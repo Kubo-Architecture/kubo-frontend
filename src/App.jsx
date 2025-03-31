@@ -1,13 +1,9 @@
-import './App.css';
-import Tela from './Tela';
-import './App.css'
+import RouterLink from "./routes/routes"
 
 function App() {
 
   return (
-    <>
-      <Tela /> {/* Chamando o componente */}
-    </>
+    <RouterLink />
   );
 }
 
