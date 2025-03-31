@@ -6,7 +6,8 @@ export default function Rotas() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LoginPage/>} />
+                <Route path="/" element={<h1>Ola mundo</h1>} />
+                <Route path="/login" element={<LoginPage/>} />
             </Routes>
         </BrowserRouter>
     );

@@ -1,4 +1,5 @@
 import RouterLink from "./routes/routes"
+import "./index.css"
 
 function App() {
 
