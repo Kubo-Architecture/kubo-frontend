@@ -105,6 +105,7 @@ const LoginForm = () => {
         >
             Proximo
         </button>
+        <a href="">Esqueci minha senha</a>
       </div>
     </form>
     

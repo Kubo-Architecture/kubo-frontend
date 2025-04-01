@@ -25,6 +25,8 @@
     align-items: center;
     justify-content: end;
     padding-bottom:40px;
+    gap: 10px;
+    font-family: "Montserrat", sans-serif;
   }
   
   .proximo-btn:disabled {
