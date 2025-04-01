@@ -6,7 +6,7 @@ header{
     align-items: center;
     height: 140px;
     gap: 15px;
-    
+    flex-shrink: 0;
 }
 
 header h1{
@@ -17,13 +17,9 @@ header h1{
 
 .kubo-icon{
     height: 35px;
-    width: auto;
+    width: 35px;
 }
 
 .kubo-icon:hover{
     cursor: pointer;
-}
-
-.icon-container{
-    margin-left:10px;
 }

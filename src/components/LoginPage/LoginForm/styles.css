@@ -1,0 +1,39 @@
+.login-form{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-inline: 8px;
+  }
+  
+  .proximo-btn {
+    width: 290px;
+    height: 45px;
+    background-color: #000000b7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .button-help-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    padding-bottom:40px;
+    gap: 10px;
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  .proximo-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .proximo-btn:hover:not(:disabled) {
+    background-color: #000000b7;
+  }
