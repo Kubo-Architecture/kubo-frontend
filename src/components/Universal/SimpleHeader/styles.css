@@ -20,6 +20,10 @@ header h1{
     width: auto;
 }
 
+.kubo-icon:hover{
+    cursor: pointer;
+}
+
 .icon-container{
     margin-left:10px;
 }
