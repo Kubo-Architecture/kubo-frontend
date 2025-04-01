@@ -1,29 +1,42 @@
-/* src/components/InputField/InputField.css */
 .input-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
+    height: 140px;
   }
   
   input {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    border: none;
+    outline: none;
+    background: transparent;
+    border-radius: 0;
+    transition: border-color 0.3s ease;
+  }
+  
+  
+  input::placeholder {
+    color: #a0a0a0;
+    opacity: 1; 
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
   
   .input-error {
-    border-color: #ff4444;
+    border-bottom: 2px solid #ff4444; 
+  }
+
+  label {
+    display: block;
+    height: 40px;
+    font-weight: 300;
+    font-size: 20px;
+    font-family: "Montserrat", sans-serif;
   }
   
   .error-message {
     color: #ff4444;
-    font-size: 0.875rem;
-    display: block;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3px;
   }

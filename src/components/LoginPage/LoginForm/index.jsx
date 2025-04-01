@@ -74,7 +74,7 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form">
       <InputField
         label="Qual o seu email?"
         type="email"
@@ -97,14 +97,17 @@ const LoginForm = () => {
         error={touched.password && errors.password}
       />
 
-      <button 
-        type="submit" 
-        className="proximo-btn"
-        disabled={!isValid}
-      >
-        Proximo
-      </button>
+      <div className="button-help-container">
+        <button 
+            type="submit" 
+            className="proximo-btn"
+            disabled={!isValid}
+        >
+            Proximo
+        </button>
+      </div>
     </form>
+    
   );
 };
 

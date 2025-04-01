@@ -5,6 +5,7 @@
     flex-direction: column;
     gap: 6px;
     height: 100px;
+    flex-shrink: 0;
 }
 
 h3{
@@ -24,5 +25,5 @@ a{
     text-decoration: none;
     color: #29435E;
     font-weight: 300;
-    padding-left:4px ;
+    padding-inline: 4px;
 }
