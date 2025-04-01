@@ -1,0 +1,29 @@
+/* src/components/InputField/InputField.css */
+.input-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .input-error {
+    border-color: #ff4444;
+  }
+  
+  .error-message {
+    color: #ff4444;
+    font-size: 0.875rem;
+    display: block;
+  }
