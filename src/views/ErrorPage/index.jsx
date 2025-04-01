@@ -1,9 +1,16 @@
+import "./styles.css"
+import { useParams } from "react-router-dom";
+import { SimpleHeader } from "../../components/Universal/SimpleHeader";
+
 export default function ErrorPage(){
 
     const { errorCode } = useParams();
     return(
         <div className="error-page-container">
-            <h1>{errorCode}</h1>
+            <SimpleHeader />
+            <div className="error-status">
+                <h4>{errorCode}</h4>
+            </div>
         </div>
     )
 }
