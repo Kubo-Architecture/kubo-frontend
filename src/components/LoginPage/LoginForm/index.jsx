@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import InputField from '../../Universal/InputField';
 import './styles.css';
 
 const LoginForm = () => {
 
-  
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -71,8 +73,8 @@ const LoginForm = () => {
         // Redirecionar ou tratar sucesso
       } catch (error) {
         console.error('Erro no login:', error);
-        if (error == 404){
-
+        if (error.response.status == 404){
+          navigate(`/error/404`)
         }
       }
     }
