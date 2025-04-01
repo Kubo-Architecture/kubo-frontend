@@ -4,6 +4,8 @@ import InputField from '../../Universal/InputField';
 import './styles.css';
 
 const LoginForm = () => {
+
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -69,6 +71,9 @@ const LoginForm = () => {
         // Redirecionar ou tratar sucesso
       } catch (error) {
         console.error('Erro no login:', error);
+        if (error == 404){
+
+        }
       }
     }
   };
