@@ -1,20 +1,35 @@
-.error-page-container{
-    min-height: 100vh;
-    width: 100vw;
+.error-page-container {
     display: flex;
     flex-direction: column;
-    padding-inline:25px ;
+    height: 100vh;
+    width: 100%;
+    padding-inline: 25px;
 }
 
-.error-status{
+.empty-icon-container {
+    flex: 1; 
     display: flex;
-    justify-content: center;
     align-items: center;
-    flex: 1;
+    justify-content: center; 
+    position: relative;
+}
+
+.icon {
+    width: 200px;
+    height: auto;
+}
+
+.error-status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
 }
 
 h4{
-    font-size: 35px;
     font-family: "Montserrat", sans-serif;
     font-weight: 500;
+    letter-spacing: 3px;
+    font-size:40px;
 }
