@@ -1,9 +1,10 @@
+import HomeHeader from "../../components/Home/HomeHeader"
 import "./styles.css"
 
 export default function Home(){
     return(
-        <div className="container">
-          ooooooo
+        <div className="home-container">
+            <HomeHeader/>
         </div>
     )
 }
