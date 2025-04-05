@@ -1,21 +1,14 @@
 import "./styles.css"
 import Logocontainer from "../../Universal/KuboLogo"
+import HamburgerHeader from "../../Universal/HamburgerHeader";
+
 
 export default function HomeHeader(){
     return(
-            <header>
-                <div className="ancora-header">
-                    <a href="">Home</a>
-                    <a href="">Sobre nos</a>
-                    <a href="">Novidades</a>
-                </div>
+        <header>   
+                <HamburgerHeader/>
                 <Logocontainer/>
-
-                <a href=""><b>Entrar</b></a>
-
-
-            </header>
-            
-    
+                <a href="" className="btn-entrar"><strong>Entrar</strong></a>
+         </header>
     )
 }
