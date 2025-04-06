@@ -8,10 +8,9 @@ export default function Rotas() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<h1>Ola mundo</h1>} />
+                <Route path="/" element={<Home/>} />
                 <Route path="/login" element={<LoginPage/>} />
                 <Route path="/error/:errorCode" element={<ErrorPage />} />
-                <Route path="/home" element={<Home/>} />
             </Routes>
         </BrowserRouter>
     );

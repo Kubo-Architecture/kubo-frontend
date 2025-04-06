@@ -1,0 +1,17 @@
+.logo-header {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    font-size: 14px;
+    position: absolute; 
+    top: 2%; 
+    left: 38%;
+}
+.kubo-title{
+    font-size: 20px;
+    margin-top: 12px;
+}
+.kubo-icon {
+    height: 2em;
+}
+ 

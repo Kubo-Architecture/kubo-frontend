@@ -1,0 +1,56 @@
+.header-container {
+    position: relative;
+  }
+  
+  .menu-button {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+    position: relative;
+  }
+  
+  .menu-icon {
+    width: 45px; 
+    height: 45px;
+    filter: brightness(0) saturate(100%); 
+  }
+  
+  .menu-sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 185px;
+    height: 100%;
+    background-color: #f2f2f2;
+    padding-top: 60px;
+    transition: left 0.4s ease;
+    z-index: 1000;
+    margin-top: 6em;
+  }
+  
+  .menu-sidebar.ativo {
+    left: 0;
+  }
+  
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    font-weight: 600; 
+    padding-top: -1; 
+
+  }
+  
+  .menu-list li {
+    padding: 15px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 0;
+    padding-top: 16px; /*espaço entre a li*/
+  }
+  
+  .menu-list li:hover {
+    background-color: #cfcfcf;
+  }
+  

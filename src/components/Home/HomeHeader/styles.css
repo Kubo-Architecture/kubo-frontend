@@ -1,0 +1,14 @@
+*{
+    font-family: "Montserrat", sans-serif;
+}
+.btn-entrar{
+    position: absolute; 
+    font-size: 18px;
+    top: 3.3%; 
+    right: 6%;
+    color: black;
+}
+header{
+    width: 100%;
+    height: 5em;
+}
