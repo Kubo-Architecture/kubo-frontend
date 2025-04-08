@@ -5,6 +5,7 @@ export default function Home(){
     return(
         <div className="home-container">
             <HomeHeader/>
+            <HomeBody/>
         </div>
     )
 }
