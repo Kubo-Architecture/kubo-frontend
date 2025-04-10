@@ -1,0 +1,30 @@
+h6 a{
+    color: #29435e;
+    font-style: bold;
+}
+
+
+
+.button-help-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    padding-bottom:40px;
+    gap: 10px;
+    font-family: "Montserrat", sans-serif;
+  }
+
+.proximo-btn {
+    width: 290px;
+    height: 45px;
+    background-color: #000000b7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    font-family: "Montserrat", sans-serif;
+  }
