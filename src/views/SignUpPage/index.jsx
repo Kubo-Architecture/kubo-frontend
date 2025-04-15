@@ -3,7 +3,7 @@ import { SimpleHeader } from "../../components/Universal/SimpleHeader"
 import AuthSupportText from "../../components/Universal/AuthSupportText"
 import SignUpForm from "../../components/SignupPage/SignUpForm"
 
-export default function SignupPage(){
+export default function SignUpPage(){
     return(
         <div className="container">
             <SimpleHeader />

@@ -4,7 +4,7 @@ import axios from 'axios';
 import InputField from '../../Universal/InputField';
 import './styles.css';
 
-const SignupForm = () => {
+const SignUpForm = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
