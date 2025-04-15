@@ -1,7 +1,7 @@
 import "./styles.css"
 import { SimpleHeader } from "../../components/Universal/SimpleHeader"
 import AuthSupportText from "../../components/Universal/AuthSupportText"
-import SignupForm from "../../components/SignupPage/SignupForm"
+import SignUpForm from "../../components/SignupPage/SignUpForm"
 
 export default function SignupPage(){
     return(
@@ -13,7 +13,7 @@ export default function SignupPage(){
                 destination="/login" 
                 navigator="Faça login" 
             />
-            <SignupForm/>
+            <SignUpForm/>
         </div>
     )
 }
