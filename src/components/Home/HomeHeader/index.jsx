@@ -8,7 +8,8 @@ export default function HomeHeader(){
         <header>   
                 <HamburgerHeader/>
                 <Logocontainer/>
-                <a href="" className="btn-entrar"><strong>Entrar</strong></a>
+                <a href="login" className="btn-entrar"><b>Entrar</b></a>
+                
          </header>
     )
 }

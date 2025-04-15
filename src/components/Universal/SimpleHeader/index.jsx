@@ -1,13 +1,10 @@
 import "./styles.css"
-import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg"
+import Logocontainer from "../KuboLogo"
 
 export function SimpleHeader(){
     return(
         <header>
-            <div className="icon-container">
-                <img src={KuboIcon} alt="Kubo icon" className="kubo-icon" />
-            </div>
-            <h1>Kubo</h1>
+           <Logocontainer/>
         </header>
     )
 }
