@@ -1,7 +1,7 @@
 import "./styles.css"
 import { SimpleHeader } from "../../components/Universal/SimpleHeader"
 import AuthSupportText from "../../components/Universal/AuthSupportText"
-import SignUpForm from "../../components/SignupPage/SignUpForm"
+import SignUpForm from "../../components/SignUp/SignUpForm"
 
 export default function SignUpPage(){
     return(
