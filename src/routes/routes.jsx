@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "../views/LoginPage"
 import ErrorPage from "../views/ErrorPage";
-import Home from "../views/home";
+import Home from "../views/Home";
 
 
 export default function Rotas() {
