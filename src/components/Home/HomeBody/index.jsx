@@ -21,9 +21,9 @@ export default function HomeBody(){
           </section>        
 
               <div class="galeria">
-                <img src={ImgFaixa} alt="Casa moderna" className="img imgCasa" />
-                <img src={ImgOnda} alt="Vila com árvores" className="img imgárvores" />
-                <img src={ImgPredio} alt="Planta arquitetônica" className="img imgdesenho" />
+                <img src={ImgFaixa} alt="Casa moderna" className="img ImgFaixa" />
+                <img src={ImgOnda} alt="Vila com árvores" className="img ImgOnda" />
+                <img src={ImgPredio} alt="Planta arquitetônica" className="img ImgPredio" />
               </div>
           </div>
 
