@@ -122,7 +122,7 @@
   }
     .ImgFaixa {
     top: -110px;
-    left: 45%;
+    left: 55%;
     width: 280px;
     height: 200px;
     z-index: 1;
@@ -145,30 +145,30 @@
   }
 
 
-  @media (min-width:1025px){
-    .imgCasa {
+  @media (min-width:1024px){
+    .ImgFaixa {
       top: -140%;
-      right: 50px;
-      height: 40vh;
+      right: 550px;
+      width: 100%;
+      height: 400px;
       object-fit: fill;
       z-index: 1;
-      width: 100%;
     }
    
-    .imgárvores{
-      top: 50px;
-      left: -25%;
+    .ImgOnda{
+      top: -200px;
+      left: 120%;
       width: 105%;
-      z-index: 2;
-      height: 40vh;
+      height: 400px;
       object-fit: fill;
+      z-index: 2;
     }
     
-    .imgdesenho {
-      top: -150px;
-      right: -240px;
+    .ImgPredio {
+      top: -20px;
+      right: -280px;
       width: 100%;
-      height: 40vh;
+      height: 400px;
       object-fit: fill;;
       z-index: 1;
     }
