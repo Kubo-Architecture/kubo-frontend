@@ -1,0 +1,46 @@
+.verification-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  .input-fields {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .code-input {
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    font-size: 1.25rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+  }
+  
+  .code-input:focus {
+    border-color: #3b82f6;
+  }
+  
+  .verify-button {
+    padding: 0.5rem 1.5rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .verify-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .verify-button:active {
+    transform: scale(0.98);
+  }
