@@ -28,8 +28,8 @@ export default function HamburgerHeader() {
       </div>
         <nav class="nav-links">
             <a href="#home"><b>Home</b></a>
-            <a href="#projetos"><b>Sobre nós</b></a>
-            <a href="#contato"><b>Novidades</b></a>
+            <a href="#sobre-nos"><b>Sobre nós</b></a>
+            <a href="#novidades"><b>Novidades</b></a>
         </nav>
     </>
   );
