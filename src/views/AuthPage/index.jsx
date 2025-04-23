@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
+import AuthSupportText from '../../components/Universal/AuthSupportText';
 
 const VerificationCodeInput = () => {
   const [code, setCode] = useState(['', '', '', '']);
@@ -55,6 +56,7 @@ const VerificationCodeInput = () => {
   return (
     <div className="verification-container">
         <SimpleHeader/>
+        <AuthSupportText greeting="Digite o codigo de confirmacao enviado em seu email"/>
       <div className="input-fields">
         {code.map((digit, index) => (
           <input
