@@ -24,7 +24,7 @@
   }
   
   .code-input:focus {
-    border-color: #3b82f6;
+    border-color: rgba(0, 0, 0, 0.76);
   }
   
   .verify-button {
@@ -40,7 +40,7 @@
   }
   
   .verify-button:hover {
-    background-color: #2563eb;
+    background-color: rgba(0, 0, 0, 0.404);
   }
   
   .verify-button:active {
