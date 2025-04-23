@@ -12,11 +12,15 @@
 
   .text-container{
     height: 130px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
   }
 
   .text-container h1{
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
+    font-size: 25px;
   }
   
   .input-fields {
