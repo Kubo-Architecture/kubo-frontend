@@ -56,7 +56,9 @@ const VerificationCodeInput = () => {
   return (
     <div className="verification-container">
         <SimpleHeader/>
-        <AuthSupportText greeting="Digite o codigo de confirmacao enviado em seu email"/>
+        <div className="text-container">
+          <h1>Digite o codigo de confirmação enviado em seu email</h1>
+        </div>
       <div className="input-fields">
         {code.map((digit, index) => (
           <input

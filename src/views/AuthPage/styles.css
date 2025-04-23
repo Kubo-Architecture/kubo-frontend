@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .verification-container {
     display: flex;
     flex-direction: column;
@@ -6,6 +8,15 @@
     min-height: 100vh;
     background-color: white;
     padding-inline: 18px;
+  }
+
+  .text-container{
+    height: 130px;
+  }
+
+  .text-container h1{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
   }
   
   .input-fields {
