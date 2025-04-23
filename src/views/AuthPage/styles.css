@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: red;
+    background-color: white;
   }
   
   .input-fields {
@@ -28,11 +28,12 @@
   }
   
   .verify-button {
-    padding: 0.5rem 1.5rem;
-    background-color: #3b82f6;
+    width: 240px;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.76);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s;
