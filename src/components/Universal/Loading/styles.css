@@ -11,17 +11,40 @@
     z-index: 1000;
   }
   
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Espaço entre a imagem e o texto */
+  }
+  
   .loading-icon {
     width: 80px;
     height: 80px;
-    animation: rotate 1.5s linear infinite;
+    animation: fade 2.5s ease-in-out infinite;
   }
   
-  @keyframes rotate {
+  .loading-text {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+  
+  /* @keyframes rotate {
     from {
       transform: rotate(0deg);
     }
     to {
       transform: rotate(360deg);
+    }
+  } */
+  
+  @keyframes fade {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
     }
   }

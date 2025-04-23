@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon-white.svg";
-import './styles.css'; // Importe o arquivo CSS
+import './styles.css';
 
 const Loading = ({ timeout = 5000 }) => {
   const navigate = useNavigate();
@@ -16,11 +16,14 @@ const Loading = ({ timeout = 5000 }) => {
 
   return (
     <div className="loading-overlay">
-      <img 
-        src={KuboIcon} 
-        alt="Carregando" 
-        className="loading-icon" 
-      />
+      <div className="loading-content">
+        <img 
+          src={KuboIcon} 
+          alt="Carregando" 
+          className="loading-icon" 
+        />
+        <p className="loading-text">Carregando...</p>
+      </div>
     </div>
   );
 };
