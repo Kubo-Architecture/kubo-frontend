@@ -71,13 +71,16 @@ const VerificationCodeInput = () => {
           />
         ))}
       </div>
+      <div className="bottom-container">
+        <button
+          onClick={handleSubmit}
+          className="verify-button"
+        >
+          Verificar Código
+        </button>
+      </div>
       
-      <button
-        onClick={handleSubmit}
-        className="verify-button"
-      >
-        Verificar Código
-      </button>
+      
     </div>
   );
 };
