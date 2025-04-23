@@ -76,8 +76,8 @@ const SignUpForm = () => {
     e.preventDefault();
     if (isValid) {
       try {
-        await axios.post('http://localhost:8080/register', formData);
-        // Redirecionar para login ou dashboard
+        const response = await axios.post('http://localhost:8080/register', formData);
+        navigate('/auth'); 
       } catch (error) {
         console.error('Erro no cadastro:', error);
         if (error.response.status === 404) {
