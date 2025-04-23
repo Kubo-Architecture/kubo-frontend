@@ -53,6 +53,7 @@ const VerificationCodeInput = () => {
 
   return (
     <div className="verification-container">
+        
       <div className="input-fields">
         {code.map((digit, index) => (
           <input
