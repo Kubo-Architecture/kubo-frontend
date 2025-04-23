@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import './styles.css';
+import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 
 const VerificationCodeInput = () => {
   const [code, setCode] = useState(['', '', '', '']);
@@ -53,7 +54,7 @@ const VerificationCodeInput = () => {
 
   return (
     <div className="verification-container">
-        
+        <SimpleHeader/>
       <div className="input-fields">
         {code.map((digit, index) => (
           <input
