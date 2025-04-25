@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import InputField from '../../Universal/InputField';
+import Loading from '../../Universal/Loading';
 import './styles.css';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -75,14 +77,19 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isValid) {
+      setIsLoading(true);
       try {
         const response = await axios.post('http://localhost:8080/register', formData);
-        navigate('/auth'); 
+        navigate('/auth');
       } catch (error) {
         console.error('Erro no cadastro:', error);
-        if (error.response.status === 404) {
-          navigate(`/error/404`);
+        if (error.response?.status === 404) {
+          navigate('/error/404');
+        } else {
+          navigate('/error');
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -133,13 +140,15 @@ const SignUpForm = () => {
         error={touched.confirmPassword && errors.confirmPassword}
       />
 
+      {isLoading && <Loading timeout={8000} />}
+
       <div className="button-help-container">
         <button 
           type="submit" 
           className="proximo-btn"
-          disabled={!isValid}
+          disabled={!isValid || isLoading}
         >
-          Criar conta
+          {isLoading ? 'Criando conta...' : 'Criar conta'}
         </button>
       </div>
     </form>
