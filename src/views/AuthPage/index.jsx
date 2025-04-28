@@ -17,7 +17,6 @@ const VerificationCodeInput = () => {
   useEffect(() => {
     inputs.current[0]?.focus();
   }, []);
-  console.log(apiUrl)
   const handleChange = (index, value) => {
     const newCode = [...code];
     newCode[index] = value.slice(-1);
