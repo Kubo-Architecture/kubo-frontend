@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
-import AuthSupportText from '../../components/Universal/AuthSupportText';
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
   const [code, setCode] = useState(['', '', '', '']);
@@ -31,7 +32,7 @@ const VerificationCodeInput = () => {
     const fullCode = code.join('');
     
     try {
-      const response = await fetch('https://sua-api.com/verify', {
+      const response = await fetch(`${apiUrl}/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
