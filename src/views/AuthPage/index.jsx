@@ -1,15 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-
 const VerificationCodeInput = () => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const idUser = params.get('idUser');
+  const { idUser } = useParams();
 
   const [code, setCode] = useState(['', '', '', '']);
   const inputs = useRef([]);
@@ -17,6 +14,9 @@ const VerificationCodeInput = () => {
   useEffect(() => {
     inputs.current[0]?.focus();
   }, []);
+
+  console.log(idUser);
+
   const handleChange = (index, value) => {
     const newCode = [...code];
     newCode[index] = value.slice(-1);
