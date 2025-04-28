@@ -15,8 +15,6 @@ const VerificationCodeInput = () => {
     inputs.current[0]?.focus();
   }, []);
 
-  console.log(idUser);
-
   const handleChange = (index, value) => {
     const newCode = [...code];
     newCode[index] = value.slice(-1);
