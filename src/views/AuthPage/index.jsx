@@ -17,7 +17,7 @@ const VerificationCodeInput = () => {
 
   const handleChange = (index, value) => {
     const newCode = [...code];
-    newCode[index] = value.slice(-1);
+    newCode[index] = value.slice(-1).toUpperCase();
     setCode(newCode);
 
     if (value && index < 3) {
@@ -32,7 +32,7 @@ const VerificationCodeInput = () => {
   };
 
   const handleSubmit = async () => {
-    const fullCode = code.join('');
+    const fullCode = code.join('').toUpperCase();
     
     try {
       const response = await fetch(`${apiUrl}/verify`, {
