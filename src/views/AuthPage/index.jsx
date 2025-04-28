@@ -1,30 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+
 const VerificationCodeInput = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const idUser = params.get('idUser');
+
   const [code, setCode] = useState(['', '', '', '']);
   const inputs = useRef([]);
 
   useEffect(() => {
-    inputs.current[0].focus();
+    inputs.current[0]?.focus();
   }, []);
-
+  console.log(apiUrl)
   const handleChange = (index, value) => {
     const newCode = [...code];
     newCode[index] = value.slice(-1);
     setCode(newCode);
 
     if (value && index < 3) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (index, e) => {
     if (e.key === 'Backspace' && !code[index] && index > 0) {
-      inputs.current[index - 1].focus();
+      inputs.current[index - 1]?.focus();
     }
   };
 
@@ -61,7 +67,7 @@ const VerificationCodeInput = () => {
     <div className="verification-container">
         <SimpleHeader/>
         <div className="text-container">
-          <h1>Digite o codigo de confirmação enviado em seu email</h1>
+          <h1>Digite o código de confirmação enviado em seu email</h1>
         </div>
       <div className="input-fields">
         {code.map((digit, index) => (
@@ -85,8 +91,6 @@ const VerificationCodeInput = () => {
           Verificar Código
         </button>
       </div>
-      
-      
     </div>
   );
 };
