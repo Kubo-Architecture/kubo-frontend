@@ -80,7 +80,9 @@ const SignUpForm = () => {
       setIsLoading(true);
       try {
         const response = await axios.post('http://localhost:8080/register', formData);
-        navigate('/auth');
+        console.log(response)
+        console.log(response.data.idUser)
+        navigate(`/auth/${response.data.idUser}`);
       } catch (error) {
         console.error('Erro no cadastro:', error);
         if (error.response?.status === 404) {
