@@ -37,7 +37,10 @@ const VerificationCodeInput = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: fullCode }),
+        body: JSON.stringify({
+          code: fullCode,
+          idUser: idUser,
+        }),
       });
 
       if (!response.ok) throw new Error('Falha na verificação');
