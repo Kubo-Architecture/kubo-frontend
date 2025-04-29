@@ -1,7 +1,6 @@
 .logo-header {
     display: flex;
     align-items: center;
-    gap: 0px;
     font-size: 14px;
     position: absolute; 
     top: 2%; 
@@ -10,8 +9,16 @@
 .kubo-title{
     font-size: 20px;
     margin-top: 12px;
+    gap: 20px;
 }
 .kubo-icon {
-    height: 2em;
+    height: 2em;  
 }
- 
+
+@media (min-width: 770px) {
+    .logo-header {
+        gap: 4px;
+        margin-left: 9em;
+        margin-top: 3px;
+    }
+}

@@ -9,6 +9,7 @@
     cursor: pointer;
     z-index: 1001;
     position: relative;
+    left:15%;
   }
   
   .menu-icon {
@@ -19,15 +20,14 @@
   
   .menu-sidebar {
     position: fixed;
-    top: 0;
+    top: 7%;
     left: -250px;
     width: 185px;
-    height: 100%;
+    height: 59.2%;
     background-color: #f2f2f2;
     padding-top: 60px;
     transition: left 0.4s ease;
     z-index: 1000;
-    margin-top: 6em;
   }
   
   .menu-sidebar.ativo {
@@ -39,18 +39,53 @@
     padding: 0;
     font-weight: 600; 
     padding-top: -1; 
-
+    text-decoration: none;
   }
-  
+
   .menu-list li {
     padding: 15px 25px;
     font-size: 16px;
     cursor: pointer;
     margin-top: 0;
-    padding-top: 16px; /*espaço entre a li*/
-  }
   
+  }
+  .menu-list li a{
+    text-decoration: none;
+    color: black;
+
+  }
+
   .menu-list li:hover {
-    background-color: #cfcfcf;
+    background-color: #c4c4c4;
   }
-  
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    text-decoration: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color:black;
+    font-size: 19px;
+  }
+ 
+  @media (min-width: 768px) {
+    .menu-icon {
+      display: none; 
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .nav-links {
+      display: none; 
+    }
+
+
+  }
+ 

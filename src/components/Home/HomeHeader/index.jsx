@@ -7,8 +7,8 @@ export default function HomeHeader(){
     return(
         <header>   
                 <HamburgerHeader/>
-                <Logocontainer/>
-                <a href="login" className="btn-entrar"><strong>Entrar</strong></a>
+                <Logocontainer/
+        <a href="login" className="btn-entrar"><b>Entrar</b></a>
          </header>
     )
 }

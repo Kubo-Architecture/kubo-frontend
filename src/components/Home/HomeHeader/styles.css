@@ -1,12 +1,17 @@
 *{
     font-family: "Montserrat", sans-serif;
 }
+header{
+    padding-inline-start: 3%;
+}
 .btn-entrar{
     position: absolute; 
-    font-size: 18px;
+    font-size: 21px;
     top: 3.3%; 
     right: 6%;
     color: black;
+    font-weight: 300;
+    text-decoration: none;
 }
 header{
     width: 100%;
