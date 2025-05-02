@@ -2,12 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
+import Loading from '../../components/Universal/Loading';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
   const { idUser } = useParams();
 
+  const [isLoading, setIsLoading] = useState(false); // ✅ Corrigido: dentro do componente
   const [code, setCode] = useState(['', '', '', '']);
   const inputs = useRef([]);
 
@@ -33,8 +35,9 @@ const VerificationCodeInput = () => {
 
   const handleSubmit = async () => {
     const fullCode = code.join('').toUpperCase();
-    
+
     try {
+      setIsLoading(true);
       const response = await fetch(`${apiUrl}/verify`, {
         method: 'POST',
         headers: {
@@ -48,9 +51,10 @@ const VerificationCodeInput = () => {
 
       if (!response.ok) throw new Error('Falha na verificação');
       console.log('Código verificado com sucesso!');
-
     } catch (error) {
       console.error('Erro:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,10 +66,17 @@ const VerificationCodeInput = () => {
 
   return (
     <div className="verification-container">
-        <SimpleHeader/>
-        <div className="text-container">
-          <h1>Digite o código de confirmação enviado em seu email</h1>
+      {isLoading && (
+        <div className="loading-overlay">
+          <Loading timeout={8000} />
         </div>
+      )}
+
+      <SimpleHeader />
+      <div className="text-container">
+        <h1>Digite o código de confirmação enviado em seu email</h1>
+      </div>
+
       <div className="input-fields">
         {code.map((digit, index) => (
           <input
@@ -80,6 +91,7 @@ const VerificationCodeInput = () => {
           />
         ))}
       </div>
+
       <div className="bottom-container">
         <button
           onClick={handleSubmit}
