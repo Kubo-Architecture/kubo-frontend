@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import forge from 'node-forge';
 import InputField from '../../Universal/InputField';
 import Loading from '../../Universal/Loading';
 import './styles.css';
@@ -8,6 +9,7 @@ import './styles.css';
 const SignUpForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [publicKeyPem, setPublicKeyPem] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -15,14 +17,14 @@ const SignUpForm = () => {
     password: '',
     confirmPassword: ''
   });
-  
+
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
-  
+
   const [touched, setTouched] = useState({
     name: false,
     email: false,
@@ -32,25 +34,36 @@ const SignUpForm = () => {
 
   const [isValid, setIsValid] = useState(false);
 
+  // Buscar chave pública na montagem
+  useEffect(() => {
+    axios.get('http://localhost:8080/public-key')
+      .then(res => {
+        setPublicKeyPem(res.data.publicKey); // já em formato PEM
+      })
+      .catch(err => {
+        console.error('Erro ao buscar chave pública:', err);
+      });
+  }, []);
+
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Nome é obrigatório';
     }
-    
+
     if (!formData.email) {
       newErrors.email = 'Email é obrigatório';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email inválido';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Senha é obrigatória';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'As senhas devem coincidir';
     }
@@ -76,23 +89,35 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isValid) {
-      setIsLoading(true);
-      try {
-        const response = await axios.post('http://localhost:8080/register', formData);
-        console.log(response)
-        console.log(response.data.idUser)
-        navigate(`/auth/${response.data.idUser}`);
-      } catch (error) {
-        console.error('Erro no cadastro:', error);
-        if (error.response?.status === 404) {
-          navigate('/error/404');
-        } else {
-          navigate('/error');
-        }
-      } finally {
-        setIsLoading(false);
+    if (!isValid || !publicKeyPem) return;
+
+    setIsLoading(true);
+    try {
+      const rsa = forge.pki.publicKeyFromPem(publicKeyPem);
+      const encryptedPassword = forge.util.encode64(
+        rsa.encrypt(formData.password, 'RSA-OAEP', {
+          md: forge.md.sha256.create()
+        })
+      );
+
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: encryptedPassword,
+        confirmPassword: formData.confirmPassword
+      };
+
+      const response = await axios.post('http://localhost:8080/register', payload);
+      navigate(`/auth/${response.data.idUser}`);
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      if (error.response?.status === 404) {
+        navigate('/error/404');
+      } else {
+        navigate('/error');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +131,7 @@ const SignUpForm = () => {
         value={formData.name}
         onChange={handleChange}
         onBlur={() => handleBlur('name')}
-        error={touched.name && errors.name}
+        error={touched.name ? errors.name : ''}
       />
 
       <InputField
@@ -117,7 +142,7 @@ const SignUpForm = () => {
         value={formData.email}
         onChange={handleChange}
         onBlur={() => handleBlur('email')}
-        error={touched.email && errors.email}
+        error={touched.email ? errors.email : ''}
       />
 
       <InputField
@@ -128,7 +153,7 @@ const SignUpForm = () => {
         value={formData.password}
         onChange={handleChange}
         onBlur={() => handleBlur('password')}
-        error={touched.password && errors.password}
+        error={touched.password ? errors.password : ''}
       />
 
       <InputField
@@ -139,14 +164,14 @@ const SignUpForm = () => {
         value={formData.confirmPassword}
         onChange={handleChange}
         onBlur={() => handleBlur('confirmPassword')}
-        error={touched.confirmPassword && errors.confirmPassword}
+        error={touched.confirmPassword ? errors.confirmPassword : ''}
       />
 
       {isLoading && <Loading timeout={8000} />}
 
       <div className="button-help-container">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="proximo-btn"
           disabled={!isValid || isLoading}
         >
