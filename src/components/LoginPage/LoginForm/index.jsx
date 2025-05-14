@@ -69,7 +69,7 @@ const LoginForm = () => {
     e.preventDefault();
     if (isValid) {
       try {
-        await axios.post('/api/login', formData);
+        await axios.post('http://localhost:8080/login', formData);
         // Redirecionar ou tratar sucesso
       } catch (error) {
         console.error('Erro no login:', error);
