@@ -51,7 +51,7 @@ header {
 }
 
 .item:hover {
-    transform: translateX(5px); /* Opcional: efeito hover nos itens */
+    transform: translateX(5px);
 }
 
 .item p {
