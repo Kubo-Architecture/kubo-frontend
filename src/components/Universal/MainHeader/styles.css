@@ -1,6 +1,6 @@
 .profile-container {
     height: 100vh;
-    padding-inline: 25px;
+    padding-inline: 15px;
 }
 
 header {
@@ -56,6 +56,7 @@ header {
 
 .item p {
     font-size: 18px;
+    font-weight: 300;
 }
 
 .nav-bar{
