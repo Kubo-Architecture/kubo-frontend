@@ -1,8 +1,9 @@
-.profile-container{
+.profile-container {
     height: 100vh;
     padding-inline: 25px;
 }
-header{
+
+header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -18,27 +19,41 @@ header{
     cursor: pointer;
 }
 
-.side-panel{
+.side-panel {
     background-color: #4A4A4A;
-    height: 100vh;
+    height: calc(100vh - 80px); /* Ajuste para altura do header */
     width: 200px;
     border-radius: 0 10px 0 0;
     position: fixed;
     top: 80px;
     left: 0;
+    transform: translateX(-100%); /* Posição inicial escondida */
     display: flex;
     flex-direction: column;
     color: white;
     padding-inline-start: 15px;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.item{
+.side-panel.open {
+    transform: translateX(0); /* Posição visível */
+}
+
+.item {
     height: 55px;
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content: center;
+    transition: transform 0.2s ease; /* Opcional: animação nos itens */
 }
-.item p{
+
+.item:hover {
+    transform: translateX(5px); /* Opcional: efeito hover nos itens */
+}
+
+.item p {
     font-size: 18px;
 }
