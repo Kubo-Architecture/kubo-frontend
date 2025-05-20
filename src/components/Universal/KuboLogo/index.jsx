@@ -1,14 +1,12 @@
-import './styles.css';
-import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg"
+import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 
-
-export default function Logocontainer(){
-    return(
-          <div className='logo-header'>
-            <a href="/">
-             <img src={KuboIcon} alt="Kubo icon" className="kubo-icon" />
-            </a>
-             <h1 className='kubo-title'>Kubo</h1>
-          </div>
-    )
+export default function Logocontainer() {
+  return (
+    <div className="flex items-center">
+      <a href="/" className="flex items-center gap-2">
+        <img src={KuboIcon} alt="Ícone da Kubo" className="w-8 h-8" />
+        <h1 className="text-xl font-semibold">Kubo</h1>
+      </a>
+    </div>
+  );
 }

@@ -2,9 +2,3 @@
 @config '../tailwind.config.js';
 
 
-*{
-    padding: 0;
-    margin: 0;
-    user-select: none;
-    box-sizing: border-box;
-}
