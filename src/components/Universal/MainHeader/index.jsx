@@ -17,19 +17,13 @@ export default function IconWithPanel() {
 
       <div className={`side-panel ${open ? "open" : ""}`}>
         <div className="item">
-          <p>Geral</p>
+          <p>Home</p>
         </div>
         <div className="item">
-          <p>Conta</p>
+          <p>Galeria</p>
         </div>
         <div className="item">
           <p>Planos e upgrades</p>
-        </div>
-        <div className="item">
-          <p>Inteface</p>
-        </div>
-        <div className="item">
-          <p>Privacidade</p>
         </div>
       </div>
     </header>
