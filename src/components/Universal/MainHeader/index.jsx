@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./styles.css";
 import MenuLogo from "../../../assets/icons/Universal/HamburguerIcon.svg";
+import KuboLogo from "../../../components/Universal/KuboLogo"
 
 export default function IconWithPanel() {
   const [open, setOpen] = useState(false);
@@ -26,6 +27,8 @@ export default function IconWithPanel() {
           <p>Planos e upgrades</p>
         </div>
       </div>
+      <KuboLogo/>
+      <div className="nav"></div>
     </header>
   );
 }
