@@ -57,3 +57,24 @@ header {
 .item p {
     font-size: 18px;
 }
+
+.nav-bar{
+    display: flex;
+}
+
+#heart-icon{
+    height: 30px;
+}
+#settings-icon{
+    height: 40px;
+}
+#profile-icon{
+    height: 50px;
+    filter: none;
+}
+
+.icon-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
