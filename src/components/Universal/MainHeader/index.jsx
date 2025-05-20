@@ -17,8 +17,21 @@ export default function IconWithPanel() {
 
       {open && (
         <div className="side-panel">
-          <p>Conteúdo do painel</p>
-          <button onClick={togglePanel}>Fechar</button>
+            <div className="item">
+                <p>Geral</p>
+            </div>
+            <div className="item">
+                <p>Conta</p>
+            </div>
+            <div className="item">
+                <p>Planos e upgrades</p>
+            </div>
+            <div className="item">
+                <p>Inteface</p>
+            </div>
+            <div className="item">
+                <p>Privacidade</p>
+            </div>
         </div>
         
       )}
