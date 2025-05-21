@@ -13,7 +13,7 @@ export default function HamburgerHeader() {
     <>
       <div className="header-container">
         <button className="menu-button" onClick={toggleMenu}>
-          <img src={HamburgerIcon} alt="Menu" className="menu-icon" />
+          <img src={HamburgerIcon} alt="Menu" className="menu-iconn" />
         </button>
       </div>
 

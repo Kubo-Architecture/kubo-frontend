@@ -12,7 +12,7 @@
     left:15%;
   }
   
-  .menu-icon {
+  .menu-iconn {
     width: 45px; 
     height: 45px;
     filter: brightness(0) saturate(100%); 
@@ -67,25 +67,5 @@
     text-decoration: none;
     color:black;
     font-size: 19px;
-  }
- 
-  @media (min-width: 768px) {
-    .menu-icon {
-      display: none; 
-    }
-  }
-
-  @media (max-width: 768px) {
-    .nav-links {
-      display: none;
-    }
-  }
-
-  @media (max-width: 430px) {
-    .nav-links {
-      display: none; 
-    }
-
-
   }
  
