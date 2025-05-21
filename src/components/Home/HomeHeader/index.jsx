@@ -1,10 +1,10 @@
 import Logocontainer from "../../Universal/KuboLogo"
-import HamburgerHeader from "../../Home/HamburgerHeader/index";
+import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 
 export default function HomeHeader() {
   return (
     <header>
-      <div className="flex items-center justify-between px-20 h-20 text-xl">
+      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl ">
         <HamburgerHeader/>
         <div className="not-sm:hidden">
           
@@ -23,7 +23,7 @@ export default function HomeHeader() {
           </nav>
         </div>
         <Logocontainer/>
-        <a href="login" className="font-bold">Entrar</a>
+        <a href="login" className="">Entrar</a>
       </div>
     </header>
   );
