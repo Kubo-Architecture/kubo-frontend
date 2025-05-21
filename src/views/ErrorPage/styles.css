@@ -24,7 +24,7 @@
 .error-status {
     position: absolute;
     top: 50%;
-    left: 49%;
+    left: 49.1%;
     margin: -25px 0 0 -25px;  /* OPA!! Acho que deu bom */
     color: black;
 }
@@ -36,13 +36,29 @@ h4{
     font-size: 40px;
 }
 
-
+/* ////////////////////////// */
 /* ----- Responsividade ----- */
+/* ////////////////////////// */
+
+/* Meio termo - nem tablet, nem desktop grande (de 768px até 1100px ) */
+@media screen and (min-width: 870px) and (max-width: 1280px) {
+    .error-status{
+        left: 48.5%;
+    }
+}
+
 
 /* Tablet */
-
-
-
+@media screen and (min-width: 540px) and (max-width: 869px) {
+    .error-status{
+        left: 48%;
+    }
+}
 
 
 /* Celulares */
+@media screen and (max-width: 539px) {
+    .error-status{
+        left: 46%;
+    }
+}
