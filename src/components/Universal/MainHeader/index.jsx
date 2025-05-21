@@ -13,7 +13,7 @@ export default function IconWithPanel() {
   };
 
   return (
-    <header className="flex flex-row justify-between items-center h-20 relative ps-0">
+    <header className="flex flex-row justify-between items-center h-20 relative">
       <div onClick={togglePanel}>
         <img
           src={MenuLogo}
