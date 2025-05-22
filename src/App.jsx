@@ -1,5 +1,5 @@
 import RouterLink from "./routes/routes"
-import "./index.css"
+import "./styles.css"
 
 function App() {
 
