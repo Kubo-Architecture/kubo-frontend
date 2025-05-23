@@ -11,7 +11,7 @@ export default function HomeHeader() {
           <nav>
             <ul className="flex gap-10"> 
               <li>
-                <a href="/" className="">Home</a>
+                <a href="/" className="">Home</a>{/** tem que ficar preto,na pagina que eu estou navegando */}
               </li>
               <li>
                 <a href="#" className="">Sobre nós</a>
