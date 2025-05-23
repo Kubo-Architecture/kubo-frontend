@@ -7,11 +7,11 @@ export default function HomeBody() {
     <main>
 
       {/* Texto */}
-      <div className="overflow-x-hidden font-monospace">
-        <div className="grid grid-cols-2 h-65 md:h-60">
-          <div className="px-9 pt-10 md:px-20">
-            <h1 className="text-5xl mb-5 md:text-7xl">Kubo</h1>
-            <div className="text-xl w-50 md:w-70 md:text-3xl">
+      <div className="overflow-hidden font-monospace">
+        <div className="grid grid-cols-2 ">
+          <div className="px-9 pt-10">
+            <h1 className="text-5xl md:text-6xl mb-5">Kubo</h1>
+            <div className="text-xl w-50 mb-200">
               O maior banco de dados de arquitetura do país
             </div>
           </div>
@@ -33,7 +33,7 @@ export default function HomeBody() {
             />
           </div>
         </div>
-        <div className="bg-black w-full h-20 flex items-center justify-center mt-95">
+        <div className="bg-black w-full h-20 flex items-center justify-center">
           <p className="text-white !text-xl ">
             + de <span className="text-blue-400">1000</span> projetos documentados
           </p>
