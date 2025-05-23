@@ -1,10 +1,3 @@
-* {
-    font-family: "Montserrat", sans-serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    right: 0;
-  }
   body{
     width: 100vw;
   }
@@ -185,9 +178,6 @@
     .novidadeh1{
       position: relative;
       top: 100%;
-    }
-    .novidade-textos{
-    
     }
   }
   

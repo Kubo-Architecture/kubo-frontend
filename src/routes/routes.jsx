@@ -4,6 +4,7 @@ import ErrorPage from "../views/ErrorPage";
 import Home from "../views/Home";
 import SignUpPage from "../views/SignUpPage";
 import VerificationCodeInput from "../views/AuthPage";
+import UserProfile from "../views/UserProfile";
 
 
 export default function Rotas() {
@@ -15,6 +16,7 @@ export default function Rotas() {
                 <Route path="/error/:errorCode" element={<ErrorPage />} />
                 <Route path="/register" element={<SignUpPage />} />
                 <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
+                <Route path="/username" element={<UserProfile />} />
             </Routes>
         </BrowserRouter>
     );
