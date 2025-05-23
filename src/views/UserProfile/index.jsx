@@ -2,7 +2,7 @@ import MainHeader from "../../components/Universal/MainHeader"
 
 export default function UserProfile(){
     return(
-        <div className="profile-container">
+        <div className="w-screen h-screen px-[20px]">
             <MainHeader/>
         </div>
     )
