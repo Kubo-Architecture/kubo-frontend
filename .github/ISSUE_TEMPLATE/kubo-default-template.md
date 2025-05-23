@@ -1,6 +1,6 @@
 ---
 name: Kubo default template
-about: Simple template to default feature
+about: Simple default template
 title: "\U0001F3F7️ "
 labels: "✨ Feature"
 assignees: ''
