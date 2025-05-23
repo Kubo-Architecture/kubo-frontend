@@ -43,9 +43,9 @@ export default function IconWithPanel() {
       
 
       <div
-        className={`fixed top-20 left-0 z-[1000] h-[calc(100vh-80px)] w-[200px] bg-[#4A4A4A] rounded-tr-[10px] transition-transform ease-in-out duration-300 px-4 shadow-[2px_0_5px_rgba(0,0,0,0.2)] flex flex-col text-white ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-20 left-0 z-[1000] h-[calc(100vh-80px)] w-[200px] bg-[#4A4A4A] rounded-tr-[10px] transition-transform ease-in-out duration-300 px-4 flex flex-col text-white
+        ${open ? "translate-x-0 shadow-[2px_0_5px_rgba(0,0,0,0.2)]" : "-translate-x-full shadow-none"}
+        `}
       >
         <div className="h-[55px] flex flex-col justify-center items-start transition-transform hover:translate-x-1">
           <p className="text-[18px] font-light">Home</p>
