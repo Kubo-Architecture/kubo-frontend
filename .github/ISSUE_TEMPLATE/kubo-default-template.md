@@ -1,18 +1,10 @@
 ---
 name: Kubo default template
 about: Simple template to default feature
-title: ''
+title: "\U0001F3F7️ "
 labels: "✨ Feature"
 assignees: ''
 
----
-
----
-name: ✅ Tarefa / Ajuste
-about: Template geral para criar uma issue técnica
-title: "[TASK] Nome da tarefa"
-labels: ["✅ Task"]
-assignees: ''
 ---
 
 ## 🧠 Descrição
