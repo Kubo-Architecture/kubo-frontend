@@ -1,7 +1,7 @@
 import Logocontainer from "../../Universal/KuboLogo"
 import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 
-export default function HomeHeader() {
+export default function LandingPageHeader() {
   return (
     <header>
       <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl ">
