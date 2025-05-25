@@ -1,4 +1,5 @@
 import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
+import ProfileStats from "../../components/Profile/ProfileStats"
 import MainHeader from "../../components/Universal/MainHeader"
 
 export default function UserProfile(){
@@ -6,6 +7,7 @@ export default function UserProfile(){
         <div className="w-screen h-screen">
             <MainHeader/>
             <ProfileInnerHeader/>
+            <ProfileStats/>
         </div>
     )
 }
