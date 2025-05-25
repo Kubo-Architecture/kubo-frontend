@@ -6,9 +6,9 @@ export default function ProfileStats(props){
                     <h3 className="font-semibold text-[30px]">{props.name}</h3>
                 </div>
                 <div className="w-full h-1/2 flex items-center gap-5">
-                <p><strong className="text-[25px]">{props.projetos}</strong> Projetos</p>
-                <p><strong className="text-[25px]">{props.likes}</strong> Likes</p>
-                <p> <strong className="text-[25px]">{props.seguidores}</strong> Seguidores</p>
+                <p><strong className="text-[25px] font-medium">{props.projetos}</strong> Projetos</p>
+                <p><strong className="text-[25px] font-medium">{props.likes}</strong> Likes</p>
+                <p> <strong className="text-[25px] font-medium">{props.seguidores}</strong> Seguidores</p>
                 </div>
             </div>
             <div className="w-10 h-full flex justify-end items-start">
