@@ -15,7 +15,7 @@ export default function IconWithPanel() {
   const menuItems = ["Home", "Galeria", "Planos e upgrades"];
 
   return (
-    <header className="flex flex-row justify-between items-center h-20 relative min-w-[300px]">
+    <header className="flex flex-row justify-between items-center h-20 relative min-w-[300px] px-[20px]">
       {/* Esquerda */}
       <div className="flex-1 h-full flex items-center min-w-[100px]">
         {/* Botão do menu (visível apenas em telas pequenas) */}
