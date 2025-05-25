@@ -1,17 +1,22 @@
 export default function ProfileStats(props){
     return(
-        <div className="h-[160px] w-100% bg-white flex pt-[8px] px-[20px]">
-            <div className="w-full h-full flex">
-                <div className="w-full h-full bg-amber-400 flex justify-start items-center">
-                    <h3>{props.name}</h3>
+        <div className="h-[200px] w-full bg-white flex pt-[8px] px-[20px]">
+            <div className="flex-grow h-full flex flex-col">
+                <div className="w-full h-1/2 flex justify-start items-end">
+                    <h3 className="font-semibold text-[30px]">{props.name}</h3>
                 </div>
-                <div className="w-full h-full bg-amber-950"></div>
+                <div className="w-full h-1/2 flex items-center gap-5">
+                <p><strong className="text-[25px]">{props.projetos}</strong> Projetos</p>
+                <p><strong className="text-[25px]">{props.likes}</strong> Likes</p>
+                <p> <strong className="text-[25px]">{props.seguidores}</strong> Seguidores</p>
+                </div>
             </div>
-            <div className="bg-green-500 w-10 h-full flex justify-center items-start">
+            <div className="w-10 h-full flex justify-end items-start">
                 <a href="#">
                     <img src="src/assets/Profile/pen.svg" alt="Edit profile icon" />
                 </a>
             </div>
         </div>
+
     )
 }

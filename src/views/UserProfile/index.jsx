@@ -7,7 +7,7 @@ export default function UserProfile(){
         <div className="w-screen h-screen">
             <MainHeader/>
             <ProfileInnerHeader/>
-            <ProfileStats name="Bruno"/>
+            <ProfileStats name="Bruno Soterio" seguidores={0} likes={0} projetos={0}/>
         </div>
     )
 }
