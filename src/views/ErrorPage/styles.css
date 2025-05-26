@@ -1,4 +1,6 @@
 .error-page-container {
+    min-height: 400px;
+    min-width: 400px;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -40,7 +42,7 @@ h4{
 /* ----- Responsividade ----- */
 /* ////////////////////////// */
 
-/* Meio termo - nem tablet, nem desktop grande (de 768px até 1100px ) */
+/* Meio termo - nem tablet, nem desktop grande */
 @media screen and (min-width: 870px) and (max-width: 1280px) {
     .error-status{
         left: 48.5%;
@@ -57,7 +59,7 @@ h4{
 
 
 /* Celulares */
-@media screen and (max-width: 539px) {
+@media screen and (max-width: 539px) {    
     .error-status{
         left: 46%;
     }
