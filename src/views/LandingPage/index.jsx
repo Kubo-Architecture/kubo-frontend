@@ -3,7 +3,7 @@ import LandingPageBody from "../../components/LandingPage/LandingPageBody"
 
 export default function LandingPage() {
     return (
-        <div className="h-screen">
+        <div>
             <LandingPageHeader />
             <LandingPageBody />
         </div>

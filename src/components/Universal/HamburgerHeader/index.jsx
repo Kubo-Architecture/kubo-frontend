@@ -10,7 +10,7 @@ export default function HamburgerHeader() {
 
   return (
     // Só aparece em telas menores que 768px
-    <div className="md:hidden">
+    <div className="md:hidden font-montserrat">
       {/* Botão de menu */}
       <div className="relative">
         <button
@@ -27,25 +27,25 @@ export default function HamburgerHeader() {
 
       {/* Menu lateral */}
       <div
-        className={`fixed top-[11%] w-[185px] h-full bg-[#f2f2f2] pt-[60px] transition-left duration-400 z-[1000] ${
+        className={`fixed top-[11%] w-[185px] h-full bg-[#4a4a4a] pt-[60px] transition-left duration-400 z-[1000] ${
           menuAberto ? "left-0" : "-left-[250px]"
         }`}
       >
-        <ul className="list-none font-semibold">
-          <li className="px-6 py-4 text-base text-xl cursor-pointer hover:bg-[#c4c4c4]">
-            <a href="#home" className="text-black no-underline">Home</a>
+        <ul className="list-none font-extralight text-white">
+          <li className="px-6 py-4 text-xl cursor-pointer hover:bg-[#c4c4c4]">
+            <a href="#home" className="text-white no-underline">Home</a>
           </li>
-          <li className="px-6 py-4 text-base text-xl cursor-pointer hover:bg-[#c4c4c4]">
-            <a href="#sobre" className="text-black no-underline">Sobre nós</a>
+          <li className="px-6 py-4 text-xl cursor-pointer hover:bg-[#c4c4c4]">
+            <a href="#sobre" className="text-white no-underline">Sobre nós</a>
           </li>
-          <li className="px-6 py-4 text-base text-xl cursor-pointer hover:bg-[#c4c4c4]">
-            <a href="#novidades" className="text-black no-underline">Novidades</a>
+          <li className="px-6 py-4 text-xl cursor-pointer hover:bg-[#c4c4c4]">
+            <a href="#novidades" className="text-white no-underline">Novidades</a>
           </li>
-          <li className="px-6 py-4 text-base text-xl cursor-pointer hover:bg-[#c4c4c4]">
-            <a href="#contato" className="text-black no-underline">Contate-nos</a>
+          <li className="px-6 py-4 text-xl cursor-pointer hover:bg-[#c4c4c4]">
+            <a href="#contato" className="text-white no-underline">Contate-nos</a>
           </li>
-          <li className="px-6 py-4 text-base text-xl cursor-pointer hover:bg-[#c4c4c4]">
-            <a href="#ajuda" className="text-black no-underline">Ajuda</a>
+          <li className="px-6 py-4 text-xl cursor-pointer hover:bg-[#c4c4c4]">
+            <a href="#ajuda" className="text-white no-underline">Ajuda</a>
           </li>
         </ul>
       </div>
