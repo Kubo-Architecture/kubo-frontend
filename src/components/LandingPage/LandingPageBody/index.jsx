@@ -6,7 +6,6 @@ export default function HomeBody() {
   return (
     <main>
 
-      {/* Texto */}
       <div className="overflow-hidden font-monospace">
         <div className="grid grid-cols-2 ">
           <div className="px-9 pt-10 h-162 md:px-20">
