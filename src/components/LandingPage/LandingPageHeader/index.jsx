@@ -4,12 +4,12 @@ import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 export default function LandingPageHeader() {
   return (
     <header>
-      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl ">
+      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl font-montserrat font-normal">
         <HamburgerHeader/>
         <div className="not-sm:hidden">
           
           <nav>
-            <ul className="flex gap-10"> 
+            <ul className="flex gap-10 font-normal"> 
               <li>
                 <a href="/" className="">Home</a>{/** tem que ficar preto,na pagina que eu estou navegando */}
               </li>
