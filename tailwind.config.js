@@ -1,8 +1,13 @@
 module.exports = {
-  future: {
-  },
+  future: {},
   purge: [],
-  theme: {},
+  theme: {
+    extend: {
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+      }
+    },
+  },
   variants: {},
   plugins: [],
 }
