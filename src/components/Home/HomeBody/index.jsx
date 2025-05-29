@@ -8,10 +8,10 @@ export default function HomeBody() {
 
       {/* Texto */}
       <div className="overflow-hidden font-monospace">
-        <div className="grid grid-cols-2 h-190">
-          <div className="px-9 pt-10">
-            <h1 className="text-5xl md:text-6xl mb-5">Kubo</h1>
-            <div className="text-xl w-50">
+        <div className="grid grid-cols-2 ">
+          <div className="px-9 pt-10 h-162 md:px-20 md:h-165">
+            <h1 className="text-5xl md:text-7xl mb-5">Kubo</h1>
+            <div className="text-2xl w-55 mb-200 md:text-4xl md:w-90">
               O maior banco de dados de arquitetura do país
             </div>
           </div>
