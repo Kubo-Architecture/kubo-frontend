@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
+import Aviao from "../../assets/icons/Universal/AviaoAuth.svg"
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -72,12 +72,18 @@ const VerificationCodeInput = () => {
         </div>
       )}
 
-      <SimpleHeader />
-      <div className="text-container">
+      <div className='pt-4'>
+        <SimpleHeader />
+      </div>
+
+      <div className='bg-[#D9D9D9] rounded-r-full h-25 w-55 flex justify-center mt-20'>
+        <img src={Aviao} alt="img avião" className='h-18 mt-4' />
+      </div>
+      <div className="w-70 font-Montserrat text-xl">
         <h1>Digite o código de confirmação enviado em seu email</h1>
       </div>
 
-      <div className="input-fields">
+      <div className="flex">
         {code.map((digit, index) => (
           <input
             key={index}
@@ -87,17 +93,18 @@ const VerificationCodeInput = () => {
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             ref={(el) => (inputs.current[index] = el)}
-            className="code-input"
+            className="bg-[#D9D9D9] w-10 h-10 rounded-full gap-20"
           />
         ))}
       </div>
+      <a href="" className=''>Não recebeu o codigo?</a>
 
-      <div className="bottom-container">
+      <div className="">
         <button
           onClick={handleSubmit}
-          className="verify-button"
+          className="bg-black text-white px-20  py-1 rounded-full"
         >
-          Verificar Código
+          Próximo
         </button>
       </div>
     </div>

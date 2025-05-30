@@ -2,7 +2,7 @@
     height: 110px;
   }
   
-  input {
+  input-error input {
     width: 100%;
     padding: 0.5rem 0;
     font-size: 1.1rem;
