@@ -9,9 +9,13 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const VerificationCodeInput = () => {
   const { idUser } = useParams();
 
-  const [isLoading, setIsLoading] = useState(false); // ✅ Corrigido: dentro do componente
+  const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState(['', '', '', '']);
+  const [attempts, setAttempts] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
   const inputs = useRef([]);
+
+  const maxAttempts = 4;
 
   useEffect(() => {
     inputs.current[0]?.focus();
@@ -50,19 +54,20 @@ const VerificationCodeInput = () => {
       });
 
       if (!response.ok) throw new Error('Falha na verificação');
+
       console.log('Código verificado com sucesso!');
     } catch (error) {
       console.error('Erro:', error);
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      if (newAttempts >= maxAttempts) {
+        setLimitReached(true);
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (code.every(digit => digit !== '')) {
-      handleSubmit();
-    }
-  }, [code]);
 
   return (
     <div className="verification-container">
@@ -76,37 +81,56 @@ const VerificationCodeInput = () => {
         <SimpleHeader />
       </div>
 
-      <div className='bg-[#D9D9D9] rounded-r-full h-25 w-55 flex justify-center mt-20'>
-        <img src={Aviao} alt="img avião" className='h-18 mt-4' />
-      </div>
-      <div className="w-70 font-Montserrat text-xl">
-        <h1>Digite o código de confirmação enviado em seu email</h1>
+      <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 flex justify-center mt-20'>
+        <img src={Aviao} alt="img avião" className='h-18 mt-6' />
       </div>
 
-      <div className="flex">
-        {code.map((digit, index) => (
-          <input
-            key={index}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
-            ref={(el) => (inputs.current[index] = el)}
-            className="bg-[#D9D9D9] w-10 h-10 rounded-full gap-20"
-          />
-        ))}
-      </div>
-      <a href="" className=''>Não recebeu o codigo?</a>
+      {!limitReached ? (
+        <>
+          <div className="w-90 font-Montserrat text-2xl mt-18 ml-7">
+            <h1>Digite o código de confirmação enviado em seu email</h1>
+          </div>
 
-      <div className="">
-        <button
-          onClick={handleSubmit}
-          className="bg-black text-white px-20  py-1 rounded-full"
-        >
-          Próximo
-        </button>
-      </div>
+          <div className="flex gap-4 ml-7 pt-2">
+            {code.map((digit, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handleChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                ref={(el) => (inputs.current[index] = el)}
+                className="bg-[#D9D9D9] w-11 h-13 rounded-3xl text-center text-2xl"
+              />
+            ))}
+          </div>
+
+          <div className='pt-3'>
+            <a href="" className='ml-7 text-[#29435E] font-Montserrat'>Não recebeu o código?</a>
+          </div>
+
+          <div className="ml-15 pt-40">
+            <button
+              onClick={() => {
+                if (code.every(digit => digit !== '')) {
+                  handleSubmit();
+                }
+              }}
+              className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl"
+            >
+              Próximo
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10 ">
+          <p className="">Você atingiu o limite de tentativas.Por favor tente novamente mais tarde.</p>
+          <div className='mt-43'>
+            <a href="" className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'>Voltar</a>
+          </div>        
+        </div>
+      )}
     </div>
   );
 };
