@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import axios from "axios"
 import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
@@ -7,17 +7,18 @@ import MainHeader from "../../components/Universal/MainHeader"
 
 export default function UserProfile() {
     const location = useLocation()
+    const [profileData, setProfileData] = useState(null)
 
     useEffect(() => {
         const pathSegments = location.pathname.split("/").filter(Boolean)
-        const username = pathSegments[0] // ex: "brunosoterio"
+        const username = pathSegments[1]
 
         const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
 
         axios.get(apiUrl)
             .then((res) => {
                 console.log("Dados do perfil:", res.data)
-                // aqui você pode usar useState para guardar os dados se quiser
+                setProfileData(res.data) // Armazena os dados
             })
             .catch((err) => {
                 console.error("Erro ao buscar perfil:", err)
@@ -27,8 +28,21 @@ export default function UserProfile() {
     return (
         <div className="w-screen h-screen">
             <MainHeader />
-            <ProfileInnerHeader />
-            <ProfileStats name="Bruno Soterio" seguidores={0} likes={0} projetos={0} />
+            {profileData && (
+                <ProfileInnerHeader 
+                photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
+                />
+            )}
+            
+
+            {profileData && (
+                <ProfileStats
+                    name={profileData.name}
+                    seguidores={profileData.followers || 0}
+                    likes={profileData.likes || 0}
+                    projetos={profileData.projects || 0}
+                />
+            )}
         </div>
     )
 }

@@ -1,3 +1,5 @@
+import PenIcon from "../../../assets/Profile/pen.svg"
+
 export default function ProfileInnerHeader(props) {
     const profileImageUrl = props.photoUrl?.trim()
         ? `url(${props.photoUrl})`
@@ -11,7 +13,7 @@ export default function ProfileInnerHeader(props) {
             />
             <div className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px]">
                 <a href="#">
-                    <img src="src/assets/Profile/pen.svg" alt="" />
+                    <img src={PenIcon} alt="" />
                 </a>
             </div>
         </div>
