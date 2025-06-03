@@ -107,7 +107,7 @@ const SignUpForm = () => {
         confirmPassword: formData.confirmPassword
       };
 
-      const response = await axios.post('http://localhost:8080/register', payload);
+      const response = await axios.post('http://localhost:8080/user', payload);
       navigate(`/auth/${response.data.idUser}`);
     } catch (error) {
       console.error('Erro no cadastro:', error);
