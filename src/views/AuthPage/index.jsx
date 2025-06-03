@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
-import Aviao from "../../assets/icons/Universal/AviaoAuth.svg"
+import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -20,6 +20,13 @@ const VerificationCodeInput = () => {
   useEffect(() => {
     inputs.current[0]?.focus();
   }, []);
+
+  // Dispara automaticamente o submit quando todos os campos estiverem preenchidos
+  useEffect(() => {
+    if (code.every(digit => digit !== '')) {
+      handleSubmit();
+    }
+  }, [code]);
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -56,6 +63,7 @@ const VerificationCodeInput = () => {
       if (!response.ok) throw new Error('Falha na verificação');
 
       console.log('Código verificado com sucesso!');
+      // Aqui você pode redirecionar, mostrar sucesso, etc.
     } catch (error) {
       console.error('Erro:', error);
       const newAttempts = attempts + 1;
@@ -124,10 +132,12 @@ const VerificationCodeInput = () => {
           </div>
         </>
       ) : (
-        <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10 ">
-          <p className="">Você atingiu o limite de tentativas.Por favor tente novamente mais tarde.</p>
+        <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
+          <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
           <div className='mt-43'>
-            <a href="" className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'>Voltar</a>
+            <button
+            onClick={() => navigate(-1)}
+            className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'></button>
           </div>        
         </div>
       )}
