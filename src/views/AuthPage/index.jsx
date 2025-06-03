@@ -1,21 +1,32 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
+import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
   const { idUser } = useParams();
 
-  const [isLoading, setIsLoading] = useState(false); // ✅ Corrigido: dentro do componente
+  const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState(['', '', '', '']);
+  const [attempts, setAttempts] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
   const inputs = useRef([]);
+
+  const maxAttempts = 4;
 
   useEffect(() => {
     inputs.current[0]?.focus();
   }, []);
+
+  // Dispara automaticamente o submit quando todos os campos estiverem preenchidos
+  useEffect(() => {
+    if (code.every(digit => digit !== '')) {
+      handleSubmit();
+    }
+  }, [code]);
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -50,19 +61,21 @@ const VerificationCodeInput = () => {
       });
 
       if (!response.ok) throw new Error('Falha na verificação');
+
       console.log('Código verificado com sucesso!');
+      // Aqui você pode redirecionar, mostrar sucesso, etc.
     } catch (error) {
       console.error('Erro:', error);
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      if (newAttempts >= maxAttempts) {
+        setLimitReached(true);
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (code.every(digit => digit !== '')) {
-      handleSubmit();
-    }
-  }, [code]);
 
   return (
     <div className="verification-container">
@@ -72,34 +85,62 @@ const VerificationCodeInput = () => {
         </div>
       )}
 
-      <SimpleHeader />
-      <div className="text-container">
-        <h1>Digite o código de confirmação enviado em seu email</h1>
+      <div className='pt-4'>
+        <SimpleHeader />
       </div>
 
-      <div className="input-fields">
-        {code.map((digit, index) => (
-          <input
-            key={index}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
-            ref={(el) => (inputs.current[index] = el)}
-            className="code-input"
-          />
-        ))}
+      <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 flex justify-center mt-20'>
+        <img src={Aviao} alt="img avião" className='h-18 mt-6' />
       </div>
 
-      <div className="bottom-container">
-        <button
-          onClick={handleSubmit}
-          className="verify-button"
-        >
-          Verificar Código
-        </button>
-      </div>
+      {!limitReached ? (
+        <>
+          <div className="w-90 font-Montserrat text-2xl mt-18 ml-7">
+            <h1>Digite o código de confirmação enviado em seu email</h1>
+          </div>
+
+          <div className="flex gap-4 ml-7 pt-2">
+            {code.map((digit, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handleChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                ref={(el) => (inputs.current[index] = el)}
+                className="bg-[#D9D9D9] w-11 h-13 rounded-3xl text-center text-2xl"
+              />
+            ))}
+          </div>
+
+          <div className='pt-3'>
+            <a href="" className='ml-7 text-[#29435E] font-Montserrat'>Não recebeu o código?</a>
+          </div>
+
+          <div className="ml-15 pt-40">
+            <button
+              onClick={() => {
+                if (code.every(digit => digit !== '')) {
+                  handleSubmit();
+                }
+              }}
+              className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl"
+            >
+              Próximo
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
+          <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
+          <div className='mt-43'>
+            <button
+            onClick={() => navigate(-1)}
+            className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'></button>
+          </div>        
+        </div>
+      )}
     </div>
   );
 };
