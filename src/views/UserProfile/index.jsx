@@ -5,11 +5,13 @@ import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
 import ProfileStats from "../../components/Profile/ProfileStats"
 import MainHeader from "../../components/Universal/MainHeader"
 import Loading from "../../components/Universal/Loading"
+import BannerSettings from "../../components/Profile/BannerSettings"
 
 export default function UserProfile() {
     const location = useLocation()
-    const [profileData, setProfileData] = useState(null)
     const navigate = useNavigate()
+    const [profileData, setProfileData] = useState(null)
+    const [showBannerSettings, setShowBannerSettings] = useState(false)
 
     useEffect(() => {
         const pathSegments = location.pathname.split("/").filter(Boolean)
@@ -39,11 +41,12 @@ export default function UserProfile() {
     }
 
     return (
-        <div className="w-screen h-screen">
+        <div className="w-screen min-h-screen relative overflow-hidden">
             <MainHeader photoUrl={profileData.photoUrl} />
             <ProfileInnerHeader
                 banner={profileData.banner}
                 photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
+                onEditBannerClick={() => setShowBannerSettings(true)}
             />
             <ProfileStats
                 name={profileData.name}
@@ -51,6 +54,12 @@ export default function UserProfile() {
                 likes={profileData.likes || 0}
                 projetos={profileData.projects || 0}
             />
+
+            {showBannerSettings && (
+                <div className="fixed inset-0 z-50">
+                    <BannerSettings onClose={() => setShowBannerSettings(false)} />
+                </div>
+            )}
         </div>
     )
 }
