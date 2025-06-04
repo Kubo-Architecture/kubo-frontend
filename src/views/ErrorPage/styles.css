@@ -1,4 +1,6 @@
 .error-page-container {
+    min-height: 400px;
+    min-width: 340px; /* ! */
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -19,11 +21,12 @@
     height: auto;
 }
 
+
 .error-status {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 49.1%;
+    margin: -25px 0 0 -25px;
     color: black;
 }
 
@@ -31,5 +34,39 @@ h4{
     font-family: "Montserrat", sans-serif;
     font-weight: 500;
     letter-spacing: 3px;
-    font-size:40px;
+    font-size: 40px;
+}
+
+/* ////////////////////////// */
+/* ----- Responsividade ----- */
+/* ////////////////////////// */
+
+/* Meio termo - nem tablet, nem desktop grande */
+@media screen and (min-width: 870px) and (max-width: 1280px) {
+    .error-status{
+        left: 48.5%;
+    }
+}
+
+
+/* Tablet */
+@media screen and (min-width: 540px) and (max-width: 869px) {
+    .error-status{
+        left: 48%;
+    }
+}
+
+
+/* Celulares */
+@media screen and (max-width: 539px) {    
+    .error-status{
+        left: 46%;
+    }
+}
+
+/* Tratamento do min-width */
+@media screen and (max-width: 340px) {
+    .error-page-container{
+        position: absolute;
+    }
 }
