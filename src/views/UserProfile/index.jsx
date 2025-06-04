@@ -35,7 +35,7 @@ export default function UserProfile() {
                 <MainHeader photoUrl={profileData.photoUrl} />
             )}
             {profileData && (
-                <ProfileInnerHeader 
+                <ProfileInnerHeader banner={profileData.banner}
                 photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
                 />
             )}
