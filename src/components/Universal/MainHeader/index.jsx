@@ -56,7 +56,12 @@ export default function IconWithPanel(props) {
           </div>
           <div className="flex items-center justify-center">
             <a href="">
-                <img src={props.photoUrl || ProfileIcon} alt="Profile icon" className="h-[35px] filter-none rounded-full " />
+              <div
+                className="h-[35px] w-[35px] filter-none rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${props.photoUrl ? props.photoUrl : ProfileIcon})`
+                }}
+              ></div>
             </a>
           </div>
         </div>
