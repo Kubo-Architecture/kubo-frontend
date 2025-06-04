@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
 import ProfileStats from "../../components/Profile/ProfileStats"
@@ -8,6 +8,7 @@ import MainHeader from "../../components/Universal/MainHeader"
 export default function UserProfile() {
     const location = useLocation()
     const [profileData, setProfileData] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const pathSegments = location.pathname.split("/").filter(Boolean)
@@ -22,6 +23,9 @@ export default function UserProfile() {
             })
             .catch((err) => {
                 console.error("Erro ao buscar perfil:", err)
+                if (err.code =="ERR_NETWORK" || err.status == 404){
+                    navigate('/error/404')
+                }
             })
     }, [location])
 
