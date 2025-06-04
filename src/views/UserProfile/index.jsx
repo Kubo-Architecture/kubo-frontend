@@ -31,7 +31,9 @@ export default function UserProfile() {
 
     return (
         <div className="w-screen h-screen">
-            <MainHeader />
+            {profileData && (
+                <MainHeader photoUrl={profileData.photoUrl} />
+            )}
             {profileData && (
                 <ProfileInnerHeader 
                 photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
