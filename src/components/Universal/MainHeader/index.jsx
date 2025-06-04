@@ -5,7 +5,7 @@ import HeartIcon from "../../../assets/icons/Universal/emptyheart.svg";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
 import SettingsIcon from "../../../assets/icons/Universal/settingsbasic.svg";
 
-export default function IconWithPanel() {
+export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
 
   const togglePanel = () => {
@@ -55,7 +55,14 @@ export default function IconWithPanel() {
             <img src={SettingsIcon} alt="Settings icon" className="h-[40px]" />
           </div>
           <div className="flex items-center justify-center">
-            <img src={ProfileIcon} alt="Profile icon" className="h-[50px] filter-none" />
+            <a href="">
+              <div
+                className="h-[35px] w-[35px] filter-none rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${props.photoUrl ? props.photoUrl : ProfileIcon})`
+                }}
+              ></div>
+            </a>
           </div>
         </div>
       </div>

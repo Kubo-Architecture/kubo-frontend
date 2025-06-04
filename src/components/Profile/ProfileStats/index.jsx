@@ -1,3 +1,5 @@
+import PenIcon from "../../../assets/Profile/pen.svg"
+
 export default function ProfileStats(props){
     return(
         <div className="h-[200px] w-full bg-white flex pt-[8px] px-[20px]">
@@ -13,7 +15,7 @@ export default function ProfileStats(props){
             </div>
             <div className="w-10 h-full flex justify-end items-start">
                 <a href="#">
-                    <img src="src/assets/Profile/pen.svg" alt="Edit profile icon" />
+                    <img src={PenIcon} alt="Edit profile icon" />
                 </a>
             </div>
         </div>
