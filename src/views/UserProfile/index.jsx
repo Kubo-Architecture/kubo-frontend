@@ -4,6 +4,7 @@ import axios from "axios"
 import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
 import ProfileStats from "../../components/Profile/ProfileStats"
 import MainHeader from "../../components/Universal/MainHeader"
+import Loading from "../../components/Universal/Loading"
 
 export default function UserProfile() {
     const location = useLocation()
@@ -19,36 +20,37 @@ export default function UserProfile() {
         axios.get(apiUrl)
             .then((res) => {
                 console.log("Dados do perfil:", res.data)
-                setProfileData(res.data) // Armazena os dados
+                setProfileData(res.data)
             })
             .catch((err) => {
                 console.error("Erro ao buscar perfil:", err)
-                if (err.code =="ERR_NETWORK" || err.status == 404){
+                if (err.code === "ERR_NETWORK" || err.response?.status === 404){
                     navigate('/error/404')
                 }
             })
     }, [location])
 
+    if (!profileData) {
+        return (
+            <div className="w-screen h-screen flex items-center justify-center">
+                <Loading />
+            </div>
+        )
+    }
+
     return (
         <div className="w-screen h-screen">
-            {profileData && (
-                <MainHeader photoUrl={profileData.photoUrl} />
-            )}
-            {profileData && (
-                <ProfileInnerHeader banner={profileData.banner}
+            <MainHeader photoUrl={profileData.photoUrl} />
+            <ProfileInnerHeader
+                banner={profileData.banner}
                 photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
-                />
-            )}
-            
-
-            {profileData && (
-                <ProfileStats
-                    name={profileData.name}
-                    seguidores={profileData.followers || 0}
-                    likes={profileData.likes || 0}
-                    projetos={profileData.projects || 0}
-                />
-            )}
+            />
+            <ProfileStats
+                name={profileData.name}
+                seguidores={profileData.followers || 0}
+                likes={profileData.likes || 0}
+                projetos={profileData.projects || 0}
+            />
         </div>
     )
 }
