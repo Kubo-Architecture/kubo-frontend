@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
+import Explore from "../../assets/icons/Universal/explore.svg"
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -88,18 +89,17 @@ const VerificationCodeInput = () => {
       <div className='pt-4'>
         <SimpleHeader />
       </div>
-
-      <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 flex justify-center mt-20'>
+      <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20'>
         <img src={Aviao} alt="img avião" className='h-18 mt-6' />
       </div>
 
       {!limitReached ? (
         <>
-          <div className="w-90 font-Montserrat text-2xl mt-18 ml-7">
-            <h1>Digite o código de confirmação enviado em seu email</h1>
+          <div className="w-90  text-2xl mt-18 md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 ml-7">
+            <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
           </div>
 
-          <div className="flex gap-4 ml-7 pt-2">
+          <div className="flex gap-4 ml-7 pt-2 md:ml-29 md:pt-7">
             {code.map((digit, index) => (
               <input
                 key={index}
@@ -109,23 +109,23 @@ const VerificationCodeInput = () => {
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 ref={(el) => (inputs.current[index] = el)}
-                className="bg-[#D9D9D9] w-11 h-13 rounded-3xl text-center text-2xl"
+                className="bg-[#D9D9D9] w-11 h-13 md:w-14 md:h-17 rounded-3xl text-center text-2xl"
               />
             ))}
           </div>
-
-          <div className='pt-3'>
-            <a href="" className='ml-7 text-[#29435E] font-Montserrat'>Não recebeu o código?</a>
+           
+          <div className='pt-3 md:pt-6'>
+            <a href="" className='ml-7 md:ml-29 text-[#29435E] md:text-xl font-Montserrat'>Não recebeu o código?</a>
           </div>
 
-          <div className="ml-15 pt-40">
+          <div className="ml-15 pt-40 md:pt-40 md:mb-10">
             <button
               onClick={() => {
                 if (code.every(digit => digit !== '')) {
                   handleSubmit();
                 }
               }}
-              className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl"
+              className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl  md:ml-39"
             >
               Próximo
             </button>
@@ -141,6 +141,10 @@ const VerificationCodeInput = () => {
           </div>        
         </div>
       )}
+      <div className=''>
+        <img src={Explore} alt="img explorar" />
+      </div>
+       
     </div>
   );
 };
