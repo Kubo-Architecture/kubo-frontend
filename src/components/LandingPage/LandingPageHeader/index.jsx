@@ -4,7 +4,7 @@ import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 export default function LandingPageHeader() {
   return (
     <header>
-      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl font-montserrat font-normal">
+      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl font-montserrat font-normal min-w-[320px]">
         <div className="block md:hidden">
           <HamburgerHeader />
         </div>

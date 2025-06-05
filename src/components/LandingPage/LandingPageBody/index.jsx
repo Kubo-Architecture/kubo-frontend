@@ -6,7 +6,7 @@ export default function HomeBody() {
   return (
     <main>
 
-      <div className="overflow-hidden font-monospace">
+      <div className="overflow-hidden font-monospace min-w-[320px]">
         <div className="grid grid-cols-2 ">
           <div className="px-9 pt-10 h-162 md:px-20">
             <h1 className="text-5xl md:text-7xl mb-5">Kubo</h1>
