@@ -18,13 +18,15 @@ export default function LoginPage() {
   return (
     <div className="container">
       <SimpleHeader />
-      <AuthSupportText
-        greeting="Bem vindo de volta!"
-        redirectMessage="Ainda não tem uma conta?"
-        destination="register"
-        navigator="Cadastre-se"
-      />
-      <LoginForm />
+      <div className="login-wrapper">
+        <AuthSupportText
+          greeting="Bem vindo de volta!"
+          redirectMessage="Ainda não tem uma conta?"
+          destination="register"
+          navigator="Cadastre-se"
+        />
+        <LoginForm />
+      </div>
       {loading && <Loading />}
     </div>
   );
