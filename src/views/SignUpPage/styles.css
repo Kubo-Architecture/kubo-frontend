@@ -1,11 +1,11 @@
 .container {
     min-height: 100vh;
-    min-width: 340px;
     padding-inline: 30px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    flex-shrink: 0;
+    flex-wrap: wrap;
+    /* Não tirar */
 }
 
 
@@ -25,6 +25,10 @@
 
 
 /* Celulares */
-@media screen {
-    
+@media screen and (max-width: 400px) {
+    .container{
+        position: sticky;
+        overflow-x: scroll;
+    }
+    /* YEEEEEEEEEEEEEEEESSSSSSSS */
 }
