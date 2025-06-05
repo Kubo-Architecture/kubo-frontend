@@ -5,8 +5,7 @@ import ImgPredio from "../../../assets/icons/Universal/ImgPredio.svg";
 export default function HomeBody() {
   return (
     <main>
-
-      <div className="overflow-hidden font-monospace min-w-[320px]">
+      <div className="overflow-hidden font-monospace min-w-[360px]">
         <div className="grid grid-cols-2 ">
           <div className="px-9 pt-10 h-162 md:px-20">
             <h1 className="text-5xl md:text-7xl mb-5">Kubo</h1>
@@ -34,7 +33,7 @@ export default function HomeBody() {
           </div>
         </div>
         <div className="bg-black w-full h-20 flex items-center justify-center">
-          <p className="text-white text-2xl font-light ">
+          <p className="text-white text-2xl font-light">
             + de <span className="text-blue-400">1000</span> projetos documentados
           </p>
         </div>
