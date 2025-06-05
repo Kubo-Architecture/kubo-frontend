@@ -39,4 +39,27 @@
     margin-top: 0.5rem;
     font-weight: 300;
     letter-spacing: 0.3px;
+    margin-left: 0.5rem;
   }
+
+/* ------------------------- */
+/*      Responsividade       */
+/* ------------------------- */
+
+/* Desktop */
+@media screen {
+    
+}
+
+/* Tablets */
+@media screen {
+    
+}
+
+
+/* Celulares */
+@media screen and (max-width: 370px) {
+    .error-message{
+      margin-left: 1rem;
+    }
+}

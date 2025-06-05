@@ -5,6 +5,7 @@ import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import AuthSupportText from '../../components/Universal/AuthSupportText';
 import SignUpForm from '../../components/SignUp/SignUpForm';
+import ImagemLua from "../../assets/images/imagem-lua.png"
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(true);

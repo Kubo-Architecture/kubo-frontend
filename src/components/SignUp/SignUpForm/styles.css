@@ -1,9 +1,10 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 0 0 auto;
     padding-inline: 8px;
     gap: 15px;
+    min-width: 340px;
 }
 
 .proximo-btn {

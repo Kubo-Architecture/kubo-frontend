@@ -1,7 +1,30 @@
 .container {
     min-height: 100vh;
+    min-width: 340px;
     padding-inline: 30px;
     display: flex;
     flex-direction: column;
     gap: 30px;
+    flex-shrink: 0;
+}
+
+
+/* ------------------------- */
+/*      Responsividade       */
+/* ------------------------- */
+
+/* Desktop */
+@media screen {
+    
+}
+
+/* Tablets */
+@media screen {
+    
+}
+
+
+/* Celulares */
+@media screen {
+    
 }
