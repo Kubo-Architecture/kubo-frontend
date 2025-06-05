@@ -26,7 +26,10 @@ const InputField = ({
         className={error ? 'input-error' : ''}
       />
       {/* Ideia: Colocar div aqui, logo abaixo do input */}
-      {error && <span className="error-message">{error}</span>}
+      {/* OOOOOOOOOOOOOOH */}
+      <div className="error-container">
+        {error && <span className="error-message">{error}</span>}
+      </div>
     </div>
   );
 };

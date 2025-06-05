@@ -39,7 +39,10 @@
     margin-top: 0.5rem;
     font-weight: 300;
     letter-spacing: 0.3px;
-    margin-left: 0.5rem;
+  }
+
+  .error-container{
+    padding-top: 0.3rem;
   }
 
 /* ------------------------- */
@@ -58,8 +61,8 @@
 
 
 /* Celulares */
-@media screen and (max-width: 370px) {
-    .error-message{
-      margin-left: 1rem;
+@media screen and (max-width: 400px) {
+    input{
+      width: 100%;
     }
 }
