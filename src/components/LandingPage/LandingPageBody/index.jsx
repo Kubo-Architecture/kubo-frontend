@@ -14,7 +14,8 @@ export default function HomeBody() {
               O maior banco de dados de arquitetura do país
             </div>
           </div>
-          <div className="flex flex-col relative">
+
+          <div className="flex flex-col relative h-[100vh]">
             <img
               src={ImgFaixa}
               alt="Imagem faixa"
