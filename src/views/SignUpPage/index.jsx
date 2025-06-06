@@ -19,14 +19,21 @@ export default function SignUpPage() {
   return (
     <div className="container">
       {/* Conteúdo da página monta imediatamente */}
-      <SimpleHeader />
-      <AuthSupportText 
-        greeting="Crie sua conta!" 
-        redirectMessage="Já tem uma conta?" 
-        destination="/login" 
-        navigator="Faça login" 
-      />
-      <SignUpForm />
+      <div className="info">
+        <SimpleHeader />
+        <AuthSupportText 
+          greeting="Crie sua conta!" 
+          redirectMessage="Já tem uma conta?" 
+          destination="/login" 
+          navigator="Faça login" 
+        />
+        <SignUpForm />
+      </div>
+      
+
+      <div className="container-with-image">
+        <img src={ImagemLua} alt="" />
+      </div>
 
       {/* Overlay de Loading — sobrepõe o conteúdo */}
       {loading && <Loading />}
