@@ -67,6 +67,7 @@ h4{
 /* Tratamento do min-width */
 @media screen and (max-width: 340px) {
     .error-page-container{
-        position: fixed;
+        position: sticky;
+        overflow-x: scroll;
     }
 }
