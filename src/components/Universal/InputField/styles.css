@@ -49,17 +49,6 @@
 /*      Responsividade       */
 /* ------------------------- */
 
-/* Desktop */
-@media screen {
-    
-}
-
-/* Tablets */
-@media screen {
-    
-}
-
-
 /* Celulares */
 @media screen and (max-width: 400px) {
     input{

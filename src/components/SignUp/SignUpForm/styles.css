@@ -38,24 +38,3 @@
 .proximo-btn:hover:not(:disabled) {
     background-color: #000000;
 }
-
-
-/* ------------------------- */
-/*      Responsividade       */
-/* ------------------------- */
-
-/* Desktop */
-@media screen {
-    
-}
-
-/* Tablets */
-@media screen {
-    
-}
-
-
-/* Celulares */
-@media screen {
-    
-}
