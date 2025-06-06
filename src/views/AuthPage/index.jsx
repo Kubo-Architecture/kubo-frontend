@@ -89,46 +89,51 @@ const VerificationCodeInput = () => {
       <div className='pt-4'>
         <SimpleHeader />
       </div>
-      <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20'>
-        <img src={Aviao} alt="img avião" className='h-18 mt-6' />
-      </div>
+
 
       {!limitReached ? (
         <>
-          <div className="w-90  text-2xl mt-18 md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 ml-7">
-            <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
-          </div>
-
-          <div className="flex gap-4 ml-7 pt-2 md:ml-29 md:pt-7">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                type="text"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                ref={(el) => (inputs.current[index] = el)}
-                className="bg-[#D9D9D9] w-11 h-13 md:w-14 md:h-17 rounded-3xl text-center text-2xl"
-              />
-            ))}
-          </div>
-           
-          <div className='pt-3 md:pt-6'>
-            <a href="" className='ml-7 md:ml-29 text-[#29435E] md:text-xl font-Montserrat'>Não recebeu o código?</a>
-          </div>
-
-          <div className="ml-15 pt-40 md:pt-40 md:mb-10">
-            <button
-              onClick={() => {
-                if (code.every(digit => digit !== '')) {
-                  handleSubmit();
-                }
-              }}
-              className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl  md:ml-39"
-            >
-              Próximo
-            </button>
+          <div className="grid grid-cols-2">
+            <div>
+              <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20'>
+                <img src={Aviao} alt="img avião" className='h-18 mt-6' />
+              </div>
+              <div className="w-90  text-2xl mt-18 md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 ml-7">
+                <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
+              </div>
+              <div className="flex gap-4 ml-7 pt-2 md:ml-29 md:pt-7">
+                {code.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    ref={(el) => (inputs.current[index] = el)}
+                    className="bg-[#D9D9D9] w-11 h-13 md:w-14 md:h-17 rounded-3xl text-center text-2xl"
+                  />
+                ))}
+              </div>
+              <div className='pt-3 md:pt-6'>
+                <a href="" className='ml-7 md:ml-29 text-[#29435E] md:text-xl font-Montserrat'>Não recebeu o código?</a>
+              </div>
+              <div className="ml-15 pt-40 md:pt-40 md:mb-10">
+                <button
+                  onClick={() => {
+                    if (code.every(digit => digit !== '')) {
+                      handleSubmit();
+                    }
+                  }}
+                  className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl  md:ml-39"
+                >
+                  Próximo
+                </button>
+              </div>
+            </div>
+            <div className='hidden md:flex md:justify-center md:items-center pb-30'>
+              <img src={Explore} alt="img explorar" className='h-135' />
+            </div>
           </div>
         </>
       ) : (
@@ -136,15 +141,11 @@ const VerificationCodeInput = () => {
           <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
           <div className='mt-43'>
             <button
-            onClick={() => navigate(-1)}
-            className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'></button>
-          </div>        
+              onClick={() => navigate(-1)}
+              className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'></button>
+          </div>
         </div>
       )}
-      <div className=''>
-        <img src={Explore} alt="img explorar" />
-      </div>
-       
     </div>
   );
 };
