@@ -25,7 +25,11 @@ const InputField = ({
         onBlur={onBlur}
         className={error ? 'input-error' : ''}
       />
-      {error && <span className="error-message">{error}</span>}
+      {/* Ideia: Colocar div aqui, logo abaixo do input */}
+      {/* OOOOOOOOOOOOOOH */}
+      <div className="error-container">
+        {error && <span className="error-message">{error}</span>}
+      </div>
     </div>
   );
 };
