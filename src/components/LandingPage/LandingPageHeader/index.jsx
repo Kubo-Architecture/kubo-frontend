@@ -4,14 +4,14 @@ import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 export default function LandingPageHeader() {
   return (
     <header>
-      <div className="flex items-center justify-between md:px-20 px-4 h-20 text-xl font-montserrat font-normal min-w-[320px]">
+      <div className="flex items-center justify-between md:px-20 2xl:py-15 px-4 h-20 text-xl 2xl:text-4xl font-montserrat font-normal min-w-[422px]">
         <div className="block md:hidden">
           <HamburgerHeader />
         </div>
 
         <div className="hidden md:block">
           <nav>
-            <ul className="flex gap-10 font-normal">
+            <ul className="flex gap-10 2xl:gap-15 font-normal">
               <li>
                 <a href="/" className="">Home</a>
               </li>
@@ -27,7 +27,7 @@ export default function LandingPageHeader() {
 
         <Logocontainer />
 
-        <a href="login" className="">Entrar</a>
+        <a href="login" className="2xl:text-4xl">Entrar</a>
       </div>
     </header>
   );
