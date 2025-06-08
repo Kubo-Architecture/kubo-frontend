@@ -16,7 +16,7 @@ export default function ProfileInnerHeader(props) {
             }}
         >
             <div
-                className="h-[160px] w-[160px] rounded-full bg-cover border-white border-3 absolute left-[20px] top-13"
+                className="h-[160px] w-[160px] rounded-full bg-cover border-white border-3 absolute left-[20px] top-12"
                 style={{ backgroundImage: profileImageUrl }}
             />
             <button
