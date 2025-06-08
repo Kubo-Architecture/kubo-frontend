@@ -3,9 +3,9 @@ import LandingPageBody from "../../components/LandingPage/LandingPageBody"
 
 export default function LandingPage() {
     return (
-        <div>
+        <body>
             <LandingPageHeader />
             <LandingPageBody />
-        </div>
+        </body>
     )
 }
