@@ -58,7 +58,7 @@ export default function UserProfile() {
             <Biografy Biografy={profileData.bio}/>
 
             {showBannerSettings && (
-                <div className="fixed inset-0 z-50">
+                <div className="z-50">
                     <BannerSettings onClose={() => setShowBannerSettings(false)} />
                 </div>
             )}
