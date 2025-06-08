@@ -16,7 +16,7 @@ export default function Rotas() {
                 <Route path="/error/:errorCode" element={<ErrorPage />} />
                 <Route path="/register" element={<SignUpPage />} />
                 <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
-                <Route path="/username" element={<UserProfile />} />
+                <Route path="/profile/:username" element={<UserProfile />} />
             </Routes>
         </BrowserRouter>
     );
