@@ -8,7 +8,7 @@ export default function HomeBody() {
       <div className="overflow-hidden font-monospace min-w-[422px] md:min-w-[960px] lg:min-w-[1090px] ">
         <div className="grid grid-cols-2 ">
           <div className="px-9 pt-10 h-162 md:px-20">
-            <h1 className="text-5xl md:text-7xl mb-5 2xl:text-9xl">Kubo</h1>
+            <h1 className="text-5xl md:text-7xl mb-5  2xl:text-9xl">Kubo</h1>
             <div className="text-2xl w-60 md:text-4xl md:w-90 2xl:text-6xl 2xl:w-140">
               O maior banco de dados de arquitetura do país
             </div>
@@ -28,7 +28,7 @@ export default function HomeBody() {
             <img
               src={ImgPredio}
               alt="Imagem predio"
-              className="w-60 h-40 object-cover rounded-xl absolute top-88 left-5 md:top-85 md:-left-30 md:h-60 md:w-auto 2xl:w-auto 2xl:h-80 2xl:top-125 2xl:left-5"
+              className="w-60 h-40 object-cover rounded-xl absolute top-88 left-5 md:top-85 md:-left-30 md:h-60 md:w-auto  2xl:w-auto 2xl:h-80 2xl:top-125 2xl:left-5"
             />
           </div>
         </div>
