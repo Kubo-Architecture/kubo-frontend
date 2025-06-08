@@ -1,4 +1,3 @@
-// components/BannerSettings.jsx
 import { useState } from "react";
 import BannerOption from "../BannerOption";
 
@@ -24,7 +23,7 @@ export default function BannerSettings({ onClose }) {
 
       if (response.ok) {
         alert("Banner salvo com sucesso!");
-        onClose?.(); // fecha modal, se onClose estiver definido
+        onClose?.(); // fecha modal, se definido
       } else {
         alert("Erro ao salvar banner.");
       }
@@ -35,11 +34,11 @@ export default function BannerSettings({ onClose }) {
   };
 
   return (
-    <div className="fixed top-[80px] left-0 right-0 h-[calc(100vh-80px)] bg-[#000000b4] flex justify-center items-end">
-      <div className="h-full w-full max-w-[800px] bg-white relative shadow-lg p-6">
+    <div className="fixed top-[80px] left-0 right-0 h-[calc(100vh-80px)] bg-[#000000b4] flex justify-center items-center z-50">
+      <div className="w-full max-w-[800px] max-h-[calc(100vh-80px)] bg-white shadow-lg p-6 overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4">Escolha o seu banner</h2>
 
-        <div className="flex pt-[50px] h-full w-full justify-start items-center gap-4 flex-col overflow-y-auto">
+        <div className="flex flex-col gap-4">
           {backgrounds.map((bg) => (
             <BannerOption
               key={bg}
@@ -50,11 +49,12 @@ export default function BannerSettings({ onClose }) {
           ))}
         </div>
 
-        <div className="absolute bottom-6 right-6">
+        <div className="h-[150px] flex flex-col justify-end items-center gap-[10px]">
+          <a href="" className="bg-[#4A4A4A] text-white flex justify-center items-center h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] disabled:bg-gray-400"> Voltar</a>
           <button
             onClick={salvarBanner}
             disabled={!bannerAtual}
-            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400"
+            className="bg-[#4A4A4A] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400"
           >
             Salvar no fundo da tela
           </button>
