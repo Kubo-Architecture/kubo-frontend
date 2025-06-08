@@ -1,7 +1,78 @@
 .container {
     min-height: 100vh;
+    min-width: 100vw;
+    padding-inline: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    /* Não tirar */
+}
+
+.info{
+    min-height: 100vh;
     padding-inline: 30px;
     display: flex;
     flex-direction: column;
     gap: 30px;
+    flex-wrap: wrap;
+    /* Não tirar */
+    flex: 1;
+}
+
+.container-with-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    flex-wrap: wrap;
+    position: sticky;
+}
+
+.container-with-image img{
+    min-width: 50%;
+    flex: 0 1 auto;
+}
+
+
+/* ------------------------- */
+/*      Responsividade       */
+/* ------------------------- */
+
+/* Tablets */
+@media screen and (min-width: 800px) and (max-width: 1300px) {
+    .container-with-image img{
+        min-height: 55%;
+    }
+}
+
+
+/* Celulares */
+@media screen and (min-width: 401px) and (max-width: 660px) {
+    .container-with-image{
+        display: none;
+    }
+}
+
+/* Tratamento de Resoluções Mínimas */
+@media screen and (max-width: 400px) {
+    .container{
+        position: sticky;
+        overflow-x: scroll;
+    }
+
+    .container-with-image{
+        display: none;
+    }
+}
+
+/* Celulares na horizontal */
+@media screen and (max-width: 940px) and (max-height: 440px) {
+    .container{
+       min-width: 100vw;
+    }
+
+    .container-with-image{
+        display: none;
+    }
 }
