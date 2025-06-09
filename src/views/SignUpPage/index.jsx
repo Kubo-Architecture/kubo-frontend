@@ -32,8 +32,14 @@ export default function SignUpPage() {
       
 
       <div className="container-with-image">
-        <h4 id='titulo-imagem'>Kubo</h4>
-        <h4 id='rodape-imagem'>Explore do seu jeito</h4>
+        <div className="div-titulo">
+          <h4 id='titulo-imagem'>Kubo</h4>
+        </div>
+
+        <div className="div-rodape">
+          <h4 id='rodape-imagem'>Explore do seu jeito</h4>
+        </div>
+                
       </div>
 
       {/* Overlay de Loading — sobrepõe o conteúdo */}
