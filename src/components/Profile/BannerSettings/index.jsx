@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import BannerOption from "../BannerOption";
 
 export default function BannerSettings({ onClose }) {
@@ -13,17 +14,22 @@ export default function BannerSettings({ onClose }) {
 
   const salvarBanner = async () => {
     try {
-      const response = await fetch("/api/salvar-banner", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/banner`,
+        {
+            //need idUser
+          path: bannerAtual
         },
-        body: JSON.stringify({ defaultBanner: bannerAtual }),
-      });
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert("Banner salvo com sucesso!");
-        onClose?.(); // fecha modal, se definido
+        onClose?.();
       } else {
         alert("Erro ao salvar banner.");
       }
@@ -50,7 +56,12 @@ export default function BannerSettings({ onClose }) {
         </div>
 
         <div className="h-[150px] flex flex-col justify-end items-center gap-[10px]">
-          <a href="" className="bg-[#4A4A4A] text-white flex justify-center items-center h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] disabled:bg-gray-400"> Voltar</a>
+          <a
+            href=""
+            className="bg-[#4A4A4A] text-white flex justify-center items-center h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] disabled:bg-gray-400"
+          >
+            Voltar
+          </a>
           <button
             onClick={salvarBanner}
             disabled={!bannerAtual}
