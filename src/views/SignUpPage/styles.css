@@ -21,19 +21,40 @@
 }
 
 .container-with-image{
+    margin: 1.2rem 0 1.2rem 1.2rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     flex: 1;
     flex-wrap: wrap;
     position: sticky;
+    background-image: url("../../assets/images/imagem-lua.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.container-with-image img{
+.container-with-image h4{
+    color: white;
+    font-size: 30px;
+}
+
+/* .container-with-image img{
     min-width: 50%;
     flex: 0 1 auto;
+} */
+
+#titulo-imagem{
+    position: relative;
+    padding-top: 0.8rem;
+    letter-spacing: 1px;
 }
 
+#rodape-imagem{
+    padding-bottom: 0.8rem;
+    letter-spacing: 1px;
+}
 
 /* ------------------------- */
 /*      Responsividade       */
@@ -41,9 +62,9 @@
 
 /* Tablets */
 @media screen and (min-width: 800px) and (max-width: 1300px) {
-    .container-with-image img{
+    /* .container-with-image img{
         min-height: 55%;
-    }
+    } */
 }
 
 
@@ -72,7 +93,7 @@
        min-width: 100vw;
     }
 
-    .container-with-image{
+    .container-with-image, .container-with-image h4{
         display: none;
     }
 }
