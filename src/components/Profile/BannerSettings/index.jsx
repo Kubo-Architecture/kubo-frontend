@@ -14,7 +14,7 @@ export default function BannerSettings({ onClose }) {
 
   const salvarBanner = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/user/banner`,
         {
             //need idUser
