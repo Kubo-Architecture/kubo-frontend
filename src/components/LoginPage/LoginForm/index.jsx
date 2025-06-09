@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import InputField from '../../Universal/InputField';
 import './styles.css';
 
 const LoginForm = () => {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -69,19 +69,24 @@ const LoginForm = () => {
     e.preventDefault();
     if (isValid) {
       try {
-        await axios.post('http://localhost:8080/login', formData);
-        // Redirecionar ou tratar sucesso
+        const response = await axios.post('http://localhost:8080/login', formData);
+        const token = response.data.token;
+        const name = response.data.name;
+        const idUser = response.data.idUser;
+        localStorage.setItem("token", token);
+        localStorage.setItem("idUser", idUser);
+        navigate(`/profile/${name}`);
       } catch (error) {
         console.error('Erro no login:', error);
-        if (error.response.status == 404){
-          navigate(`/error/404`)
+        if (error.response?.status === 404) {
+          navigate(`/error/404`);
         }
       }
     }
   };
 
   return (
-        <form onSubmit={handleSubmit} className="login-form">
+    <form onSubmit={handleSubmit} className="login-form">
       <InputField
         label="Qual o seu email?"
         type="email"
@@ -106,16 +111,15 @@ const LoginForm = () => {
 
       <div className="button-help-container">
         <button 
-            type="submit" 
-            className="proximo-btn"
-            disabled={!isValid}
+          type="submit" 
+          className="proximo-btn"
+          disabled={!isValid}
         >
-            Proximo
+          Proximo
         </button>
         <a href="">Esqueci minha senha</a>
       </div>
     </form>
-    
   );
 };
 
