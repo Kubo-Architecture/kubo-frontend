@@ -46,7 +46,7 @@ export default function UserProfile() {
             <MainHeader photoUrl={profileData.photoUrl} />
             <ProfileInnerHeader
                 banner={profileData.banner}
-                photoUrl={profileData.photoUrl || "src/assets/Profile/defaultProfile.svg"}
+                photoUrl={profileData.photoUrl}
                 onEditBannerClick={() => setShowBannerSettings(true)}
             />
             <ProfileStats
