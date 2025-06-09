@@ -68,7 +68,7 @@ export default function BannerSettings({ onClose }) {
             disabled={!bannerAtual}
             className="bg-[#4A4A4A] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400"
           >
-            Salvar no fundo da tela
+            Salvar
           </button>
         </div>
       </div>
