@@ -14,18 +14,20 @@ export default function BannerSettings({ onClose }) {
 
   const salvarBanner = async () => {
     try {
-      const response = await axios.put(
+        const idUser = localStorage.getItem("idUser")
+        const formData = new FormData();                //verificar necessidade de usar tipo aplication/json quando for enviar arquivo de imagem
+        formData.append("idUser", idUser);
+        formData.append("path", bannerAtual);
+
+        const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/user/banner`,
+        formData,
         {
-            //need idUser
-          path: bannerAtual
-        },
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
+            headers: {
+            "Content-Type": "multipart/form-data"
+            }
         }
-      );
+    );
 
       if (response.status === 200) {
         alert("Banner salvo com sucesso!");
