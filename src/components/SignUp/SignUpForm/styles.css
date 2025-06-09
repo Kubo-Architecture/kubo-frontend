@@ -38,3 +38,17 @@
 .proximo-btn:hover:not(:disabled) {
     background-color: #000000;
 }
+
+/* ------------------------- */
+/*      Responsividade       */
+/* ------------------------- */
+
+@media screen and (min-height: 700px) and (min-width: 760px) {
+    .login-form label{
+      font-size: 23px;
+    }
+
+    .proximo-btn{
+        font-size: 18px;
+    }
+}
