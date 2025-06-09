@@ -30,8 +30,7 @@ export default function BannerSettings({ onClose }) {
     );
 
       if (response.status === 200) {
-        alert("Banner salvo com sucesso!");
-        onClose?.();
+        window.location.reload();
       } else {
         alert("Erro ao salvar banner.");
       }
