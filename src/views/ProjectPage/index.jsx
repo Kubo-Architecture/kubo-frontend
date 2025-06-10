@@ -6,13 +6,13 @@ export default function ProjectPage() {
         <>
         <IconWithPanel />
         <div className="flex flex-col w-full min-h-[calc(100vh-5rem)]">
-            <div className="flex w-full h-12 justify-end items-center px-5 gap-10">
+            <div className="flex w-full h-12 justify-end items-center px-5 gap-5 lg:gap-10">
                 <div className="flex h-full items-center gap-2">
-                    <span>Postagem verificada</span>
+                    <span className="text-xs lg:text-base">Postagem verificada</span>
                     <div className="w-5 h-5 bg-gray-100"></div>
                 </div>
                 <div className="flex h-full items-center gap-2">
-                    <span>Favorito</span>
+                    <span className="text-xs lg:text-base">Favorito</span>
                     <div className="w-5 h-5 bg-gray-100"></div>
                 </div>
             </div>
@@ -28,11 +28,11 @@ export default function ProjectPage() {
                 </div>
             </div>
 
-            <div className="flex flex-col w-full px-12">
+            <div className="flex flex-col w-full px-8">
                 <span className="text-4xl font-medium">Mansão dos Arcos</span>
                 <span>por Lele</span>
                 <div className="flex gap-2">
-                    <span>Stockholm, Suécia 2021</span>
+                    <span className="text-xs lg:text-base">Stockholm, Suécia 2021</span>
                     <div className="w-5 h-5 bg-gray-100"></div>
                 </div>
 
@@ -53,57 +53,49 @@ export default function ProjectPage() {
                 </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-5 p-12 text-xl">
+            <div className="grid grid-cols-2 gap-y-5 p-8 text-xl">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100"></div>
                     <div className="flex flex-col">
-                        <span>Materiais</span>
-                        <span className="font-light text-xs">Concreto, cimento e vidro</span>
+                        <span className="leading-4">Materiais</span>
+                        <span className="font-light text-xs mt-1 leading-3">Concreto, cimento e vidro</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100"></div>
                     <div className="flex flex-col">
-                        <span>Realização</span>
-                        <span className="font-light text-xs">Grupo Souza Lima</span>
+                        <span className="leading-4">Status</span>
+                        <span className="font-light text-xs mt-1 leading-3">Em construção</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100"></div>
                     <div className="flex flex-col">
-                        <span>Status</span>
-                        <span className="font-light text-xs">Em construção</span>
+                        <span className="leading-4">Uso</span>
+                        <span className="font-light text-xs mt-1 leading-3">Escolar, esportivo</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100"></div>
                     <div className="flex flex-col">
-                        <span>Uso</span>
-                        <span className="font-light text-xs">Escolar, esportivo</span>
+                        <span className="leading-4">Área construída</span>
+                        <span className="font-light text-xs mt-1 leading-3">92.102km²</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100"></div>
                     <div className="flex flex-col">
-                        <span>Área construída</span>
-                        <span className="font-light text-xs">92.102km²</span>
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-100"></div>
-                    <div className="flex flex-col">
-                        <span>Área construída</span>
-                        <span className="font-light text-xs">20.232km²</span>
+                        <span className="leading-4">Área construída</span>
+                        <span className="font-light text-xs mt-1 leading-3">20.232km²</span>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-col p-12">
+            <div className="flex flex-col p-8">
                 <span className="text-3xl font-medium mb-5">Galeria</span>
                 <div className="grid grid-cols-1 sm:grid-rows-2 sm:grid-cols-3 gap-1
                                 lg:grid-rows-3">
