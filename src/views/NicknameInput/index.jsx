@@ -79,9 +79,9 @@ export default function NicknameInput() {
         </a>
       </header>
       
-      <form onSubmit={handleSubmit} className="flex flex-col items-center">
+      <form onSubmit={handleSubmit} className="flex flex-col justify-between h-[calc(100vh-80px)] items-center">
         <InputField
-          label="Qual o seu apelido?"
+          label="Como gostaria de ser chamado?"
           type="text"
           name="nickname"
           placeholder="Digite seu apelido"
@@ -93,12 +93,9 @@ export default function NicknameInput() {
         <button 
           type="submit"
           disabled={isLoading}
-          className={`mt-8 w-full max-w-[400px] py-3 rounded-lg text-white font-medium
-                     ${isLoading 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-blue-500 hover:bg-blue-600'}`}
+          className={`bg-[#4A4A4A] mb-[30px] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400`}
         >
-          {isLoading ? 'Enviando...' : 'Confirmar Apelido'}
+          {isLoading ? 'Enviando...' : 'Confirmar'}
         </button>
       </form>
     </div>
