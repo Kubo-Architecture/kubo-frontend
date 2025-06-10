@@ -8,7 +8,7 @@ export default function ProfileInnerHeader(props) {
 
   return (
     <div
-      className="h-[150px] w-screen flex px-[20px] relative justify-end"
+      className="h-[150px] w-screen  min-w-[380px] flex px-[20px] relative justify-end"
       style={{
         backgroundColor: props.banner ? undefined : "#C4C4C4",
         backgroundImage: props.banner ? `url(${props.banner})` : undefined,

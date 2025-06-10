@@ -51,6 +51,7 @@ export default function UserProfile() {
             />
             <ProfileStats
                 name={profileData.name}
+                nickname={profileData.nickname}
                 seguidores={profileData.followers || 0}
                 likes={profileData.likes || 0}
                 projetos={profileData.projects || 0}
