@@ -1,10 +1,11 @@
 import IconWithPanel from "../../components/Universal/MainHeader";
+import ProjectImage from "../../assets/images/project.svg";
 
 export default function ProjectPage() {
     return (
         <>
         <IconWithPanel />
-        <div className="flex w-full min-h-[calc(100vh-5rem)] bg-red-500">
+        <div className="flex flex-col w-full min-h-[calc(100vh-5rem)] bg-red-500">
             <div className="flex w-full h-12 justify-end items-center px-5 gap-10 bg-white">
                 <div className="flex h-full items-center gap-2">
                     <span>Postagem verificada</span>
@@ -13,6 +14,17 @@ export default function ProjectPage() {
                 <div className="flex h-full items-center gap-2">
                     <span>Favorito</span>
                     <div className="w-5 h-5 bg-gray-100"></div>
+                </div>
+            </div>
+
+            <div className="min-w-full h-70 md:h-90 lg:h-140 bg-blue-500">
+                <img className="w-full h-full object-cover" src={ProjectImage}/>
+            </div>
+
+            <div className="flex w-full h-12 justify-end items-center px-5 gap-10 bg-white">
+                <div className="flex h-full items-center gap-2">
+                    <div className="w-5 h-5 bg-gray-100"></div>
+                    <span className="font-light text-sm">João Figueiras Lima</span>
                 </div>
             </div>
         </div>
