@@ -12,8 +12,8 @@ export default function Rotas() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LandingPage/>} />
-                <Route path="/login" element={<LoginPage/>} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/error/:errorCode" element={<ErrorPage />} />
                 <Route path="/register" element={<SignUpPage />} />
                 <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
