@@ -22,6 +22,9 @@ export default function UserProfile() {
 
         axios.get(apiUrl)
             .then((res) => {
+                if (res.data.nickname == ""){
+                    navigate("/")
+                }
                 console.log("Dados do perfil:", res.data)
                 setProfileData(res.data)
             })
