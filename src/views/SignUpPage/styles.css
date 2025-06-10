@@ -75,6 +75,16 @@
 /*      Responsividade       */
 /* ------------------------- */
 
+/* Desktop em Pé */
+@media screen and (min-height: 481px) and (max-width: 944px) {
+    .container-with-image{
+        display: none;
+    }
+}
+
+
+
+
 /* Tratamento dos h4 da imagem */
 @media screen and (min-width: 800px) and (max-width: 1300px) {
     
