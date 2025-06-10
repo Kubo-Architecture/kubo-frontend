@@ -11,7 +11,6 @@ export default function NicknameInput() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-
   // Carrega o idUser do localStorage ao inicializar
   useEffect(() => {
     const storedId = localStorage.getItem('idUser');
@@ -27,6 +26,11 @@ export default function NicknameInput() {
     
     if (!nickname.trim()) {
       setError('Por favor, insira um apelido válido');
+      return;
+    }
+
+    if (nickname.length > 80) {
+      setError('O apelido deve ter no máximo 80 caracteres.');
       return;
     }
 
@@ -53,7 +57,7 @@ export default function NicknameInput() {
       );
       
       const name = localStorage.getItem("name")
-      if(response.status == 200){ 
+      if(response.status === 200){ 
         navigate(`/profile/${name}`);
       }
     } catch (err) {
@@ -66,37 +70,48 @@ export default function NicknameInput() {
   };
 
   const handleChange = (e) => {
-    setNickname(e.target.value);
-    // Limpa erros quando o usuário começa a digitar
+    const value = e.target.value;
+
+    if (value.length > 50) {
+      setError('O apelido deve ter no máximo 50 caracteres.');
+      return;
+    }
+
+    setNickname(value);
+
+    // Limpa erros quando o usuário digita algo válido
     if (error) setError('');
   };
 
   return (
-    <div className="h-screen w-full px-[40px]">
+    <div className="h-screen w-full px-[30px]">
       <header className="h-[80px] flex justify-center items-center">
         <a href="/">
           <img className="h-[30px]" src={KuboIcon} alt="kubo icon" />
         </a>
       </header>
       
-      <form onSubmit={handleSubmit} className="flex flex-col justify-between h-[calc(100vh-80px)] items-center">
-        <InputField
-          label="Como gostaria de ser chamado?"
-          type="text"
-          name="nickname"
-          placeholder="Digite seu apelido"
-          value={nickname}
-          onChange={handleChange}
-          error={error}
-        />
-        
-        <button 
-          type="submit"
-          disabled={isLoading}
-          className={`bg-[#4A4A4A] mb-[30px] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400`}
-        >
-          {isLoading ? 'Enviando...' : 'Confirmar'}
-        </button>
+      <form onSubmit={handleSubmit} className="flex flex-col justify-between h-[calc(100vh-80px)] items-start">
+        <div className="mt-[30px] w-full">
+          <InputField
+            label="Como gostaria de ser chamado?"
+            type="text"
+            name="nickname"
+            placeholder="Digite seu apelido"
+            value={nickname}
+            onChange={handleChange}
+            error={error}
+          />
+        </div>
+        <div className="w-full flex justify-center items-center">
+          <button 
+            type="submit"
+            disabled={isLoading}
+            className={`bg-[#4A4A4A] mb-[30px] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400`}
+          >
+            {isLoading ? 'Enviando...' : 'Confirmar'}
+          </button>
+        </div>
       </form>
     </div>
   );
