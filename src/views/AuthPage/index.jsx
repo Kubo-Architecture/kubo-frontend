@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
-import Explore from "../../assets/icons/Universal/explore.svg"
+import Explore from "../../assets/icons/Universal/Explore.svg"
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -79,7 +79,7 @@ const VerificationCodeInput = () => {
   };
 
   return (
-    <div className='overflow-x-hidden'>
+    <div className='overflow-x-hidden h-[100vh]'>
       <div className="verification-container">
         {isLoading && (
           <div className="loading-overlay">
@@ -87,21 +87,31 @@ const VerificationCodeInput = () => {
           </div>
         )}
 
-        <div className='pt-4 md:min-w-[1534px]'>
-          <SimpleHeader />
-        </div>
-
-
         {!limitReached ? (
           <>
-            <div className="grid grid-cols-2 ">
+            <div className="grid grid-cols-2 md:py-4 ">
               <div>
-                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20 2xl:w-160 2xl:h-40'>
-                  <img src={Aviao} alt="img avião" className='h-18 mt-6 2xl:h-25 2xl:mt-8' />
+
+                {/*logo do site*/}
+                <div className='flex justify-end md:ml-185 '>
+                  <SimpleHeader />
                 </div>
-                <div className="w-90  text-2xl mt-18 md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 ml-7 2xl:text-5xl 2xl:w-200">
+
+                {/*img do avião*/}
+                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20
+                md:w-90 md:justify-end md:pr-15 flex justify-center    
+                2xl:w-160 2xl:h-40'>
+                  <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
+                </div>
+
+                {/*txt do codigo*/}
+                <div className="w-90 text-2xl mt-18  ml-7
+                md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 
+                2xl:text-5xl 2xl:w-200">
                   <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
                 </div>
+
+                {/*inputs do codigo */}
                 <div className="flex gap-4 ml-7 pt-2 md:ml-29 md:pt-7">
                   {code.map((digit, index) => (
                     <input
@@ -116,10 +126,17 @@ const VerificationCodeInput = () => {
                     />
                   ))}
                 </div>
+
+                {/*txt não recebeu o código*/}
                 <div className='pt-3 md:pt-6'>
-                  <a href="" className='ml-7 md:ml-29 text-[#29435E] md:text-xl 2xl:text-2xl font-Montserrat'>Não recebeu o código?</a>
+                  <a href="" className='ml-7 
+                  md:ml-29 md:text-xl
+                  2xl:text-2xl 
+                   text-[#29435E]  font-Montserrat'>Não recebeu o código?</a>
                 </div>
-                <div className="ml-15 pt-40 md:pt-40 md:mb-10">
+
+                {/*btn proximo*/}
+                <div className="ml-15 pt-40 md:pt-25  md:pb-8">
                   <button
                     onClick={() => {
                       if (code.every(digit => digit !== '')) {
@@ -132,18 +149,58 @@ const VerificationCodeInput = () => {
                   </button>
                 </div>
               </div>
-              <div className='hidden md:flex md:justify-center md:items-center pb-30 min-w-[800px]'>
-                <img src={Explore} alt="img explorar" className='h-135 w-auto 2xl:h-240 2xl:w-200 2xl:mt-10' />
+
+              {/* img explorar do seu jeito */}
+              <div className="md:px-40 ">
+                <div
+                  className="
+      hidden md:flex justify-center items-center 
+      mt-10 md:ml-9 
+      md:w-[330px] md:h-[500px] 
+      lg:w-[380px] lg:h-[850px] 
+      xl:w-[420px] xl:h-[600px] 
+      2xl:w-[600px] 2xl:h-[880px] 
+      bg-center bg-no-repeat bg-cover 
+      rounded-2xl relative overflow-hidden
+    "
+                  style={{ backgroundImage: `url(${Explore})` }}
+                >
+                  {/* Título no canto superior esquerdo */}
+                  <div className="absolute top-4 left-4 z-10 text-white text-lg md:text-2xl 2xl:text-4xl font-normal font-Montserrat">
+                    Kubo
+                  </div>
+
+                  {/* Texto no rodapé centralizado */}
+                  <div className="absolute bottom-4 left-0 right-0 text-center text-white text-base md:text-2xl 2xl:text-4xl">
+                    Explore do seu jeito
+                  </div>
+                </div>
               </div>
+
             </div>
+
           </>
         ) : (
-          <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
-            <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
-            <div className='mt-43'>
-              <button
-                onClick={() => navigate(-1)}
-                className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-xl'></button>
+
+          <div className="grid grid-cols-2 ">
+
+            <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
+              <div>
+                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20 2xl:w-160 2xl:h-40'>
+                  <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
+                </div>
+
+              </div>
+              <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
+              <div className='mt-43'>
+                <button
+                  onClick={() => navigate(-1)}
+                  className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39 2xl:px-30 2xl:py-5 2xl:text-3xl'>voltar</button>
+              </div>
+            </div>
+
+            <div className='hidden md:flex md:justify-center min-w-[800px]'>
+              <img src={Explore} alt="img explorar" className='h-135 w-auto md:mt-25 2xl:h-240 2xl:w-200 2xl:mt-10' />
             </div>
           </div>
         )}
@@ -151,5 +208,4 @@ const VerificationCodeInput = () => {
     </div>
   );
 };
-
 export default VerificationCodeInput;
