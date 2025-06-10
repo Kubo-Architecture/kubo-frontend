@@ -72,6 +72,7 @@ const LoginForm = () => {
         const token = response.data.token;
         const name = response.data.name;
         const idUser = response.data.idUser;
+        localStorage.setItem("name", name);
         localStorage.setItem("token", token);
         localStorage.setItem("idUser", idUser);
         navigate(`/profile/${name}`);
