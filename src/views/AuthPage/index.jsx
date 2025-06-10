@@ -155,13 +155,12 @@ const VerificationCodeInput = () => {
                 <div
                   className="
       hidden md:flex justify-center items-center 
-      mt-10 md:ml-9 
-      md:w-[330px] md:h-[500px] 
-      lg:w-[380px] lg:h-[850px] 
-      xl:w-[420px] xl:h-[600px] 
-      2xl:w-[600px] 2xl:h-[880px] 
+      md:ml-9 
+      md:w-[330px] lg:w-[380px]
+       xl:w-[420px] 
+      2xl:w-[700px] 2xl:h-[1100px]
       bg-center bg-no-repeat bg-cover 
-      rounded-2xl relative overflow-hidden
+      rounded-4xl relative overflow-hidden
     "
                   style={{ backgroundImage: `url(${Explore})` }}
                 >
@@ -176,6 +175,8 @@ const VerificationCodeInput = () => {
                   </div>
                 </div>
               </div>
+
+
 
             </div>
 
