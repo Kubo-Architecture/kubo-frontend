@@ -27,6 +27,80 @@ export default function ProjectPage() {
                     <span className="font-light text-sm">João Figueiras Lima</span>
                 </div>
             </div>
+
+            <div className="flex flex-col w-full px-12 bg-white">
+                <span className="text-4xl font-medium">Mansão dos Arcos</span>
+                <span>por Lele</span>
+                <div className="flex gap-2">
+                    <span>Stockholm, Suécia 2021</span>
+                    <div className="w-5 h-5 bg-gray-100"></div>
+                </div>
+
+                <span className="text-sm text-[#4f4f4f] mt-10">
+                    A Mansão dos Arcos é uma construção arquitetônica que se destaca por sua
+                    grandiosidade e elementos clássicos, muitas vezes associados a estilos  
+                    como o neoclássico, barroco ou até mesmo revivalista, dependendo da  
+                    interpretação e contexto em que foi projetada. Abaixo, descrevo uma  
+                    versão detalhada e específica dessa mansão, considerando características 
+                    comuns de propriedades luxuosas e imponentes que carregam o nome "dos  
+                    Arcos":A Mansão dos Arcos é uma construção arquitetônica que se destaca 
+                    por sua grandiosidade e elementos clássicos, muitas vezes associados a 
+                    estilos  como o neoclássico, barroco ou até mesmo revivalista, dependendo da  
+                    interpretação e contexto em que foi projetada. Abaixo, descrevo uma  versão 
+                    detalhada e específica dessa mansão, considerando características comuns de 
+                    propriedades luxuosas e imponentes que carregam o nome "dos  Arcos":
+                </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-5 p-12 text-xl bg-white">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Materiais</span>
+                        <span className="font-light text-xs">Concreto, cimento e vidro</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Realização</span>
+                        <span className="font-light text-xs">Grupo Souza Lima</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Status</span>
+                        <span className="font-light text-xs">Em construção</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Uso</span>
+                        <span className="font-light text-xs">Escolar, esportivo</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Área construída</span>
+                        <span className="font-light text-xs">92.102km²</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100"></div>
+                    <div className="flex flex-col">
+                        <span>Área construída</span>
+                        <span className="font-light text-xs">20.232km²</span>
+                    </div>
+                </div>
+            </div>
         </div>
         </>
     )
