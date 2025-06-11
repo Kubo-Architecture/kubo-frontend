@@ -34,7 +34,12 @@ export default function LoginPage() {
         {loading && <Loading />}
       </div>
       <div className="rightSide">
-        <img src={loginImage} alt="imagem lua" />
+          <div className="topText">
+            <p>Kubo</p>
+          </div>
+          <div className="bottomText">
+            <p>Explore do seu jeito</p>
+          </div>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@
     align-items: row;
     justify-content: start;
     align-items: start;
+    margin-bottom: 10px;
 }
 
 .forms{
@@ -23,12 +24,37 @@
 
 .leftSide{
     width: 50%;
-    background-color: blue;
     height: 100vh;
 }
 
 .rightSide{
     width: 50%;
-    background-color: red;
-    height: 100vh;
+    height: 90vh;
+    position: relative;
+    background-image: url(../../assets/images/loginImage.svg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 14px;
 }
+
+
+.topText{
+    position: absolute;
+    top: 20px;
+    left: 160px;
+    font-family: "Montserrat", sans-serif;
+    color: white;
+    font-size: 20px;
+}
+
+.bottomText{
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Montserrat", sans-serif;
+    color: white;
+    font-size: 20px;
+}
+
