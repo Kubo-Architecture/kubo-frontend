@@ -1,7 +1,7 @@
 .container {
     min-height: 100vh;
     min-width: 100vw;
-    padding-inline: 30px;
+    padding-inline: 100px;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -14,42 +14,131 @@
     padding-inline: 30px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 45px;
     flex-wrap: wrap;
     /* Não tirar */
     flex: 1;
 }
 
 .container-with-image{
+    min-width: 460px;
+    min-height: 800px;
+    margin: 1.2rem 0 1.2rem 1.2rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     flex: 1;
     flex-wrap: wrap;
     position: sticky;
+    background-image: url("../../assets/images/imagem-lua.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.container-with-image img{
-    min-width: 50%;
-    flex: 0 1 auto;
+.container-with-image h4{
+    color: white;
+    font-size: 30px;
 }
 
+.div-titulo, .div-rodape{
+    height: 50%;
+}
+
+.div-titulo{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 50%;
+    position: static;
+}
+
+.div-rodape{
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+#titulo-imagem{
+    position: sticky;
+    padding-top: 0.8rem;
+    letter-spacing: 1px;
+}
+
+#rodape-imagem{
+    padding-bottom: 0.8rem;
+    letter-spacing: 1px;
+}
 
 /* ------------------------- */
 /*      Responsividade       */
 /* ------------------------- */
 
-/* Tablets */
+/* Desktop em Pé */
+@media screen and (min-height: 481px) and (max-width: 944px) {
+    .container-with-image{
+        display: none;
+    }
+}
+
+
+
+
+/* Tratamento dos h4 da imagem */
 @media screen and (min-width: 800px) and (max-width: 1300px) {
-    .container-with-image img{
-        min-height: 55%;
+    
+    .container{
+        padding-inline: 40px;
+    }
+
+    .container-with-image{
+        margin: 1.2rem;
+        border-radius: 30px;
+        background-size: cover;
+    }
+
+    #titulo-imagem{
+        padding-top: 1rem;
+    }
+
+    #rodape-imagem{
+        padding-bottom: 1rem;
+    }
+}
+
+
+/* Tablets */
+/* O form ganha prioridade */
+@media screen and (min-height: 700px) and (max-height: 1300px) and (min-width: 661px) and (max-width: 860px) {
+    .container{
+        padding-inline: 15px;
+    }
+    
+    .container-with-image{
+        display: none;
     }
 }
 
 
 /* Celulares */
 @media screen and (min-width: 401px) and (max-width: 660px) {
-    .container-with-image{
+    .container{
+        padding-inline: 10px;
+    }
+    
+    .container-with-image, .container-with-image h4{
+        display: none;
+    }
+}
+
+/* Celulares na horizontal */
+@media screen and (max-width: 940px) and (max-height: 480px) {
+    .container{
+       min-width: 100vw;
+    }
+
+    .container-with-image, .container-with-image h4{
         display: none;
     }
 }
@@ -59,17 +148,7 @@
     .container{
         position: sticky;
         overflow-x: scroll;
-    }
-
-    .container-with-image{
-        display: none;
-    }
-}
-
-/* Celulares na horizontal */
-@media screen and (max-width: 940px) and (max-height: 440px) {
-    .container{
-       min-width: 100vw;
+        padding-inline: 10px;
     }
 
     .container-with-image{
