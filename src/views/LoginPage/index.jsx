@@ -17,7 +17,9 @@ export default function LoginPage() {
 
   return (
     <div className="container">
-      <SimpleHeader />
+      <div className="header">
+        <SimpleHeader />
+      </div>
       <AuthSupportText
         greeting="Bem vindo de volta!"
         redirectMessage="Ainda não tem uma conta?"
