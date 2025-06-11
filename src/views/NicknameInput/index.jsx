@@ -43,8 +43,9 @@ export default function NicknameInput() {
     setError('');
     
     try {
+        const apiUrl = `${import.meta.env.VITE_API_URL}/user`
       const response = await axios.put(
-        'http://localhost:8080/user',
+        apiUrl,
         { 
           nickname: nickname,
           idUser: idUser 
