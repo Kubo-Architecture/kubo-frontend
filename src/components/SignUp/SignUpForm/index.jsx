@@ -36,7 +36,8 @@ const SignUpForm = () => {
 
   // Buscar chave pública na montagem
   useEffect(() => {
-    axios.get('http://localhost:8080/public-key')
+    const apiUrl = `${import.meta.env.VITE_API_URL}/public-key`
+    axios.get(apiUrl)
       .then(res => {
         setPublicKeyPem(res.data.publicKey); // já em formato PEM
       })
