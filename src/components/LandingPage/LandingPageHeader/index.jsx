@@ -4,7 +4,7 @@ import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 export default function LandingPageHeader() {
   return (
     <header>
-      <div className="flex items-center justify-between md:px-20 2xl:py-15 px-4 h-20 text-xl 2xl:text-4xl font-montserrat font-normal min-w-[422px] md:min-w-[959px]">
+      <div className="flex items-center justify-between md:px-20 2xl:px-30 2xl:py-20 px-4 h-20 text-xl 2xl:text-5xl font-montserrat font-normal min-w-[422px] md:min-w-[959px] lg:min-w-[1090px]">
         <div className="block md:hidden">
           <HamburgerHeader />
         </div>
@@ -27,7 +27,7 @@ export default function LandingPageHeader() {
 
         <Logocontainer />
 
-        <a href="login" className="2xl:text-4xl">Entrar</a>
+        <a href="login" className="2xl:text-5xl">Entrar</a>
       </div>
     </header>
   );
