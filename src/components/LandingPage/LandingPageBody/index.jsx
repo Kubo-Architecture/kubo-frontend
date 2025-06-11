@@ -17,7 +17,7 @@ export default function HomeBody() {
           </div>
 
           {/*imagens*/}
-          <div className="min-h-[973px]">
+          <div className="min-h-[703px] md:min-h-[973px] lg:min-h-[973px] xl:min-h-[973px] 2xl:min-h-[973px]">
             <div className="flex flex-col relative h-[100vh] ">
               <img
                 src={ImgFaixa}
