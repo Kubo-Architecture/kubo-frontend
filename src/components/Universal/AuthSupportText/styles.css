@@ -27,3 +27,17 @@
     font-weight: 300;
     padding-inline: 4px;
 }
+
+/* ------------------------- */
+/*      Responsividade       */
+/* ------------------------- */
+
+@media screen and (min-height: 700px) and (min-width: 760px) {
+    .support-text-container h3{
+        font-size: 30px;
+    }
+
+    .support-text-container p{
+        font-size: 16px;
+    }
+}

@@ -36,7 +36,8 @@ const SignUpForm = () => {
 
   // Buscar chave pública na montagem
   useEffect(() => {
-    axios.get('http://localhost:8080/public-key')
+    const apiUrl = `${import.meta.env.VITE_API_URL}/public-key`
+    axios.get(apiUrl)
       .then(res => {
         setPublicKeyPem(res.data.publicKey); // já em formato PEM
       })
@@ -106,8 +107,9 @@ const SignUpForm = () => {
         password: encryptedPassword,
         confirmPassword: formData.confirmPassword
       };
+      const apiUrl = `${import.meta.env.VITE_API_URL}/user`
 
-      const response = await axios.post('http://localhost:8080/user', payload);
+      const response = await axios.post(apiUrl, payload);
       navigate(`/auth/${response.data.idUser}`);
     } catch (error) {
       console.error('Erro no cadastro:', error);
