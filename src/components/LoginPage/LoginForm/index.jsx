@@ -70,12 +70,18 @@ const LoginForm = () => {
     if (isValid) {
       try {
         const apiUrl = `${import.meta.env.VITE_API_URL}/login`
-        await axios.post(apiUrl, formData);
-        // Redirecionar ou tratar sucesso
+        const response = await axios.post(apiUrl, formData);
+        const token = response.data.token;
+        const name = response.data.name;
+        const idUser = response.data.idUser;
+        localStorage.setItem("name", name);
+        localStorage.setItem("token", token);
+        localStorage.setItem("idUser", idUser);
+        navigate(`/profile/${name}`);
       } catch (error) {
         console.error('Erro no login:', error);
-        if (error.response.status == 404){
-          navigate(`/error/404`)
+        if (error.response?.status === 404) {
+          navigate(`/error/404`);
         }
       }
     }
