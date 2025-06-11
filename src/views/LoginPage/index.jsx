@@ -4,6 +4,7 @@ import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import AuthSupportText from '../../components/Universal/AuthSupportText';
 import LoginForm from '../../components/LoginPage/LoginForm';
+import loginImage from '../../assets/images/loginImage.svg'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(true);
@@ -17,17 +18,24 @@ export default function LoginPage() {
 
   return (
     <div className="container">
-      <div className="header">
-        <SimpleHeader />
+      <div className="leftSide">
+        <div className="header">
+          <SimpleHeader />
+        </div>
+        <div className="forms">
+          <AuthSupportText
+            greeting="Bem vindo de volta!"
+            redirectMessage="Ainda não tem uma conta?"
+            destination="register"
+            navigator="Cadastre-se"
+          />
+          <LoginForm />
+        </div>
+        {loading && <Loading />}
       </div>
-      <AuthSupportText
-        greeting="Bem vindo de volta!"
-        redirectMessage="Ainda não tem uma conta?"
-        destination="register"
-        navigator="Cadastre-se"
-      />
-      <LoginForm />
-      {loading && <Loading />}
+      <div className="rightSide">
+        <img src={loginImage} alt="imagem lua" />
+      </div>
     </div>
   );
 }
