@@ -69,7 +69,8 @@ const LoginForm = () => {
     e.preventDefault();
     if (isValid) {
       try {
-        await axios.post('http://localhost:8080/login', formData);
+        const apiUrl = `${import.meta.env.VITE_API_URL}/login`
+        await axios.post(apiUrl, formData);
         // Redirecionar ou tratar sucesso
       } catch (error) {
         console.error('Erro no login:', error);
