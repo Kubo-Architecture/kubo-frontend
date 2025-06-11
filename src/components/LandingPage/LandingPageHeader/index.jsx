@@ -9,7 +9,7 @@ export default function LandingPageHeader() {
       md:px-20 md:min-w-[959px]
       lg:min-w-[1090px]
       xl:text-3xl xl:py-13
-      2xl:px-30 2xl:py-20 2xl:text-5xl ">
+      2xl:px-30 2xl:py-20 2xl:text-4xl ">
         <div className="block md:hidden">
           <HamburgerHeader />
         </div>
@@ -32,7 +32,7 @@ export default function LandingPageHeader() {
 
         <Logocontainer />
 
-        <a href="login" className="2xl:text-5xl">Entrar</a>
+        <a href="login" className="2xl:text-4xl">Entrar</a>
       </div>
     </header>
   );
