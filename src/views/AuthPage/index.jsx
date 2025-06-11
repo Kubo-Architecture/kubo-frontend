@@ -158,7 +158,7 @@ const VerificationCodeInput = () => {
       md:ml-9 
       md:w-[330px] lg:w-[380px]
        xl:w-[420px] 
-      2xl:w-[700px] 2xl:h-[1100px]
+      2xl:w-[700px] 2xl:h-[900px]
       bg-center bg-no-repeat bg-cover 
       rounded-4xl relative overflow-hidden
     "
