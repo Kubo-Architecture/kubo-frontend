@@ -2,7 +2,7 @@ import PenIcon from "../../../assets/Profile/pen.svg"
 
 export default function ProfileStats(props){
     return(
-        <div className="h-[220px] min-w-[380px] w-full bg-white flex pt-[8px] px-[20px] md:px-[30px] lg:px-[40px] md:mt-[10px] lg:mt-[18px]">
+        <div className="h-[220px] min-w-[380px] w-full bg-white flex pt-[8px] px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px] md:mt-[10px] lg:mt-[18px]">
             <div className="flex-grow h-full flex flex-col lg:flex-row">
                 <div className="w-full lg:w-[400px] xl:w-[500px] h-3/4 xl:h-full flex flex-col lg:whitespace-nowrap justify-end items-start">
                     <h3 className="font-normal text-[30px] font-montserrat">{props.nickname}</h3>
