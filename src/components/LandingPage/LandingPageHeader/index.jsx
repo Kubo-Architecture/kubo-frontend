@@ -7,8 +7,8 @@ export default function LandingPageHeader() {
       <div className="flex items-center justify-between 
       px-4 h-20 text-xl font-montserrat font-normal min-w-[422px]
       md:px-20 md:min-w-[959px]
-      lg:min-w-[1090px]
-      xl:text-3xl xl:py-13
+      lg:min-w-[1090px] lg:text-xl
+      xl:text-2xl xl:py-13
       2xl:px-30 2xl:py-20 2xl:text-4xl ">
         <div className="block md:hidden">
           <HamburgerHeader />
@@ -32,7 +32,9 @@ export default function LandingPageHeader() {
 
         <Logocontainer />
 
-        <a href="login" className="2xl:text-4xl">Entrar</a>
+        <a href="login" className="
+        lg:text-2xl
+        2xl:text-4xl">Entrar</a>
       </div>
     </header>
   );

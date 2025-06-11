@@ -13,14 +13,14 @@ export default function HomeBody() {
             <h1 className="
             text-5xl mb-5
             md:text-7xl
-            xl:text-8xl  
+            xl:text-7xl  
             2xl:text-8xl ">
               Kubo</h1>
 
             <div className="
              text-2xl w-60 
              md:text-4xl md:w-90
-             xl:text-5xl xl:w-120
+             xl:text-4xl xl:w-90
              2xl:text-6xl 2xl:w-160 2xl:leading-18">
               O maior banco de dados de arquitetura do país
             </div>
@@ -60,7 +60,7 @@ export default function HomeBody() {
           <div className="bg-black h-20 2xl:h-30 flex items-center justify-center col-span-2 ">
             <p className="text-white font-light 
             text-2xl  
-            xl:text-3xl
+            xl:text-2xl
             2xl:text-4xl">
               + de <span className="text-blue-400">1000</span> projetos documentados
             </p>
