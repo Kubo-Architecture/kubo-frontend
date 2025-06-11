@@ -15,7 +15,7 @@ export default function IconWithPanel(props) {
   const menuItems = ["Home", "Galeria", "Planos e upgrades"];
 
   return (
-    <header className="flex flex-row justify-between items-center h-20 relative min-w-[300px] px-[20px]">
+    <header className="fixed top-0 left-0 w-full z-50 flex flex-row justify-between items-center h-20 min-w-[300px] px-[20px] bg-white shadow-md">
       {/* Esquerda */}
       <div className="flex-1 h-full flex items-center min-w-[100px]">
         {/* Botão do menu (visível apenas em telas pequenas) */}
@@ -59,7 +59,7 @@ export default function IconWithPanel(props) {
               <div
                 className="h-[35px] w-[35px] filter-none rounded-full bg-cover bg-center"
                 style={{
-                  backgroundImage: `url(${props.photoUrl ? props.photoUrl : ProfileIcon})`
+                  backgroundImage: `url(${props.photoUrl ? props.photoUrl : ProfileIcon})`,
                 }}
               ></div>
             </a>

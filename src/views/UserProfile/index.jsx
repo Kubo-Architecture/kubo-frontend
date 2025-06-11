@@ -9,63 +9,63 @@ import BannerSettings from "../../components/Profile/BannerSettings"
 import Biografy from "../../components/Profile/Biografy"
 
 export default function UserProfile() {
-    const location = useLocation()
-    const navigate = useNavigate()
-    const [profileData, setProfileData] = useState(null)
-    const [showBannerSettings, setShowBannerSettings] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [profileData, setProfileData] = useState(null)
+  const [showBannerSettings, setShowBannerSettings] = useState(false)
 
-    useEffect(() => {
-        const pathSegments = location.pathname.split("/").filter(Boolean)
-        const username = pathSegments[1]
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/").filter(Boolean)
+    const username = pathSegments[1]
 
-        const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
+    const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
 
-        axios.get(apiUrl)
-            .then((res) => {
-                if (res.data.nickname == ""){
-                    navigate("/")
-                }
-                console.log("Dados do perfil:", res.data)
-                setProfileData(res.data)
-            })
-            .catch((err) => {
-                console.error("Erro ao buscar perfil:", err)
-                if (err.code === "ERR_NETWORK" || err.response?.status === 404){
-                    navigate('/error/404')
-                }
-            })
-    }, [location])
+    axios.get(apiUrl)
+      .then((res) => {
+        if (res.data.nickname === "") {
+          navigate("/profile/nickname")
+        }
+        console.log("Dados do perfil:", res.data)
+        setProfileData(res.data)
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar perfil:", err)
+        if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
+          navigate("/error/404")
+        }
+      })
+  }, [location])
 
-    if (!profileData) {
-        return (
-            <div className="w-screen h-screen flex items-center justify-center">
-                <Loading />
-            </div>
-        )
-    }
-
+  if (!profileData) {
     return (
-        <div className="w-screen min-h-screen relative overflow-hidden">
-            <MainHeader photoUrl={profileData.photoUrl} />
-            <ProfileInnerHeader
-                banner={profileData.banner}
-                photoUrl={profileData.photoUrl}
-                onEditBannerClick={() => setShowBannerSettings(true)}
-            />
-            <ProfileStats
-                name={profileData.name}
-                nickname={profileData.nickname}
-                seguidores={profileData.followers || 0}
-                likes={profileData.likes || 0}
-                projetos={profileData.projects || 0}
-            />
-            <Biografy Biografy={profileData.bio}/>
-
-            {showBannerSettings && (
-                <div className="z-50">
-                    <BannerSettings onClose={() => setShowBannerSettings(false)} />
-                </div>
-            )}
-        </div>
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loading />
+      </div>
     )
+  }
+
+  return (
+    <div className="w-screen min-h-screen relative overflow-hidden pt-20">
+      <MainHeader photoUrl={profileData.photoUrl} />
+      <ProfileInnerHeader
+        banner={profileData.banner}
+        photoUrl={profileData.photoUrl}
+        onEditBannerClick={() => setShowBannerSettings(true)}
+      />
+      <ProfileStats
+        name={profileData.name}
+        nickname={profileData.nickname}
+        seguidores={profileData.followers || 0}
+        likes={profileData.likes || 0}
+        projetos={profileData.projects || 0}
+      />
+      <Biografy Biografy={profileData.bio} />
+
+      {showBannerSettings && (
+        <div className="z-50">
+          <BannerSettings onClose={() => setShowBannerSettings(false)} />
+        </div>
+      )}
+    </div>
+  )
 }

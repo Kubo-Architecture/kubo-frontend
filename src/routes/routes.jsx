@@ -5,6 +5,7 @@ import LandingPage from "../views/LandingPage";
 import SignUpPage from "../views/SignUpPage";
 import VerificationCodeInput from "../views/AuthPage";
 import UserProfile from "../views/UserProfile";
+import NicknameInput from "../views/NicknameInput";
 import ProjectPage from "../views/ProjectPage";
 
 
@@ -18,6 +19,7 @@ export default function Rotas() {
                 <Route path="/register" element={<SignUpPage />} />
                 <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
                 <Route path="/profile/:username" element={<UserProfile />} />
+                <Route path="/profile/nickname" element={<NicknameInput />} />
                 <Route path="/project" element={<ProjectPage />} />
             </Routes>
         </BrowserRouter>
