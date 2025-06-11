@@ -51,7 +51,7 @@
 @media (max-width: 1100px) {
     .leftSide {
         width: 100%; /* para ocupar toda a largura no mobile */
-        height: 100vh; /* para não forçar 100vh quando for coluna */
+        height: 100vh;
     }
 }
 
@@ -90,4 +90,10 @@
     .rightSide {
         display: none;
     }
+}
+
+.header,
+.topText,
+.bottomText {
+    user-select: none;
 }
