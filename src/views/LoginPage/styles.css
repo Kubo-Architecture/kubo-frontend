@@ -18,7 +18,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: start;
     align-items: start;
     margin-bottom: 40px;
 }
@@ -62,7 +62,7 @@
     width: 500px;
     height: 95vh;
     position: relative;
-    background-image: url(../../assets/images/loginImage.svg);
+    background-color: red;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;

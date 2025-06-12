@@ -4,7 +4,7 @@ import './styles.css';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import AuthSupportText from '../../components/Universal/AuthSupportText';
 import LoginForm from '../../components/LoginPage/LoginForm';
-import loginImage from '../../assets/images/loginImage.svg'
+import LoginBanner from '../../components/Universal/LoginBanner';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(true);
@@ -36,6 +36,7 @@ export default function LoginPage() {
         {loading && <Loading />}
       </div>
       <div className="rightSide">
+          <LoginBanner className="h-64 w-full object-cover" alt="Banner aleatório" />
           <div className="topText">
             <p>Kubo</p>
           </div>
