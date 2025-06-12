@@ -5,18 +5,16 @@ export default function LandingPageHeader() {
   return (
     <header>
       <div className="flex items-center justify-between 
-      px-4 h-20 text-xl font-montserrat font-normal min-w-[422px]
-      md:px-20 md:min-w-[959px]
-      lg:min-w-[1090px] lg:text-xl
-      xl:text-2xl xl:py-13
-      2xl:px-30 2xl:py-14 2xl:text-4xl ">
+      px-4 h-20 text-xl font-montserrat font-normal w-full
+      md:px-20
+       ">
         <div className="block md:hidden">
           <HamburgerHeader />
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex md:flex-1">
           <nav>
-            <ul className="flex gap-10 2xl:gap-15 font-normal">
+            <ul className="flex gap-10 lg:gap-12 2xl:text-xl font-normal">
               <li>
                 <a href="/" className="">Home</a>
               </li>
@@ -29,12 +27,15 @@ export default function LandingPageHeader() {
             </ul>
           </nav>
         </div>
+        <div className="md:flex md:flex-1 justify-center">
+          <Logocontainer/>
+        </div>
 
-        <Logocontainer />
-
-        <a href="login" className="
+        <div className="md:flex md:flex-1 justify-end">
+          <a href="login" className="
         lg:text-2xl
-        2xl:text-4xl">Entrar</a>
+        ">Entrar</a>
+        </div>
       </div>
     </header>
   );
