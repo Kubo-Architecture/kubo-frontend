@@ -19,8 +19,10 @@ export default function SignUpPage() {
   return (
     <div className="container">
       {/* Conteúdo da página monta imediatamente */}
-      <div className="info">
+      <div className="header">
         <SimpleHeader />
+      </div>
+      <div className="info">
         <AuthSupportText 
           greeting="Crie sua conta!" 
           redirectMessage="Já tem uma conta?" 

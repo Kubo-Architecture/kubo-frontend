@@ -22,13 +22,15 @@ export default function LoginPage() {
         <div className="header">
           <SimpleHeader />
         </div>
+          <div className="suportText">
+            <AuthSupportText
+              greeting="Bem vindo de volta!"
+              redirectMessage="Ainda não tem uma conta?"
+              destination="register"
+              navigator="Cadastre-se"
+            />
+          </div>
         <div className="forms">
-          <AuthSupportText
-            greeting="Bem vindo de volta!"
-            redirectMessage="Ainda não tem uma conta?"
-            destination="register"
-            navigator="Cadastre-se"
-          />
           <LoginForm />
         </div>
         {loading && <Loading />}
