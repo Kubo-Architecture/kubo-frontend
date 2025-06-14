@@ -89,96 +89,91 @@ const VerificationCodeInput = () => {
 
         {!limitReached ? (
           <>
-            <div className="grid grid-cols-2 md:py-4 ">
-              <div>
+            <div className="flex flex-col justify-between md:grid grid-cols-2 md:py-4">
+              {/* lado esquerdo */}
+              <div className="flex flex-col justify-between h-[100vh]">
+                <div>
+                  {/* logo */}
+                  <div className='w-full flex justify-center mt-5'>
+                    <SimpleHeader />
+                  </div>
 
-                {/*logo do site*/}
-                <div className='flex justify-end md:ml-185 '>
-                  <SimpleHeader />
+                  {/* img avião */}
+                  <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20                  
+                  md:w-90 md:justify-end md:pr-15 flex justify-center    
+                  2xl:w-160 2xl:h-40'>
+                    <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
+                  </div>
+
+                  {/* texto código */}
+                  <div className="w-90 text-2xl mt-19 ml-7 
+                  md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150">
+                    <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
+                  </div>
+
+                  {/* inputs código */}
+                  <div className="flex gap-4 ml-7 pt-4 
+                  md:ml-29 md:pt-7">
+                    {code.map((digit, index) => (
+                      <input
+                        key={index}
+                        type="text"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleChange(index, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        ref={(el) => (inputs.current[index] = el)}
+                        className="bg-[#D9D9D9] w-13 h-16 rounded-3xl text-center text-2xl
+                        md:w-14 md:h-17  
+                        2xl:h-22 2xl:w-20 2xl:rounded-4xl"
+                      />
+                    ))}
+                  </div>
+
+                  {/* link não recebeu código */}
+                  <div className='pt-5 w-60 
+                  md:pt-6'>
+                    <a href="#" className='ml-7 text-[#29435E] font-Montserrat text-xl
+                    md:ml-29 md:text-xl
+                    '>Não recebeu o código?</a>
+                  </div>
                 </div>
 
-                {/*img do avião*/}
-                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20
-                md:w-90 md:justify-end md:pr-15 flex justify-center    
-                2xl:w-160 2xl:h-40'>
-                  <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
-                </div>
-
-                {/*txt do codigo*/}
-                <div className="w-90 text-2xl mt-18  ml-7
-                md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150 
-                2xl:text-5xl 2xl:w-200">
-                  <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
-                </div>
-
-                {/*inputs do codigo */}
-                <div className="flex gap-4 ml-7 pt-2 md:ml-29 md:pt-7">
-                  {code.map((digit, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      ref={(el) => (inputs.current[index] = el)}
-                      className="bg-[#D9D9D9] w-11 h-13 md:w-14 md:h-17 rounded-3xl text-center text-2xl 2xl:h-22 2xl:w-20 2xl:rounded-4xl"
-                    />
-                  ))}
-                </div>
-
-                {/*txt não recebeu o código*/}
-                <div className='pt-3 md:pt-6'>
-                  <a href="" className='ml-7 
-                  md:ml-29 md:text-xl
-                  2xl:text-2xl 
-                   text-[#29435E]  font-Montserrat'>Não recebeu o código?</a>
-                </div>
-
-                {/*btn proximo*/}
-                <div className="ml-15 pt-40 md:pt-25  md:pb-8">
+                {/* botão próximo colado no final */}
+                <div className="flex justify-center pb-10 md:pb-8">
                   <button
                     onClick={() => {
                       if (code.every(digit => digit !== '')) {
                         handleSubmit();
                       }
                     }}
-                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39 2xl:px-30 2xl:py-5 2xl:text-3xl"
+                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2 rounded-4xl 
+                    md:ml-39 
+                    2xl:px-30 2xl:py-5 2xl:text-3xl"
                   >
                     Próximo
                   </button>
                 </div>
               </div>
 
-              {/* img explorar do seu jeito */}
+              {/* lado direito */}
               <div className="md:px-40 ">
                 <div
-                  className="
-      hidden md:flex justify-center items-center 
-      md:ml-9 
-      md:w-[330px] lg:w-[380px]
-       xl:w-[420px] 
-      2xl:w-[700px] 2xl:h-[900px]
-      bg-center bg-no-repeat bg-cover 
-      rounded-4xl relative overflow-hidden
-    "
+                  className="hidden md:flex justify-center items-center md:ml-9 md:w-[330px] lg:w-[380px] xl:w-[420px] 2xl:w-[700px] 2xl:h-[900px] bg-center bg-no-repeat bg-cover rounded-4xl relative overflow-hidden"
                   style={{ backgroundImage: `url(${Explore})` }}
                 >
-                  {/* Título no canto superior esquerdo */}
                   <div className="absolute top-4 left-4 z-10 text-white text-lg md:text-2xl 2xl:text-4xl font-normal font-Montserrat">
                     Kubo
                   </div>
-
-                  {/* Texto no rodapé centralizado */}
                   <div className="absolute bottom-4 left-0 right-0 text-center text-white text-base md:text-2xl 2xl:text-4xl">
                     Explore do seu jeito
                   </div>
                 </div>
               </div>
-
-
-
             </div>
+
+
+
 
           </>
         ) : (
