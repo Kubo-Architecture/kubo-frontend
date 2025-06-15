@@ -33,7 +33,7 @@ export default function LandingPageHeader() {
 
         <div className="md:flex md:flex-1 justify-end">
           <a href="login" className="
-        lg:text-2xl
+        text-xl
         ">Entrar</a>
         </div>
       </div>
