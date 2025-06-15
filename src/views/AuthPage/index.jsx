@@ -89,7 +89,7 @@ const VerificationCodeInput = () => {
 
         {!limitReached ? (
           <>
-            <div className="flex flex-col justify-between md:grid grid-cols-2 md:py-4">
+            <div className="flex flex-col justify-between lg:grid grid-cols-2 md:py-4">
               {/* lado esquerdo */}
               <div className="flex flex-col justify-between h-[100vh]">
                 <div>
@@ -99,15 +99,18 @@ const VerificationCodeInput = () => {
                   </div>
 
                   {/* img avião */}
-                  <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20                  
-                  md:w-90 md:justify-end md:pr-15 flex justify-center    
-                  2xl:w-160 2xl:h-40'>
-                    <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
+                  <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20 flex justify-center                
+                  md:w-100 md:h-34 md:justify-end md:pr-15 md:mt-32
+                  '>
+                    <img src={Aviao} alt="img avião" className='h-18 mt-6 
+                    md:h-20 md:mt-8
+                    2xl:h-25 2xl:mt-8' />
                   </div>
 
                   {/* texto código */}
                   <div className="w-90 text-2xl mt-19 ml-7 
-                  md:mt-8 md:ml-29 md:text-4xl md:font-light md:w-150">
+                  md:mt-23 md:ml-29 md:text-4xl md:font-light md:w-150 
+                  ">
                     <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
                   </div>
 
@@ -124,7 +127,7 @@ const VerificationCodeInput = () => {
                         onKeyDown={(e) => handleKeyDown(index, e)}
                         ref={(el) => (inputs.current[index] = el)}
                         className="bg-[#D9D9D9] w-13 h-16 rounded-3xl text-center text-2xl
-                        md:w-14 md:h-17  
+                        md:w-16 md:h-19  
                         2xl:h-22 2xl:w-20 2xl:rounded-4xl"
                       />
                     ))}
@@ -132,7 +135,8 @@ const VerificationCodeInput = () => {
 
                   {/* link não recebeu código */}
                   <div className='pt-5 w-60 
-                  md:pt-6'>
+                  md:pt-6 md:w-90
+                  '>
                     <a href="#" className='ml-7 text-[#29435E] font-Montserrat text-xl
                     md:ml-29 md:text-xl
                     '>Não recebeu o código?</a>
@@ -148,7 +152,7 @@ const VerificationCodeInput = () => {
                       }
                     }}
                     className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2 rounded-4xl 
-                    md:ml-39 
+                    md:px-25 md:py-4
                     2xl:px-30 2xl:py-5 2xl:text-3xl"
                   >
                     Próximo
