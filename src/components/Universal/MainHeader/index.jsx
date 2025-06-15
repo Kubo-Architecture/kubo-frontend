@@ -5,7 +5,7 @@ import HeartIcon from "../../../assets/icons/Universal/emptyheart.svg";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
 import SettingsIcon from "../../../assets/icons/Universal/settingsbasic.svg";
 
-export default function IconWithPanel() {
+export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
 
   const togglePanel = () => {
@@ -15,7 +15,7 @@ export default function IconWithPanel() {
   const menuItems = ["Home", "Galeria", "Planos e upgrades"];
 
   return (
-    <header className="flex flex-row justify-between items-center h-20 relative min-w-[300px] px-[20px]">
+    <header className="fixed top-0 left-0 w-full z-50 flex flex-row justify-between items-center h-20 min-w-[300px] px-[20px] bg-white shadow-md">
       {/* Esquerda */}
       <div className="flex-1 h-full flex items-center min-w-[100px]">
         {/* Botão do menu (visível apenas em telas pequenas) */}
@@ -55,12 +55,19 @@ export default function IconWithPanel() {
             <img src={SettingsIcon} alt="Settings icon" className="h-[40px]" />
           </div>
           <div className="flex items-center justify-center">
-            <img src={ProfileIcon} alt="Profile icon" className="h-[50px] filter-none" />
+            <a href="">
+              <div
+                className="h-[35px] w-[35px] filter-none rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${props.photoUrl ? props.photoUrl : ProfileIcon})`,
+                }}
+              ></div>
+            </a>
           </div>
         </div>
       </div>
 
-      {/* Painel lateral: visível apenas em telas menores que md */}
+      {/* Painel lateral: visível apenas em telas menores que md. */}
       <div
         className={`fixed top-20 left-0 z-[1000] h-[calc(100vh-80px)] w-[200px] bg-[#4A4A4A] rounded-tr-[10px] transition-transform ease-in-out duration-300 px-4 flex flex-col text-white md:hidden
           ${open ? "translate-x-0 shadow-[2px_0_5px_rgba(0,0,0,0.2)]" : "-translate-x-full shadow-none"}

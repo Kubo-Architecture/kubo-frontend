@@ -69,12 +69,19 @@ const LoginForm = () => {
     e.preventDefault();
     if (isValid) {
       try {
-        await axios.post('http://localhost:8080/login', formData);
-        // Redirecionar ou tratar sucesso
+        const apiUrl = `${import.meta.env.VITE_API_URL}/login`
+        const response = await axios.post(apiUrl, formData);
+        const token = response.data.token;
+        const name = response.data.name;
+        const idUser = response.data.idUser;
+        localStorage.setItem("name", name);
+        localStorage.setItem("token", token);
+        localStorage.setItem("idUser", idUser);
+        navigate(`/profile/${name}`);
       } catch (error) {
         console.error('Erro no login:', error);
-        if (error.response.status == 404){
-          navigate(`/error/404`)
+        if (error.response?.status === 404) {
+          navigate(`/error/404`);
         }
       }
     }
@@ -110,7 +117,7 @@ const LoginForm = () => {
             className="proximo-btn"
             disabled={!isValid}
         >
-            Proximo
+            próximo
         </button>
         <a href="">Esqueci minha senha</a>
       </div>
