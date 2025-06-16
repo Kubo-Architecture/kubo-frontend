@@ -6,6 +6,7 @@ import AuthSupportText from '../../components/Universal/AuthSupportText';
 import LoginForm from '../../components/LoginPage/LoginForm';
 import loginImage from '../../assets/images/loginImage.svg'
 
+
 export default function LoginPage() {
   const [loading, setLoading] = useState(true);
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import InputField from '../../Universal/InputField';
 import './styles.css';
+import { loginSchema } from '../../../validators/loginSchema';
 
 const LoginForm = () => {
 
@@ -25,28 +26,24 @@ const LoginForm = () => {
 
   const [isValid, setIsValid] = useState(false);
 
-  const validate = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email é obrigatório';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
+    const validate = async () => {
+    try {
+      await loginSchema.validate(formData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err) {
+      const newErrors = {};
+      err.inner.forEach(error => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
     }
-    
-    if (!formData.password) {
-      newErrors.password = 'Senha é obrigatória';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   useEffect(() => {
     if (touched.email || touched.password) {
-      setIsValid(validate());
+      validate().then(valid => setIsValid(valid));
     }
   }, [formData, touched]);
 
