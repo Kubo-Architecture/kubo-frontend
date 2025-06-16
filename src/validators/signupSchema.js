@@ -23,11 +23,32 @@ export const signupSchema = yup.object().shape({
   password: yup
     .string()
     .required('Senha é obrigatória')
-    .min(6, 'Senha deve ter no mínimo 6 caracteres')
-    .max(100, 'Senha deve ter no máximo 100 caracteres')
-    .matches(passwordRegex.uppercase, 'Senha deve conter pelo menos uma letra maiúscula')
-    .matches(passwordRegex.number, 'Senha deve conter pelo menos um número')
-    .matches(passwordRegex.specialChar, 'Senha deve conter pelo menos um caractere especial'),
+    .test('password-requirements', function (value) {
+      const errors = [];
+      if (!value) return this.createError({ message: 'Senha é obrigatória' });
+
+      if (value.length < 6) {
+        errors.push('no mínimo 6 caracteres');
+      }
+      if (!/[A-Z]/.test(value)) {
+        errors.push('uma letra maiúscula');
+      }
+      if (!/\d/.test(value)) {
+        errors.push('um número');
+      }
+      if (!/[\W_]/.test(value)) {
+        errors.push('um caractere especial');
+      }
+
+      if (errors.length > 0) {
+        return this.createError({
+          message: `A senha deve conter ${errors.join(', ')}`,
+        });
+      }
+
+      return true;
+    })
+    .max(100, 'Senha deve ter no máximo 100 caracteres'),
 
   confirmPassword: yup
     .string()
