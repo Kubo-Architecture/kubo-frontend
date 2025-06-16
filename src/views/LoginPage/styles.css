@@ -1,4 +1,4 @@
-.container{
+.container {
     min-height: 100vh;
     display: flex;
     flex-direction: row;
@@ -13,12 +13,15 @@
     }
 }
 
-.header{
+.header {
+    margin-top: 30px;
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: start;
     align-items: start;
     margin-bottom: 40px;
+    user-select: none;
 }
 
 @media (max-width: 1100px) {
@@ -28,7 +31,7 @@
     }
 }
 
-.forms{
+.forms {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -36,54 +39,41 @@
 
 @media (max-width: 1100px) {
     .forms {
-    min-width: 375px;
-    height: 100%;
-    left: 1000px;
-    padding: 20px;
+        min-width: 375px;
+        height: 100%;
+        left: 1000px;
+        padding: 20px;
     }
 }
 
-.leftSide{
+.leftSide {
     width: 50%;
     height: 100vh;
 }
 
 @media (max-width: 1100px) {
     .leftSide {
-        width: 100%; /* para ocupar toda a largura no mobile */
+        width: 100%;
         height: 100vh;
     }
 }
 
-.rightSide{
-    width: 500px;
+.rightSide {
+    overflow: hidden;
+    width: 450px;
     height: 95vh;
     position: relative;
-    background-image: url(../../assets/images/loginImage.svg);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 14px;
 }
 
-
-.topText{
-    position: absolute;
-    top: 20px;
-    left: 120px;
-    font-family: "Montserrat", sans-serif;
-    color: white;
-    font-size: 20px;
-}
-
-.bottomText{
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: "Montserrat", sans-serif;
-    color: white;
-    font-size: 20px;
+.loginBanner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
 }
 
 @media (max-width: 1100px) {
@@ -92,8 +82,15 @@
     }
 }
 
-.header,
-.topText,
-.bottomText {
-    user-select: none;
+.suportText {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-left: 7px;
+}
+
+@media (max-width: 1100px) {
+    .suportText {
+        margin-left: 20px;
+    }
 }

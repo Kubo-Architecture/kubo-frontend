@@ -30,7 +30,7 @@
     flex: 1;
     flex-wrap: wrap;
     position: sticky;
-    background-image: url("../../assets/images/imagem-lua.png");
+    background-image: url("../../assets/images/loginImage.svg");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -154,4 +154,14 @@
     .container-with-image{
         display: none;
     }
+}
+
+.header{
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px
 }
