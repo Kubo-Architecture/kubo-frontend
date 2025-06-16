@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import banner1 from '../../../assets/images/loginImage.svg';
-import banner2 from '../../../assets/images/banner-2.jpg';
-import banner3 from '../../../assets/images/banner-3.jpg';
+import banner2 from '../../../assets/images/banner-1.svg';
+import banner3 from '../../../assets/images/banner-2.svg';
+import './style.css'
 
-export default function LoginBanner({ className = "", alt = "Imagem aleatória" }) {
+export default function LoginBanner({ className = "", alt = "Login banner" }) {
   const images = [
     banner1,
     banner2,
@@ -15,5 +16,5 @@ export default function LoginBanner({ className = "", alt = "Imagem aleatória" 
     return images[index];
   }, []);
 
-  return <img src={randomImage} alt={alt} className={className} />;
+  return <img src={randomImage} alt={alt} className={`login-banner ${className}`} />;
 }

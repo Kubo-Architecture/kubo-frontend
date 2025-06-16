@@ -36,7 +36,7 @@ export default function LoginPage() {
         {loading && <Loading />}
       </div>
       <div className="rightSide">
-          <LoginBanner className="h-full w-full object-cover" alt="Banner aleatório" />
+          <LoginBanner className="loginBanner" alt="Login banner." />
           <div className="topText">
             <p>Kubo</p>
           </div>
