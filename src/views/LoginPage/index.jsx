@@ -36,13 +36,7 @@ export default function LoginPage() {
         {loading && <Loading />}
       </div>
       <div className="rightSide">
-          <LoginBanner className="loginBanner" alt="Login banner." />
-          <div className="topText">
-            <p>Kubo</p>
-          </div>
-          <div className="bottomText">
-            <p>Explore do seu jeito</p>
-          </div>
+        <LoginBanner className="loginBanner" alt="Login banner." />
       </div>
     </div>
   );
