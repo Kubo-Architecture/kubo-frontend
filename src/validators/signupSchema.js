@@ -17,7 +17,6 @@ export const signupSchema = yup.object().shape({
     .string()
     .required('Email é obrigatório')
     .email('Email inválido')
-    .matches(/^[^@]+@[^@]+\.[^@]+$/, 'Email deve conter um domínio válido com ponto')
     .max(255, 'Email deve ter no máximo 255 caracteres'),
 
   password: yup
