@@ -4,6 +4,7 @@ import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
 
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
@@ -59,6 +60,10 @@ const VerificationCodeInput = () => {
           idUser: idUser,
         }),
       });
+      console.log(response)
+      if (response.status === 200) {
+          navigate(`/login`);
+      }
 
       if (!response.ok) throw new Error('Falha na verificação');
 
