@@ -9,104 +9,54 @@
     /* Não tirar */
 }
 
-.info{
-    min-height: 100vh;
-    padding-inline: 30px;
+.header{
+    margin-top: 30px;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 45px;
-    flex-wrap: wrap;
-    /* Não tirar */
-    flex: 1;
-}
-
-.container-with-image{
-    min-width: 460px;
-    min-height: 800px;
-    margin: 1.2rem 0 1.2rem 1.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-    flex-wrap: wrap;
-    position: sticky;
-    background-image: url("../../assets/images/loginImage.svg");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.container-with-image h4{
-    color: white;
-    font-size: 30px;
-}
-
-.div-titulo, .div-rodape{
-    height: 50%;
-}
-
-.div-titulo{
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    width: 50%;
-    position: static;
-}
-
-.div-rodape{
-    display: flex;
     justify-content: center;
-    align-items: end;
+    align-items: center;
+    margin-bottom: 40px
 }
 
-#titulo-imagem{
-    position: sticky;
-    padding-top: 0.8rem;
-    letter-spacing: 1px;
+.registerForm{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    min-height: 75vh;
 }
 
-#rodape-imagem{
-    padding-bottom: 0.8rem;
-    letter-spacing: 1px;
+.supportText {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-left: 7px;
+}
+
+@media (max-width: 1100px) {
+    .supportText {
+        margin-left: 20px;
+    }
 }
 
 /* ------------------------- */
 /*      Responsividade       */
 /* ------------------------- */
 
-/* Desktop em Pé */
-@media screen and (min-height: 481px) and (max-width: 944px) {
-    .container-with-image{
-        display: none;
+@media screen and (max-width: 1100px) {
+    .registerForm{
+        min-width: 375px;
+        left: 1000px;
+        padding: 20px;
     }
 }
 
 
-
-
-/* Tratamento dos h4 da imagem */
-@media screen and (min-width: 800px) and (max-width: 1300px) {
-    
+@media screen and (min-width: 800px) and (max-width: 1300px) {   
     .container{
         padding-inline: 40px;
     }
-
-    .container-with-image{
-        margin: 1.2rem;
-        border-radius: 30px;
-        background-size: cover;
-    }
-
-    #titulo-imagem{
-        padding-top: 1rem;
-    }
-
-    #rodape-imagem{
-        padding-bottom: 1rem;
-    }
 }
-
 
 /* Tablets */
 /* O form ganha prioridade */
@@ -114,10 +64,7 @@
     .container{
         padding-inline: 15px;
     }
-    
-    .container-with-image{
-        display: none;
-    }
+
 }
 
 
@@ -126,10 +73,7 @@
     .container{
         padding-inline: 10px;
     }
-    
-    .container-with-image, .container-with-image h4{
-        display: none;
-    }
+
 }
 
 /* Celulares na horizontal */
@@ -138,9 +82,6 @@
        min-width: 100vw;
     }
 
-    .container-with-image, .container-with-image h4{
-        display: none;
-    }
 }
 
 /* Tratamento de Resoluções Mínimas */
@@ -151,17 +92,4 @@
         padding-inline: 10px;
     }
 
-    .container-with-image{
-        display: none;
-    }
-}
-
-.header{
-    margin-top: 30px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px
 }
