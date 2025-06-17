@@ -20,7 +20,7 @@
     flex: 1;
 }
 
-.container-with-image{
+/* .container-with-image{
     min-width: 460px;
     min-height: 800px;
     margin: 1.2rem 0 1.2rem 1.2rem;
@@ -69,7 +69,7 @@
 #rodape-imagem{
     padding-bottom: 0.8rem;
     letter-spacing: 1px;
-}
+} */
 
 /* ------------------------- */
 /*      Responsividade       */
