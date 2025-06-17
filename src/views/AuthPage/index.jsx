@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
-import Explore from "../../assets/icons/Universal/Explore.svg"
-
+import LoginBanner from "../../components/Universal/LoginBanner/index"
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
@@ -94,17 +93,20 @@ const VerificationCodeInput = () => {
               <div className="flex flex-col justify-between h-[100vh]">
                 <div>
                   {/* logo */}
-                  <div className='w-full flex justify-center mt-5'>
+                  <div className='w-full mt-5'>
                     <SimpleHeader />
                   </div>
 
                   {/* img avião */}
-                  <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 mt-20 flex justify-center                
-                  md:w-100 md:h-34 md:justify-end md:pr-15 md:mt-32
+                  <div className='bg-[#D9D9D9] rounded-r-full flex justify-end md:hidden           
+                  w-100 h-34 pr-15 mt-32
                   '>
                     <img src={Aviao} alt="img avião" className='h-18 mt-6 
                     md:h-20 md:mt-8
                     2xl:h-25 2xl:mt-8' />
+                  </div>
+                  <div className='hidden md:block text-4xl w-70'>
+                    <h3>Verifique seu email</h3>
                   </div>
 
                   {/* texto código */}
@@ -126,9 +128,9 @@ const VerificationCodeInput = () => {
                         onChange={(e) => handleChange(index, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
                         ref={(el) => (inputs.current[index] = el)}
-                        className="bg-[#D9D9D9] w-13 h-16 rounded-3xl text-center text-2xl
+                        className="bg-[#D9D9D9] w-13 h-16 rounded-xl text-center text-2xl
                         md:w-16 md:h-19  
-                        2xl:h-22 2xl:w-20 2xl:rounded-4xl"
+                        "
                       />
                     ))}
                   </div>
@@ -144,14 +146,14 @@ const VerificationCodeInput = () => {
                 </div>
 
                 {/* botão próximo colado no final */}
-                <div className="flex justify-center pb-10 md:pb-8">
+                <div className="flex justify-center pb-10 pt-15 md:pb-8">
                   <button
                     onClick={() => {
                       if (code.every(digit => digit !== '')) {
                         handleSubmit();
                       }
                     }}
-                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2 rounded-4xl 
+                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2 rounded-2xl 
                     md:px-25 md:py-4
                     2xl:px-30 2xl:py-5 2xl:text-3xl"
                   >
@@ -161,18 +163,8 @@ const VerificationCodeInput = () => {
               </div>
 
               {/* lado direito */}
-              <div className="md:px-40 ">
-                <div
-                  className="hidden md:flex justify-center items-center md:ml-9 md:w-[330px] lg:w-[380px] xl:w-[420px] 2xl:w-[700px] 2xl:h-[900px] bg-center bg-no-repeat bg-cover rounded-4xl relative overflow-hidden"
-                  style={{ backgroundImage: `url(${Explore})` }}
-                >
-                  <div className="absolute top-4 left-4 z-10 text-white text-lg md:text-2xl 2xl:text-4xl font-normal font-Montserrat">
-                    Kubo
-                  </div>
-                  <div className="absolute bottom-4 left-0 right-0 text-center text-white text-base md:text-2xl 2xl:text-4xl">
-                    Explore do seu jeito
-                  </div>
-                </div>
+              <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block">
+                <LoginBanner />
               </div>
             </div>
 
@@ -199,9 +191,6 @@ const VerificationCodeInput = () => {
               </div>
             </div>
 
-            <div className='hidden md:flex md:justify-center min-w-[800px]'>
-              <img src={Explore} alt="img explorar" className='h-135 w-auto md:mt-25 2xl:h-240 2xl:w-200 2xl:mt-10' />
-            </div>
           </div>
         )}
       </div>
