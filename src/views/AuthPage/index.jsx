@@ -173,25 +173,25 @@ const VerificationCodeInput = () => {
         ) : (
 
           <div className="grid grid-cols-2 md:py-4 ">
-            <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
-              <div className='w-full mt-5 flex  justify-center md:justify-start md:ml-29 md:mb-12'>
+            <div className="w-90 font-Montserrat text-3xl mt-18 text-center pt-10">
+              <div className='w-full mt-5 flex justify-center md:justify-start md:ml-29 '>
                 <SimpleHeader />
               </div>
-              <div>
+            
 
-                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20 2xl:w-160 2xl:h-40'>
-                  <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
+                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 '>
+                  <img src={Aviao} alt="img avião" className='h-18 mt-6 ' />
                 </div>
-              </div>
+             
 
               <div className='text-justify'>
                 <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
               </div>
 
-              <div className='mt-43'>
+              <div className='mt-4'>
                 <button
                   onClick={() => navigate(-1)}
-                  className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39 2xl:px-30 2xl:py-5 2xl:text-3xl'>voltar</button>
+                  className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39'>voltar</button>
               </div>
             </div>
 
