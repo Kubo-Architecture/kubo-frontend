@@ -88,37 +88,35 @@ const VerificationCodeInput = () => {
 
         {!limitReached ? (
           <>
-            <div className="flex flex-col justify-between lg:grid grid-cols-2 md:py-4">
+            <div className="flex flex-col justify-between lg:grid grid-cols-2 md:py-4 md:min-w-[1080px]">
               {/* lado esquerdo */}
               <div className="flex flex-col justify-between h-[100vh]">
                 <div>
                   {/* logo */}
-                  <div className='w-full mt-5'>
+                  <div className='w-full mt-5 flex  justify-center md:justify-start md:ml-29 md:mb-12'>
                     <SimpleHeader />
                   </div>
 
                   {/* img avião */}
                   <div className='bg-[#D9D9D9] rounded-r-full flex justify-end md:hidden           
-                  w-100 h-34 pr-15 mt-32
+                  w-65 h-34 pr-15 mt-32
                   '>
-                    <img src={Aviao} alt="img avião" className='h-18 mt-6 
-                    md:h-20 md:mt-8
-                    2xl:h-25 2xl:mt-8' />
+                    <img src={Aviao} alt="img avião" className='h-18 mt-8' />
                   </div>
-                  <div className='hidden md:block text-4xl w-70'>
+                  <div className='hidden md:block text-5xl w-120 md:ml-29 md:mb-8'>
                     <h3>Verifique seu email</h3>
                   </div>
 
                   {/* texto código */}
                   <div className="w-90 text-2xl mt-19 ml-7 
-                  md:mt-23 md:ml-29 md:text-4xl md:font-light md:w-150 
+                   md:ml-29 md:text-4xl md:font-light md:w-120 md:mt-4 md:mb-4
                   ">
                     <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
                   </div>
 
                   {/* inputs código */}
                   <div className="flex gap-4 ml-7 pt-4 
-                  md:ml-29 md:pt-7">
+                  md:ml-29 md:pt-7  ">
                     {code.map((digit, index) => (
                       <input
                         key={index}
@@ -153,9 +151,9 @@ const VerificationCodeInput = () => {
                         handleSubmit();
                       }
                     }}
-                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2 rounded-2xl 
-                    md:px-25 md:py-4
-                    2xl:px-30 2xl:py-5 2xl:text-3xl"
+                    className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2.5 rounded-xl 
+                    md:px-30 
+                    "
                   >
                     Próximo
                   </button>
@@ -163,7 +161,7 @@ const VerificationCodeInput = () => {
               </div>
 
               {/* lado direito */}
-              <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block">
+              <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-15 ">
                 <LoginBanner />
               </div>
             </div>
@@ -174,21 +172,31 @@ const VerificationCodeInput = () => {
           </>
         ) : (
 
-          <div className="grid grid-cols-2 ">
-
+          <div className="grid grid-cols-2 md:py-4 ">
             <div className="w-90 font-Montserrat text-3xl mt-18 ml-4 text-center pt-10">
+              <div className='w-full mt-5 flex  justify-center md:justify-start md:ml-29 md:mb-12'>
+                <SimpleHeader />
+              </div>
               <div>
+
                 <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 mt-20 2xl:w-160 2xl:h-40'>
                   <img src={Aviao} alt="img avião" className='h-18 mt-6  2xl:h-25 2xl:mt-8' />
                 </div>
-
               </div>
-              <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
+
+              <div className='text-justify'>
+                <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
+              </div>
+
               <div className='mt-43'>
                 <button
                   onClick={() => navigate(-1)}
                   className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39 2xl:px-30 2xl:py-5 2xl:text-3xl'>voltar</button>
               </div>
+            </div>
+
+            <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-15 ">
+              <LoginBanner />
             </div>
 
           </div>
