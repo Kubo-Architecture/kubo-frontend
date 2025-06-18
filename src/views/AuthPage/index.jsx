@@ -173,16 +173,19 @@ const VerificationCodeInput = () => {
         ) : (
 
           <div className="grid grid-cols-2 md:py-4 ">
-            <div className="w-90 font-Montserrat text-3xl mt-18 text-center pt-10">
-              <div className='w-full mt-5 flex justify-center md:justify-start md:ml-29 '>
+            <div className="w-90 font-Montserrat text-3xl text-center">
+
+              <div className='w-full mt-5 flex  justify-center md:justify-start md:mb-12'>
                 <SimpleHeader />
               </div>
-            
 
-                <div className='bg-[#D9D9D9] rounded-r-full h-28 w-55 md:w-90 flex justify-center md:justify-end md:pr-15 '>
-                  <img src={Aviao} alt="img avião" className='h-18 mt-6 ' />
-                </div>
-             
+
+              <div className='bg-[#D9D9D9] rounded-r-full flex justify-end           
+                  w-65 h-34 pr-15 
+                  '>
+                    <img src={Aviao} alt="img avião" className='h-18 mt-8' />
+                  </div>
+
 
               <div className='text-justify'>
                 <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
