@@ -172,36 +172,39 @@ const VerificationCodeInput = () => {
           </>
         ) : (
 
-          <div className="grid grid-cols-2 md:py-4 ">
-            <div className="w-90 font-Montserrat text-3xl text-center">
+          <div className="md:py-4 grid grid-cols-2">
+            <div className="w-90 font-Montserrat text-3xl text-center flex flex-col justify-between h-[100vh]">
 
-              <div className='w-full mt-5 flex  justify-center md:justify-start md:mb-12'>
+              {/*Logo Kubo*/}
+              <div className='w-full mt-5 flex justify-center md:justify-start md:ml-29'>
                 <SimpleHeader />
               </div>
 
+              {/* container aviao */}
+              <div className='bg-[#D9D9D9] rounded-r-full flex justify-end w-65 h-34 pr-15 md:w-90'>
+                <img src={Aviao} alt="img avião" className='h-18 mt-8' />
+              </div>
 
-              <div className='bg-[#D9D9D9] rounded-r-full flex justify-end           
-                  w-65 h-34 pr-15 
-                  '>
-                    <img src={Aviao} alt="img avião" className='h-18 mt-8' />
-                  </div>
-
-
-              <div className='text-justify'>
+              {/* numero de tentativas */}
+              <div className='text-justify md:ml-29 md:w-89'>
                 <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
               </div>
 
-              <div className='mt-4'>
+              {/* btn de voltar*/}
+              <div className=''>
                 <button
                   onClick={() => navigate(-1)}
-                  className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-27 py-3 rounded-4xl md:ml-39'>voltar</button>
+                  className='bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2.5 rounded-xl 
+                    md:px-30 md:ml-39'>
+                  voltar
+                </button>
               </div>
             </div>
 
-            <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-15 ">
+            {/*component img*/}
+            <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-15">
               <LoginBanner />
             </div>
-
           </div>
         )}
       </div>
