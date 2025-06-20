@@ -1,6 +1,7 @@
 import ImgFaixa from "../../../assets/icons/Universal/ImgFaixa.svg";
 import ImgOnda from "../../../assets/icons/Universal/ImgOnda.svg";
 import ImgPredio from "../../../assets/icons/Universal/ImgPredio.svg";
+import SobreNos from "../../../components/LandingPage/LandingPageInfo/index"
 
 export default function HomeBody() {
   return (
@@ -58,15 +59,16 @@ export default function HomeBody() {
           </div>
 
           {/*container projetos*/}
-          <div className="bg-black h-20 2xl:h-30 flex items-center justify-center col-span-2 ">
+          <div className="bg-[#4A4A4A] h-40 flex items-center justify-center col-span-2">
             <p className="text-white font-light 
             text-2xl  
-            xl:text-2xl
-            2xl:text-4xl">
+            md:text-3xl
+            2xl:text-4xl 2xl:h-30">
               + de <span className="text-blue-400">1000</span> projetos documentados
             </p>
           </div>
         </div>
+        <SobreNos/>
       </div>
     </main>
   )
