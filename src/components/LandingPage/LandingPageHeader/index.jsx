@@ -19,7 +19,7 @@ export default function LandingPageHeader() {
                 <a href="/" className="">Home</a>
               </li>
               <li>
-                <a href="#" className="">Sobre nós</a>
+                <a href="#sobre nos" className="">Sobre nós</a>
               </li>
               <li>
                 <a href="#" className="">Novidades</a>
