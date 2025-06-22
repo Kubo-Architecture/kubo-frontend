@@ -2,7 +2,7 @@ import Estatua from "../../../assets/images/Estatua.svg"
 
 export default function Novidades() {
     return (
-        <div className="px-8 py-10 md:px-12 min-w-[418px]">
+        <div className="px-8 py-10 md:px-12 min-w-[418px] md:mt-20">
             <div id="novidades" className="text-5xl mb-8 font-montserrat 
             md:font-light md:text-7xl 
 ">

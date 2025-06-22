@@ -5,7 +5,7 @@ export default function SobreNos() {
         <div id="sobre nos" className="md:grid grid-cols-2 md:min-w-[1290px]">
             <div className="px-8 md:px-12 sm:w-full">
                 <div className="text-5xl font-montserrat md:font-light mt-13 mb-10   
-                 md:text-7xl
+                 md:text-7xl 
                  ">
                     <h1>Sobre nós</h1>
                 </div>
