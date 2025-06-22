@@ -116,7 +116,7 @@ const LoginForm = () => {
         >
             próximo
         </button>
-        <a href="">Esqueci minha senha</a>
+        <a href="/forgotpassword">Esqueci minha senha</a>
       </div>
     </form>
     
