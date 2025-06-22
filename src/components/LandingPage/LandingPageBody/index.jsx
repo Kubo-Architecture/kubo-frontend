@@ -2,6 +2,7 @@ import ImgFaixa from "../../../assets/icons/Universal/ImgFaixa.svg";
 import ImgOnda from "../../../assets/icons/Universal/ImgOnda.svg";
 import ImgPredio from "../../../assets/icons/Universal/ImgPredio.svg";
 import SobreNos from "../../../components/LandingPage/LandingPageInfo/index"
+import Novidades from "../../../components/LandingPage/Novidades/index"
 
 export default function HomeBody() {
   return (
@@ -69,6 +70,9 @@ export default function HomeBody() {
           </div>
         </div>
         <SobreNos/>
+      </div>
+      <div>
+        <Novidades/>
       </div>
     </main>
   )

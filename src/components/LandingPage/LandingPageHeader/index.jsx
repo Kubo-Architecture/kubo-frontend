@@ -22,7 +22,7 @@ export default function LandingPageHeader() {
                 <a href="#sobre nos" className="">Sobre nós</a>
               </li>
               <li>
-                <a href="#" className="">Novidades</a>
+                <a href="#novidades" className="">Novidades</a>
               </li>
             </ul>
           </nav>

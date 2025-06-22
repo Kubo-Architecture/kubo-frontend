@@ -14,8 +14,7 @@ export default function SobreNos() {
                 md:text-5xl md:w-150">
                     <p>A jornada que moldou <span className="text-[#0B85FF]">nossa</span> plataforma</p>
                 </div>
-                <div className="text-justify !w-full text-2xl font-normal
-                sm:text-2xl 
+                <div className="text-justify w-full text-2xl font-normal
                 ">
                     <p>
                         Kubo é uma plataforma web criada com o propósito de facilitar a conexão, o compartilhamento de ideias e a valorização de projetos no campo da Arquitetura. Pensada especialmente para estudantes e jovens profissionais da área, o Kubo funciona como uma rede social temática, onde os usuários podem publicar seus trabalhos acadêmicos e pessoais, trocar referências e acompanhar as produções de colegas de diferentes instituições e regiões.<br /><br />
