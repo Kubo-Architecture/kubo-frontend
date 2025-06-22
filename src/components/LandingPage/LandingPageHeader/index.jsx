@@ -1,7 +1,41 @@
+import { useEffect } from "react";
 import Logocontainer from "../../Universal/KuboLogo";
 import HamburgerHeader from "../../Universal/HamburgerHeader/index";
 
 export default function LandingPageHeader() {
+  useEffect(() => {
+    // Função para lidar com o clique suave nas âncoras
+    const handleSmoothScroll = (e) => {
+      e.preventDefault();
+      const targetId = e.currentTarget.getAttribute("href").substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        // Calcula a posição para centralizar o elemento
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - (window.innerHeight / 2) + (targetElement.offsetHeight / 2);
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    };
+
+    // Adiciona os event listeners aos links
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+      link.addEventListener("click", handleSmoothScroll);
+    });
+
+    // Limpa os event listeners quando o componente desmontar
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener("click", handleSmoothScroll);
+      });
+    };
+  }, []);
+
   return (
     <header>
       <div className="flex items-center justify-between scroll-smooth min-w-[424px]
@@ -16,13 +50,13 @@ export default function LandingPageHeader() {
           <nav>
             <ul className="flex gap-10 lg:gap-12 2xl:text-xl font-normal">
               <li>
-                <a href="/" className="">Home</a>
+                <a href="#sobre nos">Sobre nós</a>
               </li>
               <li>
-                <a href="#sobre nos" className="">Sobre nós</a>
+                <a href="#novidades">Novidades</a>
               </li>
               <li>
-                <a href="#novidades" className="">Novidades</a>
+                <a href="#projetos">Projetos</a>
               </li>
             </ul>
           </nav>
@@ -32,9 +66,7 @@ export default function LandingPageHeader() {
         </div>
 
         <div className="md:flex md:flex-1 justify-end">
-          <a href="login" className="
-        text-xl
-        ">Entrar</a>
+          <a href="login" className="text-xl">Entrar</a>
         </div>
       </div>
     </header>

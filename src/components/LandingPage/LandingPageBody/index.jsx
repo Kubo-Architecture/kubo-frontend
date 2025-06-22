@@ -73,11 +73,11 @@ export default function HomeBody() {
         <SobreNos/>
       </div>
 
-      <div>
+      <div id="novidades">
         <Novidades/>
       </div>
 
-      <div>
+      <div id="projetos">
         <Projetos/>
       </div>
     </main>
