@@ -3,7 +3,7 @@ import Universo from "../../../assets/images/Universo.svg"
 export default function Projetos(){
     return(
          <div className="px-8 py-10 md:px-25 md:mt-10 md:mb-5">
-                    <div className="grid grid-row-2 md:grid-cols-2 px-5  shadow-[6px_6px_12px_rgba(0,0,0,0.45)] rounded-xl h-auto bg-[#F4F4F4] min-w-[350px]
+                    <div className="grid grid-row-2 md:grid-cols-2 px-5  shadow-[6px_6px_12px_rgba(0,0,0,0.45)] rounded-xl h-auto bg-[#F4F4F4] min-w-[353px]
                     md:mt-10  ">
         
                         <div className="order-1">
