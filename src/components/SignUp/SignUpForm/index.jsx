@@ -5,6 +5,7 @@ import forge from 'node-forge';
 import InputField from '../../Universal/InputField';
 import Loading from '../../Universal/Loading';
 import './styles.css';
+import { signupSchema } from '../../../validators/signupSchema';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -46,32 +47,21 @@ const SignUpForm = () => {
       });
   }, []);
 
-  const validate = () => {
+  const validate = async () => {
+  try {
+    await signupSchema.validate(formData, { abortEarly: false });
+    setErrors({});
+    return true;
+  } catch (err) {
     const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Nome é obrigatório';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email é obrigatório';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Senha é obrigatória';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'As senhas devem coincidir';
-    }
-
+    err.inner.forEach(error => {
+      newErrors[error.path] = error.message;
+    });
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    return false;
+  }
+};
+
 
   useEffect(() => {
     if (Object.values(touched).some(field => field)) {

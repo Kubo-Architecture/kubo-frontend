@@ -92,6 +92,10 @@ const VerificationCodeInput = () => {
           idUser: idUser,
         }),
       });
+      console.log(response)
+      if (response.status === 200) {
+          navigate(`/login`);
+      }
 
       if (!response.ok) throw new Error('Falha na verificação');
 
