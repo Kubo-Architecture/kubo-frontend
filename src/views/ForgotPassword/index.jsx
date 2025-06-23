@@ -39,8 +39,9 @@ export default function ForgotPassword() {
                 </form>
 
                 {/* Container do botão que sempre fica no final */}
-                <div className="w-full flex justify-center pb-10
-                md:-ml-20
+                <div className="w-full flex justify-start
+                 pb-10
+                md:-ml
                 ">
                     <button type="submit" className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat font-light px-27 py-2.5 rounded-xl">Enviar</button>
                 </div>
