@@ -1,7 +1,7 @@
 import ImgFaixa from "../../../assets/icons/Universal/ImgFaixa.svg";
 import ImgOnda from "../../../assets/icons/Universal/ImgOnda.svg";
 import ImgPredio from "../../../assets/icons/Universal/ImgPredio.svg";
-import SobreNos from "../../../components/LandingPage/SobreMim/index"
+import SobreNos from "../../../components/LandingPage/Sobremim/index"
 import Novidades from "../../../components/LandingPage/Novidades/index"
 import Projetos from "../../../components/LandingPage/projetos/index"
 
@@ -70,6 +70,9 @@ export default function HomeBody() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div id="sobre nos">
         <SobreNos/>
       </div>
 
