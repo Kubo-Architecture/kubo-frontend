@@ -6,7 +6,7 @@ export default function ForgotPassword() {
     return (
         <div className="md:grid md:grid-cols-2 h-[100vh] min-w-[364px] md:px-5">
             {/* Container da esquerda - ajustado para ter altura completa e flex column */}
-            <div className="flex flex-col h-full px-10 space-y-10 ">
+            <div className="flex flex-col sm:justify-center h-full px-10 space-y-10 ">
                 <div className=" mt-5 mb-20 md:flex md:mb-0 md:mt-10 ">
                     <LogoKubo />
                 </div>
