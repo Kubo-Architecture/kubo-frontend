@@ -24,7 +24,7 @@ export default function ProfileInnerHeader(props) {
         className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer"
         onClick={props.onEditBannerClick}
       >
-        <img src={PenIcon} alt="Editar banner" />
+        <img src={PenIcon} alt="Editar banner" className="h-[20px]"/>
       </button>
     </div>
   );

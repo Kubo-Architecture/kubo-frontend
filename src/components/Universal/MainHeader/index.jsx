@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import MenuLogo from "../../../assets/icons/Universal/HamburguerIcon.svg";
 import KuboLogo from "../../../components/Universal/KuboLogo";
-import HeartIcon from "../../../assets/icons/Universal/emptyheart.svg";
+import HeartIcon from "../../../assets/icons/Universal/heart-sw.svg";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
-import SettingsIcon from "../../../assets/icons/Universal/settingsbasic.svg";
+import SettingsIcon from "../../../assets/icons/Universal/settings-sw.svg";
+//import BookmarkIcon from "../../../assets/icons/Universal/bookmark.svg"
 
 export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
@@ -47,12 +48,13 @@ export default function IconWithPanel(props) {
 
       {/* Direita */}
       <div className="flex-1 h-full">
-        <div className="flex flex-row gap-1 h-full w-full justify-end min-w-[120px]">
+        <div className="flex flex-row gap-2 h-full w-full justify-end min-w-[120px]">
           <div className="flex items-center justify-center">
-            <img src={HeartIcon} alt="Heart icon" className="h-[30px]" />
+            <img src={HeartIcon} alt="Heart icon" className="h-7" />
+            {/* <img src={BookmarkIcon} alt="Bookmark Icon" className="h-[30px]" /> */}
           </div>
           <div className="flex items-center justify-center">
-            <img src={SettingsIcon} alt="Settings icon" className="h-[40px]" />
+            <img src={SettingsIcon} alt="Settings icon" className="h-7" />
           </div>
           <div className="flex items-center justify-center">
             <a href="">
