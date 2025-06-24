@@ -48,15 +48,15 @@ export default function LandingPageHeader() {
 
         <div className="hidden md:flex md:flex-1">
           <nav>
-            <ul className="flex gap-10 lg:gap-12 2xl:text-xl font-normal">
-              <li>
+            <ul className="flex gap-10 lg:gap-12 2xl:text-xl font-normal ">
+              <li className="hover:scale-106 transition duration-200">
                 <a href="#sobre nos">Sobre nós</a>
               </li>
-              <li>
+              <li className="hover:scale-106 transition duration-200">
                 <a href="#novidades">Novidades</a>
               </li>
-              <li>
-                <a href="#projetos">Projetos</a>
+              <li className="hover:scale-106 transition duration-200">
+                <a href="#projetos" >Projetos</a>
               </li>
             </ul>
           </nav>
@@ -65,8 +65,8 @@ export default function LandingPageHeader() {
           <Logocontainer/>
         </div>
 
-        <div className="md:flex md:flex-1 justify-end">
-          <a href="login" className="text-xl">Entrar</a>
+        <div className="md:flex md:flex-1 justify-end ">
+          <a href="login" className="text-xl hover:scale-106 transition duration-200">Entrar</a>
         </div>
       </div>
     </header>

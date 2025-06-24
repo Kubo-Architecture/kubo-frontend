@@ -3,7 +3,7 @@ import Universo from "../../../assets/images/Universo.svg"
 export default function Projetos() {
     return (
         <section className="px-4 mb-8 sm:px-6 md:px-8 lg:px-16 xl:px-25 w-full md:mt-20 min-w-[400px] flex flex-col items-center">
-            {/* Card principal - aumentado para max-w-6xl */}
+            {/* Card principal */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 shadow-[6px_6px_12px_rgba(0,0,0,0.45)] rounded-2xl bg-[#F4F4F4] overflow-hidden max-w-6xl w-full mx-auto">
                 {/* Container do Conteúdo */}
                 <div className="order-2 lg:order-1 flex flex-col justify-center p-4 md:p-6 lg:p-8 space-y-4">
