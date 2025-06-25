@@ -3,7 +3,12 @@ import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
+<<<<<<< feature/esqueci-senha
 import LoginBanner from "../../components/Universal/LoginBanner/index";
+=======
+
+
+>>>>>>> develop
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
