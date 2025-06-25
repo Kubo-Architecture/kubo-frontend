@@ -20,6 +20,12 @@ export default function ProfileInnerHeader(props) {
 
     if (!file || !idUser) return;
 
+    // ✅ Validação do tamanho máximo da imagem (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 5MB.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("image", file);
     formData.append("idUser", idUser);
@@ -32,6 +38,7 @@ export default function ProfileInnerHeader(props) {
       // Você pode emitir um callback para o pai recarregar os dados se quiser
     } catch (error) {
       console.error("Erro ao enviar imagem:", error);
+      alert(error.response?.data?.error || "Erro ao enviar imagem.");
     }
   };
 
