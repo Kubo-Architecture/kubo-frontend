@@ -24,7 +24,7 @@ export default function Projetos() {
 
                     {/* Call to Action */}
                     <div className="flex justify-center pt-2">
-                        <button 
+                        <a
                             className="
                                 group relative bg-[#0B85FF] hover:bg-[#0969CC] 
                                 transition-all duration-300 ease-in-out
@@ -37,11 +37,12 @@ export default function Projetos() {
                                 focus:outline-none focus:ring-4 focus:ring-[#0B85FF]/30
                                 active:scale-95
                             "
+                            href="/register"
                             aria-label="Criar um novo projeto"
                         >
                             <span className="relative z-10">Crie já</span>
                             <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </button>
+                        </a>
                     </div>
                 </div>
 

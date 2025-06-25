@@ -14,7 +14,7 @@ export default function LoginBanner({ className = "", alt = "Login banner" }) {
 
   return (
     <div className={`login-banner-wrapper ${className}`}>
-      <img src={randomImage} alt={alt} className="login-banner" />
+      <img src={randomImage} alt={alt} className="login-banner"/>
       <div className="topText">Kubo</div>
       <div className="bottomText">Explore do seu jeito</div>
     </div>

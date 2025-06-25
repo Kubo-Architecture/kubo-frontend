@@ -38,7 +38,7 @@ export default function LandingPageHeader() {
 
   return (
     <header>
-      <div className="flex items-center justify-between scroll-smooth min-w-[424px]
+      <div className="flex items-center justify-between scroll-smooth 
       px-4 h-20 text-xl font-montserrat font-normal w-full
       md:px-20
        ">
@@ -49,13 +49,13 @@ export default function LandingPageHeader() {
         <div className="hidden md:flex md:flex-1">
           <nav>
             <ul className="flex gap-10 lg:gap-12 2xl:text-xl font-normal ">
-              <li className="hover:scale-106 transition duration-200">
+              <li className="transform hover:translate-x-2 duration-500">
                 <a href="#sobre nos">Sobre nós</a>
               </li>
-              <li className="hover:scale-106 transition duration-200">
+              <li className="transform hover:translate-x-2 duration-500">
                 <a href="#novidades">Novidades</a>
               </li>
-              <li className="hover:scale-106 transition duration-200">
+              <li className="transform hover:translate-x-2 duration-500">
                 <a href="#projetos" >Projetos</a>
               </li>
             </ul>
@@ -66,7 +66,7 @@ export default function LandingPageHeader() {
         </div>
 
         <div className="md:flex md:flex-1 justify-end ">
-          <a href="login" className="text-xl hover:scale-106 transition duration-200">Entrar</a>
+          <a href="login" className="text-xl transform hover:translate-x-2 duration-500">Entrar</a>
         </div>
       </div>
     </header>
