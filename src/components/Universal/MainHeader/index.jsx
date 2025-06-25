@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import MenuLogo from "../../../assets/icons/Universal/HamburguerIcon.svg";
 import KuboLogo from "../../../components/Universal/KuboLogo";
-import HeartIcon from "../../../assets/icons/Universal/emptyheart.svg";
+import HeartIcon from "../../../assets/icons/Universal/heart-sw.svg";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
-import SettingsIcon from "../../../assets/icons/Universal/settingsbasic.svg";
+import SettingsIcon from "../../../assets/icons/Universal/settings-sw.svg";
 
 export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
@@ -16,9 +16,7 @@ export default function IconWithPanel(props) {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 flex flex-row justify-between items-center h-20 min-w-[300px] px-[20px] bg-white shadow-md">
-      {/* Esquerda */}
       <div className="flex-1 h-full flex items-center min-w-[100px]">
-        {/* Botão do menu (visível apenas em telas pequenas) */}
         <div onClick={togglePanel} className="block md:hidden">
           <img
             src={MenuLogo}
@@ -27,7 +25,6 @@ export default function IconWithPanel(props) {
           />
         </div>
 
-        {/* Links inline (visíveis apenas em telas md ou maiores) */}
         <div className="hidden md:flex items-center gap-6 ml-2 black">
           {menuItems.map((item) => (
             <span
@@ -40,19 +37,17 @@ export default function IconWithPanel(props) {
         </div>
       </div>
 
-      {/* Centro */}
       <div className="flex-1 h-full flex justify-center items-center min-w-[100px]">
         <KuboLogo />
       </div>
 
-      {/* Direita */}
       <div className="flex-1 h-full">
-        <div className="flex flex-row gap-1 h-full w-full justify-end min-w-[120px]">
+        <div className="flex flex-row gap-2 h-full w-full justify-end min-w-[120px]">
           <div className="flex items-center justify-center">
-            <img src={HeartIcon} alt="Heart icon" className="h-[30px]" />
+            <img src={HeartIcon} alt="Heart icon" className="h-7" />
           </div>
           <div className="flex items-center justify-center">
-            <img src={SettingsIcon} alt="Settings icon" className="h-[40px]" />
+            <img src={SettingsIcon} alt="Settings icon" className="h-7" />
           </div>
           <div className="flex items-center justify-center">
             <a href="">
@@ -67,7 +62,6 @@ export default function IconWithPanel(props) {
         </div>
       </div>
 
-      {/* Painel lateral: visível apenas em telas menores que md. */}
       <div
         className={`fixed top-20 left-0 z-[1000] h-[calc(100vh-80px)] w-[200px] bg-[#4A4A4A] rounded-tr-[10px] transition-transform ease-in-out duration-300 px-4 flex flex-col text-white md:hidden
           ${open ? "translate-x-0 shadow-[2px_0_5px_rgba(0,0,0,0.2)]" : "-translate-x-full shadow-none"}

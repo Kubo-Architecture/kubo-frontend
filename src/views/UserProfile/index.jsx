@@ -7,6 +7,7 @@ import MainHeader from "../../components/Universal/MainHeader"
 import Loading from "../../components/Universal/Loading"
 import BannerSettings from "../../components/Profile/BannerSettings"
 import Biografy from "../../components/Profile/Biografy"
+import ProjectGallery from "../../components/Profile/ProjectGallery"
 
 export default function UserProfile() {
   const location = useLocation()
@@ -60,6 +61,8 @@ export default function UserProfile() {
         projetos={profileData.projects || 0}
       />
       <Biografy Biografy={profileData.bio} />
+
+      <ProjectGallery/>
 
       {showBannerSettings && (
         <div className="z-50">
