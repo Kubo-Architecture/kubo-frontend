@@ -1,9 +1,9 @@
 import ImgFaixa from "../../../assets/icons/Universal/ImgFaixa.svg";
 import ImgOnda from "../../../assets/icons/Universal/ImgOnda.svg";
 import ImgPredio from "../../../assets/icons/Universal/ImgPredio.svg";
-import SobreNos from "../../../components/LandingPage/Sobremim/index"
-import Novidades from "../../../components/LandingPage/Novidades/index"
-import Projetos from "../../../components/LandingPage/projetos/index"
+import SobreNos from "../../../components/LandingPage/Sobremim"
+import Novidades from "../../../components/LandingPage/Novidades"
+import Projetos from "../../../components/LandingPage/Projetos"
 
 export default function HomeBody() {
   return (
