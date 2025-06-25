@@ -4,6 +4,7 @@ import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
 import LoginBanner from "../../components/Universal/LoginBanner/index";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
