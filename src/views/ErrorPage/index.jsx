@@ -8,7 +8,9 @@ export default function ErrorPage() {
     
     return (
         <div className="error-page-container">
-            <SimpleHeader />
+            <div className="my-[30px]">
+                <SimpleHeader />
+            </div>
             <div className="empty-icon-container">
                 <img className="icon" src={KuboEmptyIcon} alt="Empty icon" />
                 <div className="error-status">
