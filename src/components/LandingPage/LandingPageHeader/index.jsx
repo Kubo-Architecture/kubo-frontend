@@ -38,7 +38,7 @@ export default function LandingPageHeader() {
 
   return (
     <header>
-      <div className="flex items-center justify-between scroll-smooth min-w-[424px]
+      <div className="flex items-center justify-between scroll-smooth 
       px-4 h-20 text-xl font-montserrat font-normal w-full
       md:px-20
        ">
