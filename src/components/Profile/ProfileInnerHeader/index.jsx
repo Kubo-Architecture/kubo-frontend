@@ -20,22 +20,20 @@ export default function ProfileInnerHeader(props) {
 
     if (!file || !idUser) return;
 
-    // ✅ Validação do tamanho máximo da imagem (5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert("A imagem deve ter no máximo 5MB.");
       return;
     }
-
+    const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`
     const formData = new FormData();
     formData.append("image", file);
     formData.append("idUser", idUser);
 
     try {
-      const response = await axios.post("/user/photo", formData, {
+      const response = await axios.put(apiUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload feito com sucesso:", response.data);
-      // Você pode emitir um callback para o pai recarregar os dados se quiser
     } catch (error) {
       console.error("Erro ao enviar imagem:", error);
       alert(error.response?.data?.error || "Erro ao enviar imagem.");
