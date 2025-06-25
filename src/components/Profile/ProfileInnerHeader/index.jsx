@@ -59,10 +59,16 @@ export default function ProfileInnerHeader(props) {
       }}
     >
       <div
-        className="h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] hover:cursor-pointer"
+        className="h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] hover:cursor-pointer group overflow-hidden"
         style={{ backgroundImage: profileImageUrl }}
         onClick={handleImageClick}
-      />
+      >
+        {/* Hover com o + */}
+        <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
+          <span className="text-white text-6xl font-light">+</span>
+        </div>
+      </div>
+
       <input
         type="file"
         accept="image/png, image/jpeg"
