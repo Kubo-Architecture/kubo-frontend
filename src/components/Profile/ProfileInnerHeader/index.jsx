@@ -64,7 +64,7 @@ export default function ProfileInnerHeader(props) {
         onClick={handleImageClick}
       >
         {/* Hover com o + */}
-        <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
+        <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-50 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
           <span className="text-white text-6xl font-light">+</span>
         </div>
       </div>
