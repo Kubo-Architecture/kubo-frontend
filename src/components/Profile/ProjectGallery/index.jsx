@@ -61,11 +61,9 @@ const ProjectGallery = () => {
 
   return (
     <div className="w-full">
-      {/* Container principal sem centralização */}
       <div className="w-full px-4 py-8">
-        {/* Título colado à esquerda */}
         <div className="w-full mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 text-left">
+          <h1 className="text-3xl font-bold text-black text-left">
             Meus Projetos
           </h1>
         </div>
