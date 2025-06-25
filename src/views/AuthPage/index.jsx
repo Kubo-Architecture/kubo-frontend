@@ -5,8 +5,12 @@ import Loading from '../../components/Universal/Loading';
 import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
 <<<<<<< feature/esqueci-senha
 import LoginBanner from "../../components/Universal/LoginBanner/index";
+<<<<<<< feature/esqueci-senha
 =======
 
+
+>>>>>>> develop
+=======
 
 >>>>>>> develop
 const apiUrl = import.meta.env.VITE_API_URL;
