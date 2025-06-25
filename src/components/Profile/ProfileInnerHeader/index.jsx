@@ -24,7 +24,8 @@ export default function ProfileInnerHeader(props) {
       alert("A imagem deve ter no máximo 5MB.");
       return;
     }
-    const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`
+
+    const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
     const formData = new FormData();
     formData.append("image", file);
     formData.append("idUser", idUser);
@@ -33,7 +34,14 @@ export default function ProfileInnerHeader(props) {
       const response = await axios.put(apiUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       console.log("Upload feito com sucesso:", response.data);
+
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        alert("Erro ao salvar imagem.");
+      }
     } catch (error) {
       console.error("Erro ao enviar imagem:", error);
       alert(error.response?.data?.error || "Erro ao enviar imagem.");
@@ -66,7 +74,7 @@ export default function ProfileInnerHeader(props) {
         className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer"
         onClick={props.onEditBannerClick}
       >
-        <img src={PenIcon} alt="Editar banner" className="h-[20px]"/>
+        <img src={PenIcon} alt="Editar banner" className="h-[20px]" />
       </button>
     </div>
   );
