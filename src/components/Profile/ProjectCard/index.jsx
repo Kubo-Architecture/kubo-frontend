@@ -42,15 +42,6 @@ const ProjectCard = ({ project }) => {
             {project.usage_type || 'Sem tipo definido'}
           </span>
         </div>
-        
-        <div className="mt-4 flex justify-between text-sm text-gray-500">
-          <span>
-            Construção: {project.build_area ? `${project.build_area} m²` : 'N/A'}
-          </span>
-          <span>
-            Terreno: {project.terrain_area ? `${project.terrain_area} m²` : 'N/A'}
-          </span>
-        </div>
       </div>
     </div>
   );
