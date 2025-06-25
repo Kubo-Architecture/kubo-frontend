@@ -61,7 +61,7 @@ const ProjectGallery = () => {
 
   return (
     <div className="w-full">
-      <div className="w-full pt-[8px] px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
+      <div className="w-full mb-[20px] pt-[8px] px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
         <div className="w-full mb-8">
           <h3 className="text-3xl font-medium text-black text-left">
             Meus Projetos
