@@ -148,7 +148,7 @@ export default function NewProject() {
                     
                     <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Inputs padrão */}
+
                             <div className="col-span-1">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Projeto *</label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
@@ -162,7 +162,6 @@ export default function NewProject() {
                                 <textarea name="description" value={formData.description} onChange={handleChange} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
                             </div>
 
-                            {/* Materiais */}
                             <div className="col-span-1 md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Materiais</label>
                                 <div className="space-y-2">
@@ -181,7 +180,6 @@ export default function NewProject() {
                                 </div>
                             </div>
 
-                            {/* Selects e números */}
                             <div className="col-span-1">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
                                 <select name="status" value={formData.status} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
@@ -210,7 +208,6 @@ export default function NewProject() {
                                 <input type="number" name="terrain_area" value={formData.terrain_area} onChange={handleChange} step="0.01" min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                             </div>
 
-                            {/* Foto principal */}
                             <div className="col-span-1">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Foto Principal *</label>
                                 <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
@@ -228,7 +225,6 @@ export default function NewProject() {
                                 {photo && <p className="mt-2 text-sm text-gray-600 truncate">{photo.name} ({Math.round(photo.size / 1024)} KB)</p>}
                             </div>
 
-                            {/* Galeria */}
                             <div className="col-span-1">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Galeria de Fotos</label>
                                 <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
