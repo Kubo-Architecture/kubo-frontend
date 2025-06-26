@@ -116,10 +116,10 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit} className="login-form">
       <InputField
-        label="Qual o seu nome?"
+        label="Digite o nome de usuário"
         type="text"
         name="name"
-        placeholder="Seu nome completo"
+        placeholder="Nome de usuário"
         value={formData.name}
         onChange={handleChange}
         onBlur={() => handleBlur('name')}
