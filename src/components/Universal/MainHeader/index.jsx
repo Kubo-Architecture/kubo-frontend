@@ -7,6 +7,7 @@ import SettingsIcon from "../../../assets/icons/Universal/settings-sw.svg";
 
 export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
+  const name = localStorage.getItem('name')
 
   const togglePanel = () => {
     setOpen(!open);
@@ -50,7 +51,7 @@ export default function IconWithPanel(props) {
             <img src={SettingsIcon} alt="Settings icon" className="h-7" />
           </div>
           <div className="flex items-center justify-center">
-            <a href="">
+            <a href={`/profile/${name}`}>
               <div
                 className="h-[35px] w-[35px] filter-none rounded-full bg-cover bg-center"
                 style={{
