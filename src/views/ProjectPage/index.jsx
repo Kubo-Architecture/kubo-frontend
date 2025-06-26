@@ -20,15 +20,12 @@ export default function ProjectPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log("ProjectID from URL:", ProjectID);
 
         const fetchProject = async () => {
             try {
                 if (!ProjectID) {
                     throw new Error('ID do projeto não fornecido');
                 }
-
-                console.log("Fetching project with ID:", ProjectID);
                 
                 const response = await fetch(`http://localhost:8080/project/${ProjectID}`);
                 
