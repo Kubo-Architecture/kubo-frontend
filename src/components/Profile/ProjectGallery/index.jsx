@@ -14,7 +14,7 @@ const ProjectGallery = () => {
           throw new Error('Usuário não autenticado');
         }
 
-        const response = await fetch(`http://localhost:8080/project/${idUser}`);
+        const response = await fetch(`http://localhost:8080/projects/${idUser}`);
         
         if (!response.ok) {
           throw new Error(`Erro na requisição: ${response.status}`);
