@@ -57,7 +57,20 @@ export default function NewProject() {
     };
 
     const handleGalleryChange = (e) => {
-        setGallery(Array.from(e.target.files));
+        const newFiles = Array.from(e.target.files);
+
+        setGallery(prevGallery => {
+            const allFiles = [...prevGallery, ...newFiles];
+            const uniqueMap = new Map();
+            allFiles.forEach(file => {
+                uniqueMap.set(file.name + file.size, file);
+            });
+            return Array.from(uniqueMap.values());
+        });
+    };
+
+    const removeGalleryImage = (index) => {
+        setGallery(prevGallery => prevGallery.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e) => {
@@ -90,8 +103,8 @@ export default function NewProject() {
             data.append('photo', photo);
         }
         
-        gallery.forEach((file, index) => {
-            data.append(`gallery`, file);
+        gallery.forEach(file => {
+            data.append('gallery', file);
         });
 
         try {
@@ -135,75 +148,31 @@ export default function NewProject() {
                     
                     <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Inputs padrão */}
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Nome do Projeto *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Projeto *</label>
+                                <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                             </div>
-                            
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Localização *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="location"
-                                    value={formData.location}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Localização *</label>
+                                <input type="text" name="location" value={formData.location} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                             </div>
-                            
                             <div className="col-span-1 md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Descrição
-                                </label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                ></textarea>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                                <textarea name="description" value={formData.description} onChange={handleChange} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
                             </div>
-                            
+
+                            {/* Materiais */}
                             <div className="col-span-1 md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Materiais
-                                </label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Materiais</label>
                                 <div className="space-y-2">
                                     {formData.materials.map((material, index) => (
                                         <div key={index} className="flex space-x-2">
-                                            <input
-                                                type="text"
-                                                value={material}
-                                                onChange={(e) => handleMaterialChange(index, e.target.value)}
-                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                                placeholder={`Material ${index + 1}`}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeMaterialField(index)}
-                                                className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
-                                            >
-                                                ×
-                                            </button>
+                                            <input type="text" value={material} onChange={(e) => handleMaterialChange(index, e.target.value)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder={`Material ${index + 1}`} />
+                                            <button type="button" onClick={() => removeMaterialField(index)} className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">×</button>
                                         </div>
                                     ))}
-                                    <button
-                                        type="button"
-                                        onClick={addMaterialField}
-                                        className="mt-2 px-4 py-2 bg-blue-100 text-black rounded-lg hover:bg-blue-200 transition flex items-center"
-                                    >
+                                    <button type="button" onClick={addMaterialField} className="mt-2 px-4 py-2 bg-blue-100 text-black rounded-lg hover:bg-blue-200 transition flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                                         </svg>
@@ -211,36 +180,20 @@ export default function NewProject() {
                                     </button>
                                 </div>
                             </div>
-                            
+
+                            {/* Selects e números */}
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Status *
-                                </label>
-                                <select
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                >
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
+                                <select name="status" value={formData.status} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                     <option value="">Selecione o status</option>
                                     <option value="Em planejamento">Em planejamento</option>
                                     <option value="Em construção">Em construção</option>
                                     <option value="Concluído">Concluído</option>
                                 </select>
                             </div>
-                            
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Tipo de Uso *
-                                </label>
-                                <select
-                                    name="usage_type"
-                                    value={formData.usage_type}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                >
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Uso *</label>
+                                <select name="usage_type" value={formData.usage_type} onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                     <option value="">Selecione o tipo de uso</option>
                                     <option value="Residencial">Residencial</option>
                                     <option value="Comercial">Comercial</option>
@@ -248,121 +201,69 @@ export default function NewProject() {
                                     <option value="Religioso">Religioso</option>
                                 </select>
                             </div>
-                            
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Área Construída (m²)
-                                </label>
-                                <input
-                                    type="number"
-                                    name="build_area"
-                                    value={formData.build_area}
-                                    onChange={handleChange}
-                                    step="0.01"
-                                    min="0"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Área Construída (m²)</label>
+                                <input type="number" name="build_area" value={formData.build_area} onChange={handleChange} step="0.01" min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                             </div>
-                            
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Área do Terreno (m²)
-                                </label>
-                                <input
-                                    type="number"
-                                    name="terrain_area"
-                                    value={formData.terrain_area}
-                                    onChange={handleChange}
-                                    step="0.01"
-                                    min="0"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Área do Terreno (m²)</label>
+                                <input type="number" name="terrain_area" value={formData.terrain_area} onChange={handleChange} step="0.01" min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
                             </div>
-                            
-                            {/* Containers de upload totalmente ajustados */}
+
+                            {/* Foto principal */}
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Foto Principal *
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Foto Principal *</label>
+                                <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
+                                    <div className="flex flex-col items-center justify-center">
+                                        <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <p className="text-sm text-gray-500 text-center">
+                                            <span className="font-semibold">Clique para enviar</span><br />
+                                            <span className="text-xs">(Formatos: JPG, PNG)</span>
+                                        </p>
+                                    </div>
+                                    <input type="file" className="hidden" onChange={handlePhotoChange} required accept="image/jpeg,image/png" />
                                 </label>
-                                <div className="flex items-center space-x-4">
-                                    <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                            </svg>
-                                            <p className="text-sm text-gray-500 text-center">
-                                                <span className="font-semibold">Clique para enviar</span>
-                                                <br />
-                                                <span className="text-xs">(Formatos: JPG, PNG)</span>
-                                            </p>
-                                        </div>
-                                        <input 
-                                            type="file" 
-                                            className="hidden" 
-                                            onChange={handlePhotoChange}
-                                            required
-                                            accept="image/jpeg,image/png"
-                                        />
-                                    </label>
-                                </div>
-                                {photo && (
-                                    <p className="mt-2 text-sm text-gray-600 truncate">
-                                        {photo.name} ({Math.round(photo.size / 1024)} KB)
-                                    </p>
-                                )}
+                                {photo && <p className="mt-2 text-sm text-gray-600 truncate">{photo.name} ({Math.round(photo.size / 1024)} KB)</p>}
                             </div>
-                            
+
+                            {/* Galeria */}
                             <div className="col-span-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Galeria de Fotos
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Galeria de Fotos</label>
+                                <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
+                                    <div className="flex flex-col items-center justify-center">
+                                        <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <p className="text-sm text-gray-500 text-center">
+                                            <span className="font-semibold">Clique para enviar</span><br />
+                                            <span className="text-xs">(Múltiplos arquivos permitidos)</span>
+                                        </p>
+                                    </div>
+                                    <input type="file" className="hidden" onChange={handleGalleryChange} multiple accept="image/jpeg,image/png" />
                                 </label>
-                                <div className="flex items-center space-x-4">
-                                    <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                            </svg>
-                                            <p className="text-sm text-gray-500 text-center">
-                                                <span className="font-semibold">Clique para enviar</span>
-                                                <br />
-                                                <span className="text-xs">(Múltiplos arquivos permitidos)</span>
-                                            </p>
-                                        </div>
-                                        <input 
-                                            type="file" 
-                                            className="hidden" 
-                                            onChange={handleGalleryChange}
-                                            multiple
-                                            accept="image/jpeg,image/png"
-                                        />
-                                    </label>
-                                </div>
+
                                 {gallery.length > 0 && (
-                                    <p className="mt-2 text-sm text-gray-600">
-                                        {gallery.length} arquivo(s) selecionado(s)
-                                    </p>
+                                    <div className="mt-2 space-y-1">
+                                        <p className="text-sm text-gray-700 font-medium">Arquivos selecionados:</p>
+                                        <ul className="text-sm text-gray-600 max-h-40 overflow-auto pr-2">
+                                            {gallery.map((file, index) => (
+                                                <li key={index} className="flex justify-between items-center py-1 border-b border-gray-200">
+                                                    <span className="truncate">{file.name} ({Math.round(file.size / 1024)} KB)</span>
+                                                    <button type="button" onClick={() => removeGalleryImage(index)} className="ml-3 px-2 py-1 text-xs text-red-600 hover:underline">Remover</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 )}
                             </div>
                         </div>
-                        
+
                         <div className="pt-6 border-t border-gray-200">
                             <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
-                                <button
-                                    type="button"
-                                    onClick={() => navigate(-1)}
-                                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className={`px-6 py-3 rounded-lg text-white transition ${
-                                        isSubmitting 
-                                            ? 'bg-[#585858] cursor-not-allowed' 
-                                            : 'bg-[#4A4A4A] hover:bg-[#5e5e5e]'
-                                    }`}
-                                >
+                                <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Cancelar</button>
+                                <button type="submit" disabled={isSubmitting} className={`px-6 py-3 rounded-lg text-white transition ${isSubmitting ? 'bg-[#585858] cursor-not-allowed' : 'bg-[#4A4A4A] hover:bg-[#5e5e5e]'}`}>
                                     {isSubmitting ? (
                                         <span className="flex items-center justify-center">
                                             <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
