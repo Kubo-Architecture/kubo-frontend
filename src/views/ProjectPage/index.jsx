@@ -99,7 +99,7 @@ export default function ProjectPage() {
         <>
             <IconWithPanel />
             <div className="flex flex-col w-full min-h-[calc(100vh-5rem)]">
-                <div className="flex w-full h-12 justify-end items-center px-5 gap-5 lg:gap-10">
+                <div className="flex w-full h-12 justify-end items-center gap-5 lg:gap-10 px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                     {project.is_verified && (
                         <div className="flex h-full items-center gap-1">
                             <span className="text-xs lg:text-base">Postagem verificada</span>
@@ -143,7 +143,7 @@ export default function ProjectPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col w-full px-8">
+                <div className="flex flex-col w-full px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                     <span className="text-4xl font-medium leading-7">{project.name}</span>
                     <div className="flex items-center gap-1 mt-1">
                         <span className="text-xs lg:text-base">{project.location}</span>
@@ -157,7 +157,7 @@ export default function ProjectPage() {
                     </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-y-5 gap-x-8 sm:gap-x-0 px-8 py-15 text-xl">
+                <div className="grid grid-cols-2 gap-y-5 gap-x-8 sm:gap-x-0 py-15 text-xl px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                     <div className="flex items-center gap-3">
                         <div className="w-11 h-11">
                             <img className="w-full h-full object-cover" src={MaterialsIcon} alt="Materiais" />
@@ -222,7 +222,7 @@ export default function ProjectPage() {
                 </div>
 
                 {project.gallery && project.gallery.length > 0 && (
-                    <div className="flex flex-col px-8 pb-10">
+                    <div className="flex flex-col pb-10 px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                         <span className="text-3xl font-medium mb-5">Galeria</span>
                         <div className="grid grid-cols-1 sm:grid-rows-2 sm:grid-cols-3 gap-1 lg:grid-rows-3">
                             {project.gallery.map((imageUrl, index) => (

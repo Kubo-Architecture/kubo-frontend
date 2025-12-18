@@ -8,10 +8,11 @@ const passwordRegex = {
 
 export const signupSchema = yup.object().shape({
   name: yup
-    .string()
-    .required('Nome é obrigatório')
-    .min(1, 'Nome deve ter no mínimo 1 caractere')
-    .max(100, 'Nome deve ter no máximo 100 caracteres'),
+  .string()
+  .required('Nome é obrigatório')
+  .min(1, 'Nome deve ter no mínimo 1 caractere')
+  .max(100, 'Nome deve ter no máximo 100 caracteres')
+  .matches(/^[^\s]+$/, 'O nome de usuário não pode conter espaços'),
 
   email: yup
     .string()

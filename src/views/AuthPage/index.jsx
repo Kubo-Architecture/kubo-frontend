@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { SimpleHeader } from '../../components/Universal/SimpleHeader';
 import Loading from '../../components/Universal/Loading';
@@ -9,7 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
   const { idUser } = useParams();
-
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState(['', '', '', '']);
   const [attempts, setAttempts] = useState(0);
