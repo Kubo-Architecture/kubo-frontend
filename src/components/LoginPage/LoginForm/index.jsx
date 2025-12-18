@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import InputField from '../../Universal/InputField';
-import './styles.css';
 import { loginSchema } from '../../../validators/loginSchema';
 
 const LoginForm = () => {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -26,7 +24,7 @@ const LoginForm = () => {
 
   const [isValid, setIsValid] = useState(false);
 
-    const validate = async () => {
+  const validate = async () => {
     try {
       await loginSchema.validate(formData, { abortEarly: false });
       setErrors({});
@@ -85,7 +83,7 @@ const LoginForm = () => {
   };
 
   return (
-        <form onSubmit={handleSubmit} className="login-form">
+    <form onSubmit={handleSubmit} className="flex flex-col flex-1 px-2">
       <InputField
         label="Qual o seu email?"
         type="email"
@@ -108,18 +106,17 @@ const LoginForm = () => {
         error={touched.password && errors.password}
       />
 
-      <div className="button-help-container">
+      <div className="flex flex-col flex-1 items-center justify-end pb-10 gap-2.5 font-montserrat">
         <button 
-            type="submit" 
-            className="proximo-btn"
-            disabled={!isValid}
+          type="submit" 
+          className="w-[290px] h-[45px] bg-[#000000b7] text-white border-none rounded-lg cursor-pointer text-base transition-colors duration-300 font-montserrat disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#000000b7] hover:disabled:bg-gray-300"
+          disabled={!isValid}
         >
-            próximo
+          próximo
         </button>
-        <a href="/forgotpassword">Esqueci minha senha</a>
+        <a href="/forgotpassword" className="font-montserrat">Esqueci minha senha</a>
       </div>
     </form>
-    
   );
 };
 
