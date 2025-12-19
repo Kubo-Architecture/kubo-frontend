@@ -2,10 +2,7 @@
 import { useState, useEffect } from 'react';
 import Loading from '../../components/Universal/Loading';
 import './styles.css';
-import { SimpleHeader } from '../../components/Universal/SimpleHeader';
-import AuthSupportText from '../../components/Universal/AuthSupportText';
 import SignUpForm from '../../components/SignUp/SignUpForm';
-import LoginBanner from '../../components/Universal/LoginBanner';
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(true);
@@ -17,32 +14,10 @@ export default function SignUpPage() {
   }, []);
 
   return (
-    <div className="container">
-      <div className="leftSide">
-        <div className="header">
-          <SimpleHeader />
-        </div>
-
-        <div className="supportText">
-          <AuthSupportText 
-            greeting="Crie sua conta!" 
-            redirectMessage="Já tem uma conta?" 
-            destination="/login" 
-            navigator="Faça login" 
-          />
-        </div>
-
-        <div className="registerForm">
-          <SignUpForm />
-        </div>
-
+    <div className="h-screen flex flex-col bg-white">
+      <div className="flex-1 flex items-center justify-center px-4">
+        <SignUpForm />
       </div>
-      
-      <div className="rightSide">
-        <LoginBanner className='loginBanner'/>
-      </div>
-
-      {/* Overlay de Loading — sobrepõe o conteúdo */}
       {loading && <Loading />}
     </div>
   );

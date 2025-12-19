@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
-import InputField from '../../Universal/InputField';
+import { User, Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
 import Loading from '../../Universal/Loading';
 import { signupSchema } from '../../../validators/signupSchema';
 
@@ -10,6 +10,8 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [publicKeyPem, setPublicKeyPem] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -114,8 +116,7 @@ const SignUpForm = () => {
       const payload = {
         name: formData.name,
         email: formData.email,
-        password: encryptedPassword,
-        confirmPassword: formData.confirmPassword
+        password: encryptedPassword
       };
       
       const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
@@ -157,67 +158,179 @@ const SignUpForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col flex-1 px-2 gap-4">
-      <InputField
-        label="Digite o nome de usuário"
-        type="text"
-        name="name"
-        placeholder="Nome de usuário"
-        value={formData.name}
-        onChange={handleChange}
-        onBlur={() => handleBlur('name')}
-        error={touched.name ? errors.name : ''}
-        labelClassName="text-base md:min-h-[481px] md:max-w-[944px]:text-xl lg:min-h-[700px] lg:min-w-[760px]:text-xl"
-      />
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      {/* Ícone de casa */}
+      <div className="flex justify-center mb-3">
+        <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
+          <Home className="w-7 h-7 text-white" strokeWidth={2} />
+        </div>
+      </div>
 
-      <InputField
-        label="Qual o seu email?"
-        type="email"
-        name="email"
-        placeholder="Seu email"
-        value={formData.email}
-        onChange={handleChange}
-        onBlur={() => handleBlur('email')}
-        error={touched.email ? errors.email : ''}
-        labelClassName="text-base md:min-h-[481px] md:max-w-[944px]:text-xl lg:min-h-[700px] lg:min-w-[760px]:text-xl"
-      />
+      {/* Título */}
+      <h1 className="text-2xl font-bold text-center text-black mb-1">
+        Criar conta
+      </h1>
+      
+      {/* Subtítulo */}
+      <p className="text-center text-gray-600 mb-4 text-xs">
+        Junte-se à comunidade Kubo
+      </p>
 
-      <InputField
-        label="Crie uma senha"
-        type="password"
-        name="password"
-        placeholder="Sua senha"
-        value={formData.password}
-        onChange={handleChange}
-        onBlur={() => handleBlur('password')}
-        error={touched.password ? errors.password : ''}
-        labelClassName="text-base md:min-h-[481px] md:max-w-[944px]:text-xl lg:min-h-[700px] lg:min-w-[760px]:text-xl"
-      />
+      {/* Formulário */}
+      <form onSubmit={handleSubmit} className="space-y-3">
+        {/* Nome completo */}
+        <div>
+          <label className="block text-black font-semibold mb-1 text-xs">
+            Nome completo
+          </label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              onBlur={() => handleBlur('name')}
+              placeholder="Digite seu nome completo"
+              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                touched.name && errors.name ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+          </div>
+          {/* Altura fixa para mensagem de erro */}
+          <div className="h-4 mt-0.5">
+            {touched.name && errors.name && (
+              <p className="text-red-500 text-xs">{errors.name}</p>
+            )}
+          </div>
+        </div>
 
-      <InputField
-        label="Confirme sua senha"
-        type="password"
-        name="confirmPassword"
-        placeholder="Confirme sua senha"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        onBlur={() => handleBlur('confirmPassword')}
-        error={touched.confirmPassword ? errors.confirmPassword : ''}
-        labelClassName="text-base md:min-h-[481px] md:max-w-[944px]:text-xl lg:min-h-[700px] lg:min-w-[760px]:text-xl"
-      />
+        {/* Email */}
+        <div>
+          <label className="block text-black font-semibold mb-1 text-xs">
+            Email
+          </label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={() => handleBlur('email')}
+              placeholder="Digite seu email"
+              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                touched.email && errors.email ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+          </div>
+          {/* Altura fixa para mensagem de erro */}
+          <div className="h-4 mt-0.5">
+            {touched.email && errors.email && (
+              <p className="text-red-500 text-xs">{errors.email}</p>
+            )}
+          </div>
+        </div>
 
-      {isLoading && <Loading timeout={8000} />}
+        {/* Senha */}
+        <div>
+          <label className="block text-black font-semibold mb-1 text-xs">
+            Senha
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+            <input
+              type={mostrarSenha ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={() => handleBlur('password')}
+              placeholder="Digite sua senha"
+              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                touched.password && errors.password ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarSenha(!mostrarSenha)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+            >
+              {mostrarSenha ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+          {/* Altura fixa para mensagem de erro */}
+          <div className="h-4 mt-0.5">
+            {touched.password && errors.password && (
+              <p className="text-red-500 text-xs">{errors.password}</p>
+            )}
+          </div>
+        </div>
 
-      <div className="flex flex-col flex-1 items-center justify-end pb-10 gap-4 font-montserrat">
+        {/* Confirmar senha */}
+        <div>
+          <label className="block text-black font-semibold mb-1 text-xs">
+            Confirmar senha
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+            <input
+              type={mostrarConfirmarSenha ? 'text' : 'password'}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              onBlur={() => handleBlur('confirmPassword')}
+              placeholder="Confirme sua senha"
+              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                touched.confirmPassword && errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+            >
+              {mostrarConfirmarSenha ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+          {/* Altura fixa para mensagem de erro */}
+          <div className="h-4 mt-0.5">
+            {touched.confirmPassword && errors.confirmPassword && (
+              <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+            )}
+          </div>
+        </div>
+
+        {isLoading && <Loading timeout={8000} />}
+
+        {/* Botão de submissão */}
         <button
           type="submit"
-          className="w-[290px] h-[45px] bg-[#000000b7] text-white border-none rounded-lg cursor-pointer text-base transition-colors duration-300 font-montserrat disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-black hover:disabled:bg-gray-300"
           disabled={!isValid || isLoading}
+          className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-4"
         >
-          {isLoading ? 'Criando conta...' : 'Criar conta'}
+          {isLoading ? 'Criando conta...' : 'Entrar'}
         </button>
-      </div>
-    </form>
+      </form>
+
+      {/* Link para login */}
+      <p className="text-center text-gray-600 mt-4 text-xs">
+        Já tem uma conta?{' '}
+        <button 
+          onClick={() => navigate('/login')}
+          className="font-semibold text-blue-600 hover:underline"
+        >
+          Fazer login
+        </button>
+      </p>
+    </div>
   );
 };
 
