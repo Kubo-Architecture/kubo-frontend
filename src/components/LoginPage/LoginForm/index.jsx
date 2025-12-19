@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { loginSchema } from '../../../validators/loginSchema';
 
 const LoginForm = () => {
@@ -106,8 +106,23 @@ const LoginForm = () => {
     console.log('Login com LinkedIn');
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Volta para a página anterior
+  };
+
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+      
+      {/* Botão de voltar */}
+      <button
+        onClick={handleGoBack}
+        className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group"
+      >
+        <a href="/"></a>
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+        <span>Voltar</span>
+      </button>
+      
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
@@ -115,7 +130,7 @@ const LoginForm = () => {
         </div>
       </div>
 
-      {/* Título */}
+      {/* Título principal */}
       <h1 className="text-2xl font-bold text-center text-black mb-0.5">
         Fazer login
       </h1>
@@ -129,9 +144,9 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit} className="space-y-0">
         {/* Email */}
         <div>
-          <label className="block text-black font-semibold mb-0.5 text-xs">
+          <h5 className="block text-black font-semibold mb-0.5 text-xs uppercase tracking-wider">
             Email
-          </label>
+          </h5>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
@@ -156,9 +171,9 @@ const LoginForm = () => {
 
         {/* Senha */}
         <div>
-          <label className="block text-black font-semibold mb-0.5 text-xs">
+          <h5 className="block text-black font-semibold mb-0.5 text-xs uppercase tracking-wider">
             Senha
-          </label>
+          </h5>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input

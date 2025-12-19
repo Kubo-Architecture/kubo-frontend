@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
-import { User, Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Loading from '../../Universal/Loading';
 import { signupSchema } from '../../../validators/signupSchema';
 
@@ -157,8 +157,22 @@ const SignUpForm = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Volta para a página anterior
+  };
+
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+      
+      {/* Botão de voltar */}
+      <button
+        onClick={handleGoBack}
+        className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+        <span>Voltar</span>
+      </button>
+      
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
@@ -166,7 +180,7 @@ const SignUpForm = () => {
         </div>
       </div>
 
-      {/* Título */}
+      {/* Título principal */}
       <h1 className="text-2xl font-bold text-center text-black mb-0.5">
         Criar conta
       </h1>
@@ -180,9 +194,9 @@ const SignUpForm = () => {
       <form onSubmit={handleSubmit} className="space-y-0">
         {/* Nome completo */}
         <div>
-          <label className="block text-black font-medium mb-1 text-[10px]">
+          <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
             Nome completo
-          </label>
+          </h5>
           <div className="relative mt-1">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
@@ -207,9 +221,9 @@ const SignUpForm = () => {
 
         {/* Email */}
         <div>
-          <label className="block text-black font-medium mb-1 text-[10px]">
+          <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
             Email
-          </label>
+          </h5>
           <div className="relative mt-1">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
@@ -234,9 +248,9 @@ const SignUpForm = () => {
 
         {/* Senha */}
         <div>
-          <label className="block text-black font-medium mb-1 text-[10px]">
+          <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
             Senha
-          </label>
+          </h5>
           <div className="relative mt-1">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
@@ -272,9 +286,9 @@ const SignUpForm = () => {
 
         {/* Confirmar senha */}
         <div>
-          <label className="block text-black font-medium mb-1 text-[10px]">
+          <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
             Confirmar senha
-          </label>
+          </h5>
           <div className="relative mt-1">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
@@ -316,7 +330,7 @@ const SignUpForm = () => {
           disabled={!isValid || isLoading}
           className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm"
         >
-          {isLoading ? 'Criando conta...' : 'Entrar'}
+          {isLoading ? 'Criando conta...' : 'Criar conta'}
         </button>
       </form>
 
