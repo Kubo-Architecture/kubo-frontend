@@ -158,32 +158,32 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
       {/* Ícone de casa */}
-      <div className="flex justify-center mb-3">
+      <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
           <Home className="w-7 h-7 text-white" strokeWidth={2} />
         </div>
       </div>
 
       {/* Título */}
-      <h1 className="text-2xl font-bold text-center text-black mb-1">
+      <h1 className="text-2xl font-bold text-center text-black mb-0.5">
         Criar conta
       </h1>
       
       {/* Subtítulo */}
-      <p className="text-center text-gray-600 mb-4 text-xs">
+      <p className="text-center text-gray-600 mb-3 text-xs">
         Junte-se à comunidade Kubo
       </p>
 
       {/* Formulário */}
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-0">
         {/* Nome completo */}
         <div>
-          <label className="block text-black font-semibold mb-1 text-xs">
+          <label className="block text-black font-medium mb-1 text-[10px]">
             Nome completo
           </label>
-          <div className="relative">
+          <div className="relative mt-1">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
               type="text"
@@ -191,7 +191,7 @@ const SignUpForm = () => {
               value={formData.name}
               onChange={handleChange}
               onBlur={() => handleBlur('name')}
-              placeholder="Digite seu nome completo"
+              placeholder="Digite seu nome"
               className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
                 touched.name && errors.name ? 'border-red-500' : 'border-gray-300'
               }`}
@@ -207,10 +207,10 @@ const SignUpForm = () => {
 
         {/* Email */}
         <div>
-          <label className="block text-black font-semibold mb-1 text-xs">
+          <label className="block text-black font-medium mb-1 text-[10px]">
             Email
           </label>
-          <div className="relative">
+          <div className="relative mt-1">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
               type="email"
@@ -234,10 +234,10 @@ const SignUpForm = () => {
 
         {/* Senha */}
         <div>
-          <label className="block text-black font-semibold mb-1 text-xs">
+          <label className="block text-black font-medium mb-1 text-[10px]">
             Senha
           </label>
-          <div className="relative">
+          <div className="relative mt-1">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
               type={mostrarSenha ? 'text' : 'password'}
@@ -272,10 +272,10 @@ const SignUpForm = () => {
 
         {/* Confirmar senha */}
         <div>
-          <label className="block text-black font-semibold mb-1 text-xs">
+          <label className="block text-black font-medium mb-1 text-[10px]">
             Confirmar senha
           </label>
-          <div className="relative">
+          <div className="relative mt-1">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <input
               type={mostrarConfirmarSenha ? 'text' : 'password'}
@@ -314,14 +314,14 @@ const SignUpForm = () => {
         <button
           type="submit"
           disabled={!isValid || isLoading}
-          className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-4"
+          className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm"
         >
           {isLoading ? 'Criando conta...' : 'Entrar'}
         </button>
       </form>
 
       {/* Link para login */}
-      <p className="text-center text-gray-600 mt-4 text-xs">
+      <p className="text-center text-gray-600 mt-3 text-xs">
         Já tem uma conta?{' '}
         <button 
           onClick={() => navigate('/login')}

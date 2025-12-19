@@ -1,44 +1,24 @@
+// src/pages/LoginPage/index.jsx
 import { useState, useEffect } from 'react';
 import Loading from '../../components/Universal/Loading';
 import './styles.css';
-import { SimpleHeader } from '../../components/Universal/SimpleHeader';
-import AuthSupportText from '../../components/Universal/AuthSupportText';
 import LoginForm from '../../components/LoginPage/LoginForm';
-import LoginBanner from '../../components/Universal/LoginBanner';
-
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    // mantém o loading pelo menos 1s
+    const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="container">
-      <div className="leftSide">
-        <div className="header">
-          <SimpleHeader />
-        </div>
-          <div className="suportText">
-            <AuthSupportText
-              greeting="Bem vindo de volta!"
-              redirectMessage="Ainda não tem uma conta?"
-              destination="register"
-              navigator="Cadastre-se"
-            />
-          </div>
-        <div className="forms">
-          <LoginForm />
-        </div>
-        {loading && <Loading />}
+    <div className="h-screen flex flex-col bg-white">
+      <div className="flex-1 flex items-center justify-center px-4">
+        <LoginForm />
       </div>
-      <div className="rightSide">
-        <LoginBanner className="loginBanner" alt="Login banner." />
-      </div>
+      {loading && <Loading />}
     </div>
   );
 }
