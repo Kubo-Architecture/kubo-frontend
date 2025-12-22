@@ -23,7 +23,7 @@ export default function NicknameInput() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!nickname.trim()) {
       setError('Por favor, insira um apelido válido');
       return;
@@ -41,14 +41,14 @@ export default function NicknameInput() {
 
     setIsLoading(true);
     setError('');
-    
+
     try {
-        const apiUrl = `${import.meta.env.VITE_API_URL}/user`
+      const apiUrl = `${import.meta.env.VITE_API_URL}/user`
       const response = await axios.put(
         apiUrl,
-        { 
+        {
           nickname: nickname,
-          idUser: idUser 
+          idUser: idUser
         },
         {
           headers: {
@@ -56,10 +56,10 @@ export default function NicknameInput() {
           }
         }
       );
-      
+
       const name = localStorage.getItem("name")
-      if(response.status === 200){ 
-        navigate(`/profile/${name}`);
+      if (response.status === 200) {
+        navigate(`/profile/${nickname}`);
       }
     } catch (err) {
       const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';
@@ -91,7 +91,7 @@ export default function NicknameInput() {
           <img className="h-[30px]" src={KuboIcon} alt="kubo icon" />
         </a>
       </header>
-      
+
       <form onSubmit={handleSubmit} className="flex flex-col justify-between h-[calc(100vh-80px)] items-start">
         <div className="mt-[30px] w-full">
           <InputField
@@ -105,7 +105,7 @@ export default function NicknameInput() {
           />
         </div>
         <div className="w-full flex justify-center items-center">
-          <button 
+          <button
             type="submit"
             disabled={isLoading}
             className={`bg-[#4A4A4A] mb-[30px] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400`}

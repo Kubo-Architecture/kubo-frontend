@@ -99,16 +99,12 @@ const LoginForm = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Login com Google');
-  };
-
   const handleLinkedInLogin = () => {
     console.log('Login com LinkedIn');
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Volta para a página anterior
+    navigate(-1);
   };
 
   return (
@@ -239,7 +235,7 @@ const LoginForm = () => {
       </div>
 
       {/* Botões Social Login */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 flex flex-col justify-center items-center-">
         {/* Botão Google */}
 
         <LoginWithGoogleButton></LoginWithGoogleButton>

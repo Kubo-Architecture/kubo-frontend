@@ -54,15 +54,15 @@ export default function UserProfile() {
         onEditBannerClick={() => setShowBannerSettings(true)}
       />
       <ProfileStats
-        name={profileData.name}
-        nickname={profileData.nickname}
+        name={profileData.nickname}
+        nickname={profileData.name}
         seguidores={profileData.followers || 0}
         likes={profileData.likes || 0}
         projetos={profileData.projects || 0}
       />
       <Biografy Biografy={profileData.bio} />
 
-      <ProjectGallery/>
+      <ProjectGallery />
 
       {showBannerSettings && (
         <div className="z-50">

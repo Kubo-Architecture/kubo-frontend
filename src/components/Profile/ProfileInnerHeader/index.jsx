@@ -7,7 +7,7 @@ export default function ProfileInnerHeader(props) {
   const fileInputRef = useRef(null);
 
   const profileImageUrl = props.photoUrl?.trim()
-    ? `url(${props.photoUrl})`
+    ? `url(${props.photoUrl.replace(/=s\d+(-c)?$/, "=s400-c")})`
     : `url(${DefaultProfile})`;
 
   const handleImageClick = () => {
@@ -66,7 +66,7 @@ export default function ProfileInnerHeader(props) {
         className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer"
         onClick={props.onEditBannerClick}
       >
-        <img src={PenIcon} alt="Editar banner" className="h-[20px]"/>
+        <img src={PenIcon} alt="Editar banner" className="h-[20px]" />
       </button>
     </div>
   );
