@@ -10,13 +10,14 @@ export default function HomeBody() {
     <main >
       {/* Kubo: O maior banco de dados de arquitetura do país*/}
 
-      <div className="overflow-hidden min-w-[422px] w-full">
+      <div className="overflow-hidden min-w-[422px] w-full h-[calc(100vh-15rem)]">
         <div className="grid grid-cols-2 ">
           <div className="px-9 pt-18 h-162 md:px-20">
             <h1 className="
             text-5xl mb-5
             md:text-7xl
-            xl:text-7xl  
+            xl:text-7xl
+            font-semibold 
              ">
               Kubo</h1>
 
@@ -24,7 +25,7 @@ export default function HomeBody() {
              text-2xl w-60 font-normal font-mont
              md:text-3xl md:w-80
              xl:text-5xl xl:w-120
-             
+             not-sm:leading-6
              ">
               O maior banco de dados de arquitetura do país
             </div>
@@ -59,29 +60,28 @@ export default function HomeBody() {
               />
             </div>
           </div>
-
-          {/*container projetos*/}
-          <div className="bg-[#4A4A4A] h-40 flex items-center justify-center col-span-2">
-            <p className="text-white font-light 
-            text-2xl  
-            sm:text-3xl
-            2xl:text-4xl 2xl:h-30 2xl:pt-10">
-              + de <span className="text-blue-400">1000</span> projetos documentados
-            </p>
-          </div>
         </div>
       </div>
 
+      <div className="bg-[#4A4A4A] h-28 not-sm:h-14 flex items-center justify-center col-span-2">
+        <p className="text-white font-light 
+            text-lg  
+            sm:text-3xl
+            2xl:text-4xl 2xl:h-30 2xl:pt-10">
+          + de <span className="text-blue-400">1000</span> projetos documentados
+        </p>
+      </div>
+
       <div id="sobre nos">
-        <SobreNos/>
+        <SobreNos />
       </div>
 
       <div id="novidades">
-        <Novidades/>
+        <Novidades />
       </div>
 
       <div id="projetos">
-        <Projetos/>
+        <Projetos />
       </div>
     </main>
   )

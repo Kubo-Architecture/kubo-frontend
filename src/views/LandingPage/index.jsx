@@ -3,9 +3,9 @@ import LandingPageBody from "../../components/LandingPage/LandingPageBody"
 
 export default function LandingPage() {
     return (
-        <body>
+        <div className="overflow-hidden">
             <LandingPageHeader />
             <LandingPageBody />
-        </body>
+        </div>
     )
 }

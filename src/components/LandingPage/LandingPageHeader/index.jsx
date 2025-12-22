@@ -9,12 +9,12 @@ export default function LandingPageHeader() {
       e.preventDefault();
       const targetId = e.currentTarget.getAttribute("href").substring(1);
       const targetElement = document.getElementById(targetId);
-      
+
       if (targetElement) {
         // Calcula a posição para centralizar o elemento
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - (window.innerHeight / 2) + (targetElement.offsetHeight / 2);
-        
+
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth"
@@ -40,11 +40,11 @@ export default function LandingPageHeader() {
     <header>
       <div className="flex items-center justify-between scroll-smooth 
       px-4 h-20 text-xl font-montserrat font-normal w-full
-      md:px-20
+      md:px-20 not-sm:px-10
        ">
-        <div className="block md:hidden">
+        {/* <div className="block sm:hidden">
           <HamburgerHeader />
-        </div>
+        </div> */}
 
         <div className="hidden md:flex md:flex-1">
           <nav>
@@ -62,7 +62,7 @@ export default function LandingPageHeader() {
           </nav>
         </div>
         <div className="md:flex md:flex-1 justify-center">
-          <Logocontainer/>
+          <Logocontainer />
         </div>
 
         <div className="md:flex md:flex-1 justify-end ">
