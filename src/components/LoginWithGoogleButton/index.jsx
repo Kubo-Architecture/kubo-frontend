@@ -27,7 +27,13 @@ function LoginWithGoogleButton() {
             localStorage.setItem('name', name);
             localStorage.setItem('idUser', idUser);
 
-            navigate(`/profile/nickname`);
+            const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+
+            if (user.data.nickname) {
+                navigate(`/profile/${user.data.nickname}`);
+            } else {
+                navigate(`/profile/nickname`);
+            }
 
         } catch (error) {
             console.error('Erro no login com Google:', error);
