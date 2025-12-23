@@ -26,11 +26,11 @@ export default function ProjectPage() {
                 if (!ProjectID) {
                     throw new Error('ID do projeto não fornecido');
                 }
-                
-                const response = await fetch(`http://localhost:8080/project/${ProjectID}`);
-                
+
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/project/${ProjectID}`);
+
                 console.log("Response status:", response.status);
-                
+
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error('Projeto não encontrado');
@@ -44,7 +44,7 @@ export default function ProjectPage() {
             } catch (err) {
                 console.error('Error fetching project:', err);
                 setError(err.message);
-                
+
                 setTimeout(() => {
                     navigate('/');
                 }, 3000);
@@ -84,7 +84,7 @@ export default function ProjectPage() {
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-4 max-w-md">
                     <h3 className="text-lg font-medium text-blue-800">Projeto não encontrado</h3>
                     <p className="text-blue-700">O projeto solicitado não existe ou foi removido</p>
-                    <button 
+                    <button
                         onClick={() => navigate('/')}
                         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                     >
@@ -118,16 +118,16 @@ export default function ProjectPage() {
 
                 <div className="min-w-full h-70 md:h-90 lg:h-140">
                     {project.photo_url ? (
-                        <img 
-                            className="w-full h-full object-cover" 
-                            src={project.photo_url} 
-                            alt={project.name} 
+                        <img
+                            className="w-full h-full object-cover"
+                            src={project.photo_url}
+                            alt={project.name}
                         />
                     ) : (
-                        <img 
-                            className="w-full h-full object-cover" 
-                            src={ProjectImage} 
-                            alt="Imagem padrão de projeto" 
+                        <img
+                            className="w-full h-full object-cover"
+                            src={ProjectImage}
+                            alt="Imagem padrão de projeto"
                         />
                     )}
                 </div>
@@ -165,8 +165,8 @@ export default function ProjectPage() {
                         <div className="flex flex-col">
                             <span className="leading-4">Materiais</span>
                             <span className="font-light text-xs mt-1 leading-3">
-                                {project.materials && project.materials.length > 0 
-                                    ? project.materials.join(', ') 
+                                {project.materials && project.materials.length > 0
+                                    ? project.materials.join(', ')
                                     : 'Nenhum material informado'}
                             </span>
                         </div>
@@ -226,17 +226,16 @@ export default function ProjectPage() {
                         <span className="text-3xl font-medium mb-5">Galeria</span>
                         <div className="grid grid-cols-1 sm:grid-rows-2 sm:grid-cols-3 gap-1 lg:grid-rows-3">
                             {project.gallery.map((imageUrl, index) => (
-                                <div 
-                                    key={index} 
-                                    className={`rounded-sm ${
-                                        index === 0 ? 'sm:row-span-2 lg:row-span-3' : 
-                                        index > 3 ? 'lg:row-span-1' : 'lg:row-span-2'
-                                    }`}
+                                <div
+                                    key={index}
+                                    className={`rounded-sm ${index === 0 ? 'sm:row-span-2 lg:row-span-3' :
+                                            index > 3 ? 'lg:row-span-1' : 'lg:row-span-2'
+                                        }`}
                                 >
-                                    <img 
-                                        className="w-full h-full object-cover rounded-sm" 
-                                        src={imageUrl} 
-                                        alt={`Imagem ${index + 1} da galeria`} 
+                                    <img
+                                        className="w-full h-full object-cover rounded-sm"
+                                        src={imageUrl}
+                                        alt={`Imagem ${index + 1} da galeria`}
                                     />
                                 </div>
                             ))}

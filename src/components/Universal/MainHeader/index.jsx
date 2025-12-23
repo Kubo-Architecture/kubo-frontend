@@ -5,6 +5,9 @@ import HeartIcon from "../../../assets/icons/Universal/heart-sw.svg";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
 import SettingsIcon from "../../../assets/icons/Universal/settings-sw.svg";
 
+import { FaHeart, FaSliders } from "react-icons/fa6";
+import { FaRegHeart } from "react-icons/fa";
+
 export default function IconWithPanel(props) {
   const [open, setOpen] = useState(false);
   const name = localStorage.getItem('name')
@@ -45,11 +48,13 @@ export default function IconWithPanel(props) {
       <div className="flex-1 h-full">
         <div className="flex flex-row gap-2 h-full w-full justify-end min-w-[120px]">
           <div className="flex items-center justify-center">
-            <img src={HeartIcon} alt="Heart icon" className="h-7" />
+            <FaRegHeart className="w-6 h-6" />
           </div>
+
           <div className="flex items-center justify-center">
-            <img src={SettingsIcon} alt="Settings icon" className="h-7" />
+            <FaSliders className="w-6 h-6" />
           </div>
+
           <div className="flex items-center justify-center">
             <a href={`/profile/${name}`}>
               <div

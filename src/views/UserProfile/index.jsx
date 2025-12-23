@@ -4,18 +4,20 @@ import axios from "axios"
 import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
 import ProfileStats from "../../components/Profile/ProfileStats"
 import MainHeader from "../../components/Universal/MainHeader"
-import Loading from "../../components/Universal/Loading"
 import BannerSettings from "../../components/Profile/BannerSettings"
 import Biografy from "../../components/Profile/Biografy"
 import ProjectGallery from "../../components/Profile/ProjectGallery"
+import Loading from "../../components/Universal/Loading"
 
 export default function UserProfile() {
+  const [loading, setLoading] = useState(true);
   const location = useLocation()
   const navigate = useNavigate()
   const [profileData, setProfileData] = useState(null)
   const [showBannerSettings, setShowBannerSettings] = useState(false)
 
   useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
     const pathSegments = location.pathname.split("/").filter(Boolean)
     const username = pathSegments[1]
 
@@ -35,6 +37,8 @@ export default function UserProfile() {
           navigate("/error/404")
         }
       })
+
+    return () => clearTimeout(timer);
   }, [location])
 
   if (!profileData) {
@@ -47,28 +51,36 @@ export default function UserProfile() {
 
   return (
     <div className="w-screen min-h-screen relative overflow-hidden pt-20">
-      <MainHeader photoUrl={profileData.photoUrl} />
-      <ProfileInnerHeader
-        banner={profileData.banner}
-        photoUrl={profileData.photoUrl}
-        onEditBannerClick={() => setShowBannerSettings(true)}
-      />
-      <ProfileStats
-        name={profileData.nickname}
-        nickname={profileData.name}
-        seguidores={profileData.followers || 0}
-        likes={profileData.likes || 0}
-        projetos={profileData.projects || 0}
-      />
-      <Biografy Biografy={profileData.bio} />
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <MainHeader photoUrl={profileData.photoUrl} />
+          <ProfileInnerHeader
+            banner={profileData.banner}
+            photoUrl={profileData.photoUrl}
+            onEditBannerClick={() => setShowBannerSettings(true)}
+          />
+          <ProfileStats
+            name={profileData.nickname}
+            nickname={profileData.name}
+            seguidores={profileData.followers || 0}
+            likes={profileData.likes || 0}
+            projetos={profileData.projects || 0}
+          />
+          <Biografy Biografy={profileData.bio} />
 
-      <ProjectGallery />
+          <ProjectGallery />
 
-      {showBannerSettings && (
-        <div className="z-50">
-          <BannerSettings onClose={() => setShowBannerSettings(false)} />
-        </div>
+          {showBannerSettings && (
+            <div className="z-50">
+              <BannerSettings onClose={() => setShowBannerSettings(false)} />
+            </div>
+          )}
+        </>
+
       )}
+
     </div>
   )
 }

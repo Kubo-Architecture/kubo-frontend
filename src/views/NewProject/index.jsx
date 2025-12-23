@@ -94,21 +94,21 @@ export default function NewProject() {
         data.append('terrain_area', formData.terrain_area);
         data.append('usage_type', formData.usage_type);
         data.append('idUser', idUser);
-        
+
         formData.materials.forEach((material, index) => {
             data.append(`materials[${index}]`, material);
         });
-        
+
         if (photo) {
             data.append('photo', photo);
         }
-        
+
         gallery.forEach(file => {
             data.append('gallery', file);
         });
 
         try {
-            const response = await fetch('http://localhost:8080/project', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/project`, {
                 method: 'POST',
                 body: data
             });
@@ -132,20 +132,20 @@ export default function NewProject() {
             <header className="h-[60px] flex justify-center shadow-sm bg-white">
                 <Logocontainer />
             </header>
-            
+
             <div className="max-w-4xl mx-auto p-4 sm:p-6">
                 <div className="bg-white shadow-xl rounded-lg overflow-hidden">
                     <div className="bg-[#4A4A4A] p-6">
                         <h1 className="text-2xl font-bold text-white">Cadastro de Novo Projeto</h1>
                         <p className="text-gray-300 mt-1">Preencha todos os campos abaixo para registrar seu projeto</p>
                     </div>
-                    
+
                     {error && (
                         <div className="bg-red-50 border-l-4 border-red-500 p-4 mx-6 mt-6">
                             <p className="text-red-700">{error}</p>
                         </div>
                     )}
-                    
+
                     <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -213,7 +213,7 @@ export default function NewProject() {
                                 <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
                                     <div className="flex flex-col items-center justify-center">
                                         <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                         </svg>
                                         <p className="text-sm text-gray-500 text-center">
                                             <span className="font-semibold">Clique para enviar</span><br />
@@ -230,7 +230,7 @@ export default function NewProject() {
                                 <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition p-6">
                                     <div className="flex flex-col items-center justify-center">
                                         <svg className="w-10 h-10 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                         </svg>
                                         <p className="text-sm text-gray-500 text-center">
                                             <span className="font-semibold">Clique para enviar</span><br />

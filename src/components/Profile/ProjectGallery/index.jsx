@@ -14,7 +14,7 @@ const ProjectGallery = () => {
           throw new Error('Usuário não autenticado');
         }
 
-        const response = await fetch(`http://localhost:8080/projects/${idUser}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${idUser}`);
 
         if (!response.ok) {
           throw new Error(`Erro na requisição: ${response.status}`);
@@ -49,7 +49,7 @@ const ProjectGallery = () => {
           </h3>
         </div>
 
-        {projects.length === 0 || error ? (
+        {projects?.length == 0 || error ? (
           <div className="bg-blue-50 border-l-4 border-[#4A4A4A] p-4 rounded text-left">
             <div className="flex">
               <div className="flex-shrink-0">
@@ -66,9 +66,9 @@ const ProjectGallery = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {projects.map((project) => (
+            {projects?.map((project) => (
               <ProjectCard
-                key={project._id}
+                key={project.id}
                 project={project}
               />
             ))}
