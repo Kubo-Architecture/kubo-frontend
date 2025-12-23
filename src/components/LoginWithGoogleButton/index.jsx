@@ -57,8 +57,6 @@ function LoginWithGoogleButton() {
             size="large"
             text="continue_with"
             shape="rectangular"
-            logo_alignment="center"
-            width={450}
         />
     );
 }

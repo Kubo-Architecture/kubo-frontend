@@ -158,7 +158,7 @@ const LoginForm = () => {
             />
           </div>
           {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
+          <div className="h-4 my-1">
             {touched.email && errors.email && (
               <p className="text-red-500 text-xs">{errors.email}</p>
             )}
@@ -195,6 +195,13 @@ const LoginForm = () => {
             </button>
           </div>
 
+          {/* Altura fixa para mensagem de erro */}
+          <div className="h-4 my-1">
+            {touched.password && errors.password && (
+              <p className="text-red-500 text-xs">{errors.password}</p>
+            )}
+          </div>
+
           {/* Link esqueci minha senha embaixo do input */}
           <div className="flex justify-end mt-1">
             <button
@@ -204,13 +211,6 @@ const LoginForm = () => {
             >
               Esqueceu a senha?
             </button>
-          </div>
-
-          {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
-            {touched.password && errors.password && (
-              <p className="text-red-500 text-xs">{errors.password}</p>
-            )}
           </div>
         </div>
 
@@ -237,7 +237,9 @@ const LoginForm = () => {
       {/* Botões Social Login */}
       <div className="space-y-1.5 flex flex-col justify-center items-center">
 
-        <LoginWithGoogleButton />
+        <div className="w-full">
+          <LoginWithGoogleButton />
+        </div>
 
         {/* <button
           type="button"
@@ -252,11 +254,11 @@ const LoginForm = () => {
       </div>
 
       {/* Link para cadastro */}
-      <p className="text-center text-gray-600 mt-3 text-sm">
+      <p className="text-center text-gray-600 mt-5 text-sm">
         Não tem uma conta?{' '}
         <button
           onClick={() => navigate('/register')}
-          className="font-semibold text-blue-600 hover:underline"
+          className="font-semibold cursor-pointer text-blue-600 hover:text-blue-500"
         >
           Criar conta
         </button>

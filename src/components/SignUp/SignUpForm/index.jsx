@@ -87,7 +87,7 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Marcar todos os campos como tocados
     setTouched({
       name: true,
@@ -118,10 +118,10 @@ const SignUpForm = () => {
         email: formData.email,
         password: encryptedPassword
       };
-      
+
       const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
       const response = await axios.post(apiUrl, payload);
-      
+
       // Verificar se a resposta é bem-sucedida
       if (response.data && response.data.idUser) {
         navigate(`/auth/${response.data.idUser}`);
@@ -130,7 +130,7 @@ const SignUpForm = () => {
       }
     } catch (error) {
       console.error('Erro no cadastro:', error);
-      
+
       // Tratar diferentes tipos de erros
       if (error.response?.status === 404) {
         navigate('/error/404');
@@ -163,7 +163,7 @@ const SignUpForm = () => {
 
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
-      
+
       {/* Botão de voltar */}
       <button
         onClick={handleGoBack}
@@ -172,7 +172,7 @@ const SignUpForm = () => {
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
         <span>Voltar</span>
       </button>
-      
+
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
@@ -184,7 +184,7 @@ const SignUpForm = () => {
       <h1 className="text-2xl font-bold text-center text-black mb-0.5">
         Criar conta
       </h1>
-      
+
       {/* Subtítulo */}
       <p className="text-center text-gray-600 mb-3 text-xs">
         Junte-se à comunidade Kubo
@@ -206,13 +206,12 @@ const SignUpForm = () => {
               onChange={handleChange}
               onBlur={() => handleBlur('name')}
               placeholder="Digite seu nome"
-              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
-                touched.name && errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.name && errors.name ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
           </div>
           {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
+          <div className="h-4 mt-1 mb-2">
             {touched.name && errors.name && (
               <p className="text-red-500 text-xs">{errors.name}</p>
             )}
@@ -233,13 +232,12 @@ const SignUpForm = () => {
               onChange={handleChange}
               onBlur={() => handleBlur('email')}
               placeholder="Digite seu email"
-              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
-                touched.email && errors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.email && errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
           </div>
           {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
+          <div className="h-4 mt-1 mb-2">
             {touched.email && errors.email && (
               <p className="text-red-500 text-xs">{errors.email}</p>
             )}
@@ -260,9 +258,8 @@ const SignUpForm = () => {
               onChange={handleChange}
               onBlur={() => handleBlur('password')}
               placeholder="Digite sua senha"
-              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
-                touched.password && errors.password ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.password && errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             <button
               type="button"
@@ -277,9 +274,9 @@ const SignUpForm = () => {
             </button>
           </div>
           {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
+          <div className="h-4 mt-1 mb-2">
             {touched.password && errors.password && (
-              <p className="text-red-500 text-xs">{errors.password}</p>
+              <p className="text-red-500 text-xs leading-3">{errors.password}</p>
             )}
           </div>
         </div>
@@ -298,9 +295,8 @@ const SignUpForm = () => {
               onChange={handleChange}
               onBlur={() => handleBlur('confirmPassword')}
               placeholder="Confirme sua senha"
-              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
-                touched.confirmPassword && errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.confirmPassword && errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             <button
               type="button"
@@ -315,7 +311,7 @@ const SignUpForm = () => {
             </button>
           </div>
           {/* Altura fixa para mensagem de erro */}
-          <div className="h-4 mt-0.5">
+          <div className="h-4 mt-1 mb-2">
             {touched.confirmPassword && errors.confirmPassword && (
               <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
             )}
@@ -337,7 +333,7 @@ const SignUpForm = () => {
       {/* Link para login */}
       <p className="text-center text-gray-600 mt-3 text-xs">
         Já tem uma conta?{' '}
-        <button 
+        <button
           onClick={() => navigate('/login')}
           className="font-semibold text-blue-600 hover:underline"
         >
