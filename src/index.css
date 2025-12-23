@@ -1,2 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 @import "tailwindcss";
+
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: "Montserrat", sans-serif;
+    }
+}
