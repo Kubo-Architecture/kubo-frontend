@@ -23,8 +23,7 @@ export default function LoginPage() {
           } else {
             navigate('/profile/nickname');
           }
-          // Se encontrou o usuário, retornamos sem mudar o loading para false
-          // Assim a tela continua branca/com loading até o navegador mudar de página
+
           return;
         } catch (error) {
           console.error("Erro ao verificar usuário:", error);
@@ -32,7 +31,6 @@ export default function LoginPage() {
         }
       }
 
-      // Se não tem idUser OU se o try/catch falhou, mostramos o formulário
       setLoading(false);
     };
 
@@ -41,7 +39,6 @@ export default function LoginPage() {
 
   return (
     <div className="h-screen flex flex-col bg-white">
-      {/* 2. Só renderizamos o conteúdo se o loading for false */}
       {!loading ? (
         <div className="flex-1 flex items-center justify-center px-4">
           <LoginForm />
