@@ -176,7 +176,7 @@ const SignUpForm = () => {
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-          <Home className="w-7 h-7 text-white" strokeWidth={2} />
+          <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
         </div>
       </div>
 

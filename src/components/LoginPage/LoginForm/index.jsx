@@ -110,20 +110,10 @@ const LoginForm = () => {
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
 
-      {/* Botão de voltar */}
-      <button
-        onClick={handleGoBack}
-        className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group"
-      >
-        <a href="/"></a>
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Voltar</span>
-      </button>
-
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-          <Home className="w-7 h-7 text-white" strokeWidth={2} />
+          <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
         </div>
       </div>
 
