@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
-import InputField from "../../components/Universal/InputField";
+import { Home, ArrowLeft } from 'lucide-react';
 
 export default function NicknameInput() {
   const [nickname, setNickname] = useState('');
   const [idUser, setIdUser] = useState(null);
   const [error, setError] = useState('');
+  const [touched, setTouched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,14 +23,15 @@ export default function NicknameInput() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setTouched(true);
 
     if (!nickname.trim()) {
       setError('Por favor, insira um apelido válido');
       return;
     }
 
-    if (nickname.length > 80) {
-      setError('O apelido deve ter no máximo 80 caracteres.');
+    if (nickname.length > 50) {
+      setError('O apelido deve ter no máximo 50 caracteres.');
       return;
     }
 
@@ -43,7 +44,7 @@ export default function NicknameInput() {
     setError('');
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user`
+      const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
       const response = await axios.put(
         apiUrl,
         {
@@ -57,7 +58,6 @@ export default function NicknameInput() {
         }
       );
 
-      const name = localStorage.getItem("name")
       if (response.status === 200) {
         navigate(`/profile/${nickname}`);
       }
@@ -72,48 +72,90 @@ export default function NicknameInput() {
 
   const handleChange = (e) => {
     const value = e.target.value;
-
-    if (value.length > 50) {
-      setError('O apelido deve ter no máximo 50 caracteres.');
-      return;
-    }
-
     setNickname(value);
-
+    
     // Limpa erros quando o usuário digita algo válido
     if (error) setError('');
   };
 
-  return (
-    <div className="h-screen w-full px-[30px]">
-      <header className="h-[80px] flex justify-center items-center">
-        <a href="/">
-          <img className="h-[30px]" src={KuboIcon} alt="kubo icon" />
-        </a>
-      </header>
+  const handleBlur = () => {
+    setTouched(true);
+    if (!nickname.trim()) {
+      setError('Por favor, insira um apelido válido');
+    } else if (nickname.length > 50) {
+      setError('O apelido deve ter no máximo 50 caracteres.');
+    } else {
+      setError('');
+    }
+  };
 
-      <form onSubmit={handleSubmit} className="flex flex-col justify-between h-[calc(100vh-80px)] items-start">
-        <div className="mt-[30px] w-full">
-          <InputField
-            label="Como gostaria de ser chamado?"
-            type="text"
-            name="nickname"
-            placeholder="Digite seu apelido"
-            value={nickname}
-            onChange={handleChange}
-            error={error}
-          />
+  const handleGoBack = () => {
+    navigate(-1); // Volta para a página anterior
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="w-full max-w-md flex flex-col justify-center items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">    
+        {/* Ícone de casa */}
+        <div className="flex justify-center mb-2">
+          <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
+            <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
+          </div>
         </div>
-        <div className="w-full flex justify-center items-center">
+
+        {/* Título */}
+        <h1 className="text-2xl font-bold text-center text-black mb-0.5">
+          Como podemos te chamar?
+        </h1>
+        
+        {/* Subtítulo */}
+        <p className="text-center text-gray-600 mb-6 text-sm px-4">
+          Esse será o nome que aparecerá no seu perfil
+        </p>
+
+        {/* Formulário */}
+        <form onSubmit={handleSubmit} className="space-y-0 w-full">
+          {/* Apelido */}
+          <div>
+            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+              Apelido
+            </h5>
+            <div className="relative mt-1">
+              <input
+                type="text"
+                name="nickname"
+                value={nickname}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Digite o seu nome de usuário"
+                className={`w-full px-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                  touched && error ? 'border-red-500' : 'border-gray-300'
+                }`}
+                autoFocus={true}
+                maxLength={50}
+              />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs">
+                {nickname.length}/50
+              </div>
+            </div>
+            {/* Altura fixa para mensagem de erro */}
+            <div className="h-4 mt-0.5">
+              {touched && error && (
+                <p className="text-red-500 text-xs">{error}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Botão de submissão */}
           <button
             type="submit"
-            disabled={isLoading}
-            className={`bg-[#4A4A4A] mb-[30px] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400`}
+            disabled={isLoading || !nickname.trim()}
+            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm"
           >
-            {isLoading ? 'Enviando...' : 'Confirmar'}
+            {isLoading ? 'Enviando...' : 'Próximo'}
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
