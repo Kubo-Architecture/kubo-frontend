@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.png";
+import KuboIconWhite from "../../assets/icons/Universal/kubo-main-icon-white.png";
 
 const Mesa = "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80";
 const Estatua = "https://images.unsplash.com/photo-1600585154340-043788447d1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80";
@@ -79,7 +81,7 @@ function LandingPageHeader() {
 
           <div className="flex-1 flex justify-center md:justify-start md:flex-1">
             <div className="w-7 h-8 flex justify-center items-center">
-              <img src="src/assets/icons/Universal/kubo-main-icon.png" alt="Kubo Icon" draggable={false} className="h-full" />
+              <img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" />
             </div>
           </div>
 
@@ -338,7 +340,7 @@ function Footer() {
           <div className="space-y-4">
             <div className="flex text-2xl font-bold gap-1">
               <div className="w-6 h-7 flex justify-center items-center">
-                <img src="src/assets/icons/Universal/kubo-main-icon-white.png" alt="Kubo Icon" draggable={false} className="h-full" />
+                <img src={KuboIconWhite} alt="Kubo Icon" draggable={false} className="h-full" />
               </div>
               <span className="text-white">KUBO</span>
             </div>
