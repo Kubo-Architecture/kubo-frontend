@@ -79,15 +79,17 @@ function LandingPageHeader() {
             </a>
           </nav>
 
-          <div className="flex-1 flex justify-center md:justify-start md:flex-1">
+          <div className="w-20 h-full hidden not-md:flex not-md:flex-1"></div>
+
+          <div className="flex flex-1 justify-between">
             <div className="w-7 h-8 flex justify-center items-center">
               <img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" />
             </div>
-          </div>
 
-          <a href="/login" className="text-lg font-medium text-gray-900 hover:text-[#0B85FF] transition-colors">
-            Entrar
-          </a>
+            <a href="/login" className="text-lg font-medium text-gray-900 hover:text-[#0B85FF] transition-colors">
+              Entrar
+            </a>
+          </div>
         </div>
       </div>
     </header>
@@ -96,13 +98,13 @@ function LandingPageHeader() {
 
 function HeroSection() {
   return (
-    <section className="select-none relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+    <section className="select-none relative min-h-screen flex items-center justify-center py-16 not-md:mt-12 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-8">
-            <div className="">
+            <div>
               <h1 className="text-7xl md:text-8xl font-bold tracking-tight text-gray-900">
                 Kubo
               </h1>
@@ -116,7 +118,7 @@ function HeroSection() {
 
             <div className="flex items-center space-x-4 pt-4">
               <a
-                href="#register"
+                href="/login"
                 className="px-8 py-3 bg-[#0B85FF] text-white rounded-full font-medium hover:bg-[#0969CC] transition-all duration-300 hover:shadow-lg hover:shadow-[#0B85FF]/20"
               >
                 Começar agora
@@ -272,7 +274,7 @@ function Novidades() {
             </div>
 
             <a
-              href="#register"
+              href="/login"
               className="inline-flex items-center space-x-2 px-8 py-4 bg-[#0B85FF] text-white rounded-full font-medium hover:bg-[#0969CC] transition-all duration-300 hover:shadow-lg hover:shadow-[#0B85FF]/20"
             >
               <span>Explore já</span>
@@ -319,7 +321,7 @@ function Projetos() {
             </p>
 
             <a
-              href="#register"
+              href="/login"
               className="inline-flex items-center space-x-2 px-8 py-4 bg-[#0B85FF] text-white rounded-full font-medium hover:bg-[#0969CC] transition-all duration-300 hover:shadow-lg hover:shadow-[#0B85FF]/20"
             >
               <span>Crie já</span>
