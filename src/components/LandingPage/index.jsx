@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.png";
-import KuboIconWhite from "../../assets/icons/Universal/kubo-main-icon-white.png";
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
+import KuboIconWhite from "../../assets/icons/Universal/kubo-main-icon-white.svg";
 
 const Mesa = "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80";
 const Estatua = "https://images.unsplash.com/photo-1600585154340-043788447d1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80";
