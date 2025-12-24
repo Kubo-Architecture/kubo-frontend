@@ -79,7 +79,7 @@ function LandingPageHeader() {
 
           <div className="flex-1 flex justify-center md:justify-start md:flex-1">
             <div className="w-7 h-8 flex justify-center items-center">
-              <img src="src/assets/icons/Universal/kubo-main-icon.svg" alt="Kubo Icon" draggable={false} className="h-full" />
+              <img src="src/assets/icons/Universal/kubo-main-icon.png" alt="Kubo Icon" draggable={false} className="h-full" />
             </div>
           </div>
 
@@ -338,7 +338,7 @@ function Footer() {
           <div className="space-y-4">
             <div className="flex text-2xl font-bold gap-1">
               <div className="w-6 h-7 flex justify-center items-center">
-                <img src="src/assets/icons/Universal/kubo-main-icon-white.svg" alt="Kubo Icon" draggable={false} className="h-full" />
+                <img src="src/assets/icons/Universal/kubo-main-icon-white.png" alt="Kubo Icon" draggable={false} className="h-full" />
               </div>
               <span className="text-white">KUBO</span>
             </div>
