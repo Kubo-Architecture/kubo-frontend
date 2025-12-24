@@ -9,6 +9,7 @@ import NicknameInput from "../views/NicknameInput";
 import ProjectPage from "../views/ProjectPage";
 import ForgotPassword from "../views/ForgotPassword"
 import NewProject from "../views/NewProject";
+import Gallery from "../views/Gallery";
 
 
 export default function Rotas() {
@@ -25,6 +26,7 @@ export default function Rotas() {
                 <Route path="/project/:ProjectID" element={<ProjectPage />} />
                 <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/new-project" element={<NewProject />} />
+                <Route path="/Gallery" element={<Gallery />} />
             </Routes>
         </BrowserRouter>
     );
