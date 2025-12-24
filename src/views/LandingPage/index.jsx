@@ -1,11 +1,9 @@
-import LandingPageHeader from "../../components/LandingPage/LandingPageHeader"
-import LandingPageBody from "../../components/LandingPage/LandingPageBody"
+import LandingPageComp from "../../components/LandingPage/index"
 
 export default function LandingPage() {
     return (
         <div className="overflow-hidden">
-            <LandingPageHeader />
-            <LandingPageBody />
+            <LandingPageComp/>
         </div>
     )
 }
