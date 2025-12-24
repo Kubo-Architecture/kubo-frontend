@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
+import axios from 'axios';
 
-const ProjectGallery = () => {
+const ProjectGallery = ({ onProjectsLoaded }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,19 +11,19 @@ const ProjectGallery = () => {
     const fetchProjects = async () => {
       try {
         const idUser = localStorage.getItem('idUser');
-        if (!idUser) {
-          throw new Error('Usuário não autenticado');
-        }
+        if (!idUser) throw new Error('Usuário não autenticado');
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${idUser}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${idUser}`);
 
-        if (!response.ok) {
-          throw new Error(`Erro na requisição: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = response.data;
         setProjects(data);
+
+        if (onProjectsLoaded) {
+          onProjectsLoaded(data.length);
+        }
+
       } catch (err) {
+        console.error("Erro ao buscar projetos:", err);
         setError(err.message);
       } finally {
         setLoading(false);

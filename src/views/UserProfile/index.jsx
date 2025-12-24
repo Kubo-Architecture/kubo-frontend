@@ -15,6 +15,7 @@ export default function UserProfile() {
   const navigate = useNavigate()
   const [profileData, setProfileData] = useState(null)
   const [showBannerSettings, setShowBannerSettings] = useState(false)
+  const [projectCount, setProjectCount] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
@@ -66,11 +67,11 @@ export default function UserProfile() {
             nickname={profileData.name}
             seguidores={profileData.followers || 0}
             likes={profileData.likes || 0}
-            projetos={profileData.projects || 0}
+            projetos={projectCount || 0}
           />
           <Biografy Biografy={profileData.bio} />
 
-          <ProjectGallery />
+          <ProjectGallery onProjectsLoaded={(count) => setProjectCount(count)} />
 
           {showBannerSettings && (
             <div className="z-50">
