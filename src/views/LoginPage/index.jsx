@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // 1. Certifique-se de importar o axios
 import Loading from '../../components/Universal/Loading';
 import LoginForm from '../../components/LoginPage/LoginForm';
-import './styles.css';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(true);
