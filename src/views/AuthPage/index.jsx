@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { SimpleHeader } from '../../components/Universal/SimpleHeader';
+import { Mail, ArrowLeft, CreditCard } from 'lucide-react';
 import Loading from '../../components/Universal/Loading';
-import Aviao from "../../assets/icons/Universal/AviaoAuth.svg";
-import LoginBanner from "../../components/Universal/LoginBanner";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -15,6 +13,7 @@ const VerificationCodeInput = () => {
   const [code, setCode] = useState(['', '', '', '']);
   const [attempts, setAttempts] = useState(0);
   const [limitReached, setLimitReached] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const inputs = useRef([]);
 
   const maxAttempts = 4;
@@ -30,12 +29,12 @@ const VerificationCodeInput = () => {
   }, [code]);
 
   const handleChange = (index, value) => {
-    // Remove espaços e pega o último caractere
     const cleanedValue = value.replace(/\s/g, '').slice(-1);
 
     const newCode = [...code];
     newCode[index] = cleanedValue;
     setCode(newCode);
+    setErrorMessage('');
 
     if (cleanedValue && index < 3) {
       inputs.current[index + 1]?.focus();
@@ -43,22 +42,18 @@ const VerificationCodeInput = () => {
   };
 
   const handleKeyDown = (index, e) => {
-    // Bloqueia especificamente a tecla de espaço
     if (e.key === ' ') {
       e.preventDefault();
       return;
     }
 
-    // Lógica para Backspace
     if (e.key === 'Backspace') {
       const newCode = [...code];
 
       if (code[index]) {
-        // Se o campo tem valor, limpa o valor atual
         newCode[index] = '';
         setCode(newCode);
       } else if (index > 0) {
-        // Se o campo está vazio, volta para o anterior e apaga
         newCode[index - 1] = '';
         setCode(newCode);
         inputs.current[index - 1]?.focus();
@@ -66,7 +61,6 @@ const VerificationCodeInput = () => {
       e.preventDefault();
     }
 
-    // Lógica para Delete
     if (e.key === 'Delete') {
       const newCode = [...code];
       newCode[index] = '';
@@ -77,6 +71,16 @@ const VerificationCodeInput = () => {
       }
       e.preventDefault();
     }
+
+    if (e.key === 'ArrowLeft' && index > 0) {
+      inputs.current[index - 1]?.focus();
+      e.preventDefault();
+    }
+    
+    if (e.key === 'ArrowRight' && index < 3) {
+      inputs.current[index + 1]?.focus();
+      e.preventDefault();
+    }
   };
 
   const handleSubmit = async () => {
@@ -84,6 +88,8 @@ const VerificationCodeInput = () => {
 
     try {
       setIsLoading(true);
+      setErrorMessage('');
+      
       const response = await fetch(`${apiUrl}/verify`, {
         method: 'POST',
         headers: {
@@ -94,16 +100,35 @@ const VerificationCodeInput = () => {
           idUser: idUser,
         }),
       });
-      console.log(response)
-      if (response.status === 200) {
-          navigate(`/login`);
+
+      if (response.ok) {
+        navigate(`/login`);
+        return;
       }
 
-      if (!response.ok) throw new Error('Falha na verificação');
+      if (response.status === 400) {
+        const data = await response.json();
+        setErrorMessage(data.message || 'Código inválido');
+      } else if (response.status === 429) {
+        setErrorMessage('Muitas tentativas. Tente novamente mais tarde.');
+      } else {
+        setErrorMessage('Erro ao verificar código');
+      }
 
-      console.log('Código verificado com sucesso!');
+      setCode(['', '', '', '']);
+      inputs.current[0]?.focus();
+
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      if (newAttempts >= maxAttempts) {
+        setLimitReached(true);
+      }
+
     } catch (error) {
       console.error('Erro:', error);
+      setErrorMessage('Erro de conexão. Tente novamente.');
+      
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
@@ -115,50 +140,82 @@ const VerificationCodeInput = () => {
     }
   };
 
+  const resendCode = async () => {
+    try {
+      setErrorMessage('');
+      const response = await fetch(`${apiUrl}/resend-code`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idUser }),
+      });
+
+      if (response.ok) {
+        setErrorMessage('Código reenviado com sucesso!');
+        setTimeout(() => setErrorMessage(''), 3000);
+      } else {
+        setErrorMessage('Erro ao reenviar código');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      setErrorMessage('Erro de conexão');
+    }
+  };
+
   const resetVerification = () => {
     setLimitReached(false);
     setAttempts(0);
     setCode(['', '', '', '']);
+    setErrorMessage('');
     inputs.current[0]?.focus();
   };
 
   return (
-    <div className='overflow-x-hidden h-[100vh]'>
-      <div className="verification-container">
-        {isLoading && (
-          <div className="loading-overlay">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
             <Loading timeout={8000} />
+            <p className="mt-4 text-sm text-gray-600">Verificando código...</p>
           </div>
-        )}
+        </div>
+      )}
 
-        {!limitReached ? (
-          <div className="flex flex-col justify-between min-h-screen min-w-[382px] 
-          md:grid md:grid-cols-2 md:py-4 md:min-w-[1080px] ">
-            {/* lado esquerdo */}
-            <div className="flex flex-col justify-between min-h-[100vh] md:min-h-[calc(100vh-32px)]">
-              <div className="space-y-7 md:space-y-10">
-                <div className='w-full flex justify-center mb-10 mt-5 md:justify-start md:ml-29 md:mt-3'>
-                  <SimpleHeader />
-                </div>
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative">
+          
+          {/* Botão de voltar dentro do card */}
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-black transition text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Voltar</span>
+          </button>
 
-                <div className='bg-[#D9D9D9] rounded-r-full flex justify-end md:hidden w-[260px] h-[136px] pr-[60px] 
-                sm:w-85'>
-                  <img src={Aviao} alt="img avião" className='h-[72px] mt-8' />
-                </div>
+          {/* Ícone de cartão centralizado em preto e branco */}
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-black rounded-xl flex items-center justify-center">
+              <CreditCard className="w-8 h-8 text-white" strokeWidth={1.5} />
+            </div>
+          </div>
 
-                <div className='text-4xl w-[480px] ml-7
-                sm:ml-20
-                md:text-5xl md:ml-29'>
-                  <h3>Verifique seu email</h3>
-                </div>
+          {!limitReached ? (
+            <>
+              {/* Título principal */}
+              <h1 className="text-2xl font-bold text-center text-black mb-2">
+                Verificação de Email
+              </h1>
 
-                <div className="w-[360px] text-2xl ml-7 
-                sm:ml-20
-                md:ml-29 md:text-4xl md:font-light md:w-[480px]">
-                  <h1 className='font-Montserrat'>Digite o código de confirmação enviado em seu email</h1>
-                </div>
+              {/* Subtítulo */}
+              <p className="text-center text-gray-600 mb-6 text-sm">
+                Digite o código de 4 dígitos enviado para seu email
+              </p>
 
-                <div className="flex gap-4 ml-7 pt-4 md:ml-29 md:pt-0 mr-10 sm:ml-20">
+              {/* Inputs do código */}
+              <div className="mb-8">
+                <div className="flex justify-center gap-3 mb-2">
                   {code.map((digit, index) => (
                     <input
                       key={index}
@@ -168,72 +225,115 @@ const VerificationCodeInput = () => {
                       onChange={(e) => handleChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       ref={(el) => (inputs.current[index] = el)}
-                      className="bg-[#D9D9D9] w-[52px] h-[64px] rounded-xl text-center text-2xl md:w-[64px] md:h-[76px]"
+                      className={`w-16 h-16 text-center text-2xl font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-black transition-all ${
+                        errorMessage 
+                          ? 'border-red-500 ring-red-200' 
+                          : 'border-gray-300 focus:border-black'
+                      }`}
                     />
                   ))}
                 </div>
 
-                <div className='w-[240px] md:w-[360px] mb-10 ml-7 md:ml-29 sm:ml-20'>
-                  <a href="#" className='text-[#29435E] font-Montserrat text-xl'>
-                    Não recebeu o código?
-                  </a>
+                {/* Mensagem de erro/sucesso */}
+                {errorMessage && (
+                  <div className={`text-center mt-3 text-sm ${
+                    errorMessage.includes('reenviado') 
+                      ? 'text-green-600 py-2 px-3 rounded-lg' 
+                      : 'text-red-500 py-2 px-3 rounded-lg'
+                  }`}>
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Tentativas restantes */}
+                <div className="text-center text-xs text-gray-500 mt-3">
+                  Tentativas restantes: {maxAttempts - attempts} de {maxAttempts}
                 </div>
               </div>
 
-              <div className="flex justify-center mb-8 md:mb-0">
+              {/* Botão de reenviar código */}
+              <div className="text-center mb-6">
                 <button
-                  onClick={() => {
-                    if (code.every(digit => digit !== '')) {
-                      handleSubmit();
-                    }
-                  }}
-                  className="bg-[#000000b7] hover:bg-black transition text-xl duration-600 text-white font-Montserrat px-20 py-2.5 rounded-xl md:px-[120px]"
+                  onClick={resendCode}
+                  className="text-gray-600 hover:text-black text-sm font-medium transition flex items-center justify-center gap-1 w-full"
                 >
-                  Próximo
+                  <Mail className="w-4 h-4" />
+                  Não recebeu o código? <span className="font-semibold text-black">Reenviar</span>
                 </button>
               </div>
-            </div>
 
-            <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-[60px]">
-              <LoginBanner />
-            </div>
-          </div>
+              {/* Botão de verificar */}
+              <button
+                onClick={() => {
+                  if (code.every(digit => digit !== '')) {
+                    handleSubmit();
+                  }
+                }}
+                disabled={!code.every(digit => digit !== '')}
+                className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+              >
+                Verificar Código
+              </button>
+            </>
+          ) : (
+            /* Tela de limite atingido */
+            <>
+              <h1 className="text-2xl font-bold text-center text-black mb-2">
+                Limite Atingido
+              </h1>
 
-        ) : (
+              <p className="text-center text-gray-600 mb-6 text-sm">
+                Você excedeu o número máximo de tentativas
+              </p>
 
-
-          <div className="md:py-4 md:grid grid-cols-2 md:min-w-[874px]">
-            <div className="w-90 font-Montserrat text-3xl text-center flex flex-col min-h-screen pt-6 md:pt-7 h-[100vh]">
-              <div className="space-y-6 md:space-y-12 flex flex-col flex-grow"> {/* Adicionei flex-grow aqui */}
-                <div className='w-full flex justify-center ml-6 mb-28 md:mb-10 md:ml-0'>
-                  <SimpleHeader />
-                </div>
-
-                <div className='bg-[#D9D9D9] rounded-r-full flex justify-end w-65 h-34 pr-15 md:w-90 mb-20'>
-                  <img src={Aviao} alt="img avião" className='h-18 mt-8' />
-                </div>
-
-                <div className='text-justify ml-10 md:ml-29 md:w-89'>
-                  <p>Você atingiu o limite de tentativas. Por favor, tente novamente mais tarde.</p>
-                </div>
-
-                {/* Container do botão com mt-auto para fixar na parte inferior */}
-                <div className='mt-auto mb-8 flex justify-center md:justify-start md:ml-39 ml-12'> {/* Adicionei mt-auto e mb-8 */}
-                  <button
-                    onClick={resetVerification}
-                    className='bg-[#000000b7] hover:bg-black transition-all duration-400 text-white font-Montserrat text-xl px-[120px] py-2 rounded-xl '
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-300">
+                  <svg 
+                    className="w-8 h-8 text-gray-700" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
                   >
-                    voltar
-                  </button>
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                    />
+                  </svg>
                 </div>
               </div>
-            </div>
 
-            <div className="w-[450px] h-[95vh] overflow-hidden relative bg-contain bg-center bg-no-repeat rounded-[14px] hidden md:block ml-15">
-              <LoginBanner />
-            </div>
-          </div>
-        )}
+              <p className="text-center text-gray-700 mb-8 text-sm leading-relaxed">
+                Por segurança, você deve esperar alguns minutos antes de tentar novamente ou solicitar um novo código de verificação.
+              </p>
+
+              <div className="space-y-3">
+                <button
+                  onClick={resendCode}
+                  className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200 text-sm flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-4 h-4" />
+                  Solicitar Novo Código
+                </button>
+
+                <button
+                  onClick={resetVerification}
+                  className="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 transition duration-200 text-sm"
+                >
+                  Tentar Novamente
+                </button>
+
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 transition duration-200 text-sm border border-gray-300"
+                >
+                  Voltar para o Login
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
