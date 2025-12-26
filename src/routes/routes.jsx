@@ -27,7 +27,7 @@ export default function Rotas() {
                 <Route path="/project/:ProjectID" element={<ProjectPage />} />
                 <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/new-project" element={<NewProject />} />
-                <Route path="/Gallery" element={<Gallery />} />
+                <Route path="/gallery" element={<Gallery />} />
                 <Route path="/Userconfig" element={<UserConfig />} />
             </Routes>
         </BrowserRouter>

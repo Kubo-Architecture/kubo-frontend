@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // 1. Certifique-se de importar o axios
+import axios from 'axios';
 import Loading from '../../components/Universal/Loading';
 import LoginForm from '../../components/LoginPage/LoginForm';
 
@@ -12,17 +12,14 @@ export default function LoginPage() {
     const checkUserLogged = async () => {
       const idUser = localStorage.getItem('idUser');
 
+      // 🔹 Se já estiver logado, SEMPRE vai pra gallery
       if (idUser) {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
-          const user = response.data;
+          await axios.get(
+            `${import.meta.env.VITE_API_URL}/user/${idUser}`
+          );
 
-          if (user.nickname) {
-            navigate(`/profile/${user.nickname}`);
-          } else {
-            navigate('/profile/nickname');
-          }
-
+          navigate('/gallery');
           return;
         } catch (error) {
           console.error("Erro ao verificar usuário:", error);

@@ -9,8 +9,6 @@ import ProjectGallery from "../../components/Profile/ProjectGallery"
 import Loading from "../../components/Universal/Loading"
 import HeaderFull  from "../../components/Universal/HeaderFull/index"
 
-
-
 export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const location = useLocation()
