@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
@@ -181,42 +182,37 @@ export default function Gallery() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header fixo */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo e título */}
             <div className="flex items-center">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">K</span>
-                </div>
-                <span className="text-gray-900 font-bold text-lg">Kubo</span>
-              </div>
-              
-              {/* Título principal */}
-              <div className="ml-8 flex items-center">
-                <h1 className="text-2xl font-bold text-gray-900">Galeria</h1>
-                <span className="ml-3 text-gray-400">|</span>
-                <span className="ml-3 text-gray-600 text-sm">Arquitetura Mundial</span>
-              </div>
+              {/* Navegação no header à esquerda */}
+              <nav className="ml-8 hidden md:flex items-center space-x-6">
+                <a 
+                  href="#destaques" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Home
+                </a>
+                <a 
+                  href="#artistas" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Galeria
+                </a>
+                <a 
+                  href="#colecoes" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Favoritos
+                </a>
+              </nav>
             </div>
-
-            {/* Barra de busca */}
-            <div className="flex-1 max-w-xl mx-8">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i className="fas fa-search text-gray-400"></i>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Buscar obras, arquitetos ou localizações..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
+            <div className="w-8 h-8 flex justify-between mr-3">
+              <a href="/"><img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" /></a>
             </div>
 
             {/* Menu do usuário */}
@@ -226,16 +222,15 @@ export default function Gallery() {
                 className="flex items-center space-x-3 focus:outline-none"
               >
                 <div className="text-right hidden md:block">
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                  <p className="font-medium text-gray-900">{user.name}</p>
                   <p className="text-xs text-gray-500">{user.role}</p>
                 </div>
                 <div className="relative">
                   <img
-                    className="h-10 w-10 rounded-full border-2 border-gray-300"
+                    className="h-10 w-10 rounded-full border border-gray-300"
                     src={user.avatar}
                     alt=""
                   />
-                  <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <i className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}></i>
               </button>
@@ -295,78 +290,119 @@ export default function Gallery() {
       {/* Conteúdo principal */}
       <main className="pt-20 pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Filtros */}
+          {/* Barra de busca minimalista */}
+          <div className="mb-8">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i className="fas fa-search text-gray-400"></i>
+              </div>
+              
+              <input
+                type="text"
+                placeholder="Buscar obras, arquitetos ou localizações..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-10 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-shadow"
+              />
+              
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
+            
+            {/* Dicas de busca minimalistas */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                onClick={() => setSearchTerm('brasil')}
+                className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                #brasil
+              </button>
+              <button
+                onClick={() => setSearchTerm('concreto')}
+                className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                #concreto
+              </button>
+              <button
+                onClick={() => setSearchTerm('modernista')}
+                className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                #modernista
+              </button>
+            </div>
+          </div>
+
+          {/* Filtros com design preto no branco */}
           <div className="mb-8">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Obras Arquitetônicas
-                  <span className="ml-2 text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {filteredWorks.length} obras
-                  </span>
-                </h2>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Galeria de Obras
+                </h1>
                 <p className="text-gray-600 text-sm mt-1">
-                  Explore as mais icônicas construções da arquitetura mundial
+                  Explore arquitetura icônica mundial
                 </p>
               </div>
 
               <div className="flex items-center space-x-4">
-                {/* Filtros de categoria */}
-                <div className="flex space-x-2">
+                {/* Filtros de categoria - Design preto no branco */}
+                <div className="flex space-x-1 bg-white border border-gray-300 rounded-lg p-1">
                   <button
                     onClick={() => setFilter('all')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                       filter === 'all'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <i className="fas fa-layer-group mr-2"></i>
                     Todas
                   </button>
                   <button
                     onClick={() => setFilter('residencial')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                       filter === 'residencial'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <i className="fas fa-home mr-2"></i>
                     Residencial
                   </button>
                   <button
                     onClick={() => setFilter('cultural')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                       filter === 'cultural'
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <i className="fas fa-landmark mr-2"></i>
                     Cultural
                   </button>
                   <button
                     onClick={() => setFilter('religioso')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                       filter === 'religioso'
-                        ? 'bg-amber-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <i className="fas fa-church mr-2"></i>
                     Religioso
                   </button>
                 </div>
 
                 {/* Modos de visualização */}
-                <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                <div className="flex space-x-1 bg-white border border-gray-300 p-1 rounded-lg">
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded transition-colors ${
                       viewMode === 'grid'
-                        ? 'bg-white text-blue-600 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     title="Grade"
                   >
@@ -376,8 +412,8 @@ export default function Gallery() {
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded transition-colors ${
                       viewMode === 'list'
-                        ? 'bg-white text-blue-600 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-black text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     title="Lista"
                   >
@@ -390,7 +426,7 @@ export default function Gallery() {
 
           {/* Galeria */}
           {filteredWorks.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
+            <div className="text-center py-16 bg-white rounded-lg border border-gray-300">
               <i className="fas fa-building text-gray-300 text-5xl mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">
                 Nenhuma obra encontrada
@@ -398,7 +434,7 @@ export default function Gallery() {
               <p className="text-gray-500 mb-4">
                 {searchTerm ? 'Tente ajustar sua busca.' : 'Adicione sua primeira obra!'}
               </p>
-              <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
                 <i className="fas fa-plus mr-2"></i>
                 Nova Obra
               </button>
@@ -409,7 +445,7 @@ export default function Gallery() {
               {filteredWorks.map((work) => (
                 <div
                   key={work.id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300 group"
+                  className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img
@@ -418,22 +454,17 @@ export default function Gallery() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        work.category === 'residencial' ? 'bg-green-100 text-green-800' :
-                        work.category === 'cultural' ? 'bg-purple-100 text-purple-800' :
-                        work.category === 'religioso' ? 'bg-amber-100 text-amber-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
+                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-medium rounded-full border border-gray-300">
                         {work.category}
                       </span>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <button
                         onClick={() => setSelectedImage(work)}
-                        className="text-white text-sm font-medium flex items-center"
+                        className="text-white text-sm font-medium flex items-center hover:text-gray-200"
                       >
-                        <i className="fas fa-expand mr-2"></i>
                         Ver detalhes
+                        <i className="fas fa-arrow-right ml-2"></i>
                       </button>
                     </div>
                   </div>
@@ -441,7 +472,7 @@ export default function Gallery() {
                   <div className="p-5">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-gray-900 text-lg">{work.title}</h3>
-                      <button className="text-gray-400 hover:text-yellow-500">
+                      <button className="text-gray-400 hover:text-black">
                         <i className="far fa-star"></i>
                       </button>
                     </div>
@@ -453,7 +484,7 @@ export default function Gallery() {
                     
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">{work.description}</p>
                     
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div>
                         <div className="text-xs text-gray-500 mb-1">Arquiteto</div>
                         <div className="text-sm font-medium text-gray-900">{work.architect}</div>
@@ -482,15 +513,15 @@ export default function Gallery() {
             </div>
           ) : (
             // Lista
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
               {filteredWorks.map((work) => (
                 <div
                   key={work.id}
-                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors duration-200"
+                  className="border-b border-gray-300 last:border-0 hover:bg-gray-50 transition-colors duration-200"
                 >
                   <div className="p-6 flex items-start">
                     <div 
-                      className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer"
+                      className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer border border-gray-300"
                       onClick={() => setSelectedImage(work)}
                     >
                       <img
@@ -514,12 +545,12 @@ export default function Gallery() {
                         </div>
                         
                         <div className="flex items-center space-x-3">
-                          <button className="text-gray-400 hover:text-yellow-500">
+                          <button className="text-gray-400 hover:text-black">
                             <i className="far fa-star"></i>
                           </button>
                           <button 
                             onClick={() => setSelectedImage(work)}
-                            className="text-gray-400 hover:text-blue-600"
+                            className="text-gray-400 hover:text-black"
                           >
                             <i className="fas fa-eye"></i>
                           </button>
@@ -529,13 +560,9 @@ export default function Gallery() {
                       <div className="mt-4 flex items-center justify-between">
                         <div className="flex items-center space-x-6">
                           <div className="flex items-center text-sm text-gray-600">
-                            <span className={`w-3 h-3 rounded-full mr-2 ${
-                              work.category === 'residencial' ? 'bg-green-500' :
-                              work.category === 'cultural' ? 'bg-purple-500' :
-                              work.category === 'religioso' ? 'bg-amber-500' :
-                              'bg-blue-500'
-                            }`}></span>
-                            {work.category}
+                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                              {work.category}
+                            </span>
                           </div>
                           <div className="text-sm text-gray-600">
                             <i className="fas fa-calendar mr-2 text-gray-400"></i>
@@ -561,57 +588,6 @@ export default function Gallery() {
               ))}
             </div>
           )}
-
-          {/* Estatísticas */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-building text-blue-600"></i>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{architecturalWorks.length}</div>
-                  <div className="text-sm text-gray-500">Obras no total</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-xl border border-gray-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-globe-americas text-green-600"></i>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">8</div>
-                  <div className="text-sm text-gray-500">Países</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-xl border border-gray-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-user-tie text-purple-600"></i>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">12</div>
-                  <div className="text-sm text-gray-500">Arquitetos</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-xl border border-gray-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-history text-amber-600"></i>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">2479 a.C.</div>
-                  <div className="text-sm text-gray-500">Obra mais antiga</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
 
@@ -632,7 +608,7 @@ export default function Gallery() {
               <i className="fas fa-times"></i>
             </button>
             
-            <div className="bg-white rounded-xl overflow-hidden">
+            <div className="bg-white rounded-lg overflow-hidden">
               <div className="h-64 md:h-96 relative">
                 <img
                   src={selectedImage.imageUrl}
@@ -692,7 +668,7 @@ export default function Gallery() {
                   </div>
                 </div>
                 
-                <div className="border-t border-gray-200 pt-6">
+                <div className="border-t border-gray-300 pt-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Descrição</h3>
                   <p className="text-gray-600">{selectedImage.description}</p>
                 </div>
@@ -702,7 +678,7 @@ export default function Gallery() {
                     <i className="far fa-star mr-2"></i>
                     Favoritar
                   </button>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
                     <i className="fas fa-share mr-2"></i>
                     Compartilhar
                   </button>
