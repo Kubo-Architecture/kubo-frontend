@@ -18,8 +18,7 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState(null)
   const [showBannerSettings, setShowBannerSettings] = useState(false)
   const [projectCount, setProjectCount] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
   const user = {
     name: "Kubo",
