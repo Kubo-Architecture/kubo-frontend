@@ -8,6 +8,8 @@ import BannerSettings from "../../components/Profile/BannerSettings"
 import Biografy from "../../components/Profile/Biografy"
 import ProjectGallery from "../../components/Profile/ProjectGallery"
 import Loading from "../../components/Universal/Loading"
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
+
 
 export default function UserProfile() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +18,14 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState(null)
   const [showBannerSettings, setShowBannerSettings] = useState(false)
   const [projectCount, setProjectCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const user = {
+    name: "Kubo",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100",
+    role: "Arquiteto"
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
@@ -51,37 +61,262 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="w-screen min-h-screen relative overflow-hidden pt-20">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <MainHeader photoUrl={profileData.photoUrl} />
-          <ProfileInnerHeader
-            banner={profileData.banner}
-            photoUrl={profileData.photoUrl}
-            onEditBannerClick={() => setShowBannerSettings(true)}
-          />
-          <ProfileStats
-            name={profileData.nickname}
-            nickname={profileData.name}
-            seguidores={profileData.followers || 0}
-            likes={profileData.likes || 0}
-            projetos={projectCount || 0}
-          />
-          <Biografy Biografy={profileData.bio} />
+    <div className="w-screen min-h-screen relative overflow-hidden">
+      {/* Header fixo */}
+      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo e título */}
+            <div className="flex items-center">
+              {/* Menu Hamburger para mobile */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden mr-4 relative w-8 h-8 focus:outline-none"
+                aria-label="Menu"
+              >
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6">
+                  <span 
+                    className={`absolute block h-0.5 w-full bg-gray-700 transform transition-all duration-300 ease-in-out ${
+                      isMobileMenuOpen 
+                        ? 'rotate-45 translate-y-0' 
+                        : '-translate-y-2'
+                    }`}
+                  ></span>
+                  <span 
+                    className={`absolute block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-in-out ${
+                      isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  ></span>
+                  <span 
+                    className={`absolute block h-0.5 w-full bg-gray-700 transform transition-all duration-300 ease-in-out ${
+                      isMobileMenuOpen 
+                        ? '-rotate-45 translate-y-0' 
+                        : 'translate-y-2'
+                    }`}
+                  ></span>
+                </div>
+              </button>
 
-          <ProjectGallery onProjectsLoaded={(count) => setProjectCount(count)} />
-
-          {showBannerSettings && (
-            <div className="z-50">
-              <BannerSettings onClose={() => setShowBannerSettings(false)} />
+              {/* Navegação no header à esquerda */}
+              <nav className="ml-8 hidden md:flex items-center space-x-6">
+                <a 
+                  href="/" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Home
+                </a>
+                <a 
+                  href="/gallery" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Galeria
+                </a>
+                <a 
+                  href="/favorites" 
+                  className="text-gray-700 hover:text-black transition-colors font-medium"
+                >
+                  Favoritos
+                </a>
+              </nav>
             </div>
-          )}
-        </>
+            
+            <div className="w-8 h-8 flex justify-between mr-3">
+              <a href="/">
+                <div className="w-7 h-8 flex justify-center items-center">
+                              <img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" />
+                            </div>
+              </a>
+            </div>
 
-      )}
+            {/* Menu do usuário */}
+            <div className="relative hidden md:block">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="flex items-center space-x-3 focus:outline-none"
+              >
+                <div className="text-right hidden md:block">
+                  <p className="font-medium text-gray-900">{profileData.name || user.name}</p>
+                  <p className="text-xs text-gray-500">{profileData.role || user.role}</p>
+                </div>
+                <div className="relative">
+                  <img
+                    className="h-10 w-10 rounded-full border border-gray-300"
+                    src={profileData.photoUrl || user.avatar}
+                    alt={profileData.name}
+                  />
+                </div>
+                <i className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}></i>
+              </button>
 
+              {/* Dropdown menu */}
+              {isMenuOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsMenuOpen(false)}
+                  ></div>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    <a
+                      href={`/profile/${profileData.nickname || profileData.name}`}
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-user-circle mr-3 text-gray-400"></i>
+                      <span>Meu Perfil</span>
+                    </a>
+                    <a
+                      href="/configuracoes"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-cog mr-3 text-gray-400"></i>
+                      <span>Configurações</span>
+                    </a>
+                    <a
+                      href="/my-works"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-bookmark mr-3 text-gray-400"></i>
+                      <span>Minhas Obras</span>
+                    </a>
+                    <div className="border-t border-gray-200 my-1"></div>
+                    <a
+                      href="/help"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-question-circle mr-3 text-gray-400"></i>
+                      <span>Ajuda & Suporte</span>
+                    </a>
+                    <a
+                      href="/logout"
+                      className="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-sign-out-alt mr-3"></i>
+                      <span>Sair</span>
+                    </a>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Menu do usuário mobile simplificado */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="focus:outline-none"
+              >
+                <img
+                  className="h-10 w-10 rounded-full border border-gray-300"
+                  src={profileData.photoUrl || user.avatar}
+                  alt={profileData.name}
+                />
+              </button>
+
+              {/* Dropdown menu mobile */}
+              {isMenuOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsMenuOpen(false)}
+                  ></div>
+                  <div className="absolute right-4 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <p className="font-medium text-gray-900">{profileData.name || user.name}</p>
+                      <p className="text-xs text-gray-500">{profileData.role || user.role}</p>
+                    </div>
+                    <a
+                      href={`/profile/${profileData.nickname || profileData.name}`}
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-user-circle mr-3 text-gray-400"></i>
+                      <span>Meu Perfil</span>
+                    </a>
+                    <a
+                      href="/my-works"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-bookmark mr-3 text-gray-400"></i>
+                      <span>Minhas Obras</span>
+                    </a>
+                    <a
+                      href="/logout"
+                      className="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50"
+                    >
+                      <i className="fas fa-sign-out-alt mr-3"></i>
+                      <span>Sair</span>
+                    </a>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Menu mobile expandido */}
+          <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-64 py-4' : 'max-h-0'
+          }`}>
+            <nav className="flex flex-col space-y-4">
+              <a 
+                href="/" 
+                className="text-gray-700 hover:text-black transition-colors font-medium py-2 border-b border-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </a>
+              <a 
+                href="/gallery" 
+                className="text-gray-700 hover:text-black transition-colors font-medium py-2 border-b border-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Galeria
+              </a>
+              <a 
+                href="/favorites" 
+                className="text-gray-700 hover:text-black transition-colors font-medium py-2 border-b border-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Favoritos
+              </a>
+              <a 
+                href="/configuracoes" 
+                className="text-gray-700 hover:text-black transition-colors font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Configurações
+              </a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Conteúdo principal */}
+      <div className="pt-16">
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <ProfileInnerHeader
+              banner={profileData.banner}
+              photoUrl={profileData.photoUrl}
+              onEditBannerClick={() => setShowBannerSettings(true)}
+            />
+            <ProfileStats
+              name={profileData.nickname}
+              nickname={profileData.name}
+              seguidores={profileData.followers || 0}
+              likes={profileData.likes || 0}
+              projetos={projectCount || 0}
+            />
+            <Biografy Biografy={profileData.bio} />
+
+            <ProjectGallery onProjectsLoaded={(count) => setProjectCount(count)} />
+
+            {showBannerSettings && (
+              <div className="z-50">
+                <BannerSettings onClose={() => setShowBannerSettings(false)} />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
-}
+}'            '
