@@ -10,6 +10,7 @@ import ProjectPage from "../views/ProjectPage";
 import ForgotPassword from "../views/ForgotPassword"
 import NewProject from "../views/NewProject";
 import Gallery from "../views/Gallery";
+import UserConfig from "../views/UserConfig";
 
 
 export default function Rotas() {
@@ -27,6 +28,7 @@ export default function Rotas() {
                 <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/new-project" element={<NewProject />} />
                 <Route path="/Gallery" element={<Gallery />} />
+                <Route path="/Userconfig" element={<UserConfig />} />
             </Routes>
         </BrowserRouter>
     );
