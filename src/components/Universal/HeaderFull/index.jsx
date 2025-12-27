@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom"
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
+import DefaultProfilePhoto from "../../../assets/icons/Universal/defaultUserPhoto.svg";
 import axios from 'axios';
 
 export default function HeaderFull() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userData, setUserData] = useState({});
+  const navigate = useNavigate()
 
   useEffect(() => {
     const userId = window.localStorage.getItem('idUser');
@@ -23,12 +26,6 @@ export default function HeaderFull() {
         }
       })
   }, []);
-
-  const user = {
-    name: "Kubo",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100",
-    role: "Arquiteto"
-  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 flex justify-center">
@@ -95,8 +92,7 @@ export default function HeaderFull() {
               <div className="relative flex justify-end">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
-                  src={user.avatar}
-                  alt={user.name}
+                  src={userData.photoUrl || DefaultProfilePhoto}
                 />
               </div>
               <i
@@ -142,13 +138,16 @@ export default function HeaderFull() {
                     <i className="fas fa-question-circle mr-3 text-gray-400"></i>
                     <span>Ajuda & Suporte</span>
                   </a>
-                  <a
-                    href="/sair"
-                    className="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50"
+                  <button
+                    onClick={() => {
+                      window.localStorage.clear();
+                      navigate("/login")
+                    }}
+                    className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50"
                   >
                     <i className="fas fa-sign-out-alt mr-3"></i>
                     <span>Sair</span>
-                  </a>
+                  </button>
                 </div>
               </>
             )}
@@ -156,17 +155,13 @@ export default function HeaderFull() {
 
           {/* Menu do usuário mobile simplificado */}
           <div className="md:hidden flex items-center space-x-3">
-            <div className="text-right">
-              <span className="text-sm font-medium text-gray-900 block">{user.name}</span>
-              <span className="text-xs text-gray-500 block">{user.role}</span>
-            </div>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none w-10 mt-2"
             >
               <img
                 className="h-10 w-10 rounded-full border border-gray-300"
-                src={userData.photoUrl}
+                src={userData.photoUrl || DefaultProfilePhoto}
                 alt=""
               />
             </button>
