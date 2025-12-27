@@ -229,7 +229,7 @@ export default function ProjectPage() {
                                 <div
                                     key={index}
                                     className={`rounded-sm ${index === 0 ? 'sm:row-span-2 lg:row-span-3' :
-                                            index > 3 ? 'lg:row-span-1' : 'lg:row-span-2'
+                                        index > 3 ? 'lg:row-span-1' : 'lg:row-span-2'
                                         }`}
                                 >
                                     <img

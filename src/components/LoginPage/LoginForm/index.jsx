@@ -79,12 +79,31 @@ const LoginForm = () => {
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/login`;
       const response = await axios.post(apiUrl, formData);
+
       const token = response.data.token;
       const name = response.data.name;
       const idUser = response.data.idUser;
+
       localStorage.setItem("name", name);
       localStorage.setItem("token", token);
       localStorage.setItem("idUser", idUser);
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+        const user = response.data;
+
+        if (user.nickname) {
+          navigate(`/profile/${user.nickname}`);
+        } else {
+          navigate('/profile/nickname');
+        }
+
+        return;
+      } catch (error) {
+        console.error("Erro ao verificar usuário:", error);
+        localStorage.removeItem('idUser');
+      }
+
       navigate(`/profile/${name}`);
     } catch (error) {
       console.error('Erro no login:', error);
@@ -97,14 +116,6 @@ const LoginForm = () => {
         }));
       }
     }
-  };
-
-  const handleLinkedInLogin = () => {
-    console.log('Login com LinkedIn');
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
   };
 
   return (
