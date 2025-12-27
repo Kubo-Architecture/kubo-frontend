@@ -31,15 +31,15 @@ export default function HeaderFull() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 flex justify-center">
+      <div className="w-7xl max-w-7xl px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo e título */}
           <div className="flex items-center">
             {/* Menu Hamburger para mobile */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden mr-4 relative w-8 h-8 focus:outline-none"
+              className="md:hidden relative w-10 h-8 focus:outline-none"
               aria-label="Menu"
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
@@ -63,7 +63,7 @@ export default function HeaderFull() {
             </button>
 
             {/* Navegação no header à esquerda */}
-            <nav className="w-60 hidden md:flex items-center space-x-6 bg-red-500">
+            <nav className="w-60 hidden md:flex items-center space-x-6">
               <a
                 href="/"
                 className="text-gray-700 hover:text-black transition-colors font-medium"
@@ -84,12 +84,12 @@ export default function HeaderFull() {
               </a>
             </nav>
           </div>
-          <div className="w-7 h-8 flex justify-between mr-3">
+          <div className="w-7 h-8 flex justify-center">
             <a href="/"><img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" /></a>
           </div>
 
           {/* Menu do usuário */}
-          <div className="relative hidden md:flex justify-end w-60 bg-red-500">
+          <div className="relative hidden md:flex justify-end w-60">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex items-center space-x-3 focus:outline-none cursor-pointer"
@@ -157,11 +157,11 @@ export default function HeaderFull() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="focus:outline-none"
+              className="focus:outline-none w-10 mt-2"
             >
               <img
                 className="h-10 w-10 rounded-full border border-gray-300"
-                src={user.avatar}
+                src={userData.photoUrl}
                 alt=""
               />
             </button>
@@ -173,13 +173,9 @@ export default function HeaderFull() {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-4 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                  <div className="px-4 py-3 border-b border-gray-200">
-                    <p className="font-medium text-gray-900">{user.name}</p>
-                    <p className="text-xs text-gray-500">{user.role}</p>
-                  </div>
+                <div className="absolute right-4 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <a
-                    href="/profile/:username"
+                    href={`/profile/${userData.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400"></i>
