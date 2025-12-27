@@ -14,11 +14,11 @@ export default function ProfileStats(props) {
                     <p className="text-[18px] lg:text-[23px]"> <strong className="text-[21px] lg:text-[25px] pr-1">{props.seguidores}</strong> Seguidores</p>
                 </div>
             </div>
-            <div className="w-10 h-full flex justify-end items-start">
+            {props.ownProfile && <div className="w-10 h-full flex justify-end items-start">
                 <a href="#">
                     <img className="h-[20px] lg:h-[25px]" src={PenIcon} alt="Edit profile icon" />
                 </a>
-            </div>
+            </div>}
         </div>
 
     )

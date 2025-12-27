@@ -62,12 +62,12 @@ export default function ProfileInnerHeader(props) {
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
-      <button
+      {props.ownProfile && <button
         className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer"
         onClick={props.onEditBannerClick}
       >
         <img src={PenIcon} alt="Editar banner" className="h-[20px]" />
-      </button>
+      </button>}
     </div>
   );
 }
