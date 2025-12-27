@@ -67,7 +67,7 @@ export default function HeaderFull() {
               </a>
             </nav>
           </div>
-          <div className="w-8 h-8 flex justify-between mr-3">
+          <div className="w-7 h-8 flex justify-between mr-3">
             <a href="/"><img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" /></a>
           </div>
 
