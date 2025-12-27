@@ -1,12 +1,10 @@
-import React, { useState } from 'react'; // Adicione esta linha
+import React, { useState } from 'react';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 
 export default function HeaderFull() {
-  // Adicione estes estados
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Adicione o objeto user (ou receba via props)
   const user = {
     name: "Kubo",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100",
@@ -27,26 +25,27 @@ export default function HeaderFull() {
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen
-                    ? 'rotate-45 top-2'
-                    : 'top-0'
-                    }`}
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${
+                    isMobileMenuOpen ? 'rotate-45 top-2' : 'top-0'
+                  }`}
                 ></span>
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 top-2 transform transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
-                    }`}
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 top-2 transform transition-all duration-300 ${
+                    isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                  }`}
                 ></span>
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen
-                    ? '-rotate-45 top-2'
-                    : 'top-4'
-                    }`}
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${
+                    isMobileMenuOpen ? '-rotate-45 top-2' : 'top-4'
+                  }`}
                 ></span>
               </div>
             </button>
 
+           
+
             {/* Navegação no header à esquerda */}
-            <nav className="ml-8 hidden md:flex items-center space-x-6">
+            <nav className="hidden md:flex items-center space-x-6">
               <a
                 href="/"
                 className="text-gray-700 hover:text-black transition-colors font-medium"
@@ -67,9 +66,13 @@ export default function HeaderFull() {
               </a>
             </nav>
           </div>
-          <div className="w-7 h-8 flex justify-between mr-3">
-            <a href="/"><img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" /></a>
-          </div>
+           <div className="flex items-center mr-8">
+              <div className="w-7 h-8 flex justify-between mr-3">
+                <a href="/">
+                  <img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" />
+                </a>
+              </div>
+            </div>
 
           {/* Menu do usuário */}
           <div className="relative hidden md:block">
@@ -77,14 +80,22 @@ export default function HeaderFull() {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex items-center space-x-3 focus:outline-none cursor-pointer"
             >
+              <div className="flex flex-col items-end mr-3">
+                <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                <span className="text-xs text-gray-500">{user.role}</span>
+              </div>
               <div className="relative">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
                   src={user.avatar}
-                  alt=""
+                  alt={user.name}
                 />
               </div>
-              <i className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}></i>
+              <i
+                className={`fas fa-chevron-down text-gray-400 transition-transform ${
+                  isMenuOpen ? 'rotate-180' : ''
+                }`}
+              ></i>
             </button>
 
             {/* Dropdown menu */}
@@ -95,6 +106,10 @@ export default function HeaderFull() {
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <p className="font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.role}</p>
+                  </div>
                   <a
                     href="/profile/:username"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
@@ -137,7 +152,11 @@ export default function HeaderFull() {
           </div>
 
           {/* Menu do usuário mobile simplificado */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-3">
+            <div className="text-right">
+              <span className="text-sm font-medium text-gray-900 block">{user.name}</span>
+              <span className="text-xs text-gray-500 block">{user.role}</span>
+            </div>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none"
@@ -145,7 +164,7 @@ export default function HeaderFull() {
               <img
                 className="h-10 w-10 rounded-full border border-gray-300"
                 src={user.avatar}
-                alt=""
+                alt={user.name}
               />
             </button>
 
@@ -189,8 +208,11 @@ export default function HeaderFull() {
         </div>
 
         {/* Menu mobile expandido */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4' : 'max-h-0'
-          }`}>
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-64 py-4' : 'max-h-0'
+          }`}
+        >
           <nav className="flex flex-col space-y-4">
             <a
               href="/"
