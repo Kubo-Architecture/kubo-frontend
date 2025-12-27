@@ -55,7 +55,7 @@ export default function NicknameInput() {
       const response = await axios.put(
         apiUrl,
         {
-          nickname: nickname.toLowerCase(),
+          nickname: nickname,
           idUser: idUser
         },
         {
@@ -79,7 +79,7 @@ export default function NicknameInput() {
 
   const handleChange = (e) => {
     const value = e.target.value;
-    setNickname(value);
+    setNickname(value.toLowerCase());
 
     if (error) setError('');
   };

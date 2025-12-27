@@ -75,7 +75,7 @@ export default function HeaderFull() {
           <div className="relative hidden md:block">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center space-x-3 focus:outline-none"
+              className="flex items-center space-x-3 focus:outline-none cursor-pointer"
             >
               <div className="relative">
                 <img
