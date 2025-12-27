@@ -63,7 +63,7 @@ export default function HeaderFull() {
             </button>
 
             {/* Navegação no header à esquerda */}
-            <nav className="ml-8 hidden md:flex items-center space-x-6">
+            <nav className="w-60 hidden md:flex items-center space-x-6 bg-red-500">
               <a
                 href="/"
                 className="text-gray-700 hover:text-black transition-colors font-medium"
@@ -89,12 +89,12 @@ export default function HeaderFull() {
           </div>
 
           {/* Menu do usuário */}
-          <div className="relative hidden md:block">
+          <div className="relative hidden md:flex justify-end w-60 bg-red-500">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex items-center space-x-3 focus:outline-none cursor-pointer"
             >
-              <div className="relative">
+              <div className="relative flex justify-end">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
                   src={userData.photoUrl}
@@ -111,7 +111,7 @@ export default function HeaderFull() {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="absolute right-0 mt-11 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <a
                     href={`/profile/${userData.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
