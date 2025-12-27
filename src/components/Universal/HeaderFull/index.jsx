@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
-=======
-import React, { useEffect, useState } from 'react';
->>>>>>> c880380b78c1321ce7b5f9bc780a64baca9fe867
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 import axios from 'axios';
 
@@ -110,13 +106,8 @@ export default function HeaderFull() {
               <div className="relative">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
-<<<<<<< HEAD
                   src={user.avatar}
                   alt={user.name}
-=======
-                  src={userData.photoUrl}
-                  alt=""
->>>>>>> c880380b78c1321ce7b5f9bc780a64baca9fe867
                 />
               </div>
               <i
