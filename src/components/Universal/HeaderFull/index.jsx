@@ -1,12 +1,29 @@
-import React, { useState } from 'react'; // Adicione esta linha
+import React, { useEffect, useState } from 'react';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
+import axios from 'axios';
 
 export default function HeaderFull() {
-  // Adicione estes estados
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userData, setUserData] = useState({});
 
-  // Adicione o objeto user (ou receba via props)
+  useEffect(() => {
+    const userId = window.localStorage.getItem('idUser');
+
+    const apiUrl = `${import.meta.env.VITE_API_URL}/user/${userId}`
+
+    axios.get(apiUrl)
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar usuário:", err)
+        if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
+          navigate("/error/404")
+        }
+      })
+  }, []);
+
   const user = {
     name: "Kubo",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100",
@@ -80,7 +97,7 @@ export default function HeaderFull() {
               <div className="relative">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
-                  src={user.avatar}
+                  src={userData.photoUrl}
                   alt=""
                 />
               </div>
@@ -96,7 +113,7 @@ export default function HeaderFull() {
                 ></div>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <a
-                    href="/profile/:username"
+                    href={`/profile/${userData.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400"></i>
