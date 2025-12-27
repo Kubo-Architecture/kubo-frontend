@@ -27,17 +27,19 @@ export default function NicknameInput() {
     e.preventDefault();
     setTouched(true);
 
-    if (!nickname.trim()) {
+    const sanitizedNickname = nickname.trim();
+
+    if (!sanitizedNickname) {
       setError('Por favor, insira um nome de usuário');
       return;
     }
 
-    if (!nicknameRegex.test(nickname)) {
+    if (!nicknameRegex.test(sanitizedNickname)) {
       setError('Use apenas letras, números, underline (_) ou ponto (.) sem espaços.');
       return;
     }
 
-    if (nickname.length > 25) {
+    if (sanitizedNickname.length > 25) {
       setError('O apelido deve ter no máximo 25 caracteres.');
       return;
     }
@@ -52,30 +54,22 @@ export default function NicknameInput() {
 
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
-      const response = await axios.put(
-        apiUrl,
-        {
-          nickname: nickname,
-          idUser: idUser
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await axios.put(apiUrl, {
+        nickname: sanitizedNickname,
+        idUser
+      });
 
       if (response.status === 200) {
-        navigate(`/profile/${nickname}`);
+        navigate(`/profile/${sanitizedNickname}`);
       }
     } catch (err) {
       const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';
       setError(errorMsg);
-      console.error('Erro na requisição:', err);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleChange = (e) => {
     const value = e.target.value;
