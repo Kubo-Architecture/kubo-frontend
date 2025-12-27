@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 import axios from 'axios';
 
@@ -44,9 +44,7 @@ export default function HeaderFull() {
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen
-                    ? 'rotate-45 top-2'
-                    : 'top-0'
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 top-2' : 'top-0'
                     }`}
                 ></span>
                 <span
@@ -54,13 +52,13 @@ export default function HeaderFull() {
                     }`}
                 ></span>
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen
-                    ? '-rotate-45 top-2'
-                    : 'top-4'
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 top-2' : 'top-4'
                     }`}
                 ></span>
               </div>
             </button>
+
+
 
             {/* Navegação no header à esquerda */}
             <nav className="w-60 hidden md:flex items-center space-x-6">
@@ -97,11 +95,14 @@ export default function HeaderFull() {
               <div className="relative flex justify-end">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300"
-                  src={userData.photoUrl}
-                  alt=""
+                  src={user.avatar}
+                  alt={user.name}
                 />
               </div>
-              <i className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}></i>
+              <i
+                className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''
+                  }`}
+              ></i>
             </button>
 
             {/* Dropdown menu */}
@@ -154,7 +155,11 @@ export default function HeaderFull() {
           </div>
 
           {/* Menu do usuário mobile simplificado */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-3">
+            <div className="text-right">
+              <span className="text-sm font-medium text-gray-900 block">{user.name}</span>
+              <span className="text-xs text-gray-500 block">{user.role}</span>
+            </div>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none w-10 mt-2"
@@ -202,8 +207,10 @@ export default function HeaderFull() {
         </div>
 
         {/* Menu mobile expandido */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4' : 'max-h-0'
-          }`}>
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4' : 'max-h-0'
+            }`}
+        >
           <nav className="flex flex-col space-y-4">
             <a
               href="/"
