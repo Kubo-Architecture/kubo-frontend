@@ -1,60 +1,89 @@
-// ProfileInnerHeader.jsx (versão minimalista)
-import React from "react";
+import { useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import axios from "axios"
+import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
+import ProfileStats from "../../components/Profile/ProfileStats"
+import BannerSettings from "../../components/Profile/BannerSettings"
+import Biografy from "../../components/Profile/Biografy"
+import ProjectGallery from "../../components/Profile/ProjectGallery"
+import Loading from "../../components/Universal/Loading"
+import HeaderFull from "../../components/Universal/HeaderFull/index"
 
-const ProfileInnerHeader = ({ banner, photoUrl, ownProfile, onEditBannerClick }) => {
-  return (
-    <div className="relative w-full h-64">
-      {/* Banner */}
-      <div 
-        className="w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${banner})` }}
-      >
-        {ownProfile && (
-          <button 
-            onClick={onEditBannerClick}
-            className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 rounded"
-          >
-            Editar banner
-          </button>
-        )}
+export default function UserProfile() {
+  const [loading, setLoading] = useState(true);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [profileData, setProfileData] = useState(null)
+  const [showBannerSettings, setShowBannerSettings] = useState(false)
+  const [projectCount, setProjectCount] = useState(0);
+
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/").filter(Boolean)
+    const currentUserId = window.localStorage.getItem('idUser');
+    const username = pathSegments[1]
+
+    const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
+
+    axios.get(apiUrl)
+      .then((res) => {
+        if (res.data.nickname === "") {
+          navigate("/profile/nickname")
+        }
+
+        setIsOwnProfile(res.data.idUser == currentUserId);
+        setProfileData(res.data)
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar perfil:", err)
+        if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
+          navigate("/error/404")
+        }
+      })
+  }, [location])
+
+  if (!profileData) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loading />
       </div>
+    )
+  }
 
-      {/* Imagem do perfil */}
-      <div className="absolute -bottom-12 left-8">
-        <div 
-          className="relative w-28 h-28 rounded-full border-4 border-white overflow-hidden group"
-          style={{ 
-            backgroundImage: `url(${photoUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        >
-          {/* Overlay com lápis */}
-          {ownProfile && (
-            <div 
-              className="absolute inset-0 bg-black/0 group-hover:bg-black/50 flex items-center justify-center transition-all duration-300"
-            >
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <svg 
-                  className="w-6 h-6 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth="2" 
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-              </div>
+  return (
+    <div className="w-full min-h-screen relative overflow-hidden">
+      {/* Header fixo */}
+      <HeaderFull />
+
+      {/* Conteúdo principal */}
+      <div className="pt-16">
+        {loading && <Loading />}
+        <div className={loading ? "hidden" : "block"}>
+          <ProfileInnerHeader
+            banner={profileData.banner}
+            photoUrl={profileData.photoUrl}
+            ownProfile={isOwnProfile}
+            onEditBannerClick={() => setShowBannerSettings(true)}
+          />
+          <ProfileStats
+            name={profileData.nickname}
+            nickname={profileData.name}
+            seguidores={profileData.followers || 0}
+            likes={profileData.likes || 0}
+            projetos={projectCount || 0}
+            ownProfile={isOwnProfile}
+          />
+          <Biografy Biografy={profileData.bio} />
+
+          <ProjectGallery userId={profileData.idUser} onProjectsLoaded={(count) => setProjectCount(count)} setIsLoadingChild={setLoading} />
+
+          {showBannerSettings && (
+            <div className="z-50">
+              <BannerSettings onClose={() => setShowBannerSettings(false)} />
             </div>
           )}
         </div>
       </div>
     </div>
-  );
-};
-
-export default ProfileInnerHeader;
+  )
+}

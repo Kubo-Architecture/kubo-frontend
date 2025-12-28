@@ -51,10 +51,17 @@ export default function ProfileInnerHeader(props) {
       }}
     >
       <div
-        className="h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] hover:cursor-pointer"
+        className="h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] hover:cursor-pointer group"
         style={{ backgroundImage: profileImageUrl }}
         onClick={handleImageClick}
-      />
+      >
+        {/* Overlay escuro e transparente no hover */}
+        <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300 flex items-center justify-center">
+          {/* Ícone de lápis centralizado (usando Font Awesome) */}
+          <i className="fas fa-pencil-alt text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+        </div>
+      </div>
+      
       <input
         type="file"
         accept="image/png, image/jpeg"
