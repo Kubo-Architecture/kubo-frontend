@@ -72,7 +72,7 @@ export default function HeaderFull() {
               >
                 Galeria
               </a>
-             
+              
             </nav>
           </div>
           
