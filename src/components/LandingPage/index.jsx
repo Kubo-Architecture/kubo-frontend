@@ -68,13 +68,13 @@ function LandingPageHeader() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <nav className="hidden md:flex space-x-8 flex-1">
-            <a href="#sobre-nos" className="text-lg font-medium text-gray-600 hover:text-[#0B85FF] transition-colors">
+            <a href="#sobre-nos" className="text-lg font-medium text-gray-600 duration-200 hover:translate-x-1">
               Sobre
             </a>
-            <a href="#novidades" className="text-lg font-medium text-gray-600 hover:text-[#0B85FF] transition-colors">
+            <a href="#novidades" className="text-lg font-medium text-gray-600 duration-200 hover:translate-x-1">
               Novidades
             </a>
-            <a href="#projetos" className="text-lg font-medium text-gray-600 hover:text-[#0B85FF] transition-colors">
+            <a href="#projetos" className="text-lg font-medium text-gray-600 transition-transform duration-200 hover:translate-x-1">
               Projetos
             </a>
           </nav>
@@ -86,7 +86,7 @@ function LandingPageHeader() {
               <img src={KuboIcon} alt="Kubo Icon" draggable={false} className="h-full" />
             </div>
 
-            <a href="/login" className="text-lg font-medium text-gray-900 hover:text-[#0B85FF] transition-colors">
+            <a href="/login" className="text-lg font-medium text-gray-900">
               Entrar
             </a>
           </div>
@@ -108,11 +108,11 @@ function HeroSection() {
               <h1 className="text-7xl md:text-8xl font-bold tracking-tight text-gray-900">
                 Kubo
               </h1>
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-9">
+              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-10.5">
                 O maior banco de
               </p>
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-9" >dados de arquitetura</p>
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-9">do país</p>
+              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-10.5" >dados de arquitetura</p>
+              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-600 max-w-lg leading-10.5">do país</p>
 
             </div>
 
@@ -264,7 +264,7 @@ function Novidades() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#0B85FF] rounded-full"></div>
-                  <span className="text-gray-700">Exposição Kubo Gallery 2024</span>
+                  <span className="text-gray-700">Exposição Kubo Gallery 2026</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#0B85FF] rounded-full"></div>
