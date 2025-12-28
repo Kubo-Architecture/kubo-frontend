@@ -1,42 +1,43 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Btncriarprojeto({ onProjectCreated }) {
+  const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newProject, setNewProject] = useState({
-    title: '',
+  const [formData, setFormData] = useState({
+    name: '',
     location: '',
-    architect: '',
-    year: '',
     description: '',
-    category: 'residencial',
-    style: '',
-    tags: '',
-    startDate: '',
-    endDate: '',
-    isAuthor: false,
-    inProgress: false
+    materials: [''],
+    status: '',
+    build_area: '',
+    terrain_area: '',
+    usage_type: '',
   });
-  const [mainImage, setMainImage] = useState(null);
-  const [galleryImages, setGalleryImages] = useState([]);
+  const [photo, setPhoto] = useState(null);
+  const [gallery, setGallery] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [touched, setTouched] = useState({});
+  
+  const modalRef = useRef(null);
+  const contentRef = useRef(null);
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [galleryPreviews, setGalleryPreviews] = useState([]);
-
-  const modalRef = useRef(null);
-  const mainImageInputRef = useRef(null);
-  const galleryInputRef = useRef(null);
-  const contentRef = useRef(null);
 
   // Fechar modal ao clicar fora ou pressionar ESC
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setShowCreateModal(false);
+        resetForm();
       }
     };
 
     const handleEscKey = (event) => {
       if (event.key === 'Escape') {
         setShowCreateModal(false);
+        resetForm();
       }
     };
 
@@ -57,123 +58,197 @@ export default function Btncriarprojeto({ onProjectCreated }) {
     };
   }, [showCreateModal]);
 
-  // Handlers para upload de imagens
-  const handleMainImageClick = () => {
-    mainImageInputRef.current?.click();
+  // Handlers do formulário
+  const handleBlur = (field) => {
+    setTouched({...touched, [field]: true});
   };
 
-  const handleGalleryClick = () => {
-    galleryInputRef.current?.click();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleMainImageChange = (e) => {
+  const handleMaterialChange = (index, value) => {
+    const newMaterials = [...formData.materials];
+    newMaterials[index] = value;
+    setFormData(prev => ({
+      ...prev,
+      materials: newMaterials
+    }));
+  };
+
+  const addMaterialField = () => {
+    setFormData(prev => ({
+      ...prev,
+      materials: [...prev.materials, '']
+    }));
+  };
+
+  const removeMaterialField = (index) => {
+    if (formData.materials.length === 1) return;
+    const newMaterials = formData.materials.filter((_, i) => i !== index);
+    setFormData(prev => ({
+      ...prev,
+      materials: newMaterials
+    }));
+  };
+
+  const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setMainImage(file);
+      if (file.size > 10 * 1024 * 1024) {
+        setError('A foto principal deve ter no máximo 10MB');
+        return;
+      }
+      setPhoto(file);
+      
+      // Criar preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setMainImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      
+      setError('');
     }
   };
 
   const handleGalleryChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length > 0) {
-      setGalleryImages(prev => [...prev, ...files]);
+    const newFiles = Array.from(e.target.files);
+    
+    const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 50 * 1024 * 1024) {
+      setError('A galeria não pode exceder 50MB no total');
+      return;
+    }
+
+    if (gallery.length + newFiles.length > 20) {
+      setError('Máximo de 20 imagens na galeria');
+      return;
+    }
+
+    setGallery(prevGallery => {
+      const allFiles = [...prevGallery, ...newFiles];
+      const uniqueMap = new Map();
+      allFiles.forEach(file => {
+        uniqueMap.set(file.name + file.size, file);
+      });
+      const uniqueFiles = Array.from(uniqueMap.values());
       
-      files.forEach(file => {
+      // Criar previews
+      newFiles.forEach(file => {
         const reader = new FileReader();
         reader.onloadend = () => {
           setGalleryPreviews(prev => [...prev, reader.result]);
         };
         reader.readAsDataURL(file);
       });
-    }
+      
+      return uniqueFiles;
+    });
+    setError('');
   };
 
   const removeGalleryImage = (index) => {
-    setGalleryImages(prev => prev.filter((_, i) => i !== index));
-    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+    setGallery(prevGallery => prevGallery.filter((_, i) => i !== index));
+    setGalleryPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
   const removeMainImage = () => {
-    setMainImage(null);
+    setPhoto(null);
     setMainImagePreview(null);
-    if (mainImageInputRef.current) {
-      mainImageInputRef.current.value = '';
-    }
   };
 
-  const handleCreateProject = () => {
-    if (!newProject.title || !newProject.location || !newProject.architect) {
-      alert('Por favor, preencha os campos obrigatórios');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+
+    const idUser = localStorage.getItem('idUser');
+    if (!idUser) {
+      setError('Usuário não autenticado');
+      setIsSubmitting(false);
       return;
     }
 
-    const tagsArray = newProject.tags.length > 0 
-      ? newProject.tags.split(',').map(tag => tag.trim()) 
-      : [];
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('location', formData.location);
+    data.append('description', formData.description);
+    data.append('status', formData.status);
+    data.append('build_area', formData.build_area);
+    data.append('terrain_area', formData.terrain_area);
+    data.append('usage_type', formData.usage_type);
+    data.append('idUser', idUser);
 
-    const projectData = {
-      ...newProject,
-      tags: tagsArray,
-      startDate: newProject.startDate || '',
-      endDate: newProject.inProgress ? '' : newProject.endDate,
-      status: newProject.inProgress ? 'Em andamento' : 'Concluído',
-      mainImage: mainImage,
-      galleryImages: galleryImages
-    };
+    formData.materials.forEach((material, index) => {
+      if (material.trim()) {
+        data.append(`materials[${index}]`, material);
+      }
+    });
 
-    delete projectData.isAuthor;
-    delete projectData.inProgress;
-
-    if (onProjectCreated) {
-      onProjectCreated(projectData);
+    if (photo) {
+      data.append('photo', photo);
     }
 
-    setShowCreateModal(false);
-    resetForm();
+    gallery.forEach(file => {
+      data.append('gallery', file);
+    });
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/project`, {
+        method: 'POST',
+        body: data
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao cadastrar projeto');
+      }
+
+      const result = await response.json();
+      
+      if (onProjectCreated) {
+        onProjectCreated(result);
+      }
+
+      setError('success: Projeto cadastrado com sucesso!');
+      
+      setTimeout(() => {
+        setShowCreateModal(false);
+        resetForm();
+        const name = localStorage.getItem('name');
+        navigate(`/profile/${name}`);
+      }, 1500);
+
+    } catch (err) {
+      setError(err.message || 'Erro desconhecido');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
-    setNewProject({
-      title: '',
+    setFormData({
+      name: '',
       location: '',
-      architect: '',
-      year: '',
       description: '',
-      category: 'residencial',
-      style: '',
-      tags: '',
-      startDate: '',
-      endDate: '',
-      isAuthor: false,
-      inProgress: false
+      materials: [''],
+      status: '',
+      build_area: '',
+      terrain_area: '',
+      usage_type: '',
     });
-    setMainImage(null);
+    setPhoto(null);
+    setGallery([]);
     setMainImagePreview(null);
-    setGalleryImages([]);
     setGalleryPreviews([]);
-    if (mainImageInputRef.current) mainImageInputRef.current.value = '';
-    if (galleryInputRef.current) galleryInputRef.current.value = '';
-  };
-
-  const handleDateChange = (e, field) => {
-    let value = e.target.value;
-    
-    if (field === 'startDate' || field === 'endDate') {
-      value = value.replace(/\D/g, '');
-      if (value.length > 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2);
-      }
-      if (value.length > 5) {
-        value = value.slice(0, 5) + '/' + value.slice(5, 9);
-      }
-    }
-    
-    setNewProject({...newProject, [field]: value});
+    setError('');
+    setTouched({});
+    setIsSubmitting(false);
   };
 
   return (
@@ -192,316 +267,413 @@ export default function Btncriarprojeto({ onProjectCreated }) {
             ref={modalRef}
             className="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col"
           >
-            {/* Header simplificado */}
+            {/* Header */}
             <div className="flex-shrink-0 bg-white border-b border-gray-200 px-8 py-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold text-gray-900">Publicar projeto</h2>
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-900">Novo Projeto</h2>
+                  <p className="text-gray-500 text-sm mt-1">Cadastre as informações do seu projeto arquitetônico</p>
+                </div>
                 <button
-                  onClick={() => setShowCreateModal(false)}
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    resetForm();
+                  }}
                   className="text-gray-400 hover:text-gray-600 text-xl transition-colors p-2 hover:bg-gray-100 rounded-lg"
                   aria-label="Fechar"
                 >
                   <i className="fas fa-times"></i>
                 </button>
               </div>
-              <p className="text-gray-500 text-sm mt-1">Preencha as informações do projeto</p>
             </div>
 
-            {/* Conteúdo com scroll - ALTURA AJUSTADA */}
+            {/* Conteúdo com scroll */}
             <div 
               ref={contentRef}
-              className="flex-1 overflow-y-auto px-8 py-4" // py-4 em vez de py-6
+              className="flex-1 overflow-y-auto px-8 py-4"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Coluna 1 - Informações principais */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Título e Localização na mesma linha */}
+              {/* Mensagens de feedback */}
+              {error && (
+                <div className={`mb-6 p-4 rounded-lg ${
+                  error.startsWith('success:') 
+                    ? 'bg-green-50 border border-green-100' 
+                    : 'bg-red-50 border border-red-100'
+                }`}>
+                  <div className="flex items-center">
+                    {error.startsWith('success:') ? (
+                      <i className="fas fa-check-circle text-green-600 mr-3"></i>
+                    ) : (
+                      <i className="fas fa-exclamation-circle text-red-600 mr-3"></i>
+                    )}
+                    <span className="text-sm">{error.replace('success: ', '')}</span>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Seção 1: Informações básicas */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-100 pb-3">
+                    Informações Básicas
+                  </h3>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Título da obra *
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Nome do Projeto *
                       </label>
-                      <input
-                        type="text"
-                        value={newProject.title}
-                        onChange={(e) => setNewProject({...newProject, title: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                        placeholder="Digite o título"
+                      <input 
+                        type="text" 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleChange}
+                        onBlur={() => handleBlur('name')}
+                        required 
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${
+                          touched.name && !formData.name ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                        placeholder="Casa Moderna em São Paulo"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
                         Localização *
                       </label>
-                      <input
-                        type="text"
-                        value={newProject.location}
-                        onChange={(e) => setNewProject({...newProject, location: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                        placeholder="Cidade, Estado"
+                      <input 
+                        type="text" 
+                        name="location" 
+                        value={formData.location} 
+                        onChange={handleChange}
+                        onBlur={() => handleBlur('location')}
+                        required 
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${
+                          touched.location && !formData.location ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                        placeholder="São Paulo, SP"
                       />
                     </div>
-                  </div>
 
-                  {/* Descrição */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Descrição do projeto
-                    </label>
-                    <textarea
-                      value={newProject.description}
-                      onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                      rows="4"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white resize-none"
-                      placeholder="Descreva o projeto, suas características principais, materiais utilizados, etc."
-                    />
-                  </div>
-
-                  {/* Datas */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Data de início
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Descrição
                       </label>
-                      <input
-                        type="text"
-                        value={newProject.startDate}
-                        onChange={(e) => handleDateChange(e, 'startDate')}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                        placeholder="DD/MM/AAAA"
-                        maxLength="10"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Data de término
-                      </label>
-                      <input
-                        type="text"
-                        value={newProject.endDate}
-                        onChange={(e) => handleDateChange(e, 'endDate')}
-                        className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white ${newProject.inProgress ? 'bg-gray-100 text-gray-500' : ''}`}
-                        placeholder="DD/MM/AAAA"
-                        maxLength="10"
-                        disabled={newProject.inProgress}
-                      />
-                      <div className="mt-3 flex items-center">
-                        <input
-                          type="checkbox"
-                          id="inProgress"
-                          checked={newProject.inProgress}
-                          onChange={(e) => setNewProject({...newProject, inProgress: e.target.checked})}
-                          className="rounded border-gray-300 text-black focus:ring-black h-4 w-4"
-                        />
-                        <label htmlFor="inProgress" className="ml-2 text-sm text-gray-700">
-                          Projeto em andamento
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Autor e checkbox */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Autor/Arquiteto responsável *
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <input
-                        type="text"
-                        value={newProject.architect}
-                        onChange={(e) => setNewProject({...newProject, architect: e.target.value})}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                        placeholder="Nome do arquiteto/autor"
-                      />
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="isAuthor"
-                          checked={newProject.isAuthor}
-                          onChange={(e) => setNewProject({...newProject, isAuthor: e.target.checked})}
-                          className="rounded border-gray-300 text-black focus:ring-black h-4 w-4"
-                        />
-                        <label htmlFor="isAuthor" className="ml-2 text-sm text-gray-700 whitespace-nowrap">
-                          Eu sou o autor
-                        </label>
-                      </div>
+                      <textarea 
+                        name="description" 
+                        value={formData.description} 
+                        onChange={handleChange}
+                        rows={4} 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm resize-none"
+                        placeholder="Descreva os conceitos, inspirações e características principais..."
+                      ></textarea>
                     </div>
                   </div>
                 </div>
 
-                {/* Coluna 2 - Imagens e detalhes */}
+                {/* Seção 2: Detalhes técnicos */}
                 <div className="space-y-6">
-                  {/* Foto principal */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Foto principal *
-                    </label>
-                    <p className="text-xs text-gray-500 mb-3">Esta será a imagem destacada do projeto</p>
-                    <input
-                      type="file"
-                      ref={mainImageInputRef}
-                      onChange={handleMainImageChange}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    {mainImagePreview ? (
-                      <div className="relative">
-                        <img 
-                          src={mainImagePreview} 
-                          alt="Preview" 
-                          className="w-full h-48 object-cover rounded-lg border border-gray-300"
-                        />
-                        <button
-                          onClick={removeMainImage}
-                          className="absolute top-2 right-2 bg-black/80 text-white p-2 rounded-full hover:bg-black transition-colors"
-                          title="Remover imagem"
-                        >
-                          <i className="fas fa-times text-sm"></i>
-                        </button>
-                        <p className="text-xs text-gray-500 mt-2 truncate px-1">
-                          {mainImage?.name}
-                        </p>
-                      </div>
-                    ) : (
-                      <div 
-                        onClick={handleMainImageClick}
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer bg-gray-50 hover:bg-gray-100"
-                      >
-                        <i className="fas fa-camera text-3xl text-gray-400 mb-3"></i>
-                        <p className="text-sm text-gray-600 font-medium mb-1">Adicionar foto principal</p>
-                        <p className="text-xs text-gray-500">Clique para selecionar uma imagem</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Categoria e Estilo */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Categoria
+                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-100 pb-3">
+                    Detalhes Técnicos
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Status *
                       </label>
-                      <select
-                        value={newProject.category}
-                        onChange={(e) => setNewProject({...newProject, category: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
+                      <select 
+                        name="status" 
+                        value={formData.status} 
+                        onChange={handleChange}
+                        required 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm appearance-none bg-white"
                       >
-                        <option value="residencial">Residencial</option>
-                        <option value="cultural">Cultural</option>
-                        <option value="religioso">Religioso</option>
-                        <option value="comercial">Comercial</option>
-                        <option value="institucional">Institucional</option>
-                        <option value="paisagismo">Paisagismo</option>
+                        <option value="">Selecione o status</option>
+                        <option value="Em planejamento">Em planejamento</option>
+                        <option value="Em construção">Em construção</option>
+                        <option value="Concluído">Concluído</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Estilo
+                    
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tipo de Uso *
                       </label>
-                      <input
-                        type="text"
-                        value={newProject.style}
-                        onChange={(e) => setNewProject({...newProject, style: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                        placeholder="Moderno, Contemporâneo..."
+                      <select 
+                        name="usage_type" 
+                        value={formData.usage_type} 
+                        onChange={handleChange}
+                        required 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm appearance-none bg-white"
+                      >
+                        <option value="">Selecione o tipo de uso</option>
+                        <option value="Residencial">Residencial</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="Industrial">Industrial</option>
+                        <option value="Religioso">Religioso</option>
+                        <option value="Público">Público</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Área Construída (m²)
+                      </label>
+                      <input 
+                        type="number" 
+                        name="build_area" 
+                        value={formData.build_area} 
+                        onChange={handleChange}
+                        step="0.01" 
+                        min="0" 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
+                        placeholder="0.00"
                       />
                     </div>
-                  </div>
-
-                  {/* Tags */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Tags
-                    </label>
-                    <p className="text-xs text-gray-500 mb-2">Separe as tags por vírgula</p>
-                    <input
-                      type="text"
-                      value={newProject.tags}
-                      onChange={(e) => setNewProject({...newProject, tags: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm bg-white"
-                      placeholder="concreto, madeira, sustentável, moderno"
-                    />
-                  </div>
-
-                  {/* Galeria de imagens */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="block text-sm font-semibold text-gray-900">
-                        Galeria de imagens
+                    
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Área do Terreno (m²)
                       </label>
-                      <span className="text-xs text-gray-500">
-                        {galleryImages.length} selecionada{galleryImages.length !== 1 ? 's' : ''}
-                      </span>
+                      <input 
+                        type="number" 
+                        name="terrain_area" 
+                        value={formData.terrain_area} 
+                        onChange={handleChange}
+                        step="0.01" 
+                        min="0" 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
+                        placeholder="0.00"
+                      />
                     </div>
-                    
-                    {/* Previews da galeria */}
-                    {galleryPreviews.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {galleryPreviews.map((preview, index) => (
-                            <div key={index} className="relative">
-                              <img 
-                                src={preview} 
-                                alt={`Preview ${index}`}
-                                className="w-16 h-16 object-cover rounded border border-gray-300"
-                              />
-                              <button
-                                onClick={() => removeGalleryImage(index)}
-                                className="absolute -top-1 -right-1 bg-black/80 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-black"
-                                title="Remover imagem"
-                              >
-                                <i className="fas fa-times"></i>
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
-                    <input
-                      type="file"
-                      ref={galleryInputRef}
-                      onChange={handleGalleryChange}
-                      accept="image/*"
-                      multiple
-                      className="hidden"
-                    />
-                    
-                    <div 
-                      onClick={handleGalleryClick}
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer bg-gray-50 hover:bg-gray-100"
-                    >
-                      <i className="fas fa-images text-xl text-gray-400 mb-2"></i>
-                      <p className="text-sm text-gray-600 font-medium">Adicionar mais imagens</p>
-                      <p className="text-xs text-gray-500 mt-1">Clique para selecionar múltiplas imagens</p>
+                    {/* Materiais */}
+                    <div className="md:col-span-2 space-y-3">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Materiais Utilizados
+                      </label>
+                      <div className="space-y-3">
+                        {formData.materials.map((material, index) => (
+                          <div key={index} className="flex items-center space-x-3 group">
+                            <div className="flex-1 relative">
+                              <input 
+                                type="text" 
+                                value={material} 
+                                onChange={(e) => handleMaterialChange(index, e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
+                                placeholder={`Material ${index + 1}`}
+                              />
+                              {formData.materials.length > 1 && (
+                                <button 
+                                  type="button" 
+                                  onClick={() => removeMaterialField(index)}
+                                  className="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-black"
+                                >
+                                  <i className="fas fa-times text-sm"></i>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        <button 
+                          type="button" 
+                          onClick={addMaterialField}
+                          className="text-sm text-gray-600 hover:text-black transition-colors flex items-center"
+                        >
+                          <i className="fas fa-plus mr-2 text-xs"></i>
+                          Adicionar material
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Nota sobre campos obrigatórios */}
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">
-                  * Campos obrigatórios
-                </p>
-              </div>
+                {/* Seção 3: Mídia */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-100 pb-3">
+                    Fotos e Mídia
+                  </h3>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Foto Principal */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Foto Principal *
+                        </label>
+                        <p className="text-xs text-gray-500">Imagem de capa do projeto</p>
+                      </div>
+                      
+                      <input 
+                        type="file" 
+                        id="mainPhoto"
+                        className="hidden" 
+                        onChange={handlePhotoChange} 
+                        required 
+                        accept="image/jpeg,image/png,image/webp"
+                      />
+                      
+                      <label 
+                        htmlFor="mainPhoto"
+                        className={`
+                          flex flex-col items-center justify-center w-full h-56
+                          border border-dashed rounded-lg cursor-pointer
+                          transition-all duration-200
+                          ${mainImagePreview ? 'border-black bg-gray-50' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'}
+                        `}
+                      >
+                        {mainImagePreview ? (
+                          <div className="w-full h-full relative">
+                            <img 
+                              src={mainImagePreview} 
+                              alt="Preview" 
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                            <div className="absolute inset-0 bg-black/10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeMainImage();
+                                }}
+                                className="bg-black/80 text-white p-2 rounded-full hover:bg-black transition-colors"
+                                title="Remover imagem"
+                              >
+                                <i className="fas fa-times text-sm"></i>
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center p-8 text-center">
+                            <i className="fas fa-camera text-3xl text-gray-400 mb-3"></i>
+                            <p className="text-sm text-gray-600 font-medium mb-1">Selecionar arquivo</p>
+                            <p className="text-xs text-gray-500">PNG, JPG (Max. 10MB)</p>
+                          </div>
+                        )}
+                      </label>
+                      
+                      {photo && (
+                        <p className="text-xs text-gray-500 truncate px-1">
+                          {photo.name}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Galeria */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Galeria de Fotos
+                        </label>
+                        <p className="text-xs text-gray-500">Até 20 imagens (50MB total)</p>
+                      </div>
+                      
+                      <input 
+                        type="file" 
+                        id="gallery"
+                        className="hidden" 
+                        onChange={handleGalleryChange} 
+                        multiple 
+                        accept="image/jpeg,image/png,image/webp"
+                      />
+                      
+                      <label 
+                        htmlFor="gallery"
+                        className="flex flex-col items-center justify-center w-full h-56 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+                      >
+                        <div className="flex flex-col items-center justify-center p-8 text-center">
+                          <i className="fas fa-images text-3xl text-gray-400 mb-3"></i>
+                          <p className="text-sm text-gray-600 font-medium mb-1">Adicionar imagens</p>
+                          <p className="text-xs text-gray-500">Clique para selecionar múltiplas imagens</p>
+                        </div>
+                      </label>
+
+                      {galleryPreviews.length > 0 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-gray-700">
+                              {galleryPreviews.length} {galleryPreviews.length === 1 ? 'imagem' : 'imagens'}
+                            </p>
+                            <button 
+                              type="button" 
+                              onClick={() => {
+                                setGallery([]);
+                                setGalleryPreviews([]);
+                              }}
+                              className="text-sm text-gray-500 hover:text-black transition-colors"
+                            >
+                              Limpar todas
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto p-1">
+                            {galleryPreviews.map((preview, index) => (
+                              <div key={index} className="relative group">
+                                <div className="aspect-square bg-gray-100 rounded border border-gray-200 overflow-hidden">
+                                  <img 
+                                    src={preview} 
+                                    alt={`Preview ${index}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <button 
+                                  type="button" 
+                                  onClick={() => removeGalleryImage(index)}
+                                  className="absolute -top-1 -right-1 w-5 h-5 bg-black text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                                >
+                                  <i className="fas fa-times"></i>
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
 
-            {/* Footer com botões - ALTURA ADEQUADA */}
+            {/* Footer com botões */}
             <div className="flex-shrink-0 bg-white border-t border-gray-200 px-8 py-5">
               <div className="flex justify-between items-center">
                 <button
-                  onClick={() => setShowCreateModal(false)}
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    resetForm();
+                  }}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                 >
                   Cancelar
                 </button>
                 <button
-                  onClick={handleCreateProject}
-                  className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm hover:shadow"
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className={`
+                    px-8 py-3 rounded-lg text-white font-medium text-sm
+                    transition-colors
+                    ${isSubmitting 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-black hover:bg-gray-800'
+                    }
+                  `}
                 >
-                  Publicar projeto
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <i className="fas fa-spinner fa-spin mr-2"></i>
+                      Criando...
+                    </span>
+                  ) : (
+                    'Criar Projeto'
+                  )}
                 </button>
               </div>
+              
+              <p className="text-xs text-gray-500 text-center mt-4">
+                Campos marcados com * são obrigatórios
+              </p>
             </div>
           </div>
         </div>
