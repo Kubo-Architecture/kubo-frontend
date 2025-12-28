@@ -55,9 +55,7 @@ export default function ProfileInnerHeader(props) {
         style={{ backgroundImage: profileImageUrl }}
         onClick={handleImageClick}
       >
-        {/* Overlay escuro e transparente no hover */}
         <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300 flex items-center justify-center">
-          {/* Ícone de lápis centralizado (usando Font Awesome) */}
           <i className="fas fa-pencil-alt text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
         </div>
       </div>
