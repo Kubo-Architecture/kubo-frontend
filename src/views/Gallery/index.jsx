@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
-import HeaderFull from "../../components/Universal/HeaderFull/index"
+import HeaderFull from "../../components/Universal/HeaderFull/index";
+import Btncriarprojeto from "../../components/BtnCriarProjeto/index"; 
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newProject, setNewProject] = useState({
-    title: '',
-    location: '',
-    architect: '',
-    year: '',
-    description: '',
-    category: 'residencial',
-    style: '',
-    tags: []
-  });
 
   // Obras arquitetônicas reais famosas
   const architecturalWorks = [
@@ -64,30 +54,15 @@ export default function Gallery() {
     return true;
   });
 
-  const handleCreateProject = () => {
-    if (!newProject.title || !newProject.location || !newProject.architect) {
-      alert('Por favor, preencha os campos obrigatórios');
-      return;
-    }
-
+  // Função para lidar com a criação de novo projeto
+  const handleNewProjectCreated = (projectData) => {
     const newWork = {
       id: works.length + 1,
-      ...newProject,
-      tags: newProject.tags.length > 0 ? newProject.tags.split(',').map(tag => tag.trim()) : []
+      ...projectData,
+      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800" // Imagem padrão
     };
-
+    
     setWorks([...works, newWork]);
-    setShowCreateModal(false);
-    setNewProject({
-      title: '',
-      location: '',
-      architect: '',
-      year: '',
-      description: '',
-      category: 'residencial',
-      style: '',
-      tags: []
-    });
   };
 
   return (
@@ -136,18 +111,10 @@ export default function Gallery() {
                   </button>
                 </div>
 
-                {/* Botão de Criar Projeto - Minimalista */}
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                  title="Criar projeto"
-                >
-                  <i className="fas fa-plus text-base sm:text-lg"></i>
-                </button>
+                <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
               </div>
             </div>
 
-            {/* Barra de busca e filtros */}
             <div className="mb-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Barra de busca */}
@@ -251,13 +218,7 @@ export default function Gallery() {
               <p className="text-gray-500 mb-4 text-sm sm:text-base">
                 {searchTerm ? 'Tente ajustar sua busca.' : 'Adicione sua primeira obra!'}
               </p>
-              <button 
-                onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base"
-              >
-                <i className="fas fa-plus mr-2"></i>
-                Criar Projeto
-              </button>
+              <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
             </div>
           ) : viewMode === 'grid' ? (
             // Grade responsiva com diferentes breakpoints
@@ -445,153 +406,6 @@ export default function Gallery() {
         </div>
       </main>
 
-      {/* Modal de Criar Projeto */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-3 sm:p-4">
-          <div className="relative max-w-md w-full max-h-[90vh] overflow-y-auto bg-white rounded-lg">
-            <div className="sticky top-0 bg-white border-b border-gray-300 p-4 sm:p-6 flex justify-between items-center">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Criar Novo Projeto</h2>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-lg sm:text-xl"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-
-            <div className="p-4 sm:p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Título *
-                  </label>
-                  <input
-                    type="text"
-                    value={newProject.title}
-                    onChange={(e) => setNewProject({...newProject, title: e.target.value})}
-                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                    placeholder="Nome do projeto"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Localização *
-                    </label>
-                    <input
-                      type="text"
-                      value={newProject.location}
-                      onChange={(e) => setNewProject({...newProject, location: e.target.value})}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                      placeholder="Cidade, País"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Arquiteto *
-                    </label>
-                    <input
-                      type="text"
-                      value={newProject.architect}
-                      onChange={(e) => setNewProject({...newProject, architect: e.target.value})}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                      placeholder="Nome do arquiteto"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Ano
-                    </label>
-                    <input
-                      type="text"
-                      value={newProject.year}
-                      onChange={(e) => setNewProject({...newProject, year: e.target.value})}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                      placeholder="2024"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Categoria
-                    </label>
-                    <select
-                      value={newProject.category}
-                      onChange={(e) => setNewProject({...newProject, category: e.target.value})}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                    >
-                      <option value="residencial">Residencial</option>
-                      <option value="cultural">Cultural</option>
-                      <option value="religioso">Religioso</option>
-                      <option value="comercial">Comercial</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Estilo Arquitetônico
-                  </label>
-                  <input
-                    type="text"
-                    value={newProject.style}
-                    onChange={(e) => setNewProject({...newProject, style: e.target.value})}
-                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                    placeholder="Modernista, Brutalista, etc."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Descrição
-                  </label>
-                  <textarea
-                    value={newProject.description}
-                    onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                    rows="3"
-                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base resize-none"
-                    placeholder="Descreva o projeto..."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Tags
-                  </label>
-                  <input
-                    type="text"
-                    value={newProject.tags}
-                    onChange={(e) => setNewProject({...newProject, tags: e.target.value})}
-                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-                    placeholder="concreto, moderno, brasil (separados por vírgula)"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base w-full sm:w-auto"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleCreateProject}
-                  className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base w-full sm:w-auto"
-                >
-                  Criar Projeto
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Modal de detalhes responsivo */}
       {selectedImage && (
         <div
@@ -694,7 +508,6 @@ export default function Gallery() {
         </div>
       )}
 
-      {/* Adicionar CSS para responsividade */}
       <style jsx global>{`
         @media (max-width: 475px) {
           .xs\\:grid-cols-2 {
