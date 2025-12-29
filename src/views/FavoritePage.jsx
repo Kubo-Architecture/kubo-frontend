@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HeaderFull from "../../components/Universal/HeaderFull/index";
+import HeaderFull from "../../src/components/Universal/HeaderFull/index";
 
 export default function FavoritePage(){
   const [viewMode, setViewMode] = useState('grid');
