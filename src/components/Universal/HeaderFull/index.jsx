@@ -118,11 +118,11 @@ export default function HeaderFull({ userData }) {
                     <span>Configurações</span>
                   </a>
                   <a
-                    href="/minhas-obras"
+                    href="/Favoritepage"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <i className="fas fa-bookmark mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Minhas Obras</span>
+                    <span>Favoritos</span>
                   </a>
                   <div className="border-t border-gray-200 my-1"></div>
                   <a
@@ -199,12 +199,12 @@ export default function HeaderFull({ userData }) {
                   </a>
 
                   <a
-                    href="/minhas-obras"
+                    href="/Favoritepage"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <i className="fas fa-bookmark mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Minhas Obras</span>
+                    <span>Favoritos</span>
                   </a>
 
                   <div className="border-t border-gray-200 my-1"></div>
