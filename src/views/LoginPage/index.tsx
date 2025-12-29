@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // 1. Certifique-se de importar o axios
+import axios from 'axios';
 import Loading from '../../components/Universal/Loading';
 import LoginForm from '../../components/LoginPage/LoginForm';
 
-export default function LoginPage({ onLoginSuccess }) {
-  const [loading, setLoading] = useState(true);
+export default function LoginPage({ onLoginSuccess }: any) {
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function LoginPage({ onLoginSuccess }) {
           }
 
           return;
-        } catch (error) {
+        } catch (error: any) {
           console.error("Erro ao verificar usuário:", error);
           localStorage.removeItem('idUser');
         }

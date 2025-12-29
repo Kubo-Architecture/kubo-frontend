@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "../views/LoginPage"
-import ErrorPage from "../views/ErrorPage";
+import ErrorPage from "../views/ErrorPage/index.tsx";
 import LandingPage from "../views/LandingPage";
 import SignUpPage from "../views/SignUpPage";
-import VerificationCodeInput from "../views/AuthPage";
+import VerificationCodeInput from "../views/AuthPage/index.tsx";
 import UserProfile from "../views/UserProfile";
 import NicknameInput from "../views/NicknameInput";
 import ProjectPage from "../views/ProjectPage";
@@ -12,7 +12,7 @@ import Gallery from "../views/Gallery";
 import UserConfig from "../views/UserConfig";
 
 
-export default function Rotas({ isAuthenticated, onLoginSuccess }) {
+export default function Rotas({ isAuthenticated, onLoginSuccess }: any) {
     return (
         <Routes>
             <Route path="/" element={isAuthenticated ? <Navigate to="/gallery" /> : <LandingPage />} />

@@ -7,14 +7,14 @@ import './index.css';
 import { useLocation } from 'react-router-dom';
 
 function App() {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const location = useLocation();
 
-  const disabledRoutes = ['/login', '/register', '/forgotpassword'];
+  const disabledRoutes: string[] = ['/login', '/register', '/forgotpassword'];
 
-  const isAuthRoute = location.pathname.startsWith('/auth/');
-  const isHeaderDisabled = disabledRoutes.includes(location.pathname) || isAuthRoute;
+  const isAuthRoute: boolean = location.pathname.startsWith('/auth/');
+  const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
 
 
   const checkUser = useCallback(async () => {
@@ -26,7 +26,7 @@ function App() {
     }
 
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
       console.log("Dados do usuário recebidos:", res.data);
       setUserData(res.data);
     } catch (error) {

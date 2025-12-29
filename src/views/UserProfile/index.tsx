@@ -9,12 +9,12 @@ import ProjectGallery from "../../components/Profile/ProjectGallery"
 import Loading from "../../components/Universal/Loading"
 
 export default function UserProfile() {
-  const [loading, setLoading] = useState(true);
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [loading, setLoading] = useState<ConstrainBoolean>(true);
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
   const location = useLocation()
   const navigate = useNavigate()
-  const [profileData, setProfileData] = useState(null)
-  const [showBannerSettings, setShowBannerSettings] = useState(false)
+  const [profileData, setProfileData] = useState<any>(null)
+  const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
   const [projectCount, setProjectCount] = useState(0);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function UserProfile() {
           />
           <Biografy Biografy={profileData.bio} />
 
-          <ProjectGallery userId={profileData.idUser} onProjectsLoaded={(count) => setProjectCount(count)} setIsLoadingChild={setLoading} />
+          <ProjectGallery userId={profileData.idUser} onProjectsLoaded={(count: number) => setProjectCount(count)} setIsLoadingChild={setLoading} />
 
           {showBannerSettings && (
             <div className="z-50">

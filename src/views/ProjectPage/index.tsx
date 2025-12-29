@@ -15,8 +15,8 @@ export default function ProjectPage() {
     const pathSegments = location.pathname.split("/").filter(Boolean);
     const projectId = pathSegments[1];
     const navigate = useNavigate();
-    const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [project, setProject] = useState<any>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -201,7 +201,7 @@ export default function ProjectPage() {
                     <div className="flex flex-col pb-10 px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                         <span className="text-3xl font-medium mb-5">Galeria</span>
                         <div className="grid grid-cols-1 sm:grid-rows-2 sm:grid-cols-3 gap-1 lg:grid-rows-3">
-                            {project.gallery.map((imageUrl, index) => (
+                            {project.gallery.map((imageUrl: string, index: number) => (
                                 <div
                                     key={index}
                                     className={`rounded-sm ${index === 0 ? 'sm:row-span-2 lg:row-span-3' :

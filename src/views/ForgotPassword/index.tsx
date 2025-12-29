@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Mail, Home, ArrowLeft } from 'lucide-react';
 
 const ForgotPasswordForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [touched, setTouched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [touched, setTouched] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setTouched(true);
 
@@ -37,7 +37,7 @@ const ForgotPasswordForm = () => {
       const apiUrl = `${import.meta.env.VITE_API_URL}/forgot-password`;
       await axios.post(apiUrl, { email });
       setSuccess(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao enviar email:', error);
       if (error.response?.status === 404) {
         setError('Email não encontrado');
@@ -68,7 +68,7 @@ const ForgotPasswordForm = () => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
         <div className="w-full max-w-md flex flex-col justify-center items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
-          
+
           {/* Botão voltar */}
           <button
             onClick={handleGoBack}
@@ -77,7 +77,7 @@ const ForgotPasswordForm = () => {
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             <span>Voltar</span>
           </button>
-          
+
           {/* Ícone de sucesso */}
           <div className="flex justify-center mb-2">
             <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center">
@@ -89,7 +89,7 @@ const ForgotPasswordForm = () => {
           <h1 className="text-2xl font-bold text-center text-black mb-0.5">
             Email enviado!
           </h1>
-          
+
           {/* Mensagem */}
           <p className="text-center text-gray-600 mb-6 text-sm px-4">
             Enviamos um link de recuperação para <strong>{email}</strong>. Verifique sua caixa de entrada.
@@ -110,7 +110,7 @@ const ForgotPasswordForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
-        
+
         {/* Botão voltar - DENTRO DO CARD */}
         <button
           onClick={handleGoBack}
@@ -119,7 +119,7 @@ const ForgotPasswordForm = () => {
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
           <span>Voltar</span>
         </button>
-        
+
         {/* Ícone de casa */}
         <div className="flex justify-center mb-2">
           <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
@@ -131,7 +131,7 @@ const ForgotPasswordForm = () => {
         <h1 className="text-2xl font-bold text-center text-black mb-0.5">
           Esqueceu a senha?
         </h1>
-        
+
         {/* Subtítulo */}
         <p className="text-center text-gray-600 mb-3 text-sm">
           Digite seu email para recuperar sua conta
@@ -153,9 +153,8 @@ const ForgotPasswordForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 onBlur={handleBlur}
                 placeholder="Digite seu email"
-                className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
-                  touched && error ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched && error ? 'border-red-500' : 'border-gray-300'
+                  }`}
               />
             </div>
             {/* Altura fixa para mensagem de erro */}
@@ -179,7 +178,7 @@ const ForgotPasswordForm = () => {
         {/* Link para cadastro */}
         <p className="text-center text-gray-600 mt-3 text-xs">
           Não tem uma conta?{' '}
-          <button 
+          <button
             onClick={() => navigate('/register')}
             className="font-semibold text-blue-600 hover:underline"
           >

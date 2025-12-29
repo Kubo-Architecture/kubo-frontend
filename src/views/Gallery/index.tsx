@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import HeaderFull from "../../components/Universal/HeaderFull/index";
+import { useState } from 'react';
 import Btncriarprojeto from "../../components/BtnCriarProjeto/index";
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
 
   // Obras arquitetônicas reais famosas
-  const architecturalWorks = [
+  const architecturalWorks: any[] = [
     {
       id: 1,
       title: "Mansão dos Arcos",
@@ -36,9 +35,9 @@ export default function Gallery() {
     },
   ];
 
-  const [works, setWorks] = useState(architecturalWorks);
+  const [works, setWorks] = useState<any>(architecturalWorks);
 
-  const filteredWorks = works.filter(work => {
+  const filteredWorks = works.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter) return false;
 
     if (searchTerm) {
@@ -47,7 +46,7 @@ export default function Gallery() {
         work.title.toLowerCase().includes(searchLower) ||
         work.location.toLowerCase().includes(searchLower) ||
         work.architect.toLowerCase().includes(searchLower) ||
-        work.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        work.tags.some((tag: any) => tag.toLowerCase().includes(searchLower))
       );
     }
 
@@ -55,7 +54,7 @@ export default function Gallery() {
   });
 
   // Função para lidar com a criação de novo projeto
-  const handleNewProjectCreated = (projectData) => {
+  const handleNewProjectCreated = (projectData: any) => {
     const newWork = {
       id: works.length + 1,
       ...projectData,
@@ -219,7 +218,7 @@ export default function Gallery() {
           ) : viewMode === 'grid' ? (
             // Grade responsiva com diferentes breakpoints
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              {filteredWorks.map((work) => (
+              {filteredWorks.map((work: any) => (
                 <div
                   key={work.id}
                   className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
@@ -274,7 +273,7 @@ export default function Gallery() {
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-1">
-                      {work.tags.slice(0, 3).map((tag, index) => (
+                      {work.tags.slice(0, 3).map((tag: string, index: number) => (
                         <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded truncate max-w-[80px] sm:max-w-[100px]">
                           {tag}
                         </span>
@@ -292,7 +291,7 @@ export default function Gallery() {
           ) : (
             // Lista responsiva - NOVO DESIGN MELHORADO
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {filteredWorks.map((work, index) => (
+              {filteredWorks.map((work: any, index: number) => (
                 <div
                   key={work.id}
                   className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
@@ -370,7 +369,7 @@ export default function Gallery() {
                       {/* Tags e informações adicionais */}
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
-                          {work.tags.map((tag, index) => (
+                          {work.tags.map((tag: string, index: number) => (
                             <span
                               key={index}
                               className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-default"
@@ -473,7 +472,7 @@ export default function Gallery() {
                     <div>
                       <div className="text-sm text-gray-500 mb-1">Tags</div>
                       <div className="flex flex-wrap gap-1">
-                        {selectedImage.tags.map((tag, index) => (
+                        {selectedImage.tags.map((tag: string, index: number) => (
                           <span key={index} className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                             {tag}
                           </span>
@@ -504,7 +503,7 @@ export default function Gallery() {
         </div>
       )}
 
-      <style jsx global>{`
+      <style>{`
         @media (max-width: 475px) {
           .xs\\:grid-cols-2 {
             grid-template-columns: repeat(2, 1fr) !important;

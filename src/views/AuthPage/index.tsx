@@ -7,14 +7,14 @@ import Loading from '../../components/Universal/Loading';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
-  const { idUser } = useParams();
+  const { idUser } = useParams<string>();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [code, setCode] = useState(['', '', '', '']);
-  const [attempts, setAttempts] = useState(0);
-  const [limitReached, setLimitReached] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const inputs = useRef([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [code, setCode] = useState<string[]>(['', '', '', '']);
+  const [attempts, setAttempts] = useState<number>(0);
+  const [limitReached, setLimitReached] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const inputs = useRef<any>([]);
 
   const maxAttempts = 4;
 
@@ -28,7 +28,7 @@ const VerificationCodeInput = () => {
     }
   }, [code]);
 
-  const handleChange = (index, value) => {
+  const handleChange = (index: number, value: any) => {
     const cleanedValue = value.replace(/\s/g, '').slice(-1);
 
     const newCode = [...code];
@@ -41,7 +41,7 @@ const VerificationCodeInput = () => {
     }
   };
 
-  const handleKeyDown = (index, e) => {
+  const handleKeyDown = (index: number, e: any) => {
     if (e.key === ' ') {
       e.preventDefault();
       return;
@@ -76,7 +76,7 @@ const VerificationCodeInput = () => {
       inputs.current[index - 1]?.focus();
       e.preventDefault();
     }
-    
+
     if (e.key === 'ArrowRight' && index < 3) {
       inputs.current[index + 1]?.focus();
       e.preventDefault();
@@ -89,7 +89,7 @@ const VerificationCodeInput = () => {
     try {
       setIsLoading(true);
       setErrorMessage('');
-      
+
       const response = await fetch(`${apiUrl}/verify`, {
         method: 'POST',
         headers: {
@@ -128,7 +128,7 @@ const VerificationCodeInput = () => {
     } catch (error) {
       console.error('Erro:', error);
       setErrorMessage('Erro de conexão. Tente novamente.');
-      
+
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
@@ -184,7 +184,7 @@ const VerificationCodeInput = () => {
 
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative">
-          
+
           {/* Botão de voltar dentro do card */}
           <button
             onClick={() => navigate(-1)}
@@ -225,22 +225,20 @@ const VerificationCodeInput = () => {
                       onChange={(e) => handleChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       ref={(el) => (inputs.current[index] = el)}
-                      className={`w-16 h-16 text-center text-2xl font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-black transition-all ${
-                        errorMessage 
-                          ? 'border-red-500 ring-red-200' 
-                          : 'border-gray-300 focus:border-black'
-                      }`}
+                      className={`w-16 h-16 text-center text-2xl font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-black transition-all ${errorMessage
+                        ? 'border-red-500 ring-red-200'
+                        : 'border-gray-300 focus:border-black'
+                        }`}
                     />
                   ))}
                 </div>
 
                 {/* Mensagem de erro/sucesso */}
                 {errorMessage && (
-                  <div className={`text-center mt-3 text-sm ${
-                    errorMessage.includes('reenviado') 
-                      ? 'text-green-600 py-2 px-3 rounded-lg' 
-                      : 'text-red-500 py-2 px-3 rounded-lg'
-                  }`}>
+                  <div className={`text-center mt-3 text-sm ${errorMessage.includes('reenviado')
+                    ? 'text-green-600 py-2 px-3 rounded-lg'
+                    : 'text-red-500 py-2 px-3 rounded-lg'
+                    }`}>
                     {errorMessage}
                   </div>
                 )}
@@ -288,17 +286,17 @@ const VerificationCodeInput = () => {
 
               <div className="flex justify-center mb-6">
                 <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-300">
-                  <svg 
-                    className="w-8 h-8 text-gray-700" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className="w-8 h-8 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                 </div>

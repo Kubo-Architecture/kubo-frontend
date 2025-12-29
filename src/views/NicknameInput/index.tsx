@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Home, ArrowLeft } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 export default function NicknameInput() {
-  const [nickname, setNickname] = useState('');
-  const [idUser, setIdUser] = useState(null);
-  const [error, setError] = useState('');
-  const [touched, setTouched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [nickname, setNickname] = useState<string>('');
+  const [idUser, setIdUser] = useState<any>(null);
+  const [error, setError] = useState<any>('');
+  const [touched, setTouched] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // Carrega o idUser do localStorage ao inicializar
   useEffect(() => {
     const storedId = localStorage.getItem('idUser');
     if (storedId) {
@@ -23,7 +22,7 @@ export default function NicknameInput() {
 
   const nicknameRegex = /^[a-zA-Z0-9._]+$/;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setTouched(true);
 
@@ -68,7 +67,7 @@ export default function NicknameInput() {
       if (response.status === 200) {
         navigate(`/profile/${nickname}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';
       setError(errorMsg);
       console.error('Erro na requisição:', err);
@@ -77,7 +76,7 @@ export default function NicknameInput() {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const value = e.target.value;
     setNickname(value.toLowerCase());
 

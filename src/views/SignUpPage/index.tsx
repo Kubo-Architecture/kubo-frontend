@@ -5,10 +5,9 @@ import './styles.css';
 import SignUpForm from '../../components/SignUp/SignUpForm';
 
 export default function SignUpPage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // mantém o loading pelo menos 1s
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);

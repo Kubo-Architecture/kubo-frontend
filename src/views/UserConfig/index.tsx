@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
-import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
-import HeaderFull from "../../components/Universal/HeaderFull/index"
-
+import { useState } from 'react';
 
 export default function UserConfig() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [theme, setTheme] = useState('mixed');
-  const [language, setLanguage] = useState('portuguese');
-  const [accountVisibility, setAccountVisibility] = useState('public');
-  const [notifications, setNotifications] = useState({
+  const [theme, setTheme] = useState<any>('mixed');
+  const [language, setLanguage] = useState<any>('portuguese');
+  const [accountVisibility, setAccountVisibility] = useState<any>('public');
+  const [notifications, setNotifications] = useState<any>({
     email: true,
     updates: true,
     favorites: false
   });
 
-  const user = {
-    name: "Kubo",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100",
-    role: "Arquiteto"
-  };
-
-  const handleNotificationChange = (type) => {
-    setNotifications(prev => ({
+  const handleNotificationChange = (type: any) => {
+    setNotifications((prev: any) => ({
       ...prev,
       [type]: !prev[type]
     }));
@@ -41,9 +31,6 @@ export default function UserConfig() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header simplificado */}
-      <HeaderFull/>
-      {/* Conteúdo principal */}
       <main className="pt-20 pb-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Cabeçalho */}
@@ -64,18 +51,17 @@ export default function UserConfig() {
                   <p className="text-gray-600 text-sm">Gerencie suas configurações pessoais</p>
                 </div>
               </div>
-              
+
               {/* Visibilidade da Conta */}
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-3">Visibilidade</h3>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setAccountVisibility('public')}
-                    className={`flex items-center p-4 rounded-lg border transition-all flex-1 ${
-                      accountVisibility === 'public'
-                        ? 'bg-gray-900 border-gray-900 text-white'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                    className={`flex items-center p-4 rounded-lg border transition-all flex-1 ${accountVisibility === 'public'
+                      ? 'bg-gray-900 border-gray-900 text-white'
+                      : 'border-gray-300 hover:border-gray-400'
+                      }`}
                   >
                     <i className="fas fa-globe text-xl mr-3"></i>
                     <div className="text-left flex-1">
@@ -86,14 +72,13 @@ export default function UserConfig() {
                       <i className="fas fa-check text-lg"></i>
                     )}
                   </button>
-                  
+
                   <button
                     onClick={() => setAccountVisibility('private')}
-                    className={`flex items-center p-4 rounded-lg border transition-all flex-1 ${
-                      accountVisibility === 'private'
-                        ? 'bg-gray-900 border-gray-900 text-white'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                    className={`flex items-center p-4 rounded-lg border transition-all flex-1 ${accountVisibility === 'private'
+                      ? 'bg-gray-900 border-gray-900 text-white'
+                      : 'border-gray-300 hover:border-gray-400'
+                      }`}
                   >
                     <i className="fas fa-lock text-xl mr-3"></i>
                     <div className="text-left flex-1">
@@ -119,7 +104,7 @@ export default function UserConfig() {
                     Exportar
                   </button>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Excluir conta</p>
@@ -150,11 +135,10 @@ export default function UserConfig() {
                     <button
                       key={option.id}
                       onClick={() => setTheme(option.id)}
-                      className={`flex-1 flex items-center justify-center p-3 rounded-lg border transition-colors ${
-                        theme === option.id
-                          ? 'bg-gray-900 text-white border-gray-900'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`flex-1 flex items-center justify-center p-3 rounded-lg border transition-colors ${theme === option.id
+                        ? 'bg-gray-900 text-white border-gray-900'
+                        : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     >
                       <i className={`fas fa-${option.icon} mr-2`}></i>
                       {option.label}
@@ -171,11 +155,10 @@ export default function UserConfig() {
                     <button
                       key={option.id}
                       onClick={() => setLanguage(option.id)}
-                      className={`px-4 py-2 rounded-lg border transition-colors ${
-                        language === option.id
-                          ? 'bg-gray-900 text-white border-gray-900'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`px-4 py-2 rounded-lg border transition-colors ${language === option.id
+                        ? 'bg-gray-900 text-white border-gray-900'
+                        : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -203,14 +186,12 @@ export default function UserConfig() {
                     </div>
                     <button
                       onClick={() => handleNotificationChange(item.id)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        notifications[item.id] ? 'bg-gray-900' : 'bg-gray-200'
-                      }`}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${notifications[item.id] ? 'bg-gray-900' : 'bg-gray-200'
+                        }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          notifications[item.id] ? 'translate-x-6' : 'translate-x-1'
-                        }`}
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${notifications[item.id] ? 'translate-x-6' : 'translate-x-1'
+                          }`}
                       />
                     </button>
                   </div>
