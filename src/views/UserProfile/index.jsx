@@ -52,10 +52,6 @@ export default function UserProfile() {
 
   return (
     <div className="w-full min-h-screen relative overflow-hidden">
-      {/* Header fixo */}
-      <HeaderFull />
-
-      {/* Conteúdo principal */}
       <div className="pt-16">
         {loading && <Loading />}
         <div className={loading ? "hidden" : "block"}>

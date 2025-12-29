@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { loginSchema } from '../../../validators/loginSchema';
 import LoginWithGoogleButton from '../../LoginWithGoogleButton';
 
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
@@ -88,6 +88,12 @@ const LoginForm = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("idUser", idUser);
 
+      if (onLoginSuccess) {
+        await onLoginSuccess();
+      }
+
+      navigate('/gallery');
+
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
         const user = response.data;
@@ -97,14 +103,11 @@ const LoginForm = () => {
         } else {
           navigate('/profile/nickname');
         }
-
-        return;
       } catch (error) {
-        console.error("Erro ao verificar usuário:", error);
         localStorage.removeItem('idUser');
       }
 
-      navigate(`/profile/${name}`);
+      navigate('/gallery');
     } catch (error) {
       console.error('Erro no login:', error);
       if (error.response?.status === 404) {
@@ -239,7 +242,7 @@ const LoginForm = () => {
       <div className="space-y-1.5 flex flex-col justify-center items-center">
 
         <div className="w-full">
-          <LoginWithGoogleButton />
+          <LoginWithGoogleButton onLoginSuccess={onLoginSuccess} />
         </div>
 
         {/* <button

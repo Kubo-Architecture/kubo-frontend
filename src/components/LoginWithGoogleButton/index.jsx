@@ -2,7 +2,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function LoginWithGoogleButton() {
+function LoginWithGoogleButton({ onLoginSuccess }) {
     const navigate = useNavigate();
 
     const handleSuccess = async (credentialResponse) => {
@@ -24,10 +24,14 @@ function LoginWithGoogleButton() {
             localStorage.setItem('name', name);
             localStorage.setItem('idUser', idUser);
 
+            if (onLoginSuccess) {
+                await onLoginSuccess();
+            }
+
             const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
 
             if (user.data.nickname) {
-                navigate(`/profile/${user.data.nickname}`);
+                navigate(`/gallery`);
             } else {
                 navigate(`/profile/nickname`);
             }
