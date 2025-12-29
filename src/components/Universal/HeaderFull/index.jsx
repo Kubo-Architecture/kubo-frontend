@@ -1,31 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from "react-router-dom"
+import { useState } from 'react';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 import DefaultProfilePhoto from "../../../assets/icons/Universal/defaultUserPhoto.svg";
-import axios from 'axios';
 
-export default function HeaderFull() {
+export default function HeaderFull({ userData }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userData, setUserData] = useState({});
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const userId = window.localStorage.getItem('idUser');
-    const apiUrl = `${import.meta.env.VITE_API_URL}/user/${userId}`
-
-    axios.get(apiUrl)
-      .then((res) => {
-        setUserData(res.data);
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar usuário:", err)
-        if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
-          navigate("/error/404")
-        }
-      })
-  }, []);
 
   // Função para verificar se o link está ativo
   const isActiveLink = (path) => {
@@ -98,7 +77,7 @@ export default function HeaderFull() {
               <div className="relative">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                  src={userData.photoUrl || DefaultProfilePhoto}
+                  src={userData?.photoUrl || DefaultProfilePhoto}
                   alt="Foto do perfil"
                 />
               </div>
@@ -118,14 +97,14 @@ export default function HeaderFull() {
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
-                      {userData.name || 'Usuário'}
+                      {userData?.name || 'Usuário'}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
-                      {userData.email || ''}
+                      {userData?.email || ''}
                     </p>
                   </div>
                   <a
-                    href={`/profile/${userData.nickname}`}
+                    href={`/profile/${userData?.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
@@ -177,7 +156,7 @@ export default function HeaderFull() {
             >
               <img
                 className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                src={userData.photoUrl || DefaultProfilePhoto}
+                src={userData?.photoUrl || DefaultProfilePhoto}
                 alt="Foto do perfil"
               />
             </button>
@@ -193,15 +172,15 @@ export default function HeaderFull() {
                   {/* Header com informações do usuário no mobile também */}
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
-                      {userData.name || 'Usuário'}
+                      {userData?.name || 'Usuário'}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
-                      {userData.email || ''}
+                      {userData?.email || ''}
                     </p>
                   </div>
 
                   <a
-                    href={`/profile/${userData.nickname}`}
+                    href={`/profile/${userData?.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >

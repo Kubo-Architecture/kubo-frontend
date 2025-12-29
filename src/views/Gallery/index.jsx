@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import HeaderFull from "../../components/Universal/HeaderFull/index";
-import Btncriarprojeto from "../../components/BtnCriarProjeto/index"; 
+import Btncriarprojeto from "../../components/BtnCriarProjeto/index";
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
@@ -61,16 +61,12 @@ export default function Gallery() {
       ...projectData,
       imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800" // Imagem padrão
     };
-    
+
     setWorks([...works, newWork]);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header fixo */}
-      <HeaderFull />
-
-      {/* Conteúdo principal */}
       <main className="pt-20 pb-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
           {/* Cabeçalho com título e controles */}
@@ -84,7 +80,7 @@ export default function Gallery() {
                   Explore arquitetura icônica mundial
                 </p>
               </div>
-              
+
               {/* Controles - Modos de visualização e botão de criar */}
               <div className="flex items-center space-x-3 self-start sm:self-center">
                 {/* Modos de visualização */}
@@ -92,8 +88,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded transition-colors ${viewMode === 'grid'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     title="Grade"
                   >
@@ -102,8 +98,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded transition-colors ${viewMode === 'list'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     title="Lista"
                   >
@@ -170,8 +166,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('all')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'all'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                   >
                     Todas
@@ -179,8 +175,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('residencial')}
                     className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'residencial'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                   >
                     Residencial
@@ -188,8 +184,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('cultural')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'cultural'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                   >
                     Cultural
@@ -197,8 +193,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('religioso')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'religioso'
-                        ? 'bg-black text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                       }`}
                   >
                     Religioso
@@ -303,7 +299,7 @@ export default function Gallery() {
                 >
                   <div className="flex flex-col lg:flex-row gap-6">
                     {/* Imagem - Mais clean */}
-                    <div 
+                    <div
                       className="lg:w-1/4 cursor-pointer group"
                       onClick={() => setSelectedImage(work)}
                     >
@@ -332,7 +328,7 @@ export default function Gallery() {
                               {work.year}
                             </span>
                           </div>
-                          
+
                           <div className="flex flex-wrap items-center gap-4 mb-3 text-gray-600">
                             <div className="flex items-center">
                               <i className="fas fa-map-marker-alt mr-2 text-gray-400"></i>
@@ -355,13 +351,13 @@ export default function Gallery() {
 
                         {/* Ações - Alinhadas à direita */}
                         <div className="flex items-center space-x-3">
-                          <button 
+                          <button
                             className="text-gray-400 hover:text-yellow-500 transition-colors p-2"
                             title="Favoritar"
                           >
                             <i className="far fa-star text-lg"></i>
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSelectedImage(work)}
                             className="text-gray-400 hover:text-blue-600 transition-colors p-2"
                             title="Ver detalhes"
@@ -375,7 +371,7 @@ export default function Gallery() {
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
                           {work.tags.map((tag, index) => (
-                            <span 
+                            <span
                               key={index}
                               className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-default"
                             >
@@ -383,7 +379,7 @@ export default function Gallery() {
                             </span>
                           ))}
                         </div>
-                        
+
                         <div className="flex items-center space-x-4 text-sm text-gray-500">
                           <span className="flex items-center">
                             <i className="fas fa-clock mr-2"></i>
@@ -391,9 +387,9 @@ export default function Gallery() {
                           </span>
                           <span className="flex items-center">
                             <i className="fas fa-building mr-2"></i>
-                            {work.category === 'residencial' ? 'Residencial' : 
-                             work.category === 'cultural' ? 'Cultural' : 
-                             work.category === 'religioso' ? 'Religioso' : 'Comercial'}
+                            {work.category === 'residencial' ? 'Residencial' :
+                              work.category === 'cultural' ? 'Cultural' :
+                                work.category === 'religioso' ? 'Religioso' : 'Comercial'}
                           </span>
                         </div>
                       </div>
