@@ -16,11 +16,8 @@ export default function ErrorPage() {
                     src={KuboEmptyIcon} 
                     alt="Empty icon" 
                 />
-                <div className="absolute top-1/2 left-[49.1%] -mt-[25px] -ml-[25px] text-black
-                    min-[870px]:left-[48.5%] max-[1280px]:left-[48.5%]
-                    min-[540px]:left-[48%] max-[869px]:left-[48%]
-                    max-[539px]:left-[46%]">
-                    <h4 className="font-['Montserrat'] font-medium tracking-[3px] text-[40px]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-black">
+                    <h4 className="font-['Montserrat'] font-medium tracking-[3px] text-[40px] text-center">
                         {errorCode}
                     </h4>
                 </div>

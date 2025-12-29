@@ -1,7 +1,5 @@
-// src/pages/SignUpPage/index.jsx
 import { useState, useEffect } from 'react';
 import Loading from '../../components/Universal/Loading';
-import './styles.css';
 import SignUpForm from '../../components/SignUp/SignUpForm';
 
 export default function SignUpPage() {
