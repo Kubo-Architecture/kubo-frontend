@@ -10,6 +10,7 @@ import ProjectPage from "../views/ProjectPage";
 import ForgotPassword from "../views/ForgotPassword"
 import Gallery from "../views/Gallery";
 import UserConfig from "../views/UserConfig";
+import FavoritePage from "../views/FavoritePage";
 
 
 export default function Rotas({ isAuthenticated, onLoginSuccess }: any) {
@@ -26,6 +27,7 @@ export default function Rotas({ isAuthenticated, onLoginSuccess }: any) {
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/Userconfig" element={<UserConfig />} />
+            <Route path="/Favoritepage" element={<FavoritePage />} />
         </Routes>
     );
 }
