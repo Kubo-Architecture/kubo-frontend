@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Btncriarprojeto({ onProjectCreated }) {
+export default function Btncriarprojeto({ onProjectCreated }: any) {
   const navigate = useNavigate();
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formData, setFormData] = useState({
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>({
     name: '',
     location: '',
     description: '',
@@ -14,27 +14,27 @@ export default function Btncriarprojeto({ onProjectCreated }) {
     terrain_area: '',
     usage_type: '',
   });
-  const [photo, setPhoto] = useState(null);
-  const [gallery, setGallery] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [touched, setTouched] = useState({});
-  
-  const modalRef = useRef(null);
-  const contentRef = useRef(null);
-  const [mainImagePreview, setMainImagePreview] = useState(null);
-  const [galleryPreviews, setGalleryPreviews] = useState([]);
+  const [photo, setPhoto] = useState<any>(null);
+  const [gallery, setGallery] = useState<any>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [touched, setTouched] = useState<any>({});
+
+  const modalRef = useRef<any>(null);
+  const contentRef = useRef<any>(null);
+  const [mainImagePreview, setMainImagePreview] = useState<any>(null);
+  const [galleryPreviews, setGalleryPreviews] = useState<any>([]);
 
   // Fechar modal ao clicar fora ou pressionar ESC
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setShowCreateModal(false);
         resetForm();
       }
     };
 
-    const handleEscKey = (event) => {
+    const handleEscKey = (event: any) => {
       if (event.key === 'Escape') {
         setShowCreateModal(false);
         resetForm();
@@ -45,7 +45,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscKey);
       document.body.style.overflow = 'hidden';
-      
+
       if (contentRef.current) {
         contentRef.current.scrollTop = 0;
       }
@@ -59,44 +59,44 @@ export default function Btncriarprojeto({ onProjectCreated }) {
   }, [showCreateModal]);
 
   // Handlers do formulário
-  const handleBlur = (field) => {
-    setTouched({...touched, [field]: true});
+  const handleBlur = (field: any) => {
+    setTouched({ ...touched, [field]: true });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleMaterialChange = (index, value) => {
+  const handleMaterialChange = (index: number, value: any) => {
     const newMaterials = [...formData.materials];
     newMaterials[index] = value;
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       materials: newMaterials
     }));
   };
 
   const addMaterialField = () => {
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       materials: [...prev.materials, '']
     }));
   };
 
-  const removeMaterialField = (index) => {
+  const removeMaterialField = (index: number) => {
     if (formData.materials.length === 1) return;
-    const newMaterials = formData.materials.filter((_, i) => i !== index);
-    setFormData(prev => ({
+    const newMaterials = formData.materials.filter((_: any, i: any) => i !== index);
+    setFormData((prev: any) => ({
       ...prev,
       materials: newMaterials
     }));
   };
 
-  const handlePhotoChange = (e) => {
+  const handlePhotoChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
@@ -104,21 +104,21 @@ export default function Btncriarprojeto({ onProjectCreated }) {
         return;
       }
       setPhoto(file);
-      
+
       // Criar preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setMainImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-      
+
       setError('');
     }
   };
 
-  const handleGalleryChange = (e) => {
+  const handleGalleryChange = (e: any) => {
     const newFiles = Array.from(e.target.files);
-    
+
     const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
     if (totalSize > 50 * 1024 * 1024) {
       setError('A galeria não pode exceder 50MB no total');
@@ -130,31 +130,31 @@ export default function Btncriarprojeto({ onProjectCreated }) {
       return;
     }
 
-    setGallery(prevGallery => {
+    setGallery((prevGallery: any) => {
       const allFiles = [...prevGallery, ...newFiles];
       const uniqueMap = new Map();
       allFiles.forEach(file => {
         uniqueMap.set(file.name + file.size, file);
       });
       const uniqueFiles = Array.from(uniqueMap.values());
-      
+
       // Criar previews
-      newFiles.forEach(file => {
+      newFiles.forEach((file: any) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setGalleryPreviews(prev => [...prev, reader.result]);
+          setGalleryPreviews((prev: any) => [...prev, reader.result]);
         };
         reader.readAsDataURL(file);
       });
-      
+
       return uniqueFiles;
     });
     setError('');
   };
 
-  const removeGalleryImage = (index) => {
-    setGallery(prevGallery => prevGallery.filter((_, i) => i !== index));
-    setGalleryPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
+  const removeGalleryImage = (index: any) => {
+    setGallery((prevGallery: any) => prevGallery.filter((_: any, i: any) => i !== index));
+    setGalleryPreviews((prevPreviews: any) => prevPreviews.filter((_: any, i: any) => i !== index));
   };
 
   const removeMainImage = () => {
@@ -162,7 +162,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
     setMainImagePreview(null);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
@@ -184,7 +184,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
     data.append('usage_type', formData.usage_type);
     data.append('idUser', idUser);
 
-    formData.materials.forEach((material, index) => {
+    formData.materials.forEach((material: string, index: number) => {
       if (material.trim()) {
         data.append(`materials[${index}]`, material);
       }
@@ -194,7 +194,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
       data.append('photo', photo);
     }
 
-    gallery.forEach(file => {
+    gallery.forEach((file: any) => {
       data.append('gallery', file);
     });
 
@@ -210,13 +210,13 @@ export default function Btncriarprojeto({ onProjectCreated }) {
       }
 
       const result = await response.json();
-      
+
       if (onProjectCreated) {
         onProjectCreated(result);
       }
 
       setError('success: Projeto cadastrado com sucesso!');
-      
+
       setTimeout(() => {
         setShowCreateModal(false);
         resetForm();
@@ -224,7 +224,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
         navigate(`/profile/${name}`);
       }, 1500);
 
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Erro desconhecido');
     } finally {
       setIsSubmitting(false);
@@ -263,7 +263,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             ref={modalRef}
             className="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col"
           >
@@ -288,17 +288,16 @@ export default function Btncriarprojeto({ onProjectCreated }) {
             </div>
 
             {/* Conteúdo com scroll */}
-            <div 
+            <div
               ref={contentRef}
               className="flex-1 overflow-y-auto px-8 py-4"
             >
               {/* Mensagens de feedback */}
               {error && (
-                <div className={`mb-6 p-4 rounded-lg ${
-                  error.startsWith('success:') 
-                    ? 'bg-green-50 border border-green-100' 
-                    : 'bg-red-50 border border-red-100'
-                }`}>
+                <div className={`mb-6 p-4 rounded-lg ${error.startsWith('success:')
+                  ? 'bg-green-50 border border-green-100'
+                  : 'bg-red-50 border border-red-100'
+                  }`}>
                   <div className="flex items-center">
                     {error.startsWith('success:') ? (
                       <i className="fas fa-check-circle text-green-600 mr-3"></i>
@@ -316,40 +315,38 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                   <h3 className="text-lg font-medium text-gray-900 border-b border-gray-100 pb-3">
                     Informações Básicas
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Nome do Projeto *
                       </label>
-                      <input 
-                        type="text" 
-                        name="name" 
-                        value={formData.name} 
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         onBlur={() => handleBlur('name')}
-                        required 
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${
-                          touched.name && !formData.name ? 'border-red-300' : 'border-gray-300'
-                        }`}
+                        required
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${touched.name && !formData.name ? 'border-red-300' : 'border-gray-300'
+                          }`}
                         placeholder="Casa Moderna em São Paulo"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Localização *
                       </label>
-                      <input 
-                        type="text" 
-                        name="location" 
-                        value={formData.location} 
+                      <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
                         onChange={handleChange}
                         onBlur={() => handleBlur('location')}
-                        required 
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${
-                          touched.location && !formData.location ? 'border-red-300' : 'border-gray-300'
-                        }`}
+                        required
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm ${touched.location && !formData.location ? 'border-red-300' : 'border-gray-300'
+                          }`}
                         placeholder="São Paulo, SP"
                       />
                     </div>
@@ -358,11 +355,11 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                       <label className="block text-sm font-medium text-gray-700">
                         Descrição
                       </label>
-                      <textarea 
-                        name="description" 
-                        value={formData.description} 
+                      <textarea
+                        name="description"
+                        value={formData.description}
                         onChange={handleChange}
-                        rows={4} 
+                        rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm resize-none"
                         placeholder="Descreva os conceitos, inspirações e características principais..."
                       ></textarea>
@@ -375,17 +372,17 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                   <h3 className="text-lg font-medium text-gray-900 border-b border-gray-100 pb-3">
                     Detalhes Técnicos
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Status *
                       </label>
-                      <select 
-                        name="status" 
-                        value={formData.status} 
+                      <select
+                        name="status"
+                        value={formData.status}
                         onChange={handleChange}
-                        required 
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm appearance-none bg-white"
                       >
                         <option value="">Selecione o status</option>
@@ -394,16 +391,16 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                         <option value="Concluído">Concluído</option>
                       </select>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Tipo de Uso *
                       </label>
-                      <select 
-                        name="usage_type" 
-                        value={formData.usage_type} 
+                      <select
+                        name="usage_type"
+                        value={formData.usage_type}
                         onChange={handleChange}
-                        required 
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm appearance-none bg-white"
                       >
                         <option value="">Selecione o tipo de uso</option>
@@ -419,29 +416,29 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                       <label className="block text-sm font-medium text-gray-700">
                         Área Construída (m²)
                       </label>
-                      <input 
-                        type="number" 
-                        name="build_area" 
-                        value={formData.build_area} 
+                      <input
+                        type="number"
+                        name="build_area"
+                        value={formData.build_area}
                         onChange={handleChange}
-                        step="0.01" 
-                        min="0" 
+                        step="0.01"
+                        min="0"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
                         placeholder="0.00"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
                         Área do Terreno (m²)
                       </label>
-                      <input 
-                        type="number" 
-                        name="terrain_area" 
-                        value={formData.terrain_area} 
+                      <input
+                        type="number"
+                        name="terrain_area"
+                        value={formData.terrain_area}
                         onChange={handleChange}
-                        step="0.01" 
-                        min="0" 
+                        step="0.01"
+                        min="0"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
                         placeholder="0.00"
                       />
@@ -453,19 +450,19 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                         Materiais Utilizados
                       </label>
                       <div className="space-y-3">
-                        {formData.materials.map((material, index) => (
+                        {formData.materials.map((material: any, index: number) => (
                           <div key={index} className="flex items-center space-x-3 group">
                             <div className="flex-1 relative">
-                              <input 
-                                type="text" 
-                                value={material} 
+                              <input
+                                type="text"
+                                value={material}
                                 onChange={(e) => handleMaterialChange(index, e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-sm"
                                 placeholder={`Material ${index + 1}`}
                               />
                               {formData.materials.length > 1 && (
-                                <button 
-                                  type="button" 
+                                <button
+                                  type="button"
                                   onClick={() => removeMaterialField(index)}
                                   className="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-black"
                                 >
@@ -475,8 +472,8 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                             </div>
                           </div>
                         ))}
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={addMaterialField}
                           className="text-sm text-gray-600 hover:text-black transition-colors flex items-center"
                         >
@@ -503,17 +500,17 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                         </label>
                         <p className="text-xs text-gray-500">Imagem de capa do projeto</p>
                       </div>
-                      
-                      <input 
-                        type="file" 
+
+                      <input
+                        type="file"
                         id="mainPhoto"
-                        className="hidden" 
-                        onChange={handlePhotoChange} 
-                        required 
+                        className="hidden"
+                        onChange={handlePhotoChange}
+                        required
                         accept="image/jpeg,image/png,image/webp"
                       />
-                      
-                      <label 
+
+                      <label
                         htmlFor="mainPhoto"
                         className={`
                           flex flex-col items-center justify-center w-full h-56
@@ -524,9 +521,9 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                       >
                         {mainImagePreview ? (
                           <div className="w-full h-full relative">
-                            <img 
-                              src={mainImagePreview} 
-                              alt="Preview" 
+                            <img
+                              src={mainImagePreview}
+                              alt="Preview"
                               className="w-full h-full object-cover rounded-lg"
                             />
                             <div className="absolute inset-0 bg-black/10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -551,7 +548,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                           </div>
                         )}
                       </label>
-                      
+
                       {photo && (
                         <p className="text-xs text-gray-500 truncate px-1">
                           {photo.name}
@@ -567,17 +564,17 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                         </label>
                         <p className="text-xs text-gray-500">Até 20 imagens (50MB total)</p>
                       </div>
-                      
-                      <input 
-                        type="file" 
+
+                      <input
+                        type="file"
                         id="gallery"
-                        className="hidden" 
-                        onChange={handleGalleryChange} 
-                        multiple 
+                        className="hidden"
+                        onChange={handleGalleryChange}
+                        multiple
                         accept="image/jpeg,image/png,image/webp"
                       />
-                      
-                      <label 
+
+                      <label
                         htmlFor="gallery"
                         className="flex flex-col items-center justify-center w-full h-56 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
                       >
@@ -594,8 +591,8 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                             <p className="text-sm font-medium text-gray-700">
                               {galleryPreviews.length} {galleryPreviews.length === 1 ? 'imagem' : 'imagens'}
                             </p>
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               onClick={() => {
                                 setGallery([]);
                                 setGalleryPreviews([]);
@@ -605,19 +602,19 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                               Limpar todas
                             </button>
                           </div>
-                          
+
                           <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto p-1">
-                            {galleryPreviews.map((preview, index) => (
+                            {galleryPreviews.map((preview: any, index: number) => (
                               <div key={index} className="relative group">
                                 <div className="aspect-square bg-gray-100 rounded border border-gray-200 overflow-hidden">
-                                  <img 
-                                    src={preview} 
+                                  <img
+                                    src={preview}
                                     alt={`Preview ${index}`}
                                     className="w-full h-full object-cover"
                                   />
                                 </div>
-                                <button 
-                                  type="button" 
+                                <button
+                                  type="button"
                                   onClick={() => removeGalleryImage(index)}
                                   className="absolute -top-1 -right-1 w-5 h-5 bg-black text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs"
                                 >
@@ -654,8 +651,8 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                   className={`
                     px-8 py-3 rounded-lg text-white font-medium text-sm
                     transition-colors
-                    ${isSubmitting 
-                      ? 'bg-gray-400 cursor-not-allowed' 
+                    ${isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-black hover:bg-gray-800'
                     }
                   `}
@@ -670,7 +667,7 @@ export default function Btncriarprojeto({ onProjectCreated }) {
                   )}
                 </button>
               </div>
-              
+
               <p className="text-xs text-gray-500 text-center mt-4">
                 Campos marcados com * são obrigatórios
               </p>

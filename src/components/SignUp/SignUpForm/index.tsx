@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
@@ -8,33 +8,33 @@ import { signupSchema } from '../../../validators/signupSchema';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [publicKeyPem, setPublicKeyPem] = useState('');
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [publicKeyPem, setPublicKeyPem] = useState<string>('');
+  const [mostrarSenha, setMostrarSenha] = useState<boolean>(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<any>({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
 
-  const [touched, setTouched] = useState({
+  const [touched, setTouched] = useState<any>({
     name: false,
     email: false,
     password: false,
     confirmPassword: false
   });
 
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
 
   // Buscar chave pública na montagem
   useEffect(() => {
@@ -53,10 +53,10 @@ const SignUpForm = () => {
       await signupSchema.validate(formData, { abortEarly: false });
       setErrors({});
       return true;
-    } catch (err) {
-      const newErrors = {};
+    } catch (err: any) {
+      const newErrors: any = {};
       if (err.inner) {
-        err.inner.forEach(error => {
+        err.inner.forEach((error: any) => {
           newErrors[error.path] = error.message;
         });
       }
@@ -76,16 +76,16 @@ const SignUpForm = () => {
     validate();
   }, [formData, touched]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  const handleBlur = (field) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
+  const handleBlur = (field: any) => {
+    setTouched((prev: any) => ({ ...prev, [field]: true }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     // Marcar todos os campos como tocados
@@ -128,7 +128,7 @@ const SignUpForm = () => {
       } else {
         throw new Error('Resposta do servidor inválida');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro no cadastro:', error);
 
       // Tratar diferentes tipos de erros
@@ -136,7 +136,7 @@ const SignUpForm = () => {
         navigate('/error/404');
       } else if (error.response?.status === 409) {
         // Usuário já existe
-        setErrors(prev => ({
+        setErrors((prev: any) => ({
           ...prev,
           email: 'Este email já está cadastrado'
         }));
@@ -144,7 +144,7 @@ const SignUpForm = () => {
         // Dados inválidos
         if (error.response.data?.errors) {
           const serverErrors = error.response.data.errors;
-          setErrors(prev => ({
+          setErrors((prev: any) => ({
             ...prev,
             ...serverErrors
           }));
@@ -318,7 +318,7 @@ const SignUpForm = () => {
           </div>
         </div>
 
-        {isLoading && <Loading timeout={8000} />}
+        {isLoading && <Loading />}
 
         {/* Botão de submissão */}
         <button

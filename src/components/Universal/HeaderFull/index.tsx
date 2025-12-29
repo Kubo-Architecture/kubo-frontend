@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
 import DefaultProfilePhoto from "../../../assets/icons/Universal/defaultUserPhoto.svg";
+import { useNavigate } from 'react-router-dom';
 
-export default function HeaderFull({ userData }) {
+export default function HeaderFull({ userData }: any) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Função para verificar se o link está ativo
-  const isActiveLink = (path) => {
+  const isActiveLink = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
     }
@@ -18,9 +19,7 @@ export default function HeaderFull({ userData }) {
     <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 flex justify-center">
       <div className="w-full max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo e título */}
           <div className="flex items-center">
-            {/* Menu Hamburger para mobile */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden relative w-10 h-8 focus:outline-none mr-2"
@@ -42,9 +41,7 @@ export default function HeaderFull({ userData }) {
               </div>
             </button>
 
-            {/* Navegação no header à esquerda - DESKTOP */}
             <nav className="w-auto hidden md:flex items-center space-x-8 ml-4">
-              {/* Link Galeria */}
               <a
                 href="/gallery"
                 className={`transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold' : 'text-gray-700 hover:text-black font-medium'}`}
@@ -55,7 +52,6 @@ export default function HeaderFull({ userData }) {
             </nav>
           </div>
 
-          {/* Logo Central */}
           <div className="w-6 h-7 flex justify-center items-center">
             <a href="/" className='w-full h-full flex justify-center items-center'>
               <img
@@ -67,7 +63,6 @@ export default function HeaderFull({ userData }) {
             </a>
           </div>
 
-          {/* Menu do usuário DESKTOP */}
           <div className="hidden md:flex relative justify-end w-auto">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -87,7 +82,6 @@ export default function HeaderFull({ userData }) {
               ></i>
             </button>
 
-            {/* Dropdown menu DESKTOP */}
             {isMenuOpen && (
               <>
                 <div
@@ -147,7 +141,6 @@ export default function HeaderFull({ userData }) {
             )}
           </div>
 
-          {/* Menu do usuário MOBILE */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -161,7 +154,6 @@ export default function HeaderFull({ userData }) {
               />
             </button>
 
-            {/* Dropdown menu MOBILE - AGORA COM TODOS OS LINKS */}
             {isMenuOpen && (
               <>
                 <div
@@ -169,7 +161,6 @@ export default function HeaderFull({ userData }) {
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
                 <div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                  {/* Header com informações do usuário no mobile também */}
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userData?.name || 'Usuário'}
@@ -188,7 +179,6 @@ export default function HeaderFull({ userData }) {
                     <span>Meu Perfil</span>
                   </a>
 
-                  {/* CONFIGURAÇÕES NO MOBILE */}
                   <a
                     href="/Userconfig"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -209,7 +199,6 @@ export default function HeaderFull({ userData }) {
 
                   <div className="border-t border-gray-200 my-1"></div>
 
-                  {/* AJUDA & SUPORTE NO MOBILE */}
                   <a
                     href="/ajuda"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -235,13 +224,11 @@ export default function HeaderFull({ userData }) {
           </div>
         </div>
 
-        {/* Menu mobile expandido */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4 border-gray-100' : 'max-h-0'
             }`}
         >
           <nav className="flex flex-col space-y-3">
-            {/* Link Galeria Mobile */}
             <a
               href="/gallery"
               className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold border-l-4 pl-3' : 'text-gray-700 hover:text-black pl-4 font-medium'}`}

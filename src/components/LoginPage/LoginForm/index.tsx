@@ -1,39 +1,39 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
 import { loginSchema } from '../../../validators/loginSchema';
 import LoginWithGoogleButton from '../../LoginWithGoogleButton';
 
-const LoginForm = ({ onLoginSuccess }) => {
+const LoginForm = ({ onLoginSuccess }: any) => {
   const navigate = useNavigate();
-  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     email: '',
     password: ''
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<any>({
     email: '',
     password: ''
   });
 
-  const [touched, setTouched] = useState({
+  const [touched, setTouched] = useState<any>({
     email: false,
     password: false
   });
 
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState<any>(false);
 
   const validate = async () => {
     try {
       await loginSchema.validate(formData, { abortEarly: false });
       setErrors({});
       return true;
-    } catch (err) {
-      const newErrors = {};
-      err.inner.forEach(error => {
+    } catch (err: any) {
+      const newErrors: any = {};
+      err.inner.forEach((error: any) => {
         newErrors[error.path] = error.message;
       });
       setErrors(newErrors);
@@ -47,22 +47,22 @@ const LoginForm = ({ onLoginSuccess }) => {
     }
   }, [formData, touched]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleBlur = (field) => {
-    setTouched(prev => ({
+  const handleBlur = (field: any) => {
+    setTouched((prev: any) => ({
       ...prev,
       [field]: true
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     setTouched({
@@ -108,12 +108,12 @@ const LoginForm = ({ onLoginSuccess }) => {
       }
 
       navigate('/gallery');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro no login:', error);
       if (error.response?.status === 404) {
         navigate(`/error/404`);
       } else if (error.response?.status === 401) {
-        setErrors(prev => ({
+        setErrors((prev: any) => ({
           ...prev,
           password: 'Email ou senha incorretos'
         }));

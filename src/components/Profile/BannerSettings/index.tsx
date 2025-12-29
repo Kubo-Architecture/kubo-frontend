@@ -2,10 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import BannerOption from "../BannerOption";
 
-export default function BannerSettings({ onClose }) {
-  const [bannerAtual, setBannerAtual] = useState(null);
+export default function BannerSettings() {
+  const [bannerAtual, setBannerAtual] = useState<any>(null);
 
-  const backgrounds = [
+  const backgrounds: string[] = [
     "/src/assets/Profile/Banners/blue.png",
     "/src/assets/Profile/Banners/green.png",
     "/src/assets/Profile/Banners/black.png",
@@ -14,20 +14,20 @@ export default function BannerSettings({ onClose }) {
 
   const salvarBanner = async () => {
     try {
-        const idUser = localStorage.getItem("idUser")
-        const formData = new FormData();                //verificar necessidade de usar tipo aplication/json quando for enviar arquivo de imagem
-        formData.append("idUser", idUser);
-        formData.append("path", bannerAtual);
+      const idUser: string = localStorage.getItem("idUser") ?? "";
+      const formData = new FormData();
+      formData.append("idUser", idUser);
+      formData.append("path", bannerAtual);
 
-        const response = await axios.put(
+      const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/user/banner`,
         formData,
         {
-            headers: {
+          headers: {
             "Content-Type": "multipart/form-data"
-            }
+          }
         }
-    );
+      );
 
       if (response.status === 200) {
         window.location.reload();

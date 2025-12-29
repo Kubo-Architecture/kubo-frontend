@@ -2,10 +2,10 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function LoginWithGoogleButton({ onLoginSuccess }) {
+function LoginWithGoogleButton({ onLoginSuccess }: any) {
     const navigate = useNavigate();
 
-    const handleSuccess = async (credentialResponse) => {
+    const handleSuccess = async (credentialResponse: any) => {
         try {
             const idToken = credentialResponse.credential;
 
@@ -36,7 +36,7 @@ function LoginWithGoogleButton({ onLoginSuccess }) {
                 navigate(`/profile/nickname`);
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Erro no login com Google:', error);
 
             if (error.response?.status === 404) {

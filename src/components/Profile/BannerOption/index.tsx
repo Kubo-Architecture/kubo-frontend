@@ -1,9 +1,8 @@
-export default function BannerOption({ background, selected, onSelect }) {
+export default function BannerOption({ background, selected, onSelect }: any) {
   return (
     <div
-      className={`relative h-[150px] w-[300px] rounded-[10px] cursor-pointer overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02] ${
-        selected ? 'border-blue-600' : 'border-transparent'
-      }`}
+      className={`relative h-[150px] w-[300px] rounded-[10px] cursor-pointer overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02] ${selected ? 'border-blue-600' : 'border-transparent'
+        }`}
       onClick={() => onSelect(background)}
     >
       <div

@@ -3,8 +3,8 @@ import PenIcon from "../../../assets/Profile/pen.svg";
 import DefaultProfile from "../../../assets/Profile/defaultProfile.svg";
 import axios from "axios";
 
-export default function ProfileInnerHeader(props) {
-  const fileInputRef = useRef(null);
+export default function ProfileInnerHeader(props: any) {
+  const fileInputRef = useRef<any>(null);
 
   const profileImageUrl = props.photoUrl?.trim()
     ? `url(${props.photoUrl.replace(/=s\d+(-c)?$/, "=s400-c")})`
@@ -14,7 +14,7 @@ export default function ProfileInnerHeader(props) {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
     const idUser = localStorage.getItem("idUser");
 
@@ -34,7 +34,7 @@ export default function ProfileInnerHeader(props) {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload feito com sucesso:", response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao enviar imagem:", error);
       alert(error.response?.data?.error || "Erro ao enviar imagem.");
     }
@@ -59,7 +59,7 @@ export default function ProfileInnerHeader(props) {
           <i className="fas fa-pencil-alt text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
         </div>
       </div>
-      
+
       <input
         type="file"
         accept="image/png, image/jpeg"

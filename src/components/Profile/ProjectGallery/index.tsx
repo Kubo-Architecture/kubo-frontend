@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import axios from 'axios';
 
-const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }) => {
+const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }) => {
         if (onProjectsLoaded) {
           onProjectsLoaded(data ? data.length : null);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Erro ao buscar projetos:", err);
         setError(err.message);
       } finally {
@@ -61,7 +61,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {projects?.map((project) => (
+            {projects?.map((project: any) => (
               <ProjectCard
                 key={project.id}
                 project={project}

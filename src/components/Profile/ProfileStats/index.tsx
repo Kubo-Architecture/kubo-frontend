@@ -1,6 +1,6 @@
 import PenIcon from "../../../assets/Profile/pen.svg"
 
-export default function ProfileStats(props) {
+export default function ProfileStats(props: any) {
     return (
         <div className="h-[220px] min-w-[380px] w-full bg-white flex pt-[8px] px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px] md:mt-[10px] lg:mt-[18px]">
             <div className="flex-grow h-full flex flex-col lg:flex-row">

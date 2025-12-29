@@ -1,7 +1,6 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project }: any) => {
     const navigate = useNavigate();
     const ProjectID = project._id || project.id;
 
@@ -10,15 +9,15 @@ const ProjectCard = ({ project }) => {
     };
 
     return (
-        <div 
+        <div
             className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
             onClick={handleClick}
         >
             {project.photo_url ? (
                 <div className="h-48 overflow-hidden">
-                    <img 
-                        src={project.photo_url} 
-                        alt={project.name} 
+                    <img
+                        src={project.photo_url}
+                        alt={project.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
                 </div>
@@ -27,7 +26,7 @@ const ProjectCard = ({ project }) => {
                     <span className="text-gray-500">Sem imagem</span>
                 </div>
             )}
-            
+
             <div className="p-5">
                 {project.is_verified && (
                     <div className="flex items-center mb-2">
@@ -37,11 +36,11 @@ const ProjectCard = ({ project }) => {
                         <span className="text-sm text-blue-600 ml-1">Verificado</span>
                     </div>
                 )}
-                
+
                 <h2 className="text-xl font-bold text-gray-800 mb-1 truncate">
                     {project.name}
                 </h2>
-                
+
                 <div className="flex items-center text-gray-600 mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -49,13 +48,13 @@ const ProjectCard = ({ project }) => {
                     </svg>
                     <span className="text-sm truncate">{project.location}</span>
                 </div>
-                
+
                 <div className="mt-3">
                     <span className="inline-block bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
                         {project.usage_type || 'Sem tipo definido'}
                     </span>
                 </div>
-                
+
             </div>
         </div>
     );

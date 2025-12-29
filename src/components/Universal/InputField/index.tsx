@@ -1,17 +1,16 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.css';
 
-const InputField = ({ 
-  label, 
-  type, 
-  name, 
-  placeholder, 
-  value, 
-  onChange, 
-  onBlur, 
-  error 
-}) => {
+const InputField = ({
+  label,
+  type,
+  name,
+  placeholder,
+  value,
+  onChange,
+  onBlur,
+  error
+}: any) => {
   return (
     <div className="input-group">
       <label htmlFor={name}>{label}</label>

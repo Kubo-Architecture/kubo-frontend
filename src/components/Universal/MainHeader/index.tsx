@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MenuLogo from "../../../assets/icons/Universal/HamburguerIcon.svg";
-import KuboLogo from "../../../components/Universal/KuboLogo";
-import HeartIcon from "../../../assets/icons/Universal/heart-sw.svg";
+import KuboLogo from "../KuboLogo";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
-import SettingsIcon from "../../../assets/icons/Universal/settings-sw.svg";
 
-import { FaHeart, FaSliders } from "react-icons/fa6";
+import { FaSliders } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 
-export default function IconWithPanel(props) {
+export default function IconWithPanel(props: any) {
   const [open, setOpen] = useState(false);
   const name = localStorage.getItem('name')
 

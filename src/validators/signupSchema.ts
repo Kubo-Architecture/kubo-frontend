@@ -1,24 +1,18 @@
 import * as yup from 'yup';
 
-const passwordRegex = {
-  uppercase: /[A-Z]/,
-  number: /\d/,
-  specialChar: /[\W_]/,
-};
-
 export const signupSchema = yup.object().shape({
   name: yup
-  .string()
-  .required('Nome é obrigatório')
-  .min(1, 'Nome deve ter no mínimo 1 caractere')
-  .max(100, 'Nome deve ter no máximo 100 caracteres')
-  .matches(/^[^\s]+$/, 'O nome de usuário não pode conter espaços'),
+    .string()
+    .required('Nome é obrigatório')
+    .min(1, 'Nome deve ter no mínimo 1 caractere')
+    .max(100, 'Nome deve ter no máximo 100 caracteres')
+    .matches(/^[^\s]+$/, 'O nome de usuário não pode conter espaços'),
 
   email: yup
     .string()
     .required('Email é obrigatório')
     .email('Email inválido')
-    .matches(/^[^@\s]+@[^@\s]+\.[^@\s]+$/, 'Email inválido') 
+    .matches(/^[^@\s]+@[^@\s]+\.[^@\s]+$/, 'Email inválido')
     .max(255, 'Email deve ter no máximo 255 caracteres'),
 
   password: yup
