@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import IconWithPanel from "../../components/Universal/MainHeader";
+import { useNavigate } from 'react-router-dom';
 import ProjectImage from "../../assets/images/project.svg";
 import ChartIcon from "../../assets/icons/Project/chart.svg";
 import EngineIcon from "../../assets/icons/Project/engine.svg";
@@ -13,23 +12,20 @@ import UserIcon from "../../assets/icons/Project/user.svg";
 import VerifyIcon from "../../assets/icons/Project/verify-post.svg";
 
 export default function ProjectPage() {
-    const { ProjectID } = useParams();
+    const pathSegments = location.pathname.split("/").filter(Boolean);
+    const projectId = pathSegments[1];
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
-
         const fetchProject = async () => {
             try {
-                if (!ProjectID) {
+                if (!projectId) {
                     throw new Error('ID do projeto não fornecido');
                 }
 
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/project/${ProjectID}`);
-
-                console.log("Response status:", response.status);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/project/${projectId}`);
 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -43,37 +39,18 @@ export default function ProjectPage() {
                 setProject(data);
             } catch (err) {
                 console.error('Error fetching project:', err);
-                setError(err.message);
-
-                setTimeout(() => {
-                    navigate('/');
-                }, 3000);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProject();
-    }, [ProjectID, navigate]);
+    }, [projectId, navigate]);
 
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen p-4">
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 max-w-md">
-                    <h3 className="text-lg font-medium text-red-800">Erro</h3>
-                    <p className="text-red-700">{error}</p>
-                    <p className="text-sm text-red-600 mt-2">
-                        Você será redirecionado para a página inicial em 3 segundos...
-                    </p>
-                </div>
             </div>
         );
     }
@@ -97,7 +74,6 @@ export default function ProjectPage() {
 
     return (
         <>
-            <IconWithPanel />
             <div className="flex flex-col w-full min-h-[calc(100vh-5rem)]">
                 <div className="flex w-full h-12 justify-end items-center gap-5 lg:gap-10 px-[20px] md:px-[30px] lg:px-[40px] xl:px-[70px]">
                     {project.is_verified && (
