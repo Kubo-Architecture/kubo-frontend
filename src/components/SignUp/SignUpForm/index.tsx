@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
 import { User, Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import Loading from '../../Universal/Loading';
+import Loading from '../../Universal/Loading/index';
 import { signupSchema } from '../../../validators/signupSchema';
 
 const SignUpForm = () => {

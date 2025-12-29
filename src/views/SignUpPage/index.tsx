@@ -1,8 +1,8 @@
 // src/pages/SignUpPage/index.jsx
 import { useState, useEffect } from 'react';
-import Loading from '../../components/Universal/Loading';
+import Loading from '../../components/Universal/Loading/index';
 import './styles.css';
-import SignUpForm from '../../components/SignUp/SignUpForm';
+import SignUpForm from '../../components/SignUp/SignUpForm/index';
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState<boolean>(true);

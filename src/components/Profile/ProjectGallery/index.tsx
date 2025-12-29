@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ProjectCard from '../ProjectCard';
+import ProjectCard from '../ProjectCard/index';
 import axios from 'axios';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) => {

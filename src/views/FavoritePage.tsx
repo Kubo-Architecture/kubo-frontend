@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import HeaderFull from "../../src/components/Universal/HeaderFull/index";
+import { useState, useEffect } from 'react';
+import HeaderFull from "../components/Universal/HeaderFull/index";
 
-export default function FavoritePage(){
-  const [viewMode, setViewMode] = useState('grid');
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [favoriteWorks, setFavoriteWorks] = useState([]);
+export default function FavoritePage() {
+  const [viewMode, setViewMode] = useState<string>('grid');
+  const [filter, setFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [favoriteWorks, setFavoriteWorks] = useState<any[]>([]);
 
-  // Obras arquitetônicas reais famosas (mesmas da galeria)
   const allWorks = [
     {
       id: 1,
@@ -47,7 +46,7 @@ export default function FavoritePage(){
   }, []);
 
   // Função para remover dos favoritos
-  const removeFromFavorites = (workId) => {
+  const removeFromFavorites = (workId: any) => {
     setFavoriteWorks(prev => prev.filter(work => work.id !== workId));
   };
 
@@ -60,7 +59,7 @@ export default function FavoritePage(){
         work.title.toLowerCase().includes(searchLower) ||
         work.location.toLowerCase().includes(searchLower) ||
         work.architect.toLowerCase().includes(searchLower) ||
-        work.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        work.tags.some((tag: string) => tag.toLowerCase().includes(searchLower))
       );
     }
 
@@ -187,12 +186,12 @@ export default function FavoritePage(){
                 {searchTerm || filter !== 'all' ? 'Nenhum favorito encontrado' : 'Nenhum favorito ainda'}
               </h3>
               <p className="text-gray-500 mb-4 text-sm sm:text-base">
-                {searchTerm || filter !== 'all' 
-                  ? 'Tente ajustar sua busca ou filtro.' 
+                {searchTerm || filter !== 'all'
+                  ? 'Tente ajustar sua busca ou filtro.'
                   : 'Explore a galeria e adicione obras aos seus favoritos!'}
               </p>
-              <a 
-                href="/galeria" 
+              <a
+                href="/galeria"
                 className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
               >
                 <i className="fas fa-building mr-2"></i>
@@ -218,7 +217,7 @@ export default function FavoritePage(){
                         {work.category}
                       </span>
                     </div>
-                    
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <button
                         onClick={() => setSelectedImage(work)}
@@ -234,7 +233,7 @@ export default function FavoritePage(){
                     {/* Título com estrela no mesmo lugar da galeria */}
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title}</h3>
-                      <button 
+                      <button
                         onClick={() => removeFromFavorites(work.id)}
                         className="text-yellow-500 hover:text-yellow-600 flex-shrink-0 ml-2 transition-colors"
                         title="Remover dos favoritos"
@@ -262,7 +261,7 @@ export default function FavoritePage(){
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-1">
-                      {work.tags.slice(0, 3).map((tag, index) => (
+                      {work.tags.slice(0, 3).map((tag: string, index: number) => (
                         <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded truncate max-w-[80px] sm:max-w-[100px]">
                           {tag}
                         </span>
@@ -359,7 +358,7 @@ export default function FavoritePage(){
                       {/* Tags */}
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
-                          {work.tags.map((tag, index) => (
+                          {work.tags.map((tag: string, index: number) => (
                             <span
                               key={index}
                               className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-default"
@@ -460,7 +459,7 @@ export default function FavoritePage(){
                     <div>
                       <div className="text-sm text-gray-500 mb-1">Tags</div>
                       <div className="flex flex-wrap gap-1">
-                        {selectedImage.tags.map((tag, index) => (
+                        {selectedImage.tags.map((tag: string, index: number) => (
                           <span key={index} className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                             {tag}
                           </span>
@@ -476,7 +475,7 @@ export default function FavoritePage(){
                 </div>
 
                 <div className="mt-6 flex flex-wrap justify-end gap-2 sm:gap-4">
-                  <button 
+                  <button
                     onClick={() => removeFromFavorites(selectedImage.id)}
                     className="px-3 sm:px-4 py-2 border border-yellow-300 text-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors text-sm sm:text-base flex items-center"
                   >
@@ -494,7 +493,7 @@ export default function FavoritePage(){
         </div>
       )}
 
-      <style jsx global>{`
+      <style>{`
         @media (max-width: 475px) {
           .xs\\:grid-cols-2 {
             grid-template-columns: repeat(2, 1fr) !important;

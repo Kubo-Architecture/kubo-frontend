@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
-import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader"
-import ProfileStats from "../../components/Profile/ProfileStats"
-import BannerSettings from "../../components/Profile/BannerSettings"
-import Biografy from "../../components/Profile/Biografy"
-import ProjectGallery from "../../components/Profile/ProjectGallery"
-import Loading from "../../components/Universal/Loading"
+import ProfileInnerHeader from "../../components/Profile/ProfileInnerHeader/index"
+import ProfileStats from "../../components/Profile/ProfileStats/index"
+import BannerSettings from "../../components/Profile/BannerSettings/index"
+import Biografy from "../../components/Profile/Biografy/index"
+import ProjectGallery from "../../components/Profile/ProjectGallery/index"
+import Loading from "../../components/Universal/Loading/index"
 
 export default function UserProfile() {
   const [loading, setLoading] = useState<ConstrainBoolean>(true);
@@ -74,7 +74,7 @@ export default function UserProfile() {
 
           {showBannerSettings && (
             <div className="z-50">
-              <BannerSettings onClose={() => setShowBannerSettings(false)} />
+              <BannerSettings />
             </div>
           )}
         </div>

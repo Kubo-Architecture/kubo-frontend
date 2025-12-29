@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Mail, ArrowLeft, CreditCard } from 'lucide-react';
-import Loading from '../../components/Universal/Loading';
+import Loading from '../../components/Universal/Loading/index';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -176,7 +176,7 @@ const VerificationCodeInput = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-            <Loading timeout={8000} />
+            <Loading />
             <p className="mt-4 text-sm text-gray-600">Verificando código...</p>
           </div>
         </div>

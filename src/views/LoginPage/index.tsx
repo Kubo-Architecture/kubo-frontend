@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Loading from '../../components/Universal/Loading';
-import LoginForm from '../../components/LoginPage/LoginForm';
+import Loading from '../../components/Universal/Loading/index';
+import LoginForm from '../../components/LoginPage/LoginForm/index';
 
 export default function LoginPage({ onLoginSuccess }: any) {
   const [loading, setLoading] = useState<boolean>(true);

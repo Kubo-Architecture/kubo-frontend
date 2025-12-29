@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MenuLogo from "../../../assets/icons/Universal/HamburguerIcon.svg";
-import KuboLogo from "../KuboLogo";
+import KuboLogo from "../KuboLogo/index";
 import ProfileIcon from "../../../assets/icons/Universal/defaultUserPhoto.svg";
 
 import { FaSliders } from "react-icons/fa6";

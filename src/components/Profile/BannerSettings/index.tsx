@@ -14,7 +14,7 @@ export default function BannerSettings() {
 
   const salvarBanner = async () => {
     try {
-      const idUser: string = localStorage.getItem("idUser") ?? "";
+      const idUser: string = localStorage.getItem("idUser") ?? ""
       const formData = new FormData();
       formData.append("idUser", idUser);
       formData.append("path", bannerAtual);
