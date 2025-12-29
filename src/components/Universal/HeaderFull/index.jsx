@@ -62,9 +62,9 @@ export default function HeaderFull() {
                 ></span>
               </div>
             </button>
-            
+
             {/* Navegação no header à esquerda - DESKTOP */}
-            <nav className="w-auto hidden md:flex items-center space-x-8 ml-4">        
+            <nav className="w-auto hidden md:flex items-center space-x-8 ml-4">
               {/* Link Galeria */}
               <a
                 href="/gallery"
@@ -72,18 +72,18 @@ export default function HeaderFull() {
               >
                 Galeria
               </a>
-             
+
             </nav>
           </div>
-          
+
           {/* Logo Central */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-7 h-8 flex justify-center">
-            <a href="/">
-              <img 
-                src={KuboIcon} 
-                alt="Kubo Icon" 
-                draggable={false} 
-                className="h-full" 
+          <div className="w-6 h-7 flex justify-center items-center">
+            <a href="/" className='w-full h-full flex justify-center items-center'>
+              <img
+                src={KuboIcon}
+                alt="Kubo Icon"
+                draggable={false}
+                className="h-full w-full"
               />
             </a>
           </div>
@@ -199,7 +199,7 @@ export default function HeaderFull() {
                       {userData.email || ''}
                     </p>
                   </div>
-                  
+
                   <a
                     href={`/profile/${userData.nickname}`}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -208,7 +208,7 @@ export default function HeaderFull() {
                     <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Meu Perfil</span>
                   </a>
-                  
+
                   {/* CONFIGURAÇÕES NO MOBILE */}
                   <a
                     href="/Userconfig"
@@ -218,7 +218,7 @@ export default function HeaderFull() {
                     <i className="fas fa-cog mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Configurações</span>
                   </a>
-                  
+
                   <a
                     href="/minhas-obras"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -227,9 +227,9 @@ export default function HeaderFull() {
                     <i className="fas fa-bookmark mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Minhas Obras</span>
                   </a>
-                  
+
                   <div className="border-t border-gray-200 my-1"></div>
-                  
+
                   {/* AJUDA & SUPORTE NO MOBILE */}
                   <a
                     href="/ajuda"
@@ -239,7 +239,7 @@ export default function HeaderFull() {
                     <i className="fas fa-question-circle mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Ajuda & Suporte</span>
                   </a>
-                  
+
                   <button
                     onClick={() => {
                       window.localStorage.clear();
@@ -258,20 +258,18 @@ export default function HeaderFull() {
 
         {/* Menu mobile expandido */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4 border-t border-gray-100' : 'max-h-0'
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 py-4 border-gray-100' : 'max-h-0'
             }`}
         >
           <nav className="flex flex-col space-y-3">
             {/* Link Galeria Mobile */}
             <a
               href="/gallery"
-              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold border-l-4 border-black pl-3' : 'text-gray-700 hover:text-black pl-4 font-medium'}`}
+              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold border-l-4 pl-3' : 'text-gray-700 hover:text-black pl-4 font-medium'}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Galeria
             </a>
-            
-          
           </nav>
         </div>
       </div>
