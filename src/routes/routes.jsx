@@ -22,7 +22,7 @@ export default function Rotas({ isAuthenticated, onLoginSuccess }) {
             <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
             <Route path="/profile/:username" element={<UserProfile />} />
             <Route path="/profile/nickname" element={<NicknameInput />} />
-            <Route path="/project/:ProjectID" element={<ProjectPage />} />
+            <Route path="/project/:projectID" element={<ProjectPage />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/Userconfig" element={<UserConfig />} />
