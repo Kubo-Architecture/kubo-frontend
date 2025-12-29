@@ -1,4 +1,3 @@
-// tailwind.config.js
 module.exports = {
   purge: [],
   theme: {
@@ -12,6 +11,15 @@ module.exports = {
         },
         'large-screen': { 
           'raw': '(min-height: 700px) and (min-width: 760px)' 
+        }
+      },
+      animation: {
+        'fade': 'fade 2.5s ease-in-out infinite',
+      },
+      keyframes: {
+        fade: {
+          '0%, 100%': { opacity: '0.3' },
+          '50%': { opacity: '1' },
         }
       }
     },
