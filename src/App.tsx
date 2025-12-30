@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import RouterLink from './routes/routes';
-import HeaderFull from './components/Universal/HeaderFull';
+import HeaderFull from './components/Universal/Header';
 import Loading from './components/Universal/Loading';
 import './index.css';
 import { useLocation } from 'react-router-dom';

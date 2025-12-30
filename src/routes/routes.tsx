@@ -1,15 +1,15 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import LoginPage from "../views/LoginPage/index.tsx";
-import ErrorPage from "../views/ErrorPage/index.tsx";
-import LandingPage from "../views/LandingPage/index.tsx";
-import SignUpPage from "../views/SignUpPage/index.tsx";
-import VerificationCodeInput from "../views/AuthPage/index.tsx";
-import UserProfile from "../views/UserProfile/index.tsx";
-import NicknameInput from "../views/NicknameInput/index.tsx";
-import ProjectPage from "../views/ProjectPage/index.tsx";
-import ForgotPassword from "../views/ForgotPassword/index.tsx";
-import Gallery from "../views/Gallery/index.tsx";
-import UserConfig from "../views/UserConfig/index.tsx";
+import LoginPage from "../views/LoginPage.tsx";
+import ErrorPage from "../views/ErrorPage.tsx";
+import LandingPage from "../views/LandingPage.tsx";
+import SignUpPage from "../views/SignUpPage.tsx";
+import VerificationCodeInput from "../views/AuthPage.tsx";
+import UserProfile from "../views/UserProfile.tsx";
+import NicknameInput from "../views/NicknameInput.tsx";
+import ProjectPage from "../views/ProjectPage.tsx";
+import ForgotPassword from "../views/ForgotPassword.tsx";
+import Gallery from "../views/Gallery.tsx";
+import UserConfig from "../views/UserConfig.tsx";
 import FavoritePage from "../views/FavoritePage.js";
 
 

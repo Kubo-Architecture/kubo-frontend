@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Btncriarprojeto from "../components/BtnCriarProjeto";
 
-export default function FavoritePage() {
-  const [viewMode, setViewMode] = useState<string>('grid');
-  const [filter, setFilter] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+export default function Gallery() {
+  const [viewMode, setViewMode] = useState('grid');
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedImage, setSelectedImage] = useState<any>(null);
-  const [favoriteWorks, setFavoriteWorks] = useState<any[]>([]);
 
-  const allWorks = [
+  // Obras arquitetônicas reais famosas
+  const architecturalWorks: any[] = [
     {
       id: 1,
       title: "Mansão dos Arcos",
@@ -18,8 +19,7 @@ export default function FavoritePage() {
       imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800",
       category: "residencial",
       style: "brutalista",
-      tags: ["concreto", "moderno", "brasil"],
-      isFavorite: true
+      tags: ["concreto", "moderno", "brasil"]
     },
     {
       id: 2,
@@ -31,25 +31,13 @@ export default function FavoritePage() {
       imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800",
       category: "cultural",
       style: "modernista",
-      tags: ["concreto", "moderno", "brasil"],
-      isFavorite: true
+      tags: ["concreto", "moderno", "brasil"]
     },
-    // Adicione mais obras favoritas conforme necessário
   ];
 
-  // Simulando carregamento de favoritos
-  useEffect(() => {
-    // Em um app real, você buscaria os favoritos de uma API ou localStorage
-    const favorites = allWorks.filter(work => work.isFavorite);
-    setFavoriteWorks(favorites);
-  }, []);
+  const [works, setWorks] = useState<any>(architecturalWorks);
 
-  // Função para remover dos favoritos
-  const removeFromFavorites = (workId: any) => {
-    setFavoriteWorks(prev => prev.filter(work => work.id !== workId));
-  };
-
-  const filteredWorks = favoriteWorks.filter(work => {
+  const filteredWorks = works.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter) return false;
 
     if (searchTerm) {
@@ -58,12 +46,23 @@ export default function FavoritePage() {
         work.title.toLowerCase().includes(searchLower) ||
         work.location.toLowerCase().includes(searchLower) ||
         work.architect.toLowerCase().includes(searchLower) ||
-        work.tags.some((tag: string) => tag.toLowerCase().includes(searchLower))
+        work.tags.some((tag: any) => tag.toLowerCase().includes(searchLower))
       );
     }
 
     return true;
   });
+
+  // Função para lidar com a criação de novo projeto
+  const handleNewProjectCreated = (projectData: any) => {
+    const newWork = {
+      id: works.length + 1,
+      ...projectData,
+      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800" // Imagem padrão
+    };
+
+    setWorks([...works, newWork]);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,15 +73,16 @@ export default function FavoritePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  Favoritos
+                  Galeria de Obras
                 </h1>
                 <p className="text-gray-600 text-sm sm:text-base mt-1">
-                  Suas obras arquitetônicas favoritas
+                  Explore arquitetura icônica mundial
                 </p>
               </div>
 
-              {/* Controles - Modos de visualização */}
+              {/* Controles - Modos de visualização e botão de criar */}
               <div className="flex items-center space-x-3 self-start sm:self-center">
+                {/* Modos de visualização */}
                 <div className="flex space-x-1 bg-white border border-gray-300 p-1 rounded-lg">
                   <button
                     onClick={() => setViewMode('grid')}
@@ -105,6 +105,8 @@ export default function FavoritePage() {
                     <i className="fas fa-list text-sm sm:text-base"></i>
                   </button>
                 </div>
+
+                <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
               </div>
             </div>
 
@@ -119,7 +121,7 @@ export default function FavoritePage() {
 
                     <input
                       type="text"
-                      placeholder="Buscar nos seus favoritos..."
+                      placeholder="Buscar obras, arquitetos ou localizações..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-10 sm:pl-12 pr-10 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-shadow text-sm sm:text-base"
@@ -135,14 +137,30 @@ export default function FavoritePage() {
                     )}
                   </div>
 
-                  {/* Contador de favoritos */}
-                  <div className="mt-3 flex items-center text-sm text-gray-600">
-                    <i className="fas fa-star text-yellow-500 mr-2"></i>
-                    <span>{favoriteWorks.length} obra{favoriteWorks.length !== 1 ? 's' : ''} favoritada{favoriteWorks.length !== 1 ? 's' : ''}</span>
+                  {/* Dicas de busca */}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setSearchTerm('brasil')}
+                      className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+                    >
+                      #brasil
+                    </button>
+                    <button
+                      onClick={() => setSearchTerm('concreto')}
+                      className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+                    >
+                      #concreto
+                    </button>
+                    <button
+                      onClick={() => setSearchTerm('modernista')}
+                      className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+                    >
+                      #modernista
+                    </button>
                   </div>
                 </div>
 
-                {/* Filtros de categoria */}
+                {/* Filtros de categoria - Agora ao lado da busca */}
                 <div className="flex flex-wrap gap-1 bg-white border border-gray-300 rounded-lg p-1 w-full sm:w-auto self-start">
                   <button
                     onClick={() => setFilter('all')}
@@ -155,7 +173,7 @@ export default function FavoritePage() {
                   </button>
                   <button
                     onClick={() => setFilter('residencial')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'residencial'
+                    className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'residencial'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -171,34 +189,36 @@ export default function FavoritePage() {
                   >
                     Cultural
                   </button>
+                  <button
+                    onClick={() => setFilter('religioso')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'religioso'
+                      ? 'bg-black text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                  >
+                    Religioso
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Galeria de favoritos */}
+          {/* Galeria responsiva */}
           {filteredWorks.length === 0 ? (
             <div className="text-center py-12 sm:py-16 bg-white rounded-lg border border-gray-300">
-              <i className="fas fa-star text-gray-300 text-4xl sm:text-5xl mb-4"></i>
+              <i className="fas fa-building text-gray-300 text-4xl sm:text-5xl mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                {searchTerm || filter !== 'all' ? 'Nenhum favorito encontrado' : 'Nenhum favorito ainda'}
+                Nenhuma obra encontrada
               </h3>
               <p className="text-gray-500 mb-4 text-sm sm:text-base">
-                {searchTerm || filter !== 'all'
-                  ? 'Tente ajustar sua busca ou filtro.'
-                  : 'Explore a galeria e adicione obras aos seus favoritos!'}
+                {searchTerm ? 'Tente ajustar sua busca.' : 'Adicione sua primeira obra!'}
               </p>
-              <a
-                href="/galeria"
-                className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <i className="fas fa-building mr-2"></i>
-                Explorar Galeria
-              </a>
+              <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
             </div>
           ) : viewMode === 'grid' ? (
+            // Grade responsiva com diferentes breakpoints
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              {filteredWorks.map((work) => (
+              {filteredWorks.map((work: any) => (
                 <div
                   key={work.id}
                   className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
@@ -215,7 +235,6 @@ export default function FavoritePage() {
                         {work.category}
                       </span>
                     </div>
-
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <button
                         onClick={() => setSelectedImage(work)}
@@ -228,15 +247,10 @@ export default function FavoritePage() {
                   </div>
 
                   <div className="p-4">
-                    {/* Título com estrela no mesmo lugar da galeria */}
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title}</h3>
-                      <button
-                        onClick={() => removeFromFavorites(work.id)}
-                        className="text-yellow-500 hover:text-yellow-600 flex-shrink-0 ml-2 transition-colors"
-                        title="Remover dos favoritos"
-                      >
-                        <i className="fas fa-star text-sm sm:text-base"></i>
+                      <button className="text-gray-400 hover:text-black flex-shrink-0 ml-2">
+                        <i className="far fa-star text-sm sm:text-base"></i>
                       </button>
                     </div>
 
@@ -275,15 +289,15 @@ export default function FavoritePage() {
               ))}
             </div>
           ) : (
-            // Modo lista
+            // Lista responsiva - NOVO DESIGN MELHORADO
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {filteredWorks.map((work, index) => (
+              {filteredWorks.map((work: any, index: number) => (
                 <div
                   key={work.id}
                   className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
                 >
                   <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Imagem */}
+                    {/* Imagem - Mais clean */}
                     <div
                       className="lg:w-1/4 cursor-pointer group"
                       onClick={() => setSelectedImage(work)}
@@ -303,7 +317,7 @@ export default function FavoritePage() {
                       </div>
                     </div>
 
-                    {/* Conteúdo */}
+                    {/* Conteúdo - Layout melhor organizado */}
                     <div className="lg:w-3/4">
                       <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-4">
                         <div className="mb-4 lg:mb-0 lg:pr-8">
@@ -337,11 +351,10 @@ export default function FavoritePage() {
                         {/* Ações - Alinhadas à direita */}
                         <div className="flex items-center space-x-3">
                           <button
-                            onClick={() => removeFromFavorites(work.id)}
-                            className="text-yellow-500 hover:text-yellow-600 transition-colors p-2"
-                            title="Remover dos favoritos"
+                            className="text-gray-400 hover:text-yellow-500 transition-colors p-2"
+                            title="Favoritar"
                           >
-                            <i className="fas fa-star text-lg"></i>
+                            <i className="far fa-star text-lg"></i>
                           </button>
                           <button
                             onClick={() => setSelectedImage(work)}
@@ -353,7 +366,7 @@ export default function FavoritePage() {
                         </div>
                       </div>
 
-                      {/* Tags */}
+                      {/* Tags e informações adicionais */}
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
                           {work.tags.map((tag: string, index: number) => (
@@ -374,7 +387,8 @@ export default function FavoritePage() {
                           <span className="flex items-center">
                             <i className="fas fa-building mr-2"></i>
                             {work.category === 'residencial' ? 'Residencial' :
-                              work.category === 'cultural' ? 'Cultural' : 'Religioso'}
+                              work.category === 'cultural' ? 'Cultural' :
+                                work.category === 'religioso' ? 'Religioso' : 'Comercial'}
                           </span>
                         </div>
                       </div>
@@ -387,7 +401,7 @@ export default function FavoritePage() {
         </div>
       </main>
 
-      {/* Modal de detalhes */}
+      {/* Modal de detalhes responsivo */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
@@ -448,7 +462,8 @@ export default function FavoritePage() {
                       <div className="text-sm text-gray-500 mb-1">Tipo de Estrutura</div>
                       <div className="font-medium text-gray-900">
                         {selectedImage.category === 'residencial' ? 'Residencial' :
-                          selectedImage.category === 'cultural' ? 'Cultural' : 'Religioso'}
+                          selectedImage.category === 'cultural' ? 'Cultural' :
+                            selectedImage.category === 'religioso' ? 'Religioso' : 'Comercial'}
                       </div>
                     </div>
                   </div>
@@ -473,14 +488,11 @@ export default function FavoritePage() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap justify-end gap-2 sm:gap-4">
-                  <button
-                    onClick={() => removeFromFavorites(selectedImage.id)}
-                    className="px-3 sm:px-4 py-2 border border-yellow-300 text-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors text-sm sm:text-base flex items-center"
-                  >
-                    <i className="fas fa-star mr-2"></i>
-                    Remover dos Favoritos
+                  <button className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base">
+                    <i className="far fa-star mr-2"></i>
+                    Favoritar
                   </button>
-                  <button className="px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base flex items-center">
+                  <button className="px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base">
                     <i className="fas fa-share mr-2"></i>
                     Compartilhar
                   </button>
