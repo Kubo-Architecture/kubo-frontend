@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import PenIcon from "../../../assets/Profile/pen.svg";
-import DefaultProfile from "../../../assets/Profile/defaultProfile.svg";
+import PenIcon from "../../assets/Profile/pen.svg";
+import DefaultProfile from "../../assets/Profile/defaultProfile.svg";
 import axios from "axios";
 
 export default function ProfileInnerHeader(props: any) {

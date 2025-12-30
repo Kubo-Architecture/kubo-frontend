@@ -1,4 +1,4 @@
-import PenIcon from "../../../assets/Profile/pen.svg"
+import PenIcon from "../../assets/Profile/pen.svg"
 
 export default function ProfileStats(props: any) {
     return (
