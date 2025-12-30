@@ -1,4 +1,4 @@
-export default function AuthSupportText(props) {
+export default function AuthSupportText(props : any) {
   return (
     <div className="flex flex-col gap-[6px] h-[100px] flex-shrink-0">
       <h3 className="text-[26px] font-montserrat font-light large-screen:text-[30px]">
