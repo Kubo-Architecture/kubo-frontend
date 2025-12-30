@@ -1,16 +1,20 @@
-module.exports = {
-  purge: [],
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
       },
       screens: {
-        'desktop-portrait': { 
-          'raw': '(min-height: 481px) and (max-width: 944px)' 
+        'desktop-portrait': {
+          'raw': '(min-height: 481px) and (max-width: 944px)'
         },
-        'large-screen': { 
-          'raw': '(min-height: 700px) and (min-width: 760px)' 
+        'large-screen': {
+          'raw': '(min-height: 700px) and (min-width: 760px)'
         }
       },
       animation: {
@@ -24,7 +28,5 @@ module.exports = {
       }
     },
   },
-  variants: {},
   plugins: [],
-  future: {},
 }
