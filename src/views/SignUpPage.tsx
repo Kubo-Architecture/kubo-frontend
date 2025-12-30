@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Loading from '../components/Universal/Loading/index';
-import SignUpForm from '../components/SignUp/SignUpForm/index';
+import Loading from '../components/Universal/Loading';
+import SignUpForm from '../components/SignUpForm';
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState<boolean>(true);

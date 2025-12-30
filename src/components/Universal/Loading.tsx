@@ -1,4 +1,4 @@
-import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon-white.svg";
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon-white.svg";
 
 const Loading = () => {
   return (

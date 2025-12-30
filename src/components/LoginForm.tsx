@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
-import { loginSchema } from '../../../validators/loginSchema';
-import LoginWithGoogleButton from '../../LoginWithGoogleButton/index';
+import { loginSchema } from '../validators/loginSchema';
+import LoginWithGoogleButton from './LoginWithGoogleButton';
 
 const LoginForm = ({ onLoginSuccess }: any) => {
   const navigate = useNavigate();

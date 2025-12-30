@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Btncriarprojeto from "../components/BtnCriarProjeto/index";
+import Btncriarprojeto from "../components/BtnCriarProjeto";
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');

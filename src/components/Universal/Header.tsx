@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
-import DefaultProfilePhoto from "../../../assets/icons/Universal/defaultUserPhoto.svg";
+import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
+import DefaultProfilePhoto from "../../assets/icons/Universal/defaultUserPhoto.svg";
 import { useNavigate } from 'react-router-dom';
 
 export default function HeaderFull({ userData }: any) {

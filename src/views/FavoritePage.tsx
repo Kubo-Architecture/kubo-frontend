@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import HeaderFull from "../components/Universal/HeaderFull/index";
 
 export default function FavoritePage() {
   const [viewMode, setViewMode] = useState<string>('grid');
@@ -68,7 +67,6 @@ export default function FavoritePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderFull />
       <main className="pt-20 pb-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
           {/* Cabeçalho com título e controles */}

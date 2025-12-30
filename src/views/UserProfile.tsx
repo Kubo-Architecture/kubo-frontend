@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
-import ProfileInnerHeader from "../components/Profile/ProfileInnerHeader/index"
-import ProfileStats from "../components/Profile/ProfileStats/index"
-import BannerSettings from "../components/Profile/BannerSettings/index"
-import Biografy from "../components/Profile/Biografy/index"
-import ProjectGallery from "../components/Profile/ProjectGallery/index"
-import Loading from "../components/Universal/Loading/index"
+import ProfileInnerHeader from "../components/Profile/ProfileInnerHeader/ProfileInnerHeader"
+import ProfileStats from "../components/Profile/ProfileStats/ProfileStats"
+import BannerSettings from "../components/Profile/BannerSettings"
+import Biografy from "../components/Profile/Biografy"
+import ProjectGallery from "../components/Profile/ProjectGallery"
+import Loading from "../components/Universal/Loading"
 
 export default function UserProfile() {
   const [loading, setLoading] = useState<ConstrainBoolean>(true);

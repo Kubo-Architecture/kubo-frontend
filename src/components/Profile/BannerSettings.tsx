@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import BannerOption from "../BannerOption";
+import BannerOption from "./BannerOption";
 
 export default function BannerSettings() {
   const [bannerAtual, setBannerAtual] = useState<any>(null);
