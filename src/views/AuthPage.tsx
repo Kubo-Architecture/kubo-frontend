@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Mail, ArrowLeft, CreditCard } from 'lucide-react';
-import Loading from '../../components/Universal/Loading/index';
+import Loading from '../components/Universal/Loading/index';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

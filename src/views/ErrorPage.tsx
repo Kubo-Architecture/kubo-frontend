@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import KuboEmptyIcon from "../../assets/icons/Universal/kubo-empty.svg";
+import KuboEmptyIcon from "../assets/icons/Universal/kubo-empty.svg";
 
 export default function ErrorPage() {
     const { errorCode } = useParams<string>();

@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProjectImage from "../../assets/images/project.svg";
-import ChartIcon from "../../assets/icons/Project/chart.svg";
-import EngineIcon from "../../assets/icons/Project/engine.svg";
-import FavoriteIcon from "../../assets/icons/Project/favorite.svg";
-import HouseIcon from "../../assets/icons/Project/house.svg";
-import MaterialsIcon from "../../assets/icons/Project/materials.svg";
-import MountainIcon from "../../assets/icons/Project/mountain.svg";
-import PinIcon from "../../assets/icons/Project/pin.svg";
-import UserIcon from "../../assets/icons/Project/user.svg";
-import VerifyIcon from "../../assets/icons/Project/verify-post.svg";
+import ProjectImage from "../assets/images/project.svg";
+import ChartIcon from "../assets/icons/Project/chart.svg";
+import EngineIcon from "../assets/icons/Project/engine.svg";
+import FavoriteIcon from "../assets/icons/Project/favorite.svg";
+import HouseIcon from "../assets/icons/Project/house.svg";
+import MaterialsIcon from "../assets/icons/Project/materials.svg";
+import MountainIcon from "../assets/icons/Project/mountain.svg";
+import PinIcon from "../assets/icons/Project/pin.svg";
+import UserIcon from "../assets/icons/Project/user.svg";
+import VerifyIcon from "../assets/icons/Project/verify-post.svg";
 
 export default function ProjectPage() {
     const pathSegments = location.pathname.split("/").filter(Boolean);
