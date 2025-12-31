@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import Kuboadd from "../../assets/icons/Universal/Kubo-add.svg"
 
-
 interface BannerSettingsProps {
   onClose: () => void;
   onBannerUpdated?: (newBanner: string) => void;
@@ -17,10 +16,10 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const predefinedBanners: string[] = [
-    "../../assets/Profile/Banners/blue.png",
-    "../../assets/Profile/Banners/green.png",
-    "../../assets/Profile/Banners/black.png",
-    "../../assets/Profile/Banners/orange.png",
+    "/src/assets/Profile/Banners/blue.png",
+    "/src/assets/Profile/Banners/green.png",
+    "/src/assets/Profile/Banners/black.png",
+    "/src/assets/Profile/Banners/orange.png",
   ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
