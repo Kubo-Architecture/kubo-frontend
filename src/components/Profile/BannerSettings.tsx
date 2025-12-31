@@ -265,12 +265,9 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
         {/* Footer com botões */}
         <div className="p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
-            >
-              Voltar
-            </button>
+            <a href=""className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
+              Voltar</a>
+           
             <button
               onClick={handleSave}
               disabled={(!selectedBanner && !selectedFile) || isLoading}
