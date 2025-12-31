@@ -1,7 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Kuboadd from "../../assets/icons/Universal/Kubo-add.svg"
-
 
 interface BannerSettingsProps {
   onClose: () => void;
@@ -15,13 +14,31 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
   const predefinedBanners: string[] = [
-    "../../assets/Profile/Banners/blue.png",
-    "../../assets/Profile/Banners/green.png",
-    "../../assets/Profile/Banners/black.png",
-    "../../assets/Profile/Banners/orange.png",
+    "/src/assets/Profile/Banners/blue.png",
+    "/src/assets/Profile/Banners/green.png",
+    "/src/assets/Profile/Banners/black.png",
+    "/src/assets/Profile/Banners/orange.png",
   ];
+
+  // Efeito para fechar com a tecla ESC
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        if (typeof onClose === 'function') {
+          onClose();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleEscKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [onClose]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -67,6 +84,23 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
   const handleCustomBannerClick = () => {
     fileInputRef.current?.click();
+  };
+
+  // Função para fechar ao clicar fora do modal
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
+      if (typeof onClose === 'function') {
+        onClose();
+      }
+    }
+  };
+
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof onClose === 'function') {
+      onClose();
+    }
   };
 
   const handleSave = async () => {
@@ -124,148 +158,171 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   };
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="w-full max-w-[800px] max-h-[calc(100vh-100px)] bg-white rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">Escolha seu banner</h2>
-        </div>
-
-        <div className="p-6 overflow-y-auto max-h-[calc(100vh-320px)]">
-          {/* Grid unificado com todos os banners */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Banners Pré-definidos */}
-            {predefinedBanners.map((banner) => (
-              <div
-                key={banner}
-                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
-                  ? 'ring-4 ring-white ring-offset-0'
-                  : 'hover:opacity-90'
-                  }`}
-                onClick={() => {
-                  setSelectedBanner(banner);
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                }}
+    <>
+      {/* Modal Overlay */}
+      <div
+        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
+        onClick={handleOverlayClick}
+      >
+        {/* Modal Content */}
+        <div
+          ref={modalContentRef}
+          className="relative max-w-3xl w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="bg-white rounded-lg overflow-hidden max-h-[85vh] flex flex-col">
+            <div className="p-4 sm:p-6 border-b border-gray-200 flex-shrink-0 flex items-center justify-between">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Escolha seu banner</h2>
+              <button
+                onClick={handleCloseClick}
+                className="text-gray-400 hover:text-gray-600 transition-colors text-2xl"
+                type="button"
               >
-                <div
-                  className="aspect-[2.5/1] w-full bg-cover bg-center"
-                  style={{ backgroundImage: `url(${banner})` }}
-                />
-                {selectedBanner === banner && (
-                  <div className="absolute top-3 right-3">
-                    <div className="bg-white text-gray-800 rounded-full p-1 w-6 h-6 flex items-center justify-center">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto">
+              {/* Grid unificado com todos os banners */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Banners Pré-definidos */}
+                {predefinedBanners.map((banner) => (
+                  <div
+                    key={banner}
+                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
+                      ? 'ring-4 ring-black ring-offset-0'
+                      : 'hover:opacity-90'
+                      }`}
+                    onClick={() => {
+                      setSelectedBanner(banner);
+                      setSelectedFile(null);
+                      setPreviewUrl(null);
+                    }}
+                  >
+                    <div
+                      className="aspect-[2.5/1] w-full bg-cover bg-center"
+                      style={{ backgroundImage: `url(${banner})` }}
+                    />
+                    {selectedBanner === banner && (
+                      <div className="absolute top-3 right-3">
+                        <div className="bg-black text-white rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {/* Banner Personalizado */}
+                {(previewUrl || selectedFile) ? (
+                  <div className="relative rounded-2xl overflow-hidden ring-4 ring-black ring-offset-0">
+                    <div className="aspect-[2.5/1] w-full">
+                      <img
+                        src={previewUrl || URL.createObjectURL(selectedFile!)}
+                        alt="Preview do banner"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <div className="absolute top-3 right-3">
+                      <div className="bg-black text-white rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                        if (fileInputRef.current) {
+                          fileInputRef.current.value = '';
+                        }
+                      }}
+                      className="absolute top-3 left-3 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                      type="button"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${isDragging
+                      ? 'ring-4 ring-blue-400'
+                      : 'hover:opacity-90'
+                      }`}
+                    onClick={handleCustomBannerClick}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <div className="absolute inset-0 bg-gray-700"></div>
+
+                    <div className="relative aspect-[2.5/1] w-full flex flex-col items-center justify-center p-4">
+                      <div className="mb-2">
+                        <img
+                          src={Kuboadd}
+                          alt="Adicionar banner"
+                          className="w-16 h-16 opacity-80"
+                        />
+                      </div>
+
+                      <p className="text-white text-sm font-medium">
+                        Adicione seu próprio banner
+                      </p>
+                    </div>
+
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileSelect}
+                      accept="image/*"
+                      className="hidden"
+                    />
                   </div>
                 )}
               </div>
-            ))}
 
-            {/* Banner Personalizado */}
-            {(previewUrl || selectedFile) ? (
-              <div className="relative rounded-2xl overflow-hidden ring-4 ring-white ring-offset-0">
-                <div className="aspect-[2.5/1] w-full">
-                  <img
-                    src={previewUrl || URL.createObjectURL(selectedFile!)}
-                    alt="Preview do banner"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute top-3 right-3">
-                  <div className="bg-white text-gray-800 rounded-full p-1 w-6 h-6 flex items-center justify-center">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedFile(null);
-                    setPreviewUrl(null);
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = '';
-                    }
-                  }}
-                  className="absolute top-3 left-3 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+              {/* Botões de ação */}
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-end">
+                <button 
+                  onClick={handleCloseClick}
+                  type="button"
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base font-medium"
                 >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  Cancelar
+                </button>
+               
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={(!selectedBanner && !selectedFile) || isLoading}
+                  className={`px-6 py-2 rounded-lg transition-colors text-sm sm:text-base font-medium ${(!selectedBanner && !selectedFile) || isLoading
+                    ? 'bg-gray-400 cursor-not-allowed text-gray-600'
+                    : 'bg-black text-white hover:bg-gray-800'
+                    }`}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Salvando...
+                    </div>
+                  ) : (
+                    "Salvar banner"
+                  )}
                 </button>
               </div>
-            ) : (
-              <div
-                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${isDragging
-                  ? 'ring-4 ring-blue-400'
-                  : 'hover:opacity-90'
-                  }`}
-                onClick={handleCustomBannerClick}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                <div className="absolute inset-0 bg-gray-700"></div>
-
-                <div className="relative aspect-[2.5/1] w-full flex flex-col items-center justify-center p-4">
-                  <div className="mb-2">
-                    <img
-                      src={Kuboadd}
-                      alt="Adicionar banner"
-                      className="w-16 h-16 opacity-80"
-                    />
-                  </div>
-
-                  <p className="text-white text-sm font-medium">
-                    Adicione seu próprio banner
-                  </p>
-                </div>
-
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  accept="image/*"
-                  className="hidden"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer com botões */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50">
-          <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <a href=""
-              className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
-            >Voltar</a>
-
-            <button
-              onClick={handleSave}
-              disabled={(!selectedBanner && !selectedFile) || isLoading}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${(!selectedBanner && !selectedFile) || isLoading
-                ? 'bg-gray-400 cursor-not-allowed text-gray-600'
-                : 'bg-gray-800 text-white hover:bg-gray-900'
-                }`}
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Salvando...
-                </div>
-              ) : (
-                "Salvar banner"
-              )}
-            </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
