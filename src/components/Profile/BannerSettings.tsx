@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import Kuboadd from "../../assets/icons/Universal/Kubo-add.svg"
+
 
 interface BannerSettingsProps {
   onClose: () => void;
@@ -15,27 +16,11 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Adiciona listener para tecla ESC
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    
-    // Cleanup: remove o listener quando o componente desmontar
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [onClose]);
-
   const predefinedBanners: string[] = [
-    "/src/assets/Profile/Banners/blue.png",
-    "/src/assets/Profile/Banners/green.png",
-    "/src/assets/Profile/Banners/black.png",
-    "/src/assets/Profile/Banners/orange.png",
+    "../../assets/Profile/Banners/blue.png",
+    "../../assets/Profile/Banners/green.png",
+    "../../assets/Profile/Banners/black.png",
+    "../../assets/Profile/Banners/orange.png",
   ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +41,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const file = e.dataTransfer.files[0];
     processFile(file);
   };
@@ -138,17 +123,8 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     }
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div 
-      className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="w-full max-w-[800px] max-h-[calc(100vh-100px)] bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
@@ -162,18 +138,17 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
             {predefinedBanners.map((banner) => (
               <div
                 key={banner}
-                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${
-                  selectedBanner === banner 
-                    ? 'ring-4 ring-white ring-offset-0' 
-                    : 'hover:opacity-90'
-                }`}
+                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
+                  ? 'ring-4 ring-white ring-offset-0'
+                  : 'hover:opacity-90'
+                  }`}
                 onClick={() => {
                   setSelectedBanner(banner);
                   setSelectedFile(null);
                   setPreviewUrl(null);
                 }}
               >
-                <div 
+                <div
                   className="aspect-[2.5/1] w-full bg-cover bg-center"
                   style={{ backgroundImage: `url(${banner})` }}
                 />
@@ -193,9 +168,9 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
             {(previewUrl || selectedFile) ? (
               <div className="relative rounded-2xl overflow-hidden ring-4 ring-white ring-offset-0">
                 <div className="aspect-[2.5/1] w-full">
-                  <img 
-                    src={previewUrl || URL.createObjectURL(selectedFile!)} 
-                    alt="Preview do banner" 
+                  <img
+                    src={previewUrl || URL.createObjectURL(selectedFile!)}
+                    alt="Preview do banner"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -223,28 +198,27 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                 </button>
               </div>
             ) : (
-              <div 
-                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${
-                  isDragging 
-                    ? 'ring-4 ring-blue-400' 
-                    : 'hover:opacity-90'
-                }`}
+              <div
+                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${isDragging
+                  ? 'ring-4 ring-blue-400'
+                  : 'hover:opacity-90'
+                  }`}
                 onClick={handleCustomBannerClick}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
                 <div className="absolute inset-0 bg-gray-700"></div>
-                
+
                 <div className="relative aspect-[2.5/1] w-full flex flex-col items-center justify-center p-4">
                   <div className="mb-2">
-                    <img 
-                      src={Kuboadd} 
-                      alt="Adicionar banner" 
+                    <img
+                      src={Kuboadd}
+                      alt="Adicionar banner"
                       className="w-16 h-16 opacity-80"
                     />
                   </div>
-                  
+
                   <p className="text-white text-sm font-medium">
                     Adicione seu próprio banner
                   </p>
@@ -265,17 +239,17 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
         {/* Footer com botões */}
         <div className="p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <a href=""className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
-              Voltar</a>
-           
+            <a href=""
+              className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >Voltar</a>
+
             <button
               onClick={handleSave}
               disabled={(!selectedBanner && !selectedFile) || isLoading}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${
-                (!selectedBanner && !selectedFile) || isLoading
-                  ? 'bg-gray-400 cursor-not-allowed text-gray-600'
-                  : 'bg-gray-800 text-white hover:bg-gray-900'
-              }`}
+              className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${(!selectedBanner && !selectedFile) || isLoading
+                ? 'bg-gray-400 cursor-not-allowed text-gray-600'
+                : 'bg-gray-800 text-white hover:bg-gray-900'
+                }`}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
