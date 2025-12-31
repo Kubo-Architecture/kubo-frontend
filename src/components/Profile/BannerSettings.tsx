@@ -1,75 +1,298 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import BannerOption from "./BannerOption";
+import Kuboadd from "../../assets/icons/Universal/Kubo-add.svg"
 
-export default function BannerSettings() {
-  const [bannerAtual, setBannerAtual] = useState<any>(null);
+interface BannerSettingsProps {
+  onClose: () => void;
+  onBannerUpdated?: (newBanner: string) => void;
+}
 
-  const backgrounds: string[] = [
+export default function BannerSettings({ onClose, onBannerUpdated }: BannerSettingsProps) {
+  const [selectedBanner, setSelectedBanner] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Adiciona listener para tecla ESC
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    
+    // Cleanup: remove o listener quando o componente desmontar
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [onClose]);
+
+  const predefinedBanners: string[] = [
     "/src/assets/Profile/Banners/blue.png",
     "/src/assets/Profile/Banners/green.png",
     "/src/assets/Profile/Banners/black.png",
-    "/src/assets/Profile/Banners/orange.png"
+    "/src/assets/Profile/Banners/orange.png",
   ];
 
-  const salvarBanner = async () => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files[0];
+    processFile(file);
+  };
+
+  const processFile = (file: File | undefined) => {
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert("Por favor, selecione apenas arquivos de imagem.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 5MB.");
+      return;
+    }
+
+    setSelectedFile(file);
+    setSelectedBanner(null);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+  };
+
+  const handleCustomBannerClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleSave = async () => {
+    if (!selectedBanner && !selectedFile) {
+      alert("Por favor, selecione um banner ou faça upload de uma imagem.");
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      const idUser: string = localStorage.getItem("idUser") ?? ""
+      const idUser = localStorage.getItem("idUser");
+      if (!idUser) {
+        alert("Usuário não autenticado.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("idUser", idUser);
-      formData.append("path", bannerAtual);
 
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/user/banner`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
+      if (selectedFile) {
+        formData.append("image", selectedFile);
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_URL}/user/custom-banner`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" }
           }
-        }
-      );
+        );
 
-      if (response.status === 200) {
-        window.location.reload();
-      } else {
-        alert("Erro ao salvar banner.");
+        if (response.status === 200) {
+          onBannerUpdated?.(response.data.bannerUrl);
+          window.location.reload();
+        }
+      } else if (selectedBanner) {
+        formData.append("path", selectedBanner);
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_URL}/user/banner`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" }
+          }
+        );
+
+        if (response.status === 200) {
+          onBannerUpdated?.(selectedBanner);
+          window.location.reload();
+        }
       }
     } catch (error) {
-      console.error("Erro ao salvar:", error);
-      alert("Erro na requisição.");
+      console.error("Erro ao salvar banner:", error);
+      alert("Erro ao salvar banner. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
     }
   };
 
   return (
-    <div className="fixed top-[80px] left-0 right-0 h-[calc(100vh-80px)] bg-[#000000b4] flex justify-center items-center z-50">
-      <div className="w-full max-w-[800px] max-h-[calc(100vh-80px)] bg-white shadow-lg p-6 overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-4">Escolha o seu banner</h2>
-
-        <div className="flex flex-col gap-4">
-          {backgrounds.map((bg) => (
-            <BannerOption
-              key={bg}
-              background={bg}
-              selected={bannerAtual === bg}
-              onSelect={setBannerAtual}
-            />
-          ))}
+    <div 
+      className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      onClick={handleBackdropClick}
+    >
+      <div className="w-full max-w-[800px] max-h-[calc(100vh-100px)] bg-white rounded-2xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800">Escolha seu banner</h2>
         </div>
 
-        <div className="h-[150px] flex flex-col justify-end items-center gap-[10px]">
-          <a
-            href=""
-            className="bg-[#4A4A4A] text-white flex justify-center items-center h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] disabled:bg-gray-400"
-          >
-            Voltar
-          </a>
-          <button
-            onClick={salvarBanner}
-            disabled={!bannerAtual}
-            className="bg-[#4A4A4A] text-white h-[40px] w-[250px] rounded-[30px] hover:bg-[#363636] cursor-pointer disabled:bg-gray-400"
-          >
-            Salvar
-          </button>
+        <div className="p-6 overflow-y-auto max-h-[calc(100vh-320px)]">
+          {/* Grid unificado com todos os banners */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Banners Pré-definidos */}
+            {predefinedBanners.map((banner) => (
+              <div
+                key={banner}
+                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${
+                  selectedBanner === banner 
+                    ? 'ring-4 ring-white ring-offset-0' 
+                    : 'hover:opacity-90'
+                }`}
+                onClick={() => {
+                  setSelectedBanner(banner);
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                }}
+              >
+                <div 
+                  className="aspect-[2.5/1] w-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${banner})` }}
+                />
+                {selectedBanner === banner && (
+                  <div className="absolute top-3 right-3">
+                    <div className="bg-white text-gray-800 rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Banner Personalizado */}
+            {(previewUrl || selectedFile) ? (
+              <div className="relative rounded-2xl overflow-hidden ring-4 ring-white ring-offset-0">
+                <div className="aspect-[2.5/1] w-full">
+                  <img 
+                    src={previewUrl || URL.createObjectURL(selectedFile!)} 
+                    alt="Preview do banner" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute top-3 right-3">
+                  <div className="bg-white text-gray-800 rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                  }}
+                  className="absolute top-3 left-3 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div 
+                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${
+                  isDragging 
+                    ? 'ring-4 ring-blue-400' 
+                    : 'hover:opacity-90'
+                }`}
+                onClick={handleCustomBannerClick}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div className="absolute inset-0 bg-gray-700"></div>
+                
+                <div className="relative aspect-[2.5/1] w-full flex flex-col items-center justify-center p-4">
+                  <div className="mb-2">
+                    <img 
+                      src={Kuboadd} 
+                      alt="Adicionar banner" 
+                      className="w-16 h-16 opacity-80"
+                    />
+                  </div>
+                  
+                  <p className="text-white text-sm font-medium">
+                    Adicione seu próprio banner
+                  </p>
+                </div>
+
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer com botões */}
+        <div className="p-6 border-t border-gray-200 bg-gray-50">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
+            <button
+              onClick={onClose}
+              className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Voltar
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={(!selectedBanner && !selectedFile) || isLoading}
+              className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 ${
+                (!selectedBanner && !selectedFile) || isLoading
+                  ? 'bg-gray-400 cursor-not-allowed text-gray-600'
+                  : 'bg-gray-800 text-white hover:bg-gray-900'
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Salvando...
+                </div>
+              ) : (
+                "Salvar banner"
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
