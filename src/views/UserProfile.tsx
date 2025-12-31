@@ -74,7 +74,7 @@ export default function UserProfile() {
 
           {showBannerSettings && (
             <div className="z-50">
-              <BannerSettings />
+              <BannerSettings/>
             </div>
           )}
         </div>
