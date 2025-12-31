@@ -41,6 +41,21 @@ export default function UserProfile() {
       })
   }, [location])
 
+  // Função para fechar o modal de banner
+  const handleCloseBannerSettings = () => {
+    setShowBannerSettings(false);
+  };
+
+  // Função para atualizar o banner após salvar
+  const handleBannerUpdated = (newBanner: string) => {
+    console.log("Banner atualizado:", newBanner);
+    // Atualiza o banner no profileData
+    setProfileData((prev: any) => ({
+      ...prev,
+      banner: newBanner
+    }));
+  };
+
   if (!profileData) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -73,9 +88,10 @@ export default function UserProfile() {
           <ProjectGallery userId={profileData.idUser} onProjectsLoaded={(count: number) => setProjectCount(count)} setIsLoadingChild={setLoading} />
 
           {showBannerSettings && (
-            <div className="z-50">
-              <BannerSettings/>
-            </div>
+            <BannerSettings 
+              onClose={handleCloseBannerSettings}
+              onBannerUpdated={handleBannerUpdated}
+            />
           )}
         </div>
       </div>
