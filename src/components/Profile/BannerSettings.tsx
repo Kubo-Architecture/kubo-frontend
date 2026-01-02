@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Kuboadd from "../../assets/icons/Universal/Kubo-add.svg"
+import BannerBlue from "../../assets/Profile/Banners/blue.png"
+import BannerGreen from "../../assets/Profile/Banners/green.png"
+import BannerBlack from "../../assets/Profile/Banners/black.png"
+import BannerOrange from "../../assets/Profile/Banners/orange.png"
 
 interface BannerSettingsProps {
   onClose: () => void;
@@ -16,11 +20,12 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
 
+  // Usando os imports das imagens
   const predefinedBanners: string[] = [
-    "/src/assets/Profile/Banners/blue.png",
-    "/src/assets/Profile/Banners/green.png",
-    "/src/assets/Profile/Banners/black.png",
-    "/src/assets/Profile/Banners/orange.png",
+    BannerBlue,
+    BannerGreen,
+    BannerBlack,
+    BannerOrange,
   ];
 
   // Efeito para fechar com a tecla ESC
@@ -186,9 +191,9 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
               {/* Grid unificado com todos os banners */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Banners Pré-definidos */}
-                {predefinedBanners.map((banner) => (
+                {predefinedBanners.map((banner, index) => (
                   <div
-                    key={banner}
+                    key={index}
                     className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
                       ? 'ring-4 ring-black ring-offset-0'
                       : 'hover:opacity-90'
