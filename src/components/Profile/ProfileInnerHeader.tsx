@@ -42,7 +42,7 @@ export default function ProfileInnerHeader(props: any) {
 
   return (
     <div
-      className="h-[150px] md:h-[200px] lg:h-[300px] xl:h-[350px] w-screen min-w-[380px] flex px-[20px] md:px-[30px] relative justify-end"
+      className="h-[150px] md:h-[200px] lg:h-[300px] xl:h-[350px] w-screen min-w-[380px] flex px-[20px] md:px-[110px] relative justify-end"
       style={{
         backgroundColor: props.banner ? undefined : "#C4C4C4",
         backgroundImage: props.banner ? `url(${props.banner})` : undefined,
