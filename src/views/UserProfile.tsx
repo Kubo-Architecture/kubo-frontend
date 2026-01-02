@@ -82,6 +82,13 @@ export default function UserProfile() {
             likes={profileData.likes || 0}
             projetos={projectCount || 0}
             ownProfile={isOwnProfile}
+            userId={profileData.idUser}
+            onFollowChange={(isFollowing: boolean) => {
+              setProfileData((prev: any) => ({
+                ...prev,
+                followers: isFollowing ? (prev.followers || 0) + 1 : Math.max(0, (prev.followers || 0) - 1)
+              }));
+            }}
           />
           <Biografy Biografy={profileData.bio} />
 
