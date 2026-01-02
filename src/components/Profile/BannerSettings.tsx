@@ -20,7 +20,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
 
-  // Usando os imports das imagens
   const predefinedBanners: string[] = [
     BannerBlue,
     BannerGreen,
@@ -28,7 +27,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     BannerOrange,
   ];
 
-  // Efeito para fechar com a tecla ESC
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' || event.key === 'Esc') {
@@ -91,7 +89,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     fileInputRef.current?.click();
   };
 
-  // Função para fechar ao clicar fora do modal
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
       if (typeof onClose === 'function') {
