@@ -33,6 +33,11 @@ export default function ProfileInnerHeader(props: any) {
       const response = await axios.post(apiUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      if (response.status === 200) {
+        window.location.reload();
+      };
+      
       console.log("Upload feito com sucesso:", response.data);
     } catch (error: any) {
       console.error("Erro ao enviar imagem:", error);
