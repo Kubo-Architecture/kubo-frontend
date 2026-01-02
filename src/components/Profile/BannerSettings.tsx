@@ -126,9 +126,9 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       formData.append("idUser", idUser);
 
       if (selectedFile) {
-        formData.append("image", selectedFile);
+        formData.append("banner", selectedFile);
         const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/user/custom-banner`,
+          `${import.meta.env.VITE_API_URL}/user/banner`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }

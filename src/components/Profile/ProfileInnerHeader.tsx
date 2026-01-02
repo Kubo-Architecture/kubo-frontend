@@ -30,7 +30,7 @@ export default function ProfileInnerHeader(props: any) {
     formData.append("idUser", idUser);
 
     try {
-      const response = await axios.put(apiUrl, formData, {
+      const response = await axios.post(apiUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload feito com sucesso:", response.data);
