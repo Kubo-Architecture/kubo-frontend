@@ -4,6 +4,7 @@ import PenIcon from "../../assets/Profile/pen.svg";
 export default function ProfileStats(props: any) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [seguidoresCount, setSeguidoresCount] = useState(props.seguidores || 0);
     const [formData, setFormData] = useState({
         nickname: props.nickname || "",
         name: props.name || "",
@@ -25,6 +26,10 @@ export default function ProfileStats(props: any) {
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
     }, [isModalOpen]);
+
+    useEffect(() => {
+        setSeguidoresCount(props.seguidores || 0);
+    }, [props.seguidores]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -54,8 +59,14 @@ export default function ProfileStats(props: any) {
     };
 
     const handleFollowToggle = () => {
+        if (isFollowing) {
+            setSeguidoresCount(prev => (prev || 0) - 1);
+            console.log("Deixou de seguir");
+        } else {
+            setSeguidoresCount(prev => (prev || 0) + 1);
+            console.log("Seguindo");
+        }
         setIsFollowing(!isFollowing);
-        console.log(isFollowing ? "Deixou de seguir" : "Seguindo");
     };
 
     return (
@@ -122,7 +133,7 @@ export default function ProfileStats(props: any) {
                             
                             <div className="text-center">
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                                    {props.seguidores}
+                                    {seguidoresCount}
                                 </p>
                                 <p className="text-sm text-gray-600 mt-1">
                                     Seguidores
