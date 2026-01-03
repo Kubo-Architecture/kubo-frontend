@@ -60,23 +60,19 @@ export default function PhotoEditorModal({
     const containerWidth = containerRef.current.offsetWidth;
     const containerHeight = containerRef.current.offsetHeight;
 
-    // Calcular escala para cobrir o círculo (280px)
     const circleSize = 280;
     const imgAspect = img.naturalWidth / img.naturalHeight;
     
     let displayWidth, displayHeight;
     
     if (imgAspect > 1) {
-      // Imagem horizontal
       displayHeight = circleSize;
       displayWidth = circleSize * imgAspect;
     } else {
-      // Imagem vertical ou quadrada
       displayWidth = circleSize;
       displayHeight = circleSize / imgAspect;
     }
 
-    // Centralizar
     const centerX = (containerWidth - displayWidth) / 2;
     const centerY = (containerHeight - displayHeight) / 2;
 
@@ -148,15 +144,12 @@ export default function PhotoEditorModal({
       const img = imageRef.current;
       const container = containerRef.current;
       
-      // Dimensões do círculo de crop
       const circleSize = 280;
       const circleRadius = circleSize / 2;
       
-      // Centro do container
       const containerCenterX = container.offsetWidth / 2;
       const containerCenterY = container.offsetHeight / 2;
       
-      // Calcular dimensões da imagem com zoom
       const imgAspect = img.naturalWidth / img.naturalHeight;
       let displayWidth, displayHeight;
       
@@ -171,28 +164,23 @@ export default function PhotoEditorModal({
       displayWidth *= zoom;
       displayHeight *= zoom;
       
-      // Calcular a escala entre a imagem exibida e a original
       const scaleX = img.naturalWidth / displayWidth;
       const scaleY = img.naturalHeight / displayHeight;
       
-      // Calcular o ponto de início do crop na imagem EXIBIDA
       const cropStartX = containerCenterX - circleRadius - position.x;
       const cropStartY = containerCenterY - circleRadius - position.y;
       
-      // Converter para coordenadas da imagem ORIGINAL
       const sourceX = cropStartX * scaleX;
       const sourceY = cropStartY * scaleY;
       const sourceSize = circleSize * scaleX;
 
       ctx.clearRect(0, 0, outputSize, outputSize);
       
-      // Criar clipping circular
       ctx.beginPath();
       ctx.arc(outputSize / 2, outputSize / 2, outputSize / 2, 0, Math.PI * 2);
       ctx.closePath();
       ctx.clip();
 
-      // Desenhar a imagem cropada
       ctx.drawImage(
         img,
         sourceX,
@@ -278,7 +266,6 @@ export default function PhotoEditorModal({
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
       
-      // Tentar primeiro com idUser no body como JSON
       let response;
       try {
         response = await axios.delete(apiUrl, {
@@ -288,7 +275,6 @@ export default function PhotoEditorModal({
           }
         });
       } catch (bodyError: any) {
-        // Se falhar com 400/404, tentar como query parameter
         if (bodyError.response?.status === 400 || bodyError.response?.status === 404) {
           response = await axios.delete(`${apiUrl}?idUser=${idUser}`);
         } else {
@@ -355,7 +341,6 @@ export default function PhotoEditorModal({
     }
   };
 
-  // Calcular dimensões da imagem com zoom
   const getImageDimensions = () => {
     if (!imageRef.current) return { width: 0, height: 0 };
     
@@ -381,12 +366,10 @@ export default function PhotoEditorModal({
 
   const dimensions = getImageDimensions();
 
-  // URL da foto atual ou default
   const displayPhotoUrl = currentPhotoUrl?.trim()
     ? currentPhotoUrl.replace(/=s\d+(-c)?$/, "=s400-c")
     : DefaultProfile;
   
-  // Verificar se há uma foto real (não a foto padrão)
   const hasRealPhoto = currentPhotoUrl && 
                        currentPhotoUrl.trim() && 
                        !currentPhotoUrl.includes('defaultProfile') &&
@@ -415,21 +398,17 @@ export default function PhotoEditorModal({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           {previewUrl ? (
             <div className="space-y-4">
-              {/* Preview Area */}
               <div 
                 ref={containerRef}
                 className="relative w-full h-[350px] bg-black rounded-lg overflow-hidden flex items-center justify-center"
               >
-                {/* Círculo de preview */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                   <div className="w-[280px] h-[280px] border-2 border-white/50 rounded-full"></div>
                 </div>
 
-                {/* Overlay */}
                 <div className="absolute inset-0 pointer-events-none z-[5]">
                   <svg className="w-full h-full">
                     <defs>
@@ -448,7 +427,6 @@ export default function PhotoEditorModal({
                   </svg>
                 </div>
 
-                {/* Imagem */}
                 <div
                   className="absolute cursor-move select-none touch-none"
                   onMouseDown={handleMouseDown}
@@ -499,7 +477,6 @@ export default function PhotoEditorModal({
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Preview da foto atual */}
               <div className="flex justify-center">
                 <div 
                   className="w-[280px] h-[280px] rounded-full bg-cover bg-center border-4 border-gray-200"
@@ -507,7 +484,6 @@ export default function PhotoEditorModal({
                 />
               </div>
 
-              {/* Área de upload */}
               <div 
                 className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-black transition-colors"
                 onClick={handleChooseNewPhoto}
@@ -548,7 +524,6 @@ export default function PhotoEditorModal({
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex gap-2">
           {!previewUrl && (
             <>
-              {/* Botão de remover foto - aparece quando há foto atual */}
               {hasRealPhoto && (
                 <button
                   onClick={handleRemovePhoto}
@@ -560,7 +535,6 @@ export default function PhotoEditorModal({
                 </button>
               )}
               
-              {/* Botão de cancelar quando não há preview */}
               <button
                 onClick={handleClose}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
