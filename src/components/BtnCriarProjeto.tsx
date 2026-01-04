@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Kuboadd from "../assets/icons/Universal/Kubo-add.svg";
 
 export default function Btncriarprojeto({ onProjectCreated }: any) {
   const navigate = useNavigate();
@@ -258,7 +259,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
         className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
         title="Criar projeto"
       >
-        <i className="fas fa-plus text-base sm:text-lg"></i>
+        <img src={Kuboadd} alt="Adicionar" className="w-10 h-10 sm:w-14 sm:h-14" />
       </button>
 
       {showCreateModal && (
@@ -477,7 +478,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
                           onClick={addMaterialField}
                           className="text-sm text-gray-600 hover:text-black transition-colors flex items-center"
                         >
-                          <i className="fas fa-plus mr-2 text-xs"></i>
+                          <img src={Kuboadd} alt="Adicionar" className="w-4 h-4 mr-2" />
                           Adicionar material
                         </button>
                       </div>

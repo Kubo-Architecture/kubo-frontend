@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
 import { loginSchema } from '../validators/loginSchema';
 import LoginWithGoogleButton from './LoginWithGoogleButton';
+import { User } from 'lucide-react';
 
 const LoginForm = ({ onLoginSuccess }: any) => {
   const navigate = useNavigate();
@@ -122,12 +123,12 @@ const LoginForm = ({ onLoginSuccess }: any) => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+    <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
 
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-          <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
+          <User className="w-7 h-7 text-white" strokeWidth={2} />
         </div>
       </div>
 
