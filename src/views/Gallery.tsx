@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import Btncriarprojeto from "../components/BtnCriarProjeto";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Gallery() {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -95,7 +97,6 @@ export default function Gallery() {
 
   const [works, setWorks] = useState<any>(architecturalWorks);
 
-  // Inicializar likes
   useEffect(() => {
     const initialLikes: { [key: number]: number } = {};
     works.forEach((work: any) => {
@@ -106,12 +107,37 @@ export default function Gallery() {
 
   // Fechar modal com ESC
   useEffect(() => {
+    const checkUserLogged = async () => {
+      const idUser = localStorage.getItem('idUser');
+
+      if (idUser) {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+          const user = response.data;
+
+          if (user.nickname) {
+            navigate(`/profile/${user.nickname}`);
+          } else {
+            navigate('/profile/nickname');
+          }
+
+          return;
+        } catch (error: any) {
+          console.error("Erro ao verificar usuário:", error);
+          localStorage.removeItem('idUser');
+        }
+      }
+    };
+
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setEditingProject(null);
       }
     };
     window.addEventListener('keydown', handleEsc);
+
+    checkUserLogged()
+
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 

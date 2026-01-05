@@ -89,6 +89,14 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       if (onLoginSuccess) {
         await onLoginSuccess();
       }
+
+      const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+
+      if (user.data.nickname) {
+          navigate(`/gallery`);
+      } else {
+          navigate(`/profile/nickname`);
+      }
       
     } catch (error: any) {
       console.error('Erro no login:', error);

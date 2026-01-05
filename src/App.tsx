@@ -11,7 +11,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const location = useLocation();
 
-  const disabledRoutes: string[] = ['/login', '/register', '/forgotpassword'];
+  const disabledRoutes: string[] = ['/login', '/register', '/forgotpassword', '/profile/nickname'];
 
   const isAuthRoute: boolean = location.pathname.startsWith('/auth/');
   const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;

@@ -36,29 +36,11 @@ export default function LoginPage({ onLoginSuccess }: any) {
     checkUserLogged();
   }, [navigate]);
 
-  const handleSuccess = async () => {
-    setLoading(true);
-    const idUser = localStorage.getItem('idUser');
-    if (idUser) {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
-        const user = response.data;
-        if (user.nickname) {
-          navigate('/gallery');
-        } else {
-          navigate('/profile/nickname');
-        }
-      } catch (e) {
-        setLoading(false);
-      }
-    }
-  };
-
   return (
     <div className="h-screen flex flex-col bg-white">
       {!loading ? (
         <div className="flex-1 flex items-center justify-center px-4">
-          <LoginForm onLoginSuccess={handleSuccess} />
+          <LoginForm onLoginSuccess={onLoginSuccess} />
         </div>
       ) : (
         <Loading />
