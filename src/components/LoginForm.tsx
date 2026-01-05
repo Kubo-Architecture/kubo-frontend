@@ -80,22 +80,14 @@ const LoginForm = ({ onLoginSuccess }: any) => {
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/login`;
       const response = await axios.post(apiUrl, formData);
-
       const { token, name, idUser } = response.data;
+      
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
       localStorage.setItem('idUser', idUser);
 
       if (onLoginSuccess) {
         await onLoginSuccess();
-      }
-
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
-
-      if (user.data.nickname) {
-          navigate(`/gallery`);
-      } else {
-          navigate(`/profile/nickname`);
       }
       
     } catch (error: any) {
