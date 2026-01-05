@@ -65,7 +65,7 @@ export default function NicknameInput() {
       );
 
       if (response.status === 200) {
-        navigate(`/profile/${nickname}`);
+        navigate(`/gallery`);
       }
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';

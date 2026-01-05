@@ -115,9 +115,7 @@ export default function Gallery() {
           const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
           const user = response.data;
 
-          if (user.nickname) {
-            navigate(`/profile/${user.nickname}`);
-          } else {
+          if (!user.nickname) {
             navigate('/profile/nickname');
           }
 

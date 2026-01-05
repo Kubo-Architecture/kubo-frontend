@@ -47,7 +47,7 @@ function App() {
     <div className="min-h-screen">
       {!isHeaderDisabled && <HeaderFull userData={userData} />}
 
-      <RouterLink isAuthenticated={!!userData} onLoginSuccess={checkUser} />
+      <RouterLink isAuthenticated={!!userData} hasNick={!!userData?.nickname} onLoginSuccess={checkUser} />
     </div>
   );
 }

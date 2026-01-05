@@ -13,10 +13,10 @@ import UserConfig from "../views/UserConfig.tsx";
 import FavoritePage from "../views/FavoritePage.js";
 
 
-export default function Rotas({ isAuthenticated, onLoginSuccess }: any) {
+export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any) {
     return (
         <Routes>
-            <Route path="/" element={isAuthenticated ? <Navigate to="/gallery" /> : <LandingPage />} />
+            <Route path="/" element={isAuthenticated ? hasNick ? <Navigate to="/gallery" /> : <Navigate to="/profile/nickname" /> : <LandingPage />} />
             <Route path="/login" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
             <Route path="/error/:errorCode" element={<ErrorPage />} />
             <Route path="/register" element={<SignUpPage />} />
