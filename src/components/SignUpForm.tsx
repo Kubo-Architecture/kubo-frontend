@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
-import { User, Mail, Lock, Home, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Home, Eye, EyeOff, ArrowLeft, UserPlus } from 'lucide-react';
 import Loading from './Universal/Loading';
 import { signupSchema } from '../validators/signupSchema';
 
@@ -162,7 +162,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+    <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
 
       {/* Botão de voltar */}
       <button
@@ -176,7 +176,7 @@ const SignUpForm = () => {
       {/* Ícone de casa */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-          <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
+          <UserPlus className="w-7 h-7 text-white" strokeWidth={2} />
         </div>
       </div>
 

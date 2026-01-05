@@ -3,6 +3,8 @@ import PenIcon from "../../assets/Profile/pen.svg";
 
 export default function ProfileStats(props: any) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [seguidoresCount, setSeguidoresCount] = useState(props.seguidores || 0);
     const [formData, setFormData] = useState({
         nickname: props.nickname || "",
         name: props.name || "",
@@ -24,6 +26,10 @@ export default function ProfileStats(props: any) {
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
     }, [isModalOpen]);
+
+    useEffect(() => {
+        setSeguidoresCount(props.seguidores || 0);
+    }, [props.seguidores]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -52,6 +58,17 @@ export default function ProfileStats(props: any) {
         setIsModalOpen(false);
     };
 
+    const handleFollowToggle = () => {
+        if (isFollowing) {
+            setSeguidoresCount(prev => (prev || 0) - 1);
+            console.log("Deixou de seguir");
+        } else {
+            setSeguidoresCount(prev => (prev || 0) + 1);
+            console.log("Seguindo");
+        }
+        setIsFollowing(!isFollowing);
+    };
+
     return (
         <>
             {/* Header do Perfil */}
@@ -70,14 +87,25 @@ export default function ProfileStats(props: any) {
                                     </p>
                                 </div>
                                 
-                                {/* Botão Edit Mobile */}
-                                {props.ownProfile && (
+                                {/* Botão Edit/Follow Mobile */}
+                                {props.ownProfile ? (
                                     <button 
                                         onClick={() => setIsModalOpen(true)}
                                         className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
                                         aria-label="Editar perfil"
                                     >
                                         <img className="h-5 w-5" src={PenIcon} alt="" />
+                                    </button>
+                                ) : (
+                                    <button 
+                                        onClick={handleFollowToggle}
+                                        className={`sm:hidden px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
+                                            isFollowing 
+                                                ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
+                                                : 'bg-gray-900 text-white hover:bg-gray-800'
+                                        }`}
+                                    >
+                                        {isFollowing ? 'Seguindo' : 'Seguir'}
                                     </button>
                                 )}
                             </div>
@@ -105,21 +133,46 @@ export default function ProfileStats(props: any) {
                             
                             <div className="text-center">
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                                    {props.seguidores}
+                                    {seguidoresCount}
                                 </p>
                                 <p className="text-sm text-gray-600 mt-1">
                                     Seguidores
                                 </p>
                             </div>
 
-                            {/* Botão Edit Desktop */}
-                            {props.ownProfile && (
+                            {/* Botão Edit/Follow Desktop */}
+                            {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsModalOpen(true)}
                                     className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <img className="h-4 w-4 invert" src={PenIcon} alt="" />
                                     Editar Perfil
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={handleFollowToggle}
+                                    className={`hidden sm:flex items-center gap-2 px-6 py-2 rounded-lg transition-colors text-sm font-medium ${
+                                        isFollowing 
+                                            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
+                                            : 'bg-gray-900 text-white hover:bg-gray-800'
+                                    }`}
+                                >
+                                    {isFollowing ? (
+                                        <>
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                            Seguindo
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Seguir
+                                        </>
+                                    )}
                                 </button>
                             )}
                         </div>

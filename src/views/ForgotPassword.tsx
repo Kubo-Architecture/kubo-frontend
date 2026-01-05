@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { Mail, Home, ArrowLeft } from 'lucide-react';
+import { Mail, KeyRound, ArrowLeft } from 'lucide-react';
 
 const ForgotPasswordForm = () => {
   const navigate = useNavigate();
@@ -66,8 +66,8 @@ const ForgotPasswordForm = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-        <div className="w-full max-w-md flex flex-col justify-center items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+      <div className="min-h-screen flex items-center justify-center p-4 ">
+        <div className="w-full max-w-md flex flex-col justify-center items-center bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
 
           {/* Botão voltar */}
           <button
@@ -108,8 +108,8 @@ const ForgotPasswordForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
 
         {/* Botão voltar - DENTRO DO CARD */}
         <button
@@ -123,7 +123,7 @@ const ForgotPasswordForm = () => {
         {/* Ícone de casa */}
         <div className="flex justify-center mb-2">
           <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-            <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
+            <KeyRound className="w-7 h-7 text-white" strokeWidth={2} />
           </div>
         </div>
 
