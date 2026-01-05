@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { Mail, Lock, Home, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { loginSchema } from '../validators/loginSchema';
 import LoginWithGoogleButton from './LoginWithGoogleButton';
 import { User } from 'lucide-react';
@@ -81,33 +81,26 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       const apiUrl = `${import.meta.env.VITE_API_URL}/login`;
       const response = await axios.post(apiUrl, formData);
 
-      const token = response.data.token;
-      const name = response.data.name;
-      const idUser = response.data.idUser;
-
-      localStorage.setItem("name", name);
-      localStorage.setItem("token", token);
-      localStorage.setItem("idUser", idUser);
+      const { token, name, idUser } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('name', name);
+      localStorage.setItem('idUser', idUser);
 
       if (onLoginSuccess) {
         await onLoginSuccess();
       }
 
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
-        const user = response.data;
+      const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
 
-        if (user.nickname) {
-          navigate(`/profile/${user.nickname}`);
-        } else {
-          navigate('/profile/nickname');
-        }
-      } catch (error) {
-        localStorage.removeItem('idUser');
+      if (user.data.nickname) {
+          navigate(`/gallery`);
+      } else {
+          navigate(`/profile/nickname`);
       }
       
     } catch (error: any) {
       console.error('Erro no login:', error);
+
       if (error.response?.status === 404) {
         navigate(`/error/404`);
       } else if (error.response?.status === 401) {
