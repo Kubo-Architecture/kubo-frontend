@@ -88,7 +88,7 @@ export default function HeaderFull({ userData }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                { userData ? (<div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userData?.name || 'Usuário'}
@@ -131,12 +131,22 @@ export default function HeaderFull({ userData }: any) {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="w-full text-left flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50 transition-colors"
+                    className="w-full text-left flex items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
                   </button>
+                </div>) : (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <a
+                    href={`/login`}
+                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
+                    <span>Entrar</span>
+                  </a>
                 </div>
+                )}
               </>
             )}
           </div>
@@ -148,7 +158,7 @@ export default function HeaderFull({ userData }: any) {
               aria-label="Menu do usuário"
             >
               <img
-                className="h-10 w-10 rounded-full border border-gray-300 object-cover"
+                className="h-10 w-10 rounded-full border border-gray-300 object-cover cursor-pointer"
                 src={userData?.photoUrl || DefaultProfile}
                 alt="Foto do perfil"
               />
@@ -160,7 +170,7 @@ export default function HeaderFull({ userData }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                { userData ? (<div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userData?.name || 'Usuário'}
@@ -218,7 +228,17 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
                   </button>
+                </div>) : (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <a
+                    href={`/login`}
+                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
+                    <span>Entrar</span>
+                  </a>
                 </div>
+                )}
               </>
             )}
           </div>
