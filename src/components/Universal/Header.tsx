@@ -64,7 +64,8 @@ export default function HeaderFull({ userData }: any) {
           </div>
 
           <div className="hidden md:flex relative justify-end w-auto">
-            <button
+            {userData ? (
+              <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex items-center space-x-3 focus:outline-none cursor-pointer"
               aria-label="Menu do usuário"
@@ -80,15 +81,17 @@ export default function HeaderFull({ userData }: any) {
                 className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''
                   }`}
               ></i>
-            </button>
+            </button>) : (
+              <span className='cursor-pointer' onClick={() => navigate('/login')}>Entrar</span>
+            )}
 
-            {isMenuOpen && (
+            {(isMenuOpen && userData) && (
               <>
                 <div
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                { userData ? (<div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userData?.name || 'Usuário'}
@@ -136,23 +139,13 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
                   </button>
-                </div>) : (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                  <a
-                    href={`/login`}
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Entrar</span>
-                  </a>
                 </div>
-                )}
               </>
             )}
           </div>
 
           <div className="md:hidden flex items-center">
-            <button
+          {userData ? (<button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none"
               aria-label="Menu do usuário"
@@ -162,15 +155,17 @@ export default function HeaderFull({ userData }: any) {
                 src={userData?.photoUrl || DefaultProfile}
                 alt="Foto do perfil"
               />
-            </button>
+            </button>) : (
+              <span className='cursor-pointer' onClick={() => navigate('/login')}>Entrar</span>
+            )}
 
-            {isMenuOpen && (
+            {(isMenuOpen && userData) && (
               <>
                 <div
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                { userData ? (<div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userData?.name || 'Usuário'}
@@ -228,17 +223,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
                   </button>
-                </div>) : (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                  <a
-                    href={`/login`}
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Entrar</span>
-                  </a>
                 </div>
-                )}
               </>
             )}
           </div>
