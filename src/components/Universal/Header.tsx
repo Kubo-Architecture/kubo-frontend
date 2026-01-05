@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
-import DefaultProfilePhoto from "../../assets/icons/Universal/defaultUserPhoto.svg";
+import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
 import { useNavigate } from 'react-router-dom';
 
 export default function HeaderFull({ userData }: any) {
@@ -72,7 +72,7 @@ export default function HeaderFull({ userData }: any) {
               <div className="relative">
                 <img
                   className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                  src={userData?.photoUrl || DefaultProfilePhoto}
+                  src={userData?.photoUrl || DefaultProfile}
                   alt="Foto do perfil"
                 />
               </div>
@@ -149,7 +149,7 @@ export default function HeaderFull({ userData }: any) {
             >
               <img
                 className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                src={userData?.photoUrl || DefaultProfilePhoto}
+                src={userData?.photoUrl || DefaultProfile}
                 alt="Foto do perfil"
               />
             </button>
