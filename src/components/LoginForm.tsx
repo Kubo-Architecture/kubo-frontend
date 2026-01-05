@@ -92,8 +92,6 @@ const LoginForm = ({ onLoginSuccess }: any) => {
         await onLoginSuccess();
       }
 
-      navigate('/gallery');
-
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
         const user = response.data;
@@ -106,8 +104,7 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       } catch (error) {
         localStorage.removeItem('idUser');
       }
-
-      navigate('/gallery');
+      
     } catch (error: any) {
       console.error('Erro no login:', error);
       if (error.response?.status === 404) {

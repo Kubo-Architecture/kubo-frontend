@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Btncriarprojeto from "../components/BtnCriarProjeto";
+import axios from 'axios';
 
 export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
@@ -35,20 +36,45 @@ export default function Gallery() {
     },
   ];
 
+  const [users, setUsers] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+
+  function getUsers(user: string) {
+    setSearchTerm(user);
+
+    if (!user.trim()) {
+      setUsers(architecturalWorks); 
+      return;
+    }
+  
+    axios.get(`${import.meta.env.VITE_API_URL}/users`, { 
+      params: { name: user } 
+    })
+      .then((response) => {
+        setUsers(response.data);
+      });
+  }
+
+  function getProjects(project: string) {
+    setSearchTerm(project);
+
+    if (!project.trim()) {
+      setProjects(architecturalWorks); 
+      return;
+    }
+  
+    axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
+      params: { title: project } 
+    })
+      .then((response) => {
+        setProjects(response.data);
+      });
+  }
+
   const [works, setWorks] = useState<any>(architecturalWorks);
 
   const filteredWorks = works.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter) return false;
-
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        work.title.toLowerCase().includes(searchLower) ||
-        work.location.toLowerCase().includes(searchLower) ||
-        work.architect.toLowerCase().includes(searchLower) ||
-        work.tags.some((tag: any) => tag.toLowerCase().includes(searchLower))
-      );
-    }
 
     return true;
   });
@@ -123,7 +149,10 @@ export default function Gallery() {
                       type="text"
                       placeholder="Buscar obras, arquitetos ou localizações..."
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={(e) => {
+                        getUsers(e.target.value)
+                        getProjects(e.target.value)
+                      }}
                       className="w-full pl-10 sm:pl-12 pr-10 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-shadow text-sm sm:text-base"
                     />
 
@@ -218,26 +247,35 @@ export default function Gallery() {
           ) : viewMode === 'grid' ? (
             // Grade responsiva com diferentes breakpoints
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              {filteredWorks.map((work: any) => (
+              {
+                users.map((user: any) => (
+                  <div className="" key={user.id}>
+                    <img src={ user.photoUrl } />
+                    <h2>{ user.name }</h2>
+                  </div>
+                ))
+              }
+
+              {projects.map((project: any) => (
                 <div
-                  key={work.id}
+                  key={project.id}
                   className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
                 >
                   <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                     <img
-                      src={work.imageUrl}
-                      alt={work.title}
+                      src={project.photo_url}
+                      alt={project.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                     <div className="absolute top-3 right-3">
                       <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-medium rounded-full border border-gray-300">
-                        {work.category}
+                        {project.usage_type}
                       </span>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <button
-                        onClick={() => setSelectedImage(work)}
+                        onClick={() => setSelectedImage(project)}
                         className="text-white text-sm font-medium flex items-center hover:text-gray-200"
                       >
                         Ver detalhes
@@ -248,7 +286,7 @@ export default function Gallery() {
 
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{project.name}</h3>
                       <button className="text-gray-400 hover:text-black flex-shrink-0 ml-2">
                         <i className="far fa-star text-sm sm:text-base"></i>
                       </button>
@@ -256,148 +294,143 @@ export default function Gallery() {
 
                     <div className="flex items-center text-gray-600 text-xs sm:text-sm mb-3">
                       <i className="fas fa-map-marker-alt mr-2 text-gray-400 flex-shrink-0"></i>
-                      <span className="truncate">{work.location}</span>
+                      <span className="truncate">{project.location}</span>
                     </div>
 
-                    <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{work.description}</p>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{project.description}</p>
 
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div className="min-w-0">
                         <div className="text-xs text-gray-500 mb-1 truncate">Arquiteto</div>
-                        <div className="text-sm font-medium text-gray-900 truncate">{work.architect}</div>
+                        <div className="text-sm font-medium text-gray-900 truncate">Dono do projeto</div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
                         <div className="text-xs text-gray-500 mb-1">Ano</div>
-                        <div className="text-sm font-medium text-gray-900">{work.year}</div>
+                        <div className="text-sm font-medium text-gray-900">2024</div>
                       </div>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap gap-1">
-                      {work.tags.slice(0, 3).map((tag: string, index: number) => (
-                        <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded truncate max-w-[80px] sm:max-w-[100px]">
-                          {tag}
-                        </span>
-                      ))}
-                      {work.tags.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                          +{work.tags.length - 3}
-                        </span>
-                      )}
+                    <div className="mt-4 flex flex-wrap gap-1">''
+                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded truncate max-w-[80px] sm:max-w-[100px]">
+                        {project.usageType}
+                      </span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
+          ) : <></>
+          //(
             // Lista responsiva - NOVO DESIGN MELHORADO
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {filteredWorks.map((work: any, index: number) => (
-                <div
-                  key={work.id}
-                  className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
-                >
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Imagem - Mais clean */}
-                    <div
-                      className="lg:w-1/4 cursor-pointer group"
-                      onClick={() => setSelectedImage(work)}
-                    >
-                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
-                        <img
-                          src={work.imageUrl}
-                          alt={work.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                        <div className="absolute top-3 right-3">
-                          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-medium rounded-full">
-                            {work.category}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+            // <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            //   {filteredWorks.map((work: any, index: number) => (
+            //     <div
+            //       key={work.id}
+            //       className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
+            //     >
+            //       <div className="flex flex-col lg:flex-row gap-6">
+            //         {/* Imagem - Mais clean */}
+            //         <div
+            //           className="lg:w-1/4 cursor-pointer group"
+            //           onClick={() => setSelectedImage(work)}
+            //         >
+            //           <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
+            //             <img
+            //               src={work.imageUrl}
+            //               alt={work.title}
+            //               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            //               loading="lazy"
+            //             />
+            //             <div className="absolute top-3 right-3">
+            //               <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-medium rounded-full">
+            //                 {work.category}
+            //               </span>
+            //             </div>
+            //           </div>
+            //         </div>
 
-                    {/* Conteúdo - Layout melhor organizado */}
-                    <div className="lg:w-3/4">
-                      <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-4">
-                        <div className="mb-4 lg:mb-0 lg:pr-8">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-xl font-bold text-gray-900">{work.title}</h3>
-                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
-                              {work.year}
-                            </span>
-                          </div>
+            //         {/* Conteúdo - Layout melhor organizado */}
+            //         <div className="lg:w-3/4">
+            //           <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-4">
+            //             <div className="mb-4 lg:mb-0 lg:pr-8">
+            //               <div className="flex items-center gap-3 mb-2">
+            //                 <h3 className="text-xl font-bold text-gray-900">{work.title}</h3>
+            //                 <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
+            //                   {work.year}
+            //                 </span>
+            //               </div>
 
-                          <div className="flex flex-wrap items-center gap-4 mb-3 text-gray-600">
-                            <div className="flex items-center">
-                              <i className="fas fa-map-marker-alt mr-2 text-gray-400"></i>
-                              <span>{work.location}</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="fas fa-user-tie mr-2 text-gray-400"></i>
-                              <span className="font-medium">{work.architect}</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="fas fa-palette mr-2 text-gray-400"></i>
-                              <span>{work.style}</span>
-                            </div>
-                          </div>
+            //               <div className="flex flex-wrap items-center gap-4 mb-3 text-gray-600">
+            //                 <div className="flex items-center">
+            //                   <i className="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+            //                   <span>{work.location}</span>
+            //                 </div>
+            //                 <div className="flex items-center">
+            //                   <i className="fas fa-user-tie mr-2 text-gray-400"></i>
+            //                   <span className="font-medium">{work.architect}</span>
+            //                 </div>
+            //                 <div className="flex items-center">
+            //                   <i className="fas fa-palette mr-2 text-gray-400"></i>
+            //                   <span>{work.style}</span>
+            //                 </div>
+            //               </div>
 
-                          <p className="text-gray-700 mb-4 line-clamp-2">
-                            {work.description}
-                          </p>
-                        </div>
+            //               <p className="text-gray-700 mb-4 line-clamp-2">
+            //                 {work.description}
+            //               </p>
+            //             </div>
 
-                        {/* Ações - Alinhadas à direita */}
-                        <div className="flex items-center space-x-3">
-                          <button
-                            className="text-gray-400 hover:text-yellow-500 transition-colors p-2"
-                            title="Favoritar"
-                          >
-                            <i className="far fa-star text-lg"></i>
-                          </button>
-                          <button
-                            onClick={() => setSelectedImage(work)}
-                            className="text-gray-400 hover:text-blue-600 transition-colors p-2"
-                            title="Ver detalhes"
-                          >
-                            <i className="fas fa-expand text-lg"></i>
-                          </button>
-                        </div>
-                      </div>
+            //             {/* Ações - Alinhadas à direita */}
+            //             <div className="flex items-center space-x-3">
+            //               <button
+            //                 className="text-gray-400 hover:text-yellow-500 transition-colors p-2"
+            //                 title="Favoritar"
+            //               >
+            //                 <i className="far fa-star text-lg"></i>
+            //               </button>
+            //               <button
+            //                 onClick={() => setSelectedImage(work)}
+            //                 className="text-gray-400 hover:text-blue-600 transition-colors p-2"
+            //                 title="Ver detalhes"
+            //               >
+            //                 <i className="fas fa-expand text-lg"></i>
+            //               </button>
+            //             </div>
+            //           </div>
 
-                      {/* Tags e informações adicionais */}
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
-                        <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
-                          {work.tags.map((tag: string, index: number) => (
-                            <span
-                              key={index}
-                              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-default"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
+            //           {/* Tags e informações adicionais */}
+            //           <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-4 border-t border-gray-100">
+            //             <div className="flex flex-wrap gap-2 mb-3 lg:mb-0">
+            //               {work.tags.map((tag: string, index: number) => (
+            //                 <span
+            //                   key={index}
+            //                   className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors cursor-default"
+            //                 >
+            //                   #{tag}
+            //                 </span>
+            //               ))}
+            //             </div>
 
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span className="flex items-center">
-                            <i className="fas fa-clock mr-2"></i>
-                            {work.year}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-building mr-2"></i>
-                            {work.category === 'residencial' ? 'Residencial' :
-                              work.category === 'cultural' ? 'Cultural' :
-                                work.category === 'religioso' ? 'Religioso' : 'Comercial'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+            //             <div className="flex items-center space-x-4 text-sm text-gray-500">
+            //               <span className="flex items-center">
+            //                 <i className="fas fa-clock mr-2"></i>
+            //                 {work.year}
+            //               </span>
+            //               <span className="flex items-center">
+            //                 <i className="fas fa-building mr-2"></i>
+            //                 {work.category === 'residencial' ? 'Residencial' :
+            //                   work.category === 'cultural' ? 'Cultural' :
+            //                     work.category === 'religioso' ? 'Religioso' : 'Comercial'}
+            //               </span>
+            //             </div>
+            //           </div>
+            //         </div>
+            //       </div>
+            //     </div>
+            //   ))}
+            // </div>
+          //)
+          }
         </div>
       </main>
 
