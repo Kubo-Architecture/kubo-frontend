@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
 
-const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) => {
+const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,6 +11,8 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
   const [favorites, setFavorites] = useState<number[]>([]);
   const [likes, setLikes] = useState<{ [key: number]: number }>({});
   const [likedProjects, setLikedProjects] = useState<number[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | number | null>(null);
 
   const tabs = [
     { id: 'meus-projetos', label: 'Projetos' },
@@ -102,23 +104,28 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${userId}`);
         const data = response.data;
-        setProjects(data);
+        setProjects(data || []);
 
         if (onProjectsLoaded) {
-          onProjectsLoaded(data ? data.length : null);
+          onProjectsLoaded(data ? data.length : 0);
         }
 
         // Inicializar likes
         const initialLikes: { [key: number]: number } = {};
-        data.forEach((project: any) => {
-          initialLikes[project.id] = project.likes || 0;
-        });
+        if (data && Array.isArray(data)) {
+          data.forEach((project: any) => {
+            const projectId = project._id || project.id;
+            initialLikes[projectId] = project.likes || 0;
+          });
+        }
         setLikes(initialLikes);
       } catch (err: any) {
         console.error("Erro ao buscar projetos:", err);
         setError(err.message);
+        setProjects([]);
         
         // Inicializar likes para projetos mockados
         const initialLikes: { [key: number]: number } = {};
@@ -135,7 +142,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
     };
 
     if (userId) fetchProjects();
-  }, [userId]);
+  }, [userId, refreshTrigger]);
 
   // Fechar modal com ESC
   useEffect(() => {
@@ -178,6 +185,8 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
   const handleEditProject = (project: any) => {
     setEditingProject({
       ...project,
+      name: project.name || project.title || '',
+      title: project.title || project.name || '',
       materials: project.materials || [''],
       status: project.status || '',
       build_area: project.build_area || '',
@@ -187,15 +196,86 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
   };
 
   // Função para salvar edição
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editingProject) return;
 
-    // Atualizar no estado de projetos mockados
-    const updatedMockProjects = mockProjects.map(p => 
-      p.id === editingProject.id ? editingProject : p
-    );
-    
-    setEditingProject(null);
+    setIsSaving(true);
+    try {
+      const projectId = editingProject._id || editingProject.id;
+      const updateData = {
+        name: editingProject.name || editingProject.title,
+        location: editingProject.location,
+        description: editingProject.description,
+        status: editingProject.status,
+        build_area: editingProject.build_area,
+        terrain_area: editingProject.terrain_area,
+        usage_type: editingProject.usage_type,
+        materials: editingProject.materials?.filter((m: string) => m.trim()) || []
+      };
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/project/${projectId}`,
+        updateData
+      );
+
+      if (response.status === 200 || response.status === 204) {
+        // Atualizar a lista de projetos
+        const updatedProjects = projects.map((p: any) => {
+          const pId = p._id || p.id;
+          return pId === projectId ? { ...p, ...updateData } : p;
+        });
+        setProjects(updatedProjects);
+        setEditingProject(null);
+        
+        // Recarregar projetos do servidor para garantir sincronização
+        const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${userId}`);
+        if (refreshResponse.data) {
+          setProjects(refreshResponse.data);
+          if (onProjectsLoaded) {
+            onProjectsLoaded(refreshResponse.data.length);
+          }
+        }
+      }
+    } catch (err: any) {
+      console.error("Erro ao atualizar projeto:", err);
+      setError(err.response?.data?.error || "Erro ao atualizar projeto");
+      alert(err.response?.data?.error || "Erro ao atualizar projeto");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Função para deletar projeto
+  const handleDeleteProject = async (projectId: string | number) => {
+    if (!window.confirm("Tem certeza que deseja deletar este projeto? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+
+    const idToCompare = projectId;
+    setIsDeleting(idToCompare as any);
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/project/${projectId}`
+      );
+
+      if (response.status === 200 || response.status === 204) {
+        // Remover projeto da lista
+        const updatedProjects = projects.filter((p: any) => {
+          const pId = p._id || p.id;
+          return String(pId) !== String(projectId);
+        });
+        setProjects(updatedProjects);
+        
+        if (onProjectsLoaded) {
+          onProjectsLoaded(updatedProjects.length);
+        }
+      }
+    } catch (err: any) {
+      console.error("Erro ao deletar projeto:", err);
+      alert(err.response?.data?.error || "Erro ao deletar projeto");
+    } finally {
+      setIsDeleting(null);
+    }
   };
 
   if (loading) {
@@ -259,9 +339,49 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
             <>
               {projects?.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {projects?.map((project: any) => (
-                    <ProjectCard key={project.id} project={project} />
-                  ))}
+                  {projects?.map((project: any) => {
+                    const projectId = project._id || project.id;
+                    const currentUserId = localStorage.getItem('idUser');
+                    const isOwnProject = project.idUser === currentUserId || project.idUser?._id === currentUserId || project.idUser?._id?.toString() === currentUserId;
+                    
+                    return (
+                      <div key={projectId} className="relative group">
+                        <ProjectCard project={project} />
+                        {isOwnProject && (
+                          <div 
+                            className="absolute top-3 left-3 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditProject(project);
+                              }}
+                              className="w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all shadow-md hover:shadow-lg"
+                              title="Editar projeto"
+                            >
+                              <i className="fas fa-edit text-gray-700 text-xs"></i>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteProject(projectId);
+                              }}
+                              disabled={isDeleting === projectId}
+                              className="w-8 h-8 flex items-center justify-center bg-red-500/90 backdrop-blur-sm rounded-full hover:bg-red-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+                              title="Deletar projeto"
+                            >
+                              {isDeleting === projectId ? (
+                                <i className="fas fa-spinner fa-spin text-white text-xs"></i>
+                              ) : (
+                                <i className="fas fa-trash text-white text-xs"></i>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : mockProjects.length > 0 ? (
                 <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
@@ -468,8 +588,8 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
                       </label>
                       <input
                         type="text"
-                        value={editingProject.title}
-                        onChange={(e) => setEditingProject({...editingProject, title: e.target.value})}
+                        value={editingProject.name || editingProject.title || ''}
+                        onChange={(e) => setEditingProject({...editingProject, name: e.target.value, title: e.target.value})}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
                         placeholder="Ex: Casa Moderna"
                       />
@@ -707,18 +827,46 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild }: any) =>
             {/* Footer com botões */}
             <div className="flex-shrink-0 bg-gray-50 border-t border-gray-200 px-8 py-5">
               <div className="flex justify-between items-center">
-                <button
-                  onClick={() => setEditingProject(null)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleSaveEdit}
-                  className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
-                >
-                  Salvar Alterações
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      const projectId = editingProject._id || editingProject.id;
+                      if (projectId && window.confirm("Tem certeza que deseja deletar este projeto?")) {
+                        handleDeleteProject(projectId);
+                        setEditingProject(null);
+                      }
+                    }}
+                    className="px-6 py-3 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
+                  >
+                    Deletar
+                  </button>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEditingProject(null)}
+                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    disabled={isSaving}
+                    className={`px-8 py-3 rounded-lg text-white transition-colors text-sm font-medium ${
+                      isSaving 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-black hover:bg-gray-800'
+                    }`}
+                  >
+                    {isSaving ? (
+                      <span className="flex items-center">
+                        <i className="fas fa-spinner fa-spin mr-2"></i>
+                        Salvando...
+                      </span>
+                    ) : (
+                      'Salvar Alterações'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

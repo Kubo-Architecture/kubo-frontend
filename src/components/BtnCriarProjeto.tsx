@@ -212,17 +212,21 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
 
       const result = await response.json();
 
-      if (onProjectCreated) {
-        onProjectCreated(result);
-      }
-
       setError('success: Projeto cadastrado com sucesso!');
 
       setTimeout(() => {
         setShowCreateModal(false);
         resetForm();
-        const name = localStorage.getItem('name');
-        navigate(`/profile/${name}`);
+        // Chamar callback para atualizar a lista de projetos
+        if (onProjectCreated) {
+          onProjectCreated(result);
+        }
+        // Só navegar se não estiver no perfil
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes('/profile/')) {
+          const name = localStorage.getItem('name');
+          navigate(`/profile/${name}`);
+        }
       }, 1500);
 
     } catch (err: any) {
@@ -325,6 +329,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
                       <input
                         type="text"
                         name="name"
+                        id="name"
                         value={formData.name}
                         onChange={handleChange}
                         onBlur={() => handleBlur('name')}
@@ -342,6 +347,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
                       <input
                         type="text"
                         name="location"
+                        id='location'
                         value={formData.location}
                         onChange={handleChange}
                         onBlur={() => handleBlur('location')}
@@ -358,6 +364,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
                       </label>
                       <textarea
                         name="description"
+                        id='description'
                         value={formData.description}
                         onChange={handleChange}
                         rows={4}
