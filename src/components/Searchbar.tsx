@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchBarProps {
   searchTerm: string;
@@ -16,9 +18,13 @@ export default function SearchBar({
   projects = []
 }: SearchBarProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [currentUserNickname, setCurrentUserNickname] = useState<string>('');
   const searchRef = useRef<HTMLDivElement>(null);
-
+  const currentuser = localStorage.getItem('idUser');
+  const navigate = useNavigate();
+  
   useEffect(() => {
+    getCurrentUserNickname();
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
@@ -29,13 +35,23 @@ export default function SearchBar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const getCurrentUserNickname = async () => {
+    if (!currentuser) return;
+    try {
+      const userData = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${currentuser}`);
+      setCurrentUserNickname(userData.data.nickname || '');
+    } catch (error) {
+      console.error('Erro ao buscar nickname do usuário:', error);
+    }
+  };
+
   const isUserSearch = searchTerm.startsWith('@');
   const searchQuery = isUserSearch ? searchTerm.slice(1) : searchTerm;
 
   const filteredUsers = isUserSearch && searchQuery.trim()
     ? users.filter(user => 
-        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
+        (user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.nickname?.toLowerCase().includes(searchQuery.toLowerCase())) && user.nickname !== currentUserNickname
       ).slice(0, 5)
     : [];
 
@@ -57,7 +73,7 @@ export default function SearchBar({
   const handleSelectUser = (user: any) => {
     setSearchTerm(`@${user.nickname || user.name}`);
     onSearch(`@${user.nickname || user.name}`);
-    setShowSuggestions(false);
+    navigate(`/profile/${user.nickname || user.name}`);
   };
 
   const handleSelectProject = (project: any) => {
@@ -106,7 +122,7 @@ export default function SearchBar({
                   <button
                     key={user.id || index}
                     onClick={() => handleSelectUser(user)}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group cursor-pointer"
                   >
                     <div className="relative flex-shrink-0">
                       <img
