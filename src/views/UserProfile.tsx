@@ -43,22 +43,18 @@ export default function UserProfile() {
       })
   }, [location])
 
-  // Função para fechar o modal de banner
   const handleCloseBannerSettings = () => {
     setShowBannerSettings(false);
   };
 
-  // Função para atualizar o banner após salvar
   const handleBannerUpdated = (newBanner: string) => {
     console.log("Banner atualizado:", newBanner);
-    // Atualiza o banner no profileData
     setProfileData((prev: any) => ({
       ...prev,
       banner: newBanner
     }));
   };
 
-  // Função para atualizar a lista de projetos quando um novo projeto é criado
   const handleProjectCreated = () => {
     setRefreshProjects(prev => prev + 1);
   };
@@ -85,7 +81,6 @@ export default function UserProfile() {
           <ProfileStats
             name={profileData.nickname}
             nickname={profileData.name}
-            seguidores={profileData.followers || 0}
             likes={profileData.likes || 0}
             projetos={projectCount || 0}
             ownProfile={isOwnProfile}
