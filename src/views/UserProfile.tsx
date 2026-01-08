@@ -7,6 +7,7 @@ import BannerSettings from "../components/Profile/BannerSettings"
 import Biografy from "../components/Profile/Biografy"
 import ProjectGallery from "../components/Profile/ProjectGallery"
 import Loading from "../components/Universal/Loading"
+import Btncriarprojeto from "../components/BtnCriarProjeto"
 
 export default function UserProfile() {
   const [loading, setLoading] = useState<ConstrainBoolean>(true);
@@ -16,6 +17,7 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState<any>(null)
   const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
   const [projectCount, setProjectCount] = useState(0);
+  const [refreshProjects, setRefreshProjects] = useState(0);
 
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
@@ -56,6 +58,11 @@ export default function UserProfile() {
     }));
   };
 
+  // Função para atualizar a lista de projetos quando um novo projeto é criado
+  const handleProjectCreated = () => {
+    setRefreshProjects(prev => prev + 1);
+  };
+
   if (!profileData) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -92,7 +99,19 @@ export default function UserProfile() {
           />
           <Biografy Biografy={profileData.bio} />
 
-          <ProjectGallery userId={profileData.idUser} onProjectsLoaded={(count: number) => setProjectCount(count)} setIsLoadingChild={setLoading} />
+          <div className="relative">
+            {isOwnProfile && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 flex justify-end">
+                <Btncriarprojeto onProjectCreated={handleProjectCreated} />
+              </div>
+            )}
+            <ProjectGallery 
+              userId={profileData.idUser} 
+              onProjectsLoaded={(count: number) => setProjectCount(count)} 
+              setIsLoadingChild={setLoading}
+              refreshTrigger={refreshProjects}
+            />
+          </div>
 
           {showBannerSettings && (
             <BannerSettings 
