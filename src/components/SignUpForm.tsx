@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import forge from 'node-forge';
-import { User, Mail, Lock, Home, Eye, EyeOff, ArrowLeft, UserPlus } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, ArrowLeft, UserPlus } from 'lucide-react';
 import Loading from './Universal/Loading';
 import { signupSchema } from '../validators/signupSchema';
 
@@ -36,7 +36,6 @@ const SignUpForm = () => {
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // Buscar chave pública na montagem
   useEffect(() => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/public-key`;
     axios.get(apiUrl)

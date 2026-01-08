@@ -341,15 +341,6 @@ export default function Gallery() {
     });
   };
 
-  const handleSaveEdit = () => {
-    if (!editingProject) return;
-
-    setWorks(works.map((work: any) => 
-      work.id === editingProject.id ? editingProject : work
-    ));
-    setEditingProject(null);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="pt-20 pb-8">

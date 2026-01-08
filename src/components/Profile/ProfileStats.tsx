@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import PenIcon from "../../assets/Profile/pen.svg";
+import axios from "axios";
 
 export default function ProfileStats(props: any) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const [seguidoresCount, setSeguidoresCount] = useState(props.seguidores || 0);
+    const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [formData, setFormData] = useState({
         nickname: props.nickname || "",
         name: props.name || "",
@@ -15,6 +17,7 @@ export default function ProfileStats(props: any) {
         instagram: props.instagram || "",
         linkedin: props.linkedin || ""
     });
+    const currentUserId = window.localStorage.getItem('idUser');
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -22,14 +25,15 @@ export default function ProfileStats(props: any) {
                 setIsModalOpen(false);
             }
         };
-        
+        axios.get(`${import.meta.env.VITE_API_URL}/followers/${props.userId}`)
+            .then((res: any) => setSeguidoresCount(res.data.followers));
+
+        axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
+            .then((res: any) => setIsFollowing(res.data.isFollowing))
+
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
-    }, [isModalOpen]);
-
-    useEffect(() => {
-        setSeguidoresCount(props.seguidores || 0);
-    }, [props.seguidores]);
+    }, [isModalOpen, props.userId, currentUserId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -59,14 +63,31 @@ export default function ProfileStats(props: any) {
     };
 
     const handleFollowToggle = () => {
-        if (isFollowing) {
-            setSeguidoresCount(prev => (prev || 0) - 1);
-            console.log("Deixou de seguir");
-        } else {
-            setSeguidoresCount(prev => (prev || 0) + 1);
-            console.log("Seguindo");
-        }
-        setIsFollowing(!isFollowing);
+        if (isFollowLoading) return;
+        
+        setIsFollowLoading(true);
+        const newFollowingState = !isFollowing;
+        
+        setIsFollowing(newFollowingState);
+        setSeguidoresCount((prev: number) => newFollowingState ? (prev || 0) + 1 : Math.max(0, (prev || 0) - 1));
+        
+        const request = isFollowing
+            ? axios.delete(`${import.meta.env.VITE_API_URL}/follow/${currentUserId}/${props.userId}`)
+            : axios.post(`${import.meta.env.VITE_API_URL}/follow`, {
+                origin_id: currentUserId,
+                destiny_id: props.userId,
+            });
+        
+        request
+            .then(() => {
+                setIsFollowLoading(false);
+            })
+            .catch((err) => {
+                console.error('Erro ao seguir/deseguir:', err);
+                setIsFollowing(isFollowing);
+                setSeguidoresCount((prev: number) => isFollowing ? (prev || 0) + 1 : Math.max(0, (prev || 0) - 1));
+                setIsFollowLoading(false);
+            });
     };
 
     return (
@@ -144,7 +165,7 @@ export default function ProfileStats(props: any) {
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsModalOpen(true)}
-                                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <img className="h-4 w-4 invert" src={PenIcon} alt="" />
                                     Editar Perfil
@@ -152,7 +173,7 @@ export default function ProfileStats(props: any) {
                             ) : (
                                 <button 
                                     onClick={handleFollowToggle}
-                                    className={`hidden sm:flex items-center gap-2 px-6 py-2 rounded-lg transition-colors text-sm font-medium ${
+                                    className={`cursor-pointer hidden sm:flex items-center gap-2 px-6 py-2 rounded-lg transition-colors text-sm font-medium ${
                                         isFollowing 
                                             ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
                                             : 'bg-gray-900 text-white hover:bg-gray-800'

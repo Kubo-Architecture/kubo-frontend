@@ -27,7 +27,6 @@ function App() {
 
     try {
       const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
-      console.log("Dados do usuário recebidos:", res.data);
       setUserData(res.data);
     } catch (error) {
       setUserData(null);
