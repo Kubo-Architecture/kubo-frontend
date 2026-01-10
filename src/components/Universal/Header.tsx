@@ -122,13 +122,7 @@ export default function HeaderFull({ userData }: any) {
                     <span>Favoritos</span>
                   </a>
                   <div className="border-t border-gray-200 my-1"></div>
-                  <a
-                    href="/ajuda"
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <i className="fas fa-question-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Ajuda & Suporte</span>
-                  </a>
+                  
                   <button
                     onClick={() => {
                       window.localStorage.clear();
