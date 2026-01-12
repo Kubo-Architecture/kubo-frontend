@@ -15,51 +15,6 @@ export default function Gallery() {
   const [likes, setLikes] = useState<{ [key: number]: number }>({});
   const [likedProjects, setLikedProjects] = useState<number[]>([]);
 
-  const architecturalWorks: any[] = [
-    {
-      id: 1,
-      title: "Meu Projeto Residencial",
-      location: "Brasília, Brasil",
-      architect: "Você",
-      year: "2024",
-      description: "Projeto residencial moderno com conceitos sustentáveis e design minimalista. Integração perfeita entre espaços internos e externos.",
-      imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800",
-      category: "residencial",
-      style: "contemporâneo",
-      tags: ["moderno", "sustentável", "minimalista"],
-      isUserProject: true,
-      likes: 45
-    },
-    {
-      id: 2,
-      title: "Mansão dos Arcos",
-      location: "Jundiaí, Brasil",
-      architect: "Paulo Mendes da Rocha",
-      year: "1998",
-      description: "Residência projetada pelo renomado arquiteto brasileiro, caracterizada por seus arcos de concreto aparente que integram o interior com a paisagem externa.",
-      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800",
-      category: "residencial",
-      style: "brutalista",
-      tags: ["concreto", "moderno", "brasil"],
-      isUserProject: true,
-      likes: 127
-    },
-    {
-      id: 3,
-      title: "Museu de Arte de São Paulo",
-      location: "São Paulo, Brasil",
-      architect: "Lina Bo Bardi",
-      year: "1968",
-      description: "Icone da arquitetura moderna brasileira, famoso por seu vão livre de 74 metros e estrutura suspensa.",
-      imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800",
-      category: "cultural",
-      style: "modernista",
-      tags: ["concreto", "moderno", "brasil"],
-      isUserProject: true,
-      likes: 243
-    },
-  ];
-
   const [users, setUsers] = useState<any[]>([
     {
       id: 1,
@@ -108,8 +63,8 @@ export default function Gallery() {
     }
   ]);
   
-  const [projects, setProjects] = useState<any[]>(architecturalWorks);
-  const [works, setWorks] = useState<any>(architecturalWorks);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [works, setWorks] = useState<any[]>([]);
 
   function getUsers(user: string) {
     if (!user.trim()) {
@@ -226,18 +181,32 @@ export default function Gallery() {
 
   function getProjects(project: string) {
     if (!project.trim()) {
-      setProjects(architecturalWorks); 
+      // Recarrega todos os projetos quando a busca está vazia
+      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
+        .then((response) => {
+          setProjects(response.data);
+          setWorks(response.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar projetos:", error);
+          setProjects([]);
+          setWorks([]);
+        });
       return;
     }
   
+    // Busca por nome ou localização
     axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
-      params: { title: project } 
+      params: { name: project, location: project } 
     })
       .then((response) => {
         setProjects(response.data);
+        setWorks(response.data);
       })
-      .catch(() => {
-        setProjects(architecturalWorks);
+      .catch((error) => {
+        console.error("Erro ao buscar projetos:", error);
+        setProjects([]);
+        setWorks([]);
       });
   }
 
@@ -253,6 +222,22 @@ export default function Gallery() {
       initialLikes[work.id] = work.likes || 0;
     });
     setLikes(initialLikes);
+  }, [works]);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects`);
+        setProjects(response.data);
+        setWorks(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar projetos:", error);
+        setProjects([]);
+        setWorks([]);
+      }
+    };
+
+    loadProjects();
   }, []);
 
   useEffect(() => {
@@ -294,15 +279,25 @@ export default function Gallery() {
   });
 
   const handleNewProjectCreated = (projectData: any) => {
+    // Adiciona o novo projeto localmente
     const newWork = {
-      id: works.length + 1,
       ...projectData,
-      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800",
       isUserProject: true,
       likes: 0
     };
 
-    setWorks([...works, newWork]);
+    setWorks([newWork, ...works]);
+    setProjects([newWork, ...projects]);
+
+    // Opcionalmente, recarrega da API para sincronizar
+    axios.get(`${import.meta.env.VITE_API_URL}/projects`)
+      .then((response) => {
+        setProjects(response.data);
+        setWorks(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao recarregar projetos:", error);
+      });
   };
 
   const toggleFavorite = (workId: number) => {
