@@ -226,15 +226,7 @@ export default function Gallery() {
 
   useEffect(() => {
     const loadProjects = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects`);
-        setProjects(response.data);
-        setWorks(response.data);
-      } catch (error) {
-        console.error("Erro ao carregar projetos:", error);
-        setProjects([]);
-        setWorks([]);
-      }
+      // TODO: carregar projetos da API
     };
 
     loadProjects();
