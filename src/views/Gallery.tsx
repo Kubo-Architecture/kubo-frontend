@@ -273,31 +273,67 @@ export default function Gallery() {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
+  // Debug - logs para verificar o estado
+  useEffect(() => {
+    console.log('Projects atualizado:', projects.length);
+    console.log('Works atualizado:', works.length);
+  }, [projects, works]);
+
   const filteredWorks = works.filter((work: any) => {
-    if (filter !== 'all' && work.category !== filter) return false;
+    if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
     return true;
   });
 
   const handleNewProjectCreated = (projectData: any) => {
-    // Adiciona o novo projeto localmente
-    const newWork = {
-      ...projectData,
+    console.log('Novo projeto recebido:', projectData);
+    
+    // Formatar o projeto para o padrão esperado
+    const newProject = {
+      id: projectData.id,
+      title: projectData.name,
+      name: projectData.name,
+      location: projectData.location,
+      description: projectData.description,
+      photo_url: projectData.photo_url,
+      imageUrl: projectData.photo_url,
+      category: projectData.usage_type,
+      usage_type: projectData.usage_type,
+      status: projectData.status,
+      build_area: projectData.build_area,
+      terrain_area: projectData.terrain_area,
+      materials: projectData.materials,
+      architect: projectData.architect || 'Dono do projeto',
+      year: projectData.year || new Date().getFullYear(),
+      tags: projectData.tags || [],
+      likes: 0,
       isUserProject: true,
-      likes: 0
+      idUser: projectData.idUser
     };
 
-    setWorks([newWork, ...works]);
-    setProjects([newWork, ...projects]);
+    // Atualizar estados IMEDIATAMENTE
+    setProjects(prev => [newProject, ...prev]);
+    setWorks(prev => [newProject, ...prev]);
+    
+    // Inicializar likes para o novo projeto
+    setLikes(prev => ({
+      ...prev,
+      [newProject.id]: 0
+    }));
 
-    // Opcionalmente, recarrega da API para sincronizar
-    axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-      .then((response) => {
-        setProjects(response.data);
-        setWorks(response.data);
-      })
-      .catch((error) => {
-        console.error("Erro ao recarregar projetos:", error);
-      });
+    console.log('Projeto adicionado localmente');
+    
+    // Recarregar da API em background para sincronizar
+    setTimeout(() => {
+      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
+        .then((response) => {
+          setProjects(response.data);
+          setWorks(response.data);
+          console.log('Projetos recarregados da API');
+        })
+        .catch((error) => {
+          console.error("Erro ao recarregar projetos:", error);
+        });
+    }, 500);
   };
 
   const toggleFavorite = (workId: number) => {
@@ -399,8 +435,8 @@ export default function Gallery() {
                     Todas
                   </button>
                   <button
-                    onClick={() => setFilter('residencial')}
-                    className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'residencial'
+                    onClick={() => setFilter('Residencial')}
+                    className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Residencial'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -408,8 +444,8 @@ export default function Gallery() {
                     Residencial
                   </button>
                   <button
-                    onClick={() => setFilter('cultural')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'cultural'
+                    onClick={() => setFilter('Cultural')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Cultural'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -417,8 +453,8 @@ export default function Gallery() {
                     Cultural
                   </button>
                   <button
-                    onClick={() => setFilter('religioso')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'religioso'
+                    onClick={() => setFilter('Religioso')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Religioso'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -443,7 +479,7 @@ export default function Gallery() {
             </div>
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              {projects.map((work: any) => (
+              {filteredWorks.map((work: any) => (
                 <div
                   key={work.id}
                   className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
@@ -487,7 +523,7 @@ export default function Gallery() {
 
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title || work.name}</h3>
                       <button 
                         onClick={() => toggleFavorite(work.id)}
                         className={`flex-shrink-0 ml-2 transition-colors ${
@@ -554,6 +590,7 @@ export default function Gallery() {
                   key={work.id}
                   className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
                 >
+                  {/* Adicione o conteúdo do modo lista aqui se necessário */}
                 </div>
               ))}
             </div>

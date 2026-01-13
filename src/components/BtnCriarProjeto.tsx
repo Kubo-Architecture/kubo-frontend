@@ -120,7 +120,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
   const handleGalleryChange = (e: any) => {
     const newFiles = Array.from(e.target.files);
 
-    const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
+    const totalSize = [...gallery, ...newFiles].reduce((acc, file: any) => acc + file.size, 0);
     if (totalSize > 50 * 1024 * 1024) {
       setError('A galeria não pode exceder 50MB no total');
       return;
@@ -134,7 +134,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     setGallery((prevGallery: any) => {
       const allFiles = [...prevGallery, ...newFiles];
       const uniqueMap = new Map();
-      allFiles.forEach(file => {
+      allFiles.forEach((file: any) => {
         uniqueMap.set(file.name + file.size, file);
       });
       const uniqueFiles = Array.from(uniqueMap.values());
@@ -211,21 +211,26 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
       }
 
       const result = await response.json();
+      console.log('Projeto criado:', result);
 
       setError('success: Projeto cadastrado com sucesso!');
+
+      // Chamar callback IMEDIATAMENTE com os dados do projeto
+      if (onProjectCreated) {
+        onProjectCreated(result);
+      }
 
       setTimeout(() => {
         setShowCreateModal(false);
         resetForm();
-        // Chamar callback para atualizar a lista de projetos
-        if (onProjectCreated) {
-          onProjectCreated(result);
-        }
-        // Só navegar se não estiver no perfil
+        
+        // Navegar para o perfil se não estiver lá
         const currentPath = window.location.pathname;
         if (!currentPath.includes('/profile/')) {
-          const name = localStorage.getItem('name');
-          navigate(`/profile/${name}`);
+          const nickname = localStorage.getItem('nickname');
+          if (nickname) {
+            navigate(`/profile/${nickname}`);
+          }
         }
       }, 1500);
 
@@ -538,6 +543,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
                               <button
                                 type="button"
                                 onClick={(e) => {
+                                  e.preventDefault();
                                   e.stopPropagation();
                                   removeMainImage();
                                 }}
