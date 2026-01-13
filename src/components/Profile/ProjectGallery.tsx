@@ -5,7 +5,6 @@ import axios from 'axios';
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('meus-projetos');
   const [editingProject, setEditingProject] = useState<any>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -124,7 +123,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         setLikes(initialLikes);
       } catch (err: any) {
         console.error("Erro ao buscar projetos:", err);
-        setError(err.message);
         setProjects([]);
         
         // Inicializar likes para projetos mockados
@@ -220,7 +218,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 
       if (response.status === 200 || response.status === 204) {
         // Atualizar a lista de projetos
-        const updatedProjects = projects.map((p: any) => {
+        const updatedProjects: any = projects.map((p: any) => {
           const pId = p._id || p.id;
           return pId === projectId ? { ...p, ...updateData } : p;
         });
@@ -238,7 +236,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       }
     } catch (err: any) {
       console.error("Erro ao atualizar projeto:", err);
-      setError(err.response?.data?.error || "Erro ao atualizar projeto");
       alert(err.response?.data?.error || "Erro ao atualizar projeto");
     } finally {
       setIsSaving(false);
@@ -342,7 +339,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   {projects?.map((project: any) => {
                     const projectId = project._id || project.id;
                     const currentUserId = localStorage.getItem('idUser');
-                    const isOwnProject = project.idUser === currentUserId || project.idUser?._id === currentUserId || project.idUser?._id?.toString() === currentUserId;
+                    const isOwnProject = project.userId === currentUserId || project.userId?._id === currentUserId || project.userId?._id?.toString() === currentUserId;
                     
                     return (
                       <div key={projectId} className="relative group">

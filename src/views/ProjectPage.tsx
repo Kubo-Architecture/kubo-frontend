@@ -207,7 +207,7 @@ export default function ProjectPage() {
                                     Autor do projeto
                                 </p>
                                 <p className="text-sm font-semibold text-gray-900">
-                                    {project.idUser || 'Usuário anônimo'}
+                                    {project.userId || 'Usuário anônimo'}
                                 </p>
                             </div>
                         </div>

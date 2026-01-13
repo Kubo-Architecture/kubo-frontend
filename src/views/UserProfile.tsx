@@ -32,7 +32,7 @@ export default function UserProfile() {
           navigate("/profile/nickname")
         }
 
-        setIsOwnProfile(res.data.idUser == currentUserId);
+        setIsOwnProfile(String(res.data.userId) == currentUserId);
         setProfileData(res.data)
       })
       .catch((err) => {
@@ -84,7 +84,7 @@ export default function UserProfile() {
             likes={profileData.likes || 0}
             projetos={projectCount || 0}
             ownProfile={isOwnProfile}
-            userId={profileData.idUser}
+            userId={profileData.userId}
             onFollowChange={(isFollowing: boolean) => {
               setProfileData((prev: any) => ({
                 ...prev,
@@ -101,7 +101,7 @@ export default function UserProfile() {
               </div>
             )}
             <ProjectGallery 
-              userId={profileData.idUser} 
+              userId={profileData.userId} 
               onProjectsLoaded={(count: number) => setProjectCount(count)} 
               setIsLoadingChild={setLoading}
               refreshTrigger={refreshProjects}

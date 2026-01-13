@@ -122,8 +122,9 @@ const SignUpForm = () => {
       const response = await axios.post(apiUrl, payload);
 
       // Verificar se a resposta é bem-sucedida
-      if (response.data && response.data.idUser) {
-        navigate(`/auth/${response.data.idUser}`);
+      if (response.data && response.data.userId) {
+        const userId = response.data.userId;
+        navigate(`/auth/${userId}`);
       } else {
         throw new Error('Resposta do servidor inválida');
       }

@@ -307,7 +307,7 @@ export default function Gallery() {
       tags: projectData.tags || [],
       likes: 0,
       isUserProject: true,
-      idUser: projectData.idUser
+      userId: projectData.userId
     };
 
     // Atualizar estados IMEDIATAMENTE
