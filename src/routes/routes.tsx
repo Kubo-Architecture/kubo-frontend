@@ -11,6 +11,7 @@ import ForgotPassword from "../views/ForgotPassword.tsx";
 import Gallery from "../views/Gallery.tsx";
 import UserConfig from "../views/UserConfig.tsx";
 import FavoritePage from "../views/FavoritePage.js";
+import MaintenanceScreen from "../views/MaintenanceScreen.tsx";
 
 
 export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any) {
@@ -28,6 +29,7 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any)
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/Userconfig" element={<UserConfig />} />
             <Route path="/Favoritepage" element={<FavoritePage />} />
+            <Route path="/MaintenanceScreen" element={<MaintenanceScreen />} />
         </Routes>
     );
 }
