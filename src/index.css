@@ -4,10 +4,6 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
 
-html.dark body {
-    outline: 50px solid lime;
-}
-
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
