@@ -26,7 +26,7 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any)
             <Route path="/project/:projectID" element={<ProjectPage />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/gallery" element={<Gallery />} />
-            <Route path="/Userconfig" element={<UserConfig />} />
+            <Route path="/config" element={<UserConfig />} />
             <Route path="/Favoritepage" element={<FavoritePage />} />
         </Routes>
     );

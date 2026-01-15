@@ -16,7 +16,7 @@ export default function HeaderFull({ userData }: any) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 flex justify-center">
+    <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#121212] dark:border-[#1b1f23] border-gray-200 z-50 flex justify-center">
       <div className="w-full max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -27,15 +27,15 @@ export default function HeaderFull({ userData }: any) {
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 top-2' : 'top-0'
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 dark:bg-white transform transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 top-2' : 'top-0'
                     }`}
                 ></span>
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 top-2 transform transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 dark:bg-white top-2 transform transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
                     }`}
                 ></span>
                 <span
-                  className={`absolute left-0 h-0.5 w-full bg-gray-700 transform transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 top-2' : 'top-4'
+                  className={`absolute left-0 h-0.5 w-full bg-gray-700 dark:bg-white transform transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 top-2' : 'top-4'
                     }`}
                 ></span>
               </div>
@@ -43,8 +43,8 @@ export default function HeaderFull({ userData }: any) {
 
             <nav className="w-auto hidden md:flex items-center space-x-8 ml-4">
               <a
-                href="/gallery"
-                className={`transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold' : 'text-gray-700 hover:text-black font-medium'}`}
+                onClick={() => navigate('/gallery')}
+                className={`cursor-pointer transition-colors ${isActiveLink('/gallery') ? 'text-black font-medium dark:text-white' : 'text-gray-700 dark:text-gray-100 hover:text-black font-normal'}`}
               >
                 Galeria
               </a>
@@ -108,8 +108,11 @@ export default function HeaderFull({ userData }: any) {
                     <span>Meu Perfil</span>
                   </a>
                   <a
-                    href="/Userconfig"
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/config');
+                    }}
+                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     <i className="fas fa-cog mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Configurações</span>
@@ -118,7 +121,7 @@ export default function HeaderFull({ userData }: any) {
                     href="/Favoritepage"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    <i className="fas fa-star mr-3 text-gray-400 w-5 text-center"></i>
+                    <i className="fas fa-star mr-3 text-gray-400 dark:text-gray-400 w-5 text-center"></i>
                     <span>Favoritos</span>
                   </a>
                   <div className="border-t border-gray-200 my-1"></div>
@@ -159,9 +162,9 @@ export default function HeaderFull({ userData }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
+                <div className="absolute right-4 top-full mt-2 w-56 bg-white dark:bg-[#1b1f23] rounded-lg shadow-lg border border-gray-200 dark:border-[#2E343B] py-1 z-50">
+                  <div className="px-4 py-3 border-b border-gray-100 dark:border-[#2E343B]">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
                       {userData?.name || 'Usuário'}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
@@ -175,16 +178,18 @@ export default function HeaderFull({ userData }: any) {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Meu Perfil</span>
+                    <span className='dark:text-gray-400'>Meu Perfil</span>
                   </a>
 
                   <a
-                    href="/Userconfig"
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/config');
+                    }}
                   >
                     <i className="fas fa-cog mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Configurações</span>
+                    <span className='dark:text-gray-400'>Configurações</span>
                   </a>
 
                   <a
@@ -193,10 +198,10 @@ export default function HeaderFull({ userData }: any) {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <i className="fas fa-bookmark mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Favoritos</span>
+                    <span className='dark:text-gray-400'>Favoritos</span>
                   </a>
 
-                  <div className="border-t border-gray-200 my-1"></div>
+                  <div className="border-t border-gray-200 dark:border-[#2E343B] my-1"></div>
 
                   <a
                     href="/ajuda"
@@ -204,7 +209,7 @@ export default function HeaderFull({ userData }: any) {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <i className="fas fa-question-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span>Ajuda & Suporte</span>
+                    <span className='dark:text-gray-400'>Ajuda & Suporte</span>
                   </a>
 
                   <button
@@ -230,7 +235,7 @@ export default function HeaderFull({ userData }: any) {
           <nav className="flex flex-col space-y-3">
             <a
               href="/gallery"
-              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black font-bold border-l-4 pl-3' : 'text-gray-700 hover:text-black pl-4 font-medium'}`}
+              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black dark:text-white font-bold border-l-4 pl-3' : 'text-gray-700 dark:text-gray-100 hover:text-black pl-4 font-medium'}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Galeria
