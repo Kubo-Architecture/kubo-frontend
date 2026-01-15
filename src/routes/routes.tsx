@@ -20,7 +20,7 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any)
             <Route path="/login" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
             <Route path="/error/:errorCode" element={<ErrorPage />} />
             <Route path="/register" element={<SignUpPage />} />
-            <Route path="/auth/:idUser" element={<VerificationCodeInput />} />
+            <Route path="/auth/:userId" element={<VerificationCodeInput />} />
             <Route path="/profile/:username" element={<UserProfile />} />
             <Route path="/profile/nickname" element={<NicknameInput />} />
             <Route path="/project/:projectID" element={<ProjectPage />} />

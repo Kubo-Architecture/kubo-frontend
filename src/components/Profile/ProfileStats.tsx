@@ -17,7 +17,7 @@ export default function ProfileStats(props: any) {
         instagram: props.instagram || "",
         linkedin: props.linkedin || ""
     });
-    const currentUserId = window.localStorage.getItem('idUser');
+    const currentUserId = window.localStorage.getItem('userId');
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {

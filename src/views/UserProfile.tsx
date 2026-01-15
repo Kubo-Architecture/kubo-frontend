@@ -21,7 +21,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
-    const currentUserId = window.localStorage.getItem('idUser');
+    const currentUserId = window.localStorage.getItem('userId');
     const username = pathSegments[1]
 
     const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`

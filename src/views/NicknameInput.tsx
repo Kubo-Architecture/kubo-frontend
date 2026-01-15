@@ -5,16 +5,16 @@ import { Home } from 'lucide-react';
 
 export default function NicknameInput() {
   const [nickname, setNickname] = useState<string>('');
-  const [idUser, setIdUser] = useState<any>(null);
+  const [userId, setuserId] = useState<any>(null);
   const [error, setError] = useState<any>('');
   const [touched, setTouched] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedId = localStorage.getItem('idUser');
+    const storedId = localStorage.getItem('userId');
     if (storedId) {
-      setIdUser(storedId);
+      setuserId(storedId);
     } else {
       setError('Usuário não identificado. Faça login novamente.');
     }
@@ -41,7 +41,7 @@ export default function NicknameInput() {
       return;
     }
 
-    if (!idUser) {
+    if (!userId) {
       setError('ID do usuário não encontrado');
       return;
     }
@@ -55,7 +55,7 @@ export default function NicknameInput() {
         apiUrl,
         {
           nickname: nickname,
-          idUser: idUser
+          userId: userId
         },
         {
           headers: {

@@ -113,14 +113,14 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
     setIsLoading(true);
     try {
-      const idUser = localStorage.getItem("idUser");
-      if (!idUser) {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
         alert("Usuário não autenticado.");
         return;
       }
 
       const formData = new FormData();
-      formData.append("idUser", idUser);
+      formData.append("userId", userId);
 
       if (selectedFile) {
         formData.append("banner", selectedFile);

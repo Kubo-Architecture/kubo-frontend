@@ -20,7 +20,7 @@ export default function SearchBar({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [currentUserNickname, setCurrentUserNickname] = useState<string>('');
   const searchRef = useRef<HTMLDivElement>(null);
-  const currentuser = localStorage.getItem('idUser');
+  const currentuser = localStorage.getItem('userId');
   const navigate = useNavigate();
   
   useEffect(() => {

@@ -18,19 +18,19 @@ function App() {
 
 
   const checkUser = useCallback(async () => {
-    const idUser = localStorage.getItem('idUser');
-    if (!idUser) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
       setUserData(null);
       setLoading(false);
       return;
     }
 
     try {
-      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${userId}`);
       setUserData(res.data);
     } catch (error) {
       setUserData(null);
-      localStorage.removeItem('idUser');
+      localStorage.removeItem('userId');
     } finally {
       setLoading(false);
     }

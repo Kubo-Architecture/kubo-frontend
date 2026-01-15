@@ -338,7 +338,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {projects?.map((project: any) => {
                     const projectId = project._id || project.id;
-                    const currentUserId = localStorage.getItem('idUser');
+                    const currentUserId = localStorage.getItem('userId');
                     const isOwnProject = project.userId === currentUserId || project.userId?._id === currentUserId || project.userId?._id?.toString() === currentUserId;
                     
                     return (
