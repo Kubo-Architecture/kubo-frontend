@@ -1,4 +1,5 @@
 import App from './App.js'
+import "./index.css";
 import { createRoot } from 'react-dom/client'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { BrowserRouter } from 'react-router-dom'

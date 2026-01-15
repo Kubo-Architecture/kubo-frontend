@@ -1,29 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
-@import "tailwindcss";
 
-@theme {
-    --font-montserrat: "Montserrat", sans-serif;
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
-    --breakpoint-desktop-portrait: raw((min-height: 481px) and (max-width: 944px));
-    --breakpoint-large-screen: raw((min-height: 700px) and (min-width: 760px));
-
-    --animate-fade: fade 2.5s ease-in-out infinite;
-
-    @keyframes fade {
-
-        0%,
-        100% {
-            opacity: 0.3;
-        }
-
-        50% {
-            opacity: 1;
-        }
-    }
+html.dark body {
+    outline: 50px solid lime;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
     html {
-        font-family: var(--font-montserrat);
+        font-family: 'Montserrat', sans-serif;
     }
 }
