@@ -29,7 +29,7 @@ const VerificationCodeInput = () => {
   }, [code]);
 
   const handleChange = (index: number, value: any) => {
-    const cleanedValue = value.replace(/\s/g, '').slice(-1);
+    const cleanedValue = value.replace(/\s/g, '').slice(-1).toUpperCase();
 
     const newCode = [...code];
     newCode[index] = cleanedValue;
