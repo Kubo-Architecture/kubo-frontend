@@ -3,8 +3,12 @@ import axios from 'axios';
 import RouterLink from './routes/routes';
 import HeaderFull from './components/Universal/Header';
 import Loading from './components/Universal/Loading';
+import MaintenanceScreen from './views/MaintenanceScreen';
 import './index.css';
 import { useLocation } from 'react-router-dom';
+
+// Flag de manutenção - você pode controlar isso via variável de ambiente
+const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 
 function App() {
   const [userData, setUserData] = useState<any>(null);
@@ -15,7 +19,6 @@ function App() {
 
   const isAuthRoute: boolean = location.pathname.startsWith('/auth/');
   const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
-
 
   const checkUser = useCallback(async () => {
     const idUser = localStorage.getItem('idUser');
@@ -39,6 +42,11 @@ function App() {
   useEffect(() => {
     checkUser();
   }, [checkUser]);
+
+  // Se estiver em modo manutenção, mostra apenas a tela de manutenção
+  if (IS_MAINTENANCE_MODE) {
+    return <MaintenanceScreen />;
+  }
 
   if (loading) return <Loading />;
 
