@@ -115,7 +115,7 @@ export default function HeaderFull({ userData }: any) {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Meu Perfil</span>
@@ -125,25 +125,25 @@ export default function HeaderFull({ userData }: any) {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
                   <a
                     href="/Favoritepage"
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
                   >
-                    <i className="fas fa-star mr-3 text-gray-400 dark:text-white w-5 text-center"></i>
+                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Favoritos</span>
                   </a>
-                  <div className="border-t dark:border-[#535353] my-1"></div>
+                  <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
@@ -188,7 +188,7 @@ export default function HeaderFull({ userData }: any) {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Meu Perfil</span>
@@ -198,25 +198,25 @@ export default function HeaderFull({ userData }: any) {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
                   <a
                     href="/Favoritepage"
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-50 dark:hover:bg-[#494949] transition-colors"
+                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
                   >
-                    <i className="fas fa-star mr-3 text-gray-400 dark:text-white w-5 text-center"></i>
+                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Favoritos</span>
                   </a>
-                  <div className="border-t dark:border-[#535353] my-1"></div>
+                  <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
