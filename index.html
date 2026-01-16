@@ -30,6 +30,17 @@
     }
   </script>
 
+  <script>
+    (function () {
+      const saved = localStorage.getItem("theme");
+      const theme = saved === "dark" ? "dark" : "light";
+      if (theme === "dark") document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+    })();
+  </script>
+
+</head>
+
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>

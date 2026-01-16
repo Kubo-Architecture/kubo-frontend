@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { BrowserRouter } from 'react-router-dom'
 import { inject } from '@vercel/analytics';
+import { ThemeProvider } from './theme/ThemeProvider.js';
 
 if (import.meta.env.PROD) {
     inject();
@@ -12,7 +13,9 @@ if (import.meta.env.PROD) {
 createRoot(document.getElementById('root')!).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <BrowserRouter>
-            <App />
+            <ThemeProvider>
+                <App />
+            </ThemeProvider>
         </BrowserRouter>
     </GoogleOAuthProvider>
 )

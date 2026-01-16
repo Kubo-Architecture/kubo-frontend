@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
+import KuboIconWhite from "../../assets/icons/Universal/kubo-main-icon-white.svg";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
 import { useNavigate } from 'react-router-dom';
 
@@ -53,9 +54,18 @@ export default function HeaderFull({ userData }: any) {
           </div>
 
           <div className="w-6 h-7 flex justify-center items-center">
-            <a href="/" className='w-full h-full flex justify-center items-center'>
+            <a href="/" className='flex dark:hidden w-full h-full justify-center items-center'>
               <img
                 src={KuboIcon}
+                alt="Kubo Icon"
+                draggable={false}
+                className="h-full w-full"
+              />
+            </a>
+
+            <a href="/" className='hidden dark:flex w-full h-full justify-center items-center'>
+              <img
+                src={KuboIconWhite}
                 alt="Kubo Icon"
                 draggable={false}
                 className="h-full w-full"
@@ -231,7 +241,7 @@ export default function HeaderFull({ userData }: any) {
           <nav className="flex flex-col space-y-3">
             <a
               href="/gallery"
-              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black dark:text-white font-bold border-l-4 pl-3' : 'text-gray-700 dark:text-gray-100 hover:text-black pl-4 font-medium'}`}
+              className={`py-2 px-2 transition-colors ${isActiveLink('/gallery') ? 'text-black dark:text-white font-bold border-l-4 pl-3' : 'text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-gray-300 pl-4 font-medium'}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Galeria
