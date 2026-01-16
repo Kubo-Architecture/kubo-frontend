@@ -3,7 +3,7 @@
  * <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Sun, 
   Moon, 
@@ -17,7 +17,7 @@ import {
 
 export default function UserConfig() {
   const [activeSection, setActiveSection] = useState('geral');
-  const [theme, setTheme] = useState('mixed');
+  const [theme, setTheme] = useState('light');
   const [language, setLanguage] = useState('portuguese');
   const [accountVisibility, setAccountVisibility] = useState('public');
   const [notifications, setNotifications] = useState({
@@ -25,6 +25,21 @@ export default function UserConfig() {
     updates: true,
     favorites: false
   });
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+      return
+    }
+    
+    localStorage.setItem('theme', theme);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme == 'dark');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const handleNotificationChange = (type: keyof typeof notifications) => {
     setNotifications((prev) => ({

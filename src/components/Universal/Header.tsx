@@ -101,8 +101,11 @@ export default function HeaderFull({ userData }: any) {
                     </p>
                   </div>
                   <a
-                    href={`/profile/${userData?.nickname}`}
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(`/profile/${userData?.nickname}`)
+                    }}
+                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
                     <span>Meu Perfil</span>
@@ -173,9 +176,11 @@ export default function HeaderFull({ userData }: any) {
                   </div>
 
                   <a
-                    href={`/profile/${userData?.nickname}`}
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(`/profile/${userData?.nickname}`)
+                    }}
                   >
                     <i className="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i>
                     <span className='dark:text-gray-400'>Meu Perfil</span>
@@ -202,15 +207,6 @@ export default function HeaderFull({ userData }: any) {
                   </a>
 
                   <div className="border-t border-gray-200 dark:border-[#2E343B] my-1"></div>
-
-                  <a
-                    href="/ajuda"
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <i className="fas fa-question-circle mr-3 text-gray-400 w-5 text-center"></i>
-                    <span className='dark:text-gray-400'>Ajuda & Suporte</span>
-                  </a>
 
                   <button
                     onClick={() => {
