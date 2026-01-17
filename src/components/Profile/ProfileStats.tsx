@@ -17,7 +17,7 @@ export default function ProfileStats(props: any) {
         instagram: props.instagram || "",
         linkedin: props.linkedin || ""
     });
-    const currentUserId = window.localStorage.getItem('idUser');
+    const currentUserId = window.localStorage.getItem('userId');
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -28,8 +28,10 @@ export default function ProfileStats(props: any) {
         axios.get(`${import.meta.env.VITE_API_URL}/followers/${props.userId}`)
             .then((res: any) => setSeguidoresCount(res.data.followers));
 
-        axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
-            .then((res: any) => setIsFollowing(res.data.isFollowing))
+        if (currentUserId !== props.userId) {
+            axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
+                .then((res: any) => setIsFollowing(res.data.isFollowing))
+        }
 
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
@@ -93,14 +95,14 @@ export default function ProfileStats(props: any) {
     return (
         <>
             {/* Header do Perfil */}
-            <div className="w-full bg-white shadow-sm pt-20">
+            <div className="w-full bg-white shadow-sm pt-20 dark:bg-zinc-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                         {/* Informações do Usuário */}
                         <div className="flex-1 lg:pt-10">
                             <div className="flex items-start justify-between sm:block">
                                 <div>
-                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-1">
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800 mb-1 dark:text-gray-100">
                                         {props.nickname}
                                     </h1>
                                     <p className="text-base sm:text-lg text-gray-500">
@@ -135,28 +137,28 @@ export default function ProfileStats(props: any) {
                         {/* Estatísticas */}
                         <div className="flex items-center gap-6 sm:gap-8 lg:gap-12">
                             <div className="text-center">
-                                <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {props.projetos}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                                     {props.projetos === 1 ? 'Projeto' : 'Projetos'}
                                 </p>
                             </div>
                             
                             <div className="text-center">
-                                <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {props.likes}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                                     Likes
                                 </p>
                             </div>
                             
                             <div className="text-center">
-                                <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguidoresCount}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                                     Seguidores
                                 </p>
                             </div>
@@ -165,7 +167,7 @@ export default function ProfileStats(props: any) {
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsModalOpen(true)}
-                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <img className="h-4 w-4 invert" src={PenIcon} alt="" />
                                     Editar Perfil

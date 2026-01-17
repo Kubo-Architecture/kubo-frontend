@@ -208,8 +208,8 @@ export default function PhotoEditorModal({
   };
 
   const handleSave = async () => {
-    const idUser = localStorage.getItem("idUser");
-    if (!idUser) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
       alert("Usuário não identificado. Por favor, faça login novamente.");
       return;
     }
@@ -222,7 +222,7 @@ export default function PhotoEditorModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/photo`;
       const formData = new FormData();
 
       const croppedBlob = await getCroppedImage();
@@ -231,7 +231,7 @@ export default function PhotoEditorModal({
       });
 
       formData.append("image", croppedFile);
-      formData.append("idUser", idUser);
+      formData.append("userId", userId);
 
       const response = await axios.post(apiUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -250,8 +250,8 @@ export default function PhotoEditorModal({
   };
 
   const handleRemovePhoto = async () => {
-    const idUser = localStorage.getItem("idUser");
-    if (!idUser) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
       alert("Usuário não identificado. Por favor, faça login novamente.");
       return;
     }
@@ -264,19 +264,19 @@ export default function PhotoEditorModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/photo`;
       
       let response;
       try {
         response = await axios.delete(apiUrl, {
-          data: { idUser },
+          data: { userId },
           headers: {
             'Content-Type': 'application/json'
           }
         });
       } catch (bodyError: any) {
         if (bodyError.response?.status === 400 || bodyError.response?.status === 404) {
-          response = await axios.delete(`${apiUrl}?idUser=${idUser}`);
+          response = await axios.delete(`${apiUrl}?userId=${userId}`);
         } else {
           throw bodyError;
         }

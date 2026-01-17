@@ -234,11 +234,11 @@ export default function Gallery() {
 
   useEffect(() => {
     const checkUserLogged = async () => {
-      const idUser = localStorage.getItem('idUser');
+      const userId = localStorage.getItem('userId');
 
-      if (idUser) {
+      if (userId) {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${idUser}`);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
           const user = response.data;
 
           if (!user.nickname) {
@@ -248,7 +248,7 @@ export default function Gallery() {
           return;
         } catch (error: any) {
           console.error("Erro ao verificar usuário:", error);
-          localStorage.removeItem('idUser');
+          localStorage.removeItem('userId');
         }
       }
     };

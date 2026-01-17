@@ -1,23 +1,17 @@
-/**
- * Make sure to include Font Awesome CDN in your HTML:
- * <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
- */
-
 import { useState } from 'react';
 import { 
   Sun, 
-  Moon, 
-  Monitor, 
+  Moon,
   Globe, 
   Mail, 
   Bell, 
   Heart, 
   Trash2
 } from 'lucide-react';
+import { useTheme } from '../theme/ThemeProvider';
 
 export default function UserConfig() {
   const [activeSection, setActiveSection] = useState('geral');
-  const [theme, setTheme] = useState('mixed');
   const [language, setLanguage] = useState('portuguese');
   const [accountVisibility, setAccountVisibility] = useState('public');
   const [notifications, setNotifications] = useState({
@@ -25,6 +19,8 @@ export default function UserConfig() {
     updates: true,
     favorites: false
   });
+
+  const { theme, setTheme } = useTheme();
 
   const handleNotificationChange = (type: keyof typeof notifications) => {
     setNotifications((prev) => ({
@@ -36,7 +32,6 @@ export default function UserConfig() {
   const themeOptions = [
     { id: 'light', label: 'Light Mode', icon: Sun },
     { id: 'dark', label: 'Dark Mode', icon: Moon },
-    { id: 'mixed', label: 'Mixed Mode', icon: Monitor }
   ];
 
   const languageOptions = [
@@ -88,7 +83,7 @@ export default function UserConfig() {
                   key={section.id}
                   onClick={() => section.available && setActiveSection(section.id)}
                   disabled={!section.available}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
+                  className={`cursor-pointer w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
                     activeSection === section.id
                       ? 'bg-white text-black shadow-sm border border-neutral-200'
                       : section.available
@@ -407,8 +402,8 @@ export default function UserConfig() {
                       return (
                         <button
                           key={option.id}
-                          onClick={() => setTheme(option.id)}
-                          className={`group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                          onClick={() => setTheme(option.id === "dark" ? "dark" : "light")}
+                          className={`cursor-pointer group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
                             theme === option.id
                               ? 'border-black shadow-lg'
                               : 'border-neutral-200 hover:border-neutral-300 hover:shadow-md'
@@ -470,7 +465,7 @@ export default function UserConfig() {
               </section>
 
               {/* INTERFACE - Densidade */}
-              <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+              {/* <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
                 <div className="p-8">
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold text-black mb-2">Densidade de Visualização</h2>
@@ -510,7 +505,7 @@ export default function UserConfig() {
                     </button>
                   </div>
                 </div>
-              </section>
+              </section> */}
             </div>
           )}
 
@@ -723,8 +718,8 @@ export default function UserConfig() {
                       return (
                         <button
                           key={option.id}
-                          onClick={() => setTheme(option.id)}
-                          className={`group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                          onClick={() => setTheme(option.id === "dark" ? "dark" : "light")}
+                          className={`cursor-pointer group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
                             theme === option.id
                               ? 'border-black shadow-lg'
                               : 'border-neutral-200 hover:border-neutral-300 hover:shadow-md'
@@ -786,7 +781,7 @@ export default function UserConfig() {
               </section>
 
               {/* Densidade */}
-              <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+              {/* <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
                 <div className="p-8">
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold text-black mb-2">Densidade de Visualização</h2>
@@ -826,19 +821,19 @@ export default function UserConfig() {
                     </button>
                   </div>
                 </div>
-              </section>
+              </section> */}
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 mt-10">
+          {/* <div className="flex items-center justify-end gap-3 mt-10">
             <button className="px-6 py-3 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-semibold rounded-xl transition-all border border-neutral-200 hover:border-neutral-300">
               Cancelar
             </button>
             <button className="px-6 py-3 bg-black hover:bg-neutral-800 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg">
               Salvar Alterações
             </button>
-          </div>
+          </div> */}
         </div>
       </main>
       </div>

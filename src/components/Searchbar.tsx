@@ -20,7 +20,7 @@ export default function SearchBar({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [currentUserNickname, setCurrentUserNickname] = useState<string>('');
   const searchRef = useRef<HTMLDivElement>(null);
-  const currentuser = localStorage.getItem('idUser');
+  const currentuser = localStorage.getItem('userId');
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function SearchBar({
   const getCurrentUserNickname = async () => {
     if (!currentuser) return;
     try {
-      const userData = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${currentuser}`);
+      const userData = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${currentuser}`);
       setCurrentUserNickname(userData.data.nickname || '');
     } catch (error) {
       console.error('Erro ao buscar nickname do usuário:', error);

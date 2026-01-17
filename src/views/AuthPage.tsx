@@ -7,7 +7,7 @@ import Loading from '../components/Universal/Loading';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const VerificationCodeInput = () => {
-  const { idUser } = useParams<string>();
+  const { userId } = useParams<string>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [code, setCode] = useState<string[]>(['', '', '', '']);
@@ -90,14 +90,14 @@ const VerificationCodeInput = () => {
       setIsLoading(true);
       setErrorMessage('');
 
-      const response = await fetch(`${apiUrl}/verify`, {
+      const response = await fetch(`${apiUrl}/auth/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           code: fullCode,
-          idUser: idUser,
+          userId: userId,
         }),
       });
 
@@ -148,7 +148,7 @@ const VerificationCodeInput = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idUser }),
+        body: JSON.stringify({ userId }),
       });
 
       if (response.ok) {

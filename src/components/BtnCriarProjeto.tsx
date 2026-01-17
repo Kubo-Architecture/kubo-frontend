@@ -168,8 +168,8 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     setIsSubmitting(true);
     setError('');
 
-    const idUser = localStorage.getItem('idUser');
-    if (!idUser) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
       setError('Usuário não autenticado');
       setIsSubmitting(false);
       return;
@@ -183,7 +183,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     data.append('build_area', formData.build_area);
     data.append('terrain_area', formData.terrain_area);
     data.append('usage_type', formData.usage_type);
-    data.append('idUser', idUser);
+    data.append('userId', userId);
 
     formData.materials.forEach((material: string, index: number) => {
       if (material.trim()) {
@@ -200,7 +200,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     });
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/project`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/`, {
         method: 'POST',
         body: data
       });

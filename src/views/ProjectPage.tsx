@@ -21,7 +21,7 @@ export default function ProjectPage() {
                     throw new Error('ID do projeto não fornecido');
                 }
 
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/project/${projectId}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${projectId}`);
 
                 if (!response.ok) {
                     if (response.status === 404) {

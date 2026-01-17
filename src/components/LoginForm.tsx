@@ -78,7 +78,7 @@ const LoginForm = ({ onLoginSuccess }: any) => {
     }
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/login`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/auth/login`;
       const response = await axios.post(apiUrl, formData);
       const { token, name, userId } = response.data;
       
@@ -90,7 +90,7 @@ const LoginForm = ({ onLoginSuccess }: any) => {
         await onLoginSuccess();
       }
 
-      const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
+      const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
 
       if (user.data.nickname) {
           navigate(`/gallery`);

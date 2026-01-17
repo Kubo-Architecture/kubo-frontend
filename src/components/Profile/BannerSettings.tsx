@@ -113,19 +113,19 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
     setIsLoading(true);
     try {
-      const idUser = localStorage.getItem("idUser");
-      if (!idUser) {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
         alert("Usuário não autenticado.");
         return;
       }
 
       const formData = new FormData();
-      formData.append("idUser", idUser);
+      formData.append("userId", userId);
 
       if (selectedFile) {
         formData.append("banner", selectedFile);
         const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/user/banner`,
+          `${import.meta.env.VITE_API_URL}/users/banner`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }
@@ -139,7 +139,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       } else if (selectedBanner) {
         formData.append("path", selectedBanner);
         const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/user/banner`,
+          `${import.meta.env.VITE_API_URL}/users/banner`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }
