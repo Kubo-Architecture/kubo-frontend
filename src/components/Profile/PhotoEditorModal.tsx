@@ -222,7 +222,7 @@ export default function PhotoEditorModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/photo`;
       const formData = new FormData();
 
       const croppedBlob = await getCroppedImage();
@@ -264,7 +264,7 @@ export default function PhotoEditorModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user/photo`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/photo`;
       
       let response;
       try {

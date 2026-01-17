@@ -26,7 +26,7 @@ function App() {
     }
 
     try {
-      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/user/${userId}`);
+      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${userId}`);
       setUserData(res.data);
     } catch (error) {
       setUserData(null);

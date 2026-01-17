@@ -90,7 +90,7 @@ const VerificationCodeInput = () => {
       setIsLoading(true);
       setErrorMessage('');
 
-      const response = await fetch(`${apiUrl}/verify`, {
+      const response = await fetch(`${apiUrl}/auth/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

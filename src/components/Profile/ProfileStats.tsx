@@ -28,8 +28,10 @@ export default function ProfileStats(props: any) {
         axios.get(`${import.meta.env.VITE_API_URL}/followers/${props.userId}`)
             .then((res: any) => setSeguidoresCount(res.data.followers));
 
-        axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
-            .then((res: any) => setIsFollowing(res.data.isFollowing))
+        if (currentUserId !== props.userId) {
+            axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
+                .then((res: any) => setIsFollowing(res.data.isFollowing))
+        }
 
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);

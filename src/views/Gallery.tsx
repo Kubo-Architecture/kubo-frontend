@@ -238,7 +238,7 @@ export default function Gallery() {
 
       if (userId) {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
           const user = response.data;
 
           if (!user.nickname) {

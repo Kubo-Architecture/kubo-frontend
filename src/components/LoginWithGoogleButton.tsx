@@ -28,7 +28,7 @@ function LoginWithGoogleButton({ onLoginSuccess }: any) {
                 await onLoginSuccess();
             }
 
-            const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${userId}`);
+            const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
 
             if (user.data.nickname) {
                 navigate(`/gallery`);

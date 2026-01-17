@@ -37,7 +37,7 @@ const SignUpForm = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
 
   useEffect(() => {
-    const apiUrl = `${import.meta.env.VITE_API_URL}/public-key`;
+    const apiUrl = `${import.meta.env.VITE_API_URL}/auth/public-key`;
     axios.get(apiUrl)
       .then(res => {
         setPublicKeyPem(res.data.publicKey);
@@ -118,7 +118,7 @@ const SignUpForm = () => {
         password: encryptedPassword
       };
 
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/`;
       const response = await axios.post(apiUrl, payload);
 
       // Verificar se a resposta é bem-sucedida

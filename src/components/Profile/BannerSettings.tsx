@@ -125,7 +125,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       if (selectedFile) {
         formData.append("banner", selectedFile);
         const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/user/banner`,
+          `${import.meta.env.VITE_API_URL}/users/banner`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }
@@ -139,7 +139,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       } else if (selectedBanner) {
         formData.append("path", selectedBanner);
         const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/user/banner`,
+          `${import.meta.env.VITE_API_URL}/users/banner`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" }

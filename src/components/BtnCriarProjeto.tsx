@@ -200,7 +200,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     });
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/project`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/`, {
         method: 'POST',
         body: data
       });

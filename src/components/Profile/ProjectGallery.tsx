@@ -104,7 +104,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}/projects`);
         const data = response.data;
         setProjects(data || []);
 
@@ -201,6 +201,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     try {
       const projectId = editingProject._id || editingProject.id;
       const updateData = {
+        id: projectId,
         name: editingProject.name || editingProject.title,
         location: editingProject.location,
         description: editingProject.description,
@@ -212,7 +213,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       };
 
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/project/${projectId}`,
+        `${import.meta.env.VITE_API_URL}/projects/`,
         updateData
       );
 
@@ -252,7 +253,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     setIsDeleting(idToCompare as any);
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/project/${projectId}`
+        `${import.meta.env.VITE_API_URL}/projects/${projectId}`
       );
 
       if (response.status === 200 || response.status === 204) {

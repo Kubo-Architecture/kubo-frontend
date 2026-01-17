@@ -50,7 +50,7 @@ export default function NicknameInput() {
     setError('');
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/user`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/users/`;
       const response = await axios.put(
         apiUrl,
         {
