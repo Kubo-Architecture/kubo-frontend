@@ -1,0 +1,62 @@
+import { Trash2 } from 'lucide-react';
+
+export default function AccountSection() {
+  return (
+    <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+      <div className="p-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-black mb-2">Informações da Conta</h2>
+          <p className="text-base text-neutral-500">Gerencie suas informações pessoais</p>
+        </div>
+
+        <div className="space-y-6 mb-8">
+          <div>
+            <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+              <i className="fa-solid fa-user text-neutral-600"></i>
+              Nome de Usuário
+            </label>
+            <input
+              type="text"
+              placeholder="seu_usuario"
+              className="w-full px-4 py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent hover:border-neutral-300 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+              <i className="fa-solid fa-envelope text-neutral-600"></i>
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              className="w-full px-4 py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent hover:border-neutral-300 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+              <i className="fa-solid fa-key text-neutral-600"></i>
+              Senha
+            </label>
+            <button className="w-full flex items-center justify-between px-4 py-3.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group">
+              <span>Alterar senha</span>
+              <i className="fa-solid fa-chevron-right text-neutral-400 group-hover:text-neutral-600 transition-colors"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label className="flex items-center gap-2 text-sm font-semibold text-red-700 mb-4">
+            <i className="fa-solid fa-triangle-exclamation"></i>
+            Zona de Perigo
+          </label>
+          <button className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-50 hover:bg-red-100 rounded-xl transition-all border border-red-200 hover:border-red-300 text-sm font-semibold text-red-700 w-full">
+            <Trash2 className="w-4 h-4" />
+            <span>Excluir conta permanentemente</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
