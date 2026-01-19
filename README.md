@@ -44,15 +44,13 @@ A aplicação consome a API do backend para gerenciar usuários, projetos e inte
 
 ---
 
+## 🚀 Tecnologias Utilizadas
 
----
-
-## 🖥️ Tecnologias Utilizadas
-- **React**
-- **TypeScript**
-- **Tailwind CSS**
-- **Axios**
-- **Vercel (Deploy)**
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Axios](https://axios-http.com/)
+- [Vercel](https://vercel.com/)
 
 ---
 
