@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../theme/ThemeProvider';
 
-// Importar componentes
 import LanguageSection from '../components/Settings/LanguageSection';
 import AccountSection from '../components/Settings/AccountSection';
 import VisibilitySection from '../components/Settings/VisibilitySection';
@@ -31,7 +30,7 @@ export default function UserConfig() {
     <div className="min-h-screen bg-white">
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-neutral-50 border-r border-neutral-200 flex-col overflow-y-auto pt-16">
+        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 flex-col overflow-y-auto pt-16">
           <div className="flex-1 p-6">
             <nav className="space-y-1">
               {menuSections.filter(section => section.id !== 'politica-privacidade').map((section) => (
@@ -75,7 +74,7 @@ export default function UserConfig() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-80 overflow-y-auto bg-white pt-16 lg:pt-16">
+        <main className="flex-1 lg:ml-80 overflow-y-auto bg-neutral-50 pt-16 lg:pt-16">
           <div className={`mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 ${activeSection === 'politica-privacidade' || activeSection === 'contato' ? 'max-w-6xl' : 'max-w-4xl'}`}>
             {activeSection === 'geral' && (
               <div className="space-y-6 lg:space-y-8">
