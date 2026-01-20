@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Send, Check, AlertCircle } from 'lucide-react';
+import axios from 'axios';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -68,31 +69,18 @@ export default function ContactForm() {
     try {
       console.log('📤 Enviando dados:', trimmedData);
 
-      const response = await fetch('http://localhost:8080/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(trimmedData),
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/contact`,
+        trimmedData,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       console.log('📊 Status da resposta:', response.status);
+      console.log('✅ Resposta do servidor:', response.data);
 
-      // Verifica se a resposta tem conteúdo antes de tentar fazer parse
-      const contentType = response.headers.get('content-type');
-      let data;
-
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        const text = await response.text();
-        console.log('⚠️ Resposta não-JSON:', text);
-        throw new Error(text || 'Resposta inválida do servidor');
-      }
-
-      console.log('✅ Resposta do servidor:', data);
-
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         setSubmitStatus('success');
         setFormData({
           fullName: '',
@@ -103,17 +91,25 @@ export default function ContactForm() {
         setTimeout(() => setSubmitStatus('idle'), 5000);
       } else {
         setSubmitStatus('error');
-        setErrorMessage(data.error || 'Erro ao enviar mensagem. Tente novamente.');
+        setErrorMessage(
+          (response.data as any)?.error || 'Erro ao enviar mensagem. Tente novamente.'
+        );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro ao enviar:', error);
-      
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        setErrorMessage('Não foi possível conectar ao servidor. Verifique se o backend está rodando na porta 3000.');
+
+      if (error.response) {
+        setErrorMessage(
+          error.response.data?.error ||
+          error.response.data?.message ||
+          'Erro ao enviar mensagem. Tente novamente.'
+        );
+      } else if (error.request) {
+        setErrorMessage('Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
       } else {
-        setErrorMessage(error instanceof Error ? error.message : 'Erro desconhecido ao enviar mensagem.');
+        setErrorMessage(error.message || 'Erro desconhecido ao enviar mensagem.');
       }
-      
+
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
