@@ -42,7 +42,7 @@ export default function HeaderFull({ userData }: any) {
               </div>
             </button>
 
-            <nav className="w-auto hidden md:flex items-center space-x-8 ml-4">
+            <nav className="hidden md:flex items-center space-x-8 ml-4 w-20">
               <a
                 onClick={() => navigate('/gallery')}
                 className={`cursor-pointer transition-colors ${isActiveLink('/gallery') ? 'text-black font-medium dark:text-white' : 'text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-gray-300 font-normal'}`}
@@ -73,7 +73,7 @@ export default function HeaderFull({ userData }: any) {
             </a>
           </div>
 
-          <div className="hidden md:flex relative justify-end w-auto">
+          <div className="hidden md:flex relative justify-end w-20">
             {userData ? (
               <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
