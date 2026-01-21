@@ -10,7 +10,7 @@ const ProjectCard = ({ project }: any) => {
 
     return (
         <div
-            className="bg-white dark:bg-[#232323] rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+            className="bg-white dark:bg-[#27313D] rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
             onClick={handleClick}
         >
             {project.photo_url ? (

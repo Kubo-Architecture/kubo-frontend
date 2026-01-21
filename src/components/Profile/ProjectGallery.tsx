@@ -305,7 +305,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
   }
 
   return (
-    <div className="w-full h-auto bg-white dark:bg-zinc-900 pt-5">
+    <div className="w-full h-auto bg-white dark:bg-[#131B24] pt-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Navegação de Abas */}

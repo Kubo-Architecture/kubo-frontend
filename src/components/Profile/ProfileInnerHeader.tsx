@@ -31,7 +31,7 @@ export default function ProfileInnerHeader(props: any) {
         }}
       >
         <div
-          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${
+          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white dark:border-[#181E29] border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${
             props.ownProfile ? "hover:cursor-pointer group" : ""
           }`}
           style={{ backgroundImage: profileImageUrl }}
