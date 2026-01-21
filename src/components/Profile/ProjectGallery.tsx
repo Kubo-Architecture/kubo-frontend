@@ -5,7 +5,6 @@ import Btncriarprojeto from '../BtnCriarProjeto';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('meus-projetos');
   const [editingProject, setEditingProject] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -19,7 +18,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}/projects`);
         const data = response.data;
         setProjects(data || []);
@@ -31,7 +29,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         console.error("Erro ao buscar projetos:", err);
         setProjects([]);
       } finally {
-        setLoading(false);
         if (setIsLoadingChild) {
           setIsLoadingChild(false);
         }
@@ -145,32 +142,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       setIsDeleting(null);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="w-full min-h-screen bg-white dark:bg-zinc-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8">
-            <div className="flex gap-6 border-b border-gray-200/60 dark:border-gray-700">
-              {[1, 2].map((i) => (
-                <div key={i} className="h-10 bg-gray-100 dark:bg-gray-800 rounded w-28 mb-[-1px] animate-pulse" />
-              ))}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="space-y-3">
-                  <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-2xl animate-pulse" />
-                  <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded w-3/4 animate-pulse" />
-                  <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2 animate-pulse" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full bg-white dark:bg-zinc-900">
