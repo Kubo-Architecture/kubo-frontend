@@ -91,7 +91,7 @@ export default function UserProfile() {
               }));
             }}
           />
-          <Biografy Biografy={profileData.bio} />
+          <Biografy bio={profileData.bio} />
 
           <div className="relative">
             <ProjectGallery 
