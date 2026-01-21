@@ -11,7 +11,6 @@ export default function ProfileStats(props: any) {
     const [isSeguindoModalOpen, setIsSeguindoModalOpen] = useState(false);
     const [seguidoresList, setSeguidoresList] = useState<any[]>([]);
     const [seguindoList, setSeguindoList] = useState<any[]>([]);
-    const [isLoadingLists, setIsLoadingLists] = useState(false);
     const [formData, setFormData] = useState({
         nickname: props.nickname || "",
         name: props.name || "",
@@ -114,29 +113,23 @@ export default function ProfileStats(props: any) {
 
     const handleOpenSeguidores = async () => {
         setIsSeguidoresModalOpen(true);
-        setIsLoadingLists(true);
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/followers-list/${props.userId}`);
             setSeguidoresList(response.data.followers || []);
         } catch (error) {
             console.error('Erro ao buscar seguidores:', error);
             setSeguidoresList([]);
-        } finally {
-            setIsLoadingLists(false);
         }
     };
 
     const handleOpenSeguindo = async () => {
         setIsSeguindoModalOpen(true);
-        setIsLoadingLists(true);
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/following-list/${props.userId}`);
             setSeguindoList(response.data.following || []);
         } catch (error) {
             console.error('Erro ao buscar seguindo:', error);
             setSeguindoList([]);
-        } finally {
-            setIsLoadingLists(false);
         }
     };
 
@@ -522,11 +515,7 @@ export default function ProfileStats(props: any) {
 
                         {/* Lista */}
                         <div className="flex-1 overflow-y-auto p-4">
-                            {isLoadingLists ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                                </div>
-                            ) : seguidoresList.length === 0 ? (
+                            {seguidoresList.length === 0 ? (
                                 <div className="text-center py-8">
                                     <p className="text-gray-500">Nenhum seguidor ainda</p>
                                 </div>
@@ -589,11 +578,7 @@ export default function ProfileStats(props: any) {
 
                         {/* Lista */}
                         <div className="flex-1 overflow-y-auto p-4">
-                            {isLoadingLists ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                                </div>
-                            ) : seguindoList.length === 0 ? (
+                            {seguindoList.length === 0 ? (
                                 <div className="text-center py-8">
                                     <p className="text-gray-500">Não está seguindo ninguém</p>
                                 </div>

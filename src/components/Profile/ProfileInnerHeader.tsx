@@ -30,6 +30,17 @@ export default function ProfileInnerHeader(props: any) {
           backgroundPosition: "center",
         }}
       >
+        {/* Botão de Editar Banner - só aparece no próprio perfil */}
+        {props.ownProfile && props.onEditBannerClick && (
+          <button
+            onClick={props.onEditBannerClick}
+            className="absolute top-4 right-4 md:right-8 bg-white hover:bg-gray-100 text-neutral-700 w-9 h-9 md:w-10 md:h-10 rounded-full transition-all shadow-md hover:shadow-lg z-10 flex items-center justify-center"
+            aria-label="Editar banner"
+          >
+            <i className="fa-solid fa-pen text-xs md:text-sm"></i>
+          </button>
+        )}
+
         <div
           className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${
             props.ownProfile ? "hover:cursor-pointer group" : ""
@@ -43,8 +54,6 @@ export default function ProfileInnerHeader(props: any) {
             </div>
           )}
         </div>
-
-       
       </div>
 
       {props.ownProfile && (
