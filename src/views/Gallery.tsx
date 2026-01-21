@@ -383,7 +383,7 @@ export default function Gallery() {
                 <div className="flex space-x-1 bg-white border border-gray-300 p-1 rounded-lg">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded transition-colors ${viewMode === 'grid'
+                    className={`p-2 rounded transition-colors cursor-pointer ${viewMode === 'grid'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -393,7 +393,7 @@ export default function Gallery() {
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded transition-colors ${viewMode === 'list'
+                    className={`p-2 rounded cursor-pointer transition-colors ${viewMode === 'list'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -419,7 +419,7 @@ export default function Gallery() {
                 <div className="flex flex-wrap gap-1 bg-white border border-gray-300 rounded-lg p-1 w-full sm:w-auto self-start">
                   <button
                     onClick={() => setFilter('all')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'all'
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'all'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -428,7 +428,7 @@ export default function Gallery() {
                   </button>
                   <button
                     onClick={() => setFilter('Residencial')}
-                    className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Residencial'
+                    className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium cursor-pointer rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Residencial'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -437,7 +437,7 @@ export default function Gallery() {
                   </button>
                   <button
                     onClick={() => setFilter('Cultural')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Cultural'
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Cultural'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}
@@ -446,7 +446,7 @@ export default function Gallery() {
                   </button>
                   <button
                     onClick={() => setFilter('Religioso')}
-                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Religioso'
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Religioso'
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                       }`}

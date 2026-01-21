@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Send, Check, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
@@ -13,6 +13,7 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubjectOpen, setIsSubjectOpen] = useState(false);
+  const subjectRef = useRef<HTMLDivElement>(null);
 
   const subjects = [
     'Suporte Técnico',
@@ -22,6 +23,23 @@ export default function ContactForm() {
     'Solicitação de Recurso',
     'Outro'
   ];
+
+  // Fechar dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (subjectRef.current && !subjectRef.current.contains(event.target as Node)) {
+        setIsSubjectOpen(false);
+      }
+    };
+
+    if (isSubjectOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSubjectOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -159,11 +177,11 @@ export default function ContactForm() {
             <label className="block text-sm font-semibold text-black mb-2 sm:mb-3">
               Assunto <span className="text-red-500">*</span>
             </label>
-            <div className="relative">
+            <div className="relative" ref={subjectRef}>
               <button
                 type="button"
                 onClick={() => setIsSubjectOpen(!isSubjectOpen)}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black hover:border-neutral-300 transition-all"
+                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black hover:border-neutral-300 transition-all"
               >
                 <span className={formData.subject ? 'text-black' : 'text-neutral-400'}>
                   {formData.subject || 'Selecione um assunto'}
@@ -178,7 +196,7 @@ export default function ContactForm() {
                       key={subject}
                       type="button"
                       onClick={() => handleSubjectSelect(subject)}
-                      className={`w-full px-3 sm:px-4 py-3 text-left text-sm font-medium transition-colors ${
+                      className={`w-full px-3 sm:px-4 py-3 text-left cursor-pointer text-sm font-medium transition-colors ${
                         formData.subject === subject
                           ? 'bg-black text-white'
                           : 'text-black hover:bg-neutral-50'
@@ -228,7 +246,7 @@ export default function ContactForm() {
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-all"
+            className="w-full flex items-center justify-center cursor-pointer gap-2 px-4 py-3.5 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-all"
           >
             {isSubmitting ? (
               <>

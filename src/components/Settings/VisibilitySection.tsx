@@ -12,10 +12,10 @@ interface VisibilitySectionProps {
             <p className="text-sm sm:text-base text-neutral-500">Controle quem pode ver seu perfil</p>
           </div>
   
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
             <button
               onClick={() => onVisibilityChange('public')}
-              className={`relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 ${
+              className={`relative p-4 sm:p-5 cursor-pointer rounded-xl border-2 transition-all duration-200 ${
                 accountVisibility === 'public'
                   ? 'bg-black border-black shadow-lg'
                   : 'bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-md'
@@ -34,7 +34,7 @@ interface VisibilitySectionProps {
   
             <button
               onClick={() => onVisibilityChange('private')}
-              className={`relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 ${
+              className={`relative p-4 sm:p-5 rounded-xl cursor-pointer border-2 transition-all duration-200 ${
                 accountVisibility === 'private'
                   ? 'bg-black border-black shadow-lg'
                   : 'bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-md'
