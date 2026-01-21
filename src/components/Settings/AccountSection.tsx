@@ -1,5 +1,6 @@
 import { Trash2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function AccountSection() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -9,6 +10,14 @@ export default function AccountSection() {
   const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [changePassword, setChangePassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const deleteModalRef = useRef<HTMLDivElement>(null);
+  const deleteConfirmModalRef = useRef<HTMLDivElement>(null);
+  const passwordModalRef = useRef<HTMLDivElement>(null);
+  const passwordConfirmModalRef = useRef<HTMLDivElement>(null);
+  const passwordSuccessModalRef = useRef<HTMLDivElement>(null);
 
   // Simulação do email do usuário - substituir pela lógica real de autenticação
   const userEmail = "usuario@exemplo.com";
@@ -16,7 +25,7 @@ export default function AccountSection() {
   // Fechar modais com ESC
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Esc') {
         if (showDeleteModal) {
           setShowDeleteModal(false);
           setDeletePassword('');
@@ -30,6 +39,8 @@ export default function AccountSection() {
         }
         if (showPasswordConfirmModal) {
           setShowPasswordConfirmModal(false);
+          setNewPassword('');
+          setConfirmNewPassword('');
         }
         if (showPasswordSuccessModal) {
           setShowPasswordSuccessModal(false);
@@ -37,8 +48,21 @@ export default function AccountSection() {
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showDeleteModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
+
+  // Bloquear scroll quando qualquer modal estiver aberto
+  useEffect(() => {
+    if (showDeleteModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [showDeleteModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
 
   const handleDeleteAccount = () => {
@@ -74,15 +98,293 @@ export default function AccountSection() {
   };
 
   const handlePasswordConfirm = () => {
-    // Lógica para alterar a senha
-    console.log('Senha alterada');
-    setShowPasswordConfirmModal(false);
-    setShowPasswordSuccessModal(true);
+    // Validar se as senhas coincidem
+    if (newPassword !== confirmNewPassword) {
+      alert('As senhas não coincidem');
+      return;
+    }
+
+    if (newPassword.trim()) {
+      // Lógica para alterar a senha
+      console.log('Senha alterada');
+      setShowPasswordConfirmModal(false);
+      setShowPasswordSuccessModal(true);
+      setNewPassword('');
+      setConfirmNewPassword('');
+    }
+  };
+
+  const handleOverlayClick = (
+    e: React.MouseEvent<HTMLDivElement>,
+    modalRef: React.RefObject<HTMLDivElement>,
+    closeCallback: () => void
+  ) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      closeCallback();
+    }
+  };
+
+  const renderModals = () => {
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
+      <>
+        {/* Modal de Senha para Excluir Conta */}
+        {showDeleteModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, deleteModalRef, () => {
+              setShowDeleteModal(false);
+              setDeletePassword('');
+            })}
+          >
+            <div 
+              ref={deleteModalRef}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-black mb-2">Confirmar Exclusão</h3>
+                <p className="text-sm text-neutral-600">Digite sua senha para continuar</p>
+              </div>
+
+              <div className="mb-6">
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+                  <i className="fa-solid fa-key text-neutral-600"></i>
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Digite sua senha"
+                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && handleDeletePasswordSubmit()}
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeletePassword('');
+                  }}
+                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeletePasswordSubmit}
+                  className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
+                >
+                  Continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Confirmação Final para Excluir Conta */}
+        {showDeleteConfirmModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, deleteConfirmModalRef, () => setShowDeleteConfirmModal(false))}
+          >
+            <div 
+              ref={deleteConfirmModalRef}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6 text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
+                </div>
+                <h3 className="text-xl font-bold text-black mb-2">Tem certeza absoluta?</h3>
+                <p className="text-sm text-neutral-600">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente excluídos.</p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirmModal(false)}
+                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
+                >
+                  Excluir Conta
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Senha para Alterar Senha */}
+        {showPasswordModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, passwordModalRef, () => {
+              setShowPasswordModal(false);
+              setChangePassword('');
+            })}
+          >
+            <div 
+              ref={passwordModalRef}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-black mb-2">Alterar Senha</h3>
+                <p className="text-sm text-neutral-600">Digite sua senha atual para continuar</p>
+              </div>
+
+              <div className="mb-6">
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+                  <i className="fa-solid fa-key text-neutral-600"></i>
+                  Senha Atual
+                </label>
+                <input
+                  type="password"
+                  value={changePassword}
+                  onChange={(e) => setChangePassword(e.target.value)}
+                  placeholder="Digite sua senha atual"
+                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setChangePassword('');
+                  }}
+                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handlePasswordSubmit}
+                  className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+                >
+                  Continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Confirmação para Alterar Senha */}
+        {showPasswordConfirmModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, passwordConfirmModalRef, () => {
+              setShowPasswordConfirmModal(false);
+              setNewPassword('');
+              setConfirmNewPassword('');
+            })}
+          >
+            <div 
+              ref={passwordConfirmModalRef}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-black mb-2">Nova Senha</h3>
+                <p className="text-sm text-neutral-600">Digite sua nova senha</p>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+                    <i className="fa-solid fa-lock text-neutral-600"></i>
+                    Nova Senha
+                  </label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Digite a nova senha"
+                    className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
+                    <i className="fa-solid fa-lock text-neutral-600"></i>
+                    Confirmar Nova Senha
+                  </label>
+                  <input
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    placeholder="Confirme a nova senha"
+                    className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordConfirm()}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowPasswordConfirmModal(false);
+                    setNewPassword('');
+                    setConfirmNewPassword('');
+                  }}
+                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handlePasswordConfirm}
+                  className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+                >
+                  Alterar Senha
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Sucesso - Senha Alterada */}
+        {showPasswordSuccessModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, passwordSuccessModalRef, () => setShowPasswordSuccessModal(false))}
+          >
+            <div 
+              ref={passwordSuccessModalRef}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6 text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fa-solid fa-check text-2xl text-green-600"></i>
+                </div>
+                <h3 className="text-xl font-bold text-black mb-2">Senha Alterada!</h3>
+                <p className="text-sm text-neutral-600">Sua senha foi alterada com sucesso.</p>
+              </div>
+
+              <button
+                onClick={() => setShowPasswordSuccessModal(false)}
+                className="w-full px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        )}
+      </>,
+      document.body
+    );
   };
 
   return (
     <>
-      <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+      <section className="bg-white rounded-2xl border border-neutral-200">
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl font-bold text-black mb-2">Informações da Conta</h2>
@@ -131,236 +433,7 @@ export default function AccountSection() {
         </div>
       </section>
 
-      {/* Modal de Senha para Excluir Conta */}
-      {showDeleteModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={() => {
-            setShowDeleteModal(false);
-            setDeletePassword('');
-          }}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-black mb-2">Confirmar Exclusão</h3>
-              <p className="text-sm text-neutral-600">Digite sua senha para continuar</p>
-            </div>
-
-            <div className="mb-6">
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                <i className="fa-solid fa-key text-neutral-600"></i>
-                Senha
-              </label>
-              <input
-                type="password"
-                value={deletePassword}
-                onChange={(e) => setDeletePassword(e.target.value)}
-                placeholder="Digite sua senha"
-                className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                onKeyPress={(e) => e.key === 'Enter' && handleDeletePasswordSubmit()}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setDeletePassword('');
-                }}
-                className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDeletePasswordSubmit}
-                className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
-              >
-                Continuar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Confirmação Final para Excluir Conta */}
-      {showDeleteConfirmModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={() => setShowDeleteConfirmModal(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6 text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
-              </div>
-              <h3 className="text-xl font-bold text-black mb-2">Tem certeza absoluta?</h3>
-              <p className="text-sm text-neutral-600">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente excluídos.</p>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowDeleteConfirmModal(false)}
-                className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
-              >
-                Excluir Conta
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Senha para Alterar Senha */}
-      {showPasswordModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={() => {
-            setShowPasswordModal(false);
-            setChangePassword('');
-          }}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-black mb-2">Alterar Senha</h3>
-              <p className="text-sm text-neutral-600">Digite sua senha atual para continuar</p>
-            </div>
-
-            <div className="mb-6">
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                <i className="fa-solid fa-key text-neutral-600"></i>
-                Senha Atual
-              </label>
-              <input
-                type="password"
-                value={changePassword}
-                onChange={(e) => setChangePassword(e.target.value)}
-                placeholder="Digite sua senha atual"
-                className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowPasswordModal(false);
-                  setChangePassword('');
-                }}
-                className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handlePasswordSubmit}
-                className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
-              >
-                Continuar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Confirmação para Alterar Senha */}
-      {showPasswordConfirmModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={() => setShowPasswordConfirmModal(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-black mb-2">Nova Senha</h3>
-              <p className="text-sm text-neutral-600">Digite sua nova senha</p>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                  <i className="fa-solid fa-lock text-neutral-600"></i>
-                  Nova Senha
-                </label>
-                <input
-                  type="password"
-                  placeholder="Digite a nova senha"
-                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                  <i className="fa-solid fa-lock text-neutral-600"></i>
-                  Confirmar Nova Senha
-                </label>
-                <input
-                  type="password"
-                  placeholder="Confirme a nova senha"
-                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowPasswordConfirmModal(false)}
-                className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handlePasswordConfirm}
-                className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
-              >
-                Alterar Senha
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Sucesso - Senha Alterada */}
-      {showPasswordSuccessModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={() => setShowPasswordSuccessModal(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6 text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fa-solid fa-check text-2xl text-green-600"></i>
-              </div>
-              <h3 className="text-xl font-bold text-black mb-2">Senha Alterada!</h3>
-              <p className="text-sm text-neutral-600">Sua senha foi alterada com sucesso.</p>
-            </div>
-
-            <button
-              onClick={() => setShowPasswordSuccessModal(false)}
-              className="w-full px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
-            >
-              Fechar
-            </button>
-          </div>
-        </div>
-      )}
+      {renderModals()}
     </>
   );
 }
