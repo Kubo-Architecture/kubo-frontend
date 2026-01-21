@@ -215,7 +215,7 @@ export default function SearchBar({
             onSearch('brasil');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
         >
           #brasil
         </button>
@@ -225,7 +225,7 @@ export default function SearchBar({
             onSearch('concreto');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
         >
           #concreto
         </button>
@@ -235,7 +235,7 @@ export default function SearchBar({
             onSearch('modernista');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
         >
           #modernista
         </button>

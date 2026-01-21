@@ -32,7 +32,7 @@ export default function LanguageSection({ language, onLanguageChange }: Language
               </option>
             ))}
           </select>
-          <Globe className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+          <Globe className="absolute  right-3 sm:right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
         </div>
       </div>
     </section>

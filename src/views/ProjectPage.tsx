@@ -125,7 +125,7 @@ export default function ProjectPage() {
                         O projeto que você está procurando não existe ou foi removido.
                     </p>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/gallery')}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-all active:scale-[0.98]"
                     >
                         <i className="fas fa-arrow-left text-xs"></i>
@@ -149,7 +149,7 @@ export default function ProjectPage() {
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center gap-2 mb-16 text-gray-600 hover:text-gray-900 transition-colors group"
+                        className="inline-flex items-center cursor-pointer gap-2 mb-16 text-gray-600 hover:text-gray-900 transition-colors group"
                     >
                         <i className="fas fa-arrow-left text-base group-hover:-translate-x-1 transition-transform"></i>
                         <span className="text-base font-medium">Voltar</span>
@@ -216,7 +216,7 @@ export default function ProjectPage() {
                         <div className="flex items-center gap-2 w-full sm:w-auto">
                             <button
                                 onClick={handleLike}
-                                className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
+                                className={`flex-1 sm:flex-initial cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isLiked 
                                         ? 'border-red-200 bg-red-50 text-red-600' 
                                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
@@ -229,7 +229,7 @@ export default function ProjectPage() {
 
                             <button
                                 onClick={handleSave}
-                                className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
+                                className={`flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isSaved 
                                         ? 'border-amber-200 bg-amber-50 text-amber-600' 
                                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
@@ -454,11 +454,12 @@ export default function ProjectPage() {
                         <i className="fas fa-times text-xl"></i>
                     </button>
                     
-                    <div className="max-w-7xl w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="max-w-7xl w-full h-full flex items-center justify-center">
                         <img
                             src={selectedImage}
                             alt="Visualização ampliada"
                             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
                         />
                     </div>
 

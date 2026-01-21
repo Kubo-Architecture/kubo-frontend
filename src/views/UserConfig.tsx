@@ -59,7 +59,7 @@ export default function UserConfig() {
           <div className="p-6 border-t border-neutral-200">
             <button
               onClick={() => setActiveSection('politica-privacidade')}
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
+              className={`w-full flex items-center gap-3 px-4 py-3.5 cursor-pointer rounded-xl transition-all duration-200 text-left group ${
                 activeSection === 'politica-privacidade'
                   ? 'bg-white text-black shadow-sm border border-neutral-200'
                   : 'text-neutral-600 hover:bg-white hover:text-black'
