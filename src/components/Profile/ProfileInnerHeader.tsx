@@ -44,14 +44,7 @@ export default function ProfileInnerHeader(props: any) {
           )}
         </div>
 
-        {props.ownProfile && (
-          <button
-            className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer hover:bg-gray-100 transition-colors"
-            onClick={props.onEditBannerClick}
-          >
-           <i className="fa-solid fa-pen"></i>
-          </button>
-        )}
+       
       </div>
 
       {props.ownProfile && (
