@@ -1,103 +1,19 @@
 import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
+import Btncriarprojeto from '../BtnCriarProjeto';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('meus-projetos');
   const [editingProject, setEditingProject] = useState<any>(null);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [likes, setLikes] = useState<{ [key: number]: number }>({});
-  const [likedProjects, setLikedProjects] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | number | null>(null);
 
   const tabs = [
     { id: 'meus-projetos', label: 'Projetos' },
     { id: 'colecoes', label: 'Coleções' }
-  ];
-
-  // Exemplos de dados mockados
-  const mockProjects = [
-    {
-      id: 101,
-      title: 'Residência Sustentável',
-      location: 'São Paulo, Brasil',
-      description: 'Casa moderna projetada com foco em sustentabilidade e eficiência energética...',
-      architect: 'Pedro Oliveira',
-      year: 2023,
-      category: 'residencial',
-      image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800',
-      tags: ['sustentavel', 'moderno', 'ecologico'],
-      isUserProject: true,
-      likes: 89,
-      materials: ['Madeira certificada', 'Vidro low-e'],
-      status: 'Concluído',
-      build_area: '320',
-      terrain_area: '800',
-      usage_type: 'Residencial',
-      style: 'Sustentável'
-    },
-    {
-      id: 102,
-      title: 'Edifício Comercial',
-      location: 'Rio de Janeiro, Brasil',
-      description: 'Complexo comercial com design contemporâneo e espaços integrados...',
-      architect: 'Carla Mendes',
-      year: 2022,
-      category: 'comercial',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800',
-      tags: ['comercial', 'corporativo', 'vidro'],
-      isUserProject: true,
-      likes: 156,
-      materials: ['Vidro', 'Aço', 'Concreto'],
-      status: 'Concluído',
-      build_area: '5500',
-      terrain_area: '8000',
-      usage_type: 'Comercial',
-      style: 'Contemporâneo'
-    },
-    {
-      id: 103,
-      title: 'Projeto Urbano',
-      location: 'Brasília, Brasil',
-      description: 'Revitalização de área urbana com foco em mobilidade e espaços públicos...',
-      architect: 'Roberto Lima',
-      year: 2024,
-      category: 'urbano',
-      image: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800',
-      tags: ['urbano', 'publico', 'revitalizacao'],
-      isUserProject: true,
-      likes: 203,
-      materials: ['Concreto permeável', 'Vegetação nativa'],
-      status: 'Em construção',
-      build_area: '12000',
-      terrain_area: '25000',
-      usage_type: 'Público',
-      style: 'Urbanismo'
-    }
-  ];
-
-  const mockCollections = [
-    {
-      id: 1,
-      name: 'Inspirações 2024',
-      count: 12,
-      preview: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400']
-    },
-    {
-      id: 2,
-      name: 'Arquitetura Moderna',
-      count: 8,
-      preview: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400']
-    },
-    {
-      id: 3,
-      name: 'Design de Interiores',
-      count: 15,
-      preview: ['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400']
-    }
   ];
 
   useEffect(() => {
@@ -111,26 +27,9 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         if (onProjectsLoaded) {
           onProjectsLoaded(data ? data.length : 0);
         }
-
-        // Inicializar likes
-        const initialLikes: { [key: number]: number } = {};
-        if (data && Array.isArray(data)) {
-          data.forEach((project: any) => {
-            const projectId = project._id || project.id;
-            initialLikes[projectId] = project.likes || 0;
-          });
-        }
-        setLikes(initialLikes);
       } catch (err: any) {
         console.error("Erro ao buscar projetos:", err);
         setProjects([]);
-        
-        // Inicializar likes para projetos mockados
-        const initialLikes: { [key: number]: number } = {};
-        mockProjects.forEach((project: any) => {
-          initialLikes[project.id] = project.likes || 0;
-        });
-        setLikes(initialLikes);
       } finally {
         setLoading(false);
         if (setIsLoadingChild) {
@@ -152,32 +51,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
-
-  // Função para favoritar
-  const toggleFavorite = (projectId: number) => {
-    setFavorites(prev => 
-      prev.includes(projectId) 
-        ? prev.filter(id => id !== projectId)
-        : [...prev, projectId]
-    );
-  };
-
-  // Função para dar like
-  const toggleLike = (projectId: number) => {
-    if (likedProjects.includes(projectId)) {
-      setLikedProjects(prev => prev.filter(id => id !== projectId));
-      setLikes(prev => ({
-        ...prev,
-        [projectId]: Math.max((prev[projectId] || 0) - 1, 0)
-      }));
-    } else {
-      setLikedProjects(prev => [...prev, projectId]);
-      setLikes(prev => ({
-        ...prev,
-        [projectId]: (prev[projectId] || 0) + 1
-      }));
-    }
-  };
 
   // Função para editar projeto
   const handleEditProject = (project: any) => {
@@ -218,7 +91,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       );
 
       if (response.status === 200 || response.status === 204) {
-        // Atualizar a lista de projetos
         const updatedProjects: any = projects.map((p: any) => {
           const pId = p._id || p.id;
           return pId === projectId ? { ...p, ...updateData } : p;
@@ -226,7 +98,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         setProjects(updatedProjects);
         setEditingProject(null);
         
-        // Recarregar projetos do servidor para garantir sincronização
         const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${userId}`);
         if (refreshResponse.data) {
           setProjects(refreshResponse.data);
@@ -257,7 +128,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       );
 
       if (response.status === 200 || response.status === 204) {
-        // Remover projeto da lista
         const updatedProjects = projects.filter((p: any) => {
           const pId = p._id || p.id;
           return String(pId) !== String(projectId);
@@ -281,14 +151,12 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       <div className="w-full min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
-            {/* Tabs skeleton */}
             <div className="flex gap-8 border-b border-gray-200/60">
-              {[1, 2, 3].map((i) => (
+              {[1, 2].map((i) => (
                 <div key={i} className="h-10 bg-gray-100 rounded w-28 mb-[-1px] animate-pulse" />
               ))}
             </div>
             
-            {/* Grid skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="space-y-3">
@@ -331,7 +199,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         </div>
 
         {/* Conteúdo */}
-        <div className="pb-12">
+        <div className="pb-8">
           {/* Meus Projetos */}
           {activeTab === 'meus-projetos' && (
             <>
@@ -386,7 +254,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   {mockProjects.map((project) => (
                     <div
                       key={project.id}
-                      className="bg-white dark:bg-[#232323] dark:border-none rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
+                      className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
                     >
                       <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                         <img
@@ -495,8 +363,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   }
                   title="Nenhum projeto ainda"
                   description="Comece compartilhando seu primeiro projeto com a comunidade"
-                  buttonText="Criar projeto"
-                  onButtonClick={() => console.log('Criar projeto')}
                 />
               )}
             </>
@@ -504,42 +370,15 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 
           {/* Coleções */}
           {activeTab === 'colecoes' && (
-            <>
-              {mockCollections.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {mockCollections.map((collection) => (
-                    <div key={collection.id} className="group cursor-pointer">
-                      <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden mb-4 relative shadow-sm hover:shadow-md transition-all duration-300">
-                        <img 
-                          src={collection.preview[0]} 
-                          alt={collection.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium text-gray-900 shadow-sm">
-                          {collection.count} projetos
-                        </div>
-                      </div>
-                      <h3 className="text-base font-medium text-gray-900 group-hover:text-gray-700 transition-colors">
-                        {collection.name}
-                      </h3>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState
-                  icon={
-                    <svg className="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                  }
-                  title="Nenhuma coleção criada"
-                  description="Organize seus projetos favoritos em coleções temáticas"
-                  buttonText="Criar coleção"
-                  onButtonClick={() => console.log('Criar coleção')}
-                />
-              )}
-            </>
+            <EmptyState
+              icon={
+                <svg className="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              }
+              title="Nenhuma coleção criada"
+              description="Organize seus projetos favoritos em coleções temáticas"
+            />
           )}
         </div>
       </div>
@@ -875,21 +714,14 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 };
 
 // Componente de Estado Vazio
-const EmptyState = ({ icon, title, description, buttonText, onButtonClick }: any) => (
-  <div className="flex flex-col items-center justify-center py-24 px-6">
-    <div className="mb-6 opacity-80">{icon}</div>
+const EmptyState = ({ icon, title, description }: any) => (
+  <div className="flex flex-col items-center justify-center py-16 px-6">
+    <div className="mb-4 opacity-80">{icon}</div>
     <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-    <p className="text-sm text-gray-500 mb-8 text-center max-w-md leading-relaxed">
+    <p className="text-sm text-gray-500 mb-6 text-center max-w-md leading-relaxed">
       {description}
     </p>
-    {buttonText && (
-      <button 
-        onClick={onButtonClick}
-        className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
-      >
-        {buttonText}
-      </button>
-    )}
+    <Btncriarprojeto />
   </div>
 );
 
