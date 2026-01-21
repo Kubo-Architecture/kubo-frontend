@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg";
 
@@ -26,6 +26,35 @@ export default function PhotoEditorModal({
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const modalContentRef = useRef<HTMLDivElement>(null);
+
+  // Bloquear scroll do body quando o modal estiver aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // Fechar modal com tecla ESC
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -335,8 +364,8 @@ export default function PhotoEditorModal({
     onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
       handleClose();
     }
   };
@@ -380,7 +409,11 @@ export default function PhotoEditorModal({
       className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-xl max-w-lg w-full overflow-hidden">
+      <div 
+        ref={modalContentRef}
+        className="bg-white rounded-xl max-w-lg w-full overflow-hidden max-h-[90vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-black">
@@ -398,12 +431,12 @@ export default function PhotoEditorModal({
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6 flex-1 overflow-hidden">
           {previewUrl ? (
             <div className="space-y-4">
               <div 
                 ref={containerRef}
-                className="relative w-full h-[350px] bg-black rounded-lg overflow-hidden flex items-center justify-center"
+                className="relative w-full h-[280px] sm:h-[350px] bg-black rounded-lg overflow-hidden flex items-center justify-center"
               >
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                   <div className="w-[280px] h-[280px] border-2 border-white/50 rounded-full"></div>
@@ -479,17 +512,17 @@ export default function PhotoEditorModal({
             <div className="space-y-4">
               <div className="flex justify-center">
                 <div 
-                  className="w-[280px] h-[280px] rounded-full bg-cover bg-center border-4 border-gray-200"
+                  className="w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] rounded-full bg-cover bg-center border-4 border-gray-200"
                   style={{ backgroundImage: `url(${displayPhotoUrl})` }}
                 />
               </div>
 
               <div 
-                className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-black transition-colors"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-12 text-center cursor-pointer hover:border-black transition-colors"
                 onClick={handleChooseNewPhoto}
               >
                 <svg
-                  className="mx-auto h-12 w-12 text-gray-400 mb-3"
+                  className="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mb-2 sm:mb-3"
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 48 48"
@@ -521,7 +554,7 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex gap-2">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-200 flex gap-2 flex-shrink-0">
           {!previewUrl && (
             <>
               {hasRealPhoto && (

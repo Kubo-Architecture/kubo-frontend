@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
-import PenIcon from "../../assets/Profile/pen.svg";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 export default function ProfileStats(props: any) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const [seguidoresCount, setSeguidoresCount] = useState(props.seguidores || 0);
+    const [seguindoCount, setSeguindoCount] = useState(0);
     const [isFollowLoading, setIsFollowLoading] = useState(false);
+    const [isSeguidoresModalOpen, setIsSeguidoresModalOpen] = useState(false);
+    const [isSeguindoModalOpen, setIsSeguindoModalOpen] = useState(false);
+    const [seguidoresList, setSeguidoresList] = useState<any[]>([]);
+    const [seguindoList, setSeguindoList] = useState<any[]>([]);
+    const [isLoadingLists, setIsLoadingLists] = useState(false);
     const [formData, setFormData] = useState({
         nickname: props.nickname || "",
         name: props.name || "",
@@ -18,15 +23,29 @@ export default function ProfileStats(props: any) {
         linkedin: props.linkedin || ""
     });
     const currentUserId = window.localStorage.getItem('userId');
+    const modalContentRef = useRef<HTMLDivElement>(null);
+    const seguidoresModalRef = useRef<HTMLDivElement>(null);
+    const seguindoModalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isModalOpen) {
                 setIsModalOpen(false);
             }
+            if (e.key === 'Escape' && isSeguidoresModalOpen) {
+                setIsSeguidoresModalOpen(false);
+            }
+            if (e.key === 'Escape' && isSeguindoModalOpen) {
+                setIsSeguindoModalOpen(false);
+            }
         };
+        
         axios.get(`${import.meta.env.VITE_API_URL}/followers/${props.userId}`)
             .then((res: any) => setSeguidoresCount(res.data.followers));
+
+        axios.get(`${import.meta.env.VITE_API_URL}/following/${props.userId}`)
+            .then((res: any) => setSeguindoCount(res.data.following || 0))
+            .catch(() => setSeguindoCount(0));
 
         if (currentUserId !== props.userId) {
             axios.get<any>(`${import.meta.env.VITE_API_URL}/is-following/${currentUserId}/${props.userId}`)
@@ -35,7 +54,18 @@ export default function ProfileStats(props: any) {
 
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
-    }, [isModalOpen, props.userId, currentUserId]);
+    }, [isModalOpen, isSeguidoresModalOpen, isSeguindoModalOpen, props.userId, currentUserId]);
+
+    // Bloquear scroll do body quando o modal estiver aberto
+    useEffect(() => {
+        if (isModalOpen || isSeguidoresModalOpen || isSeguindoModalOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+        
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isModalOpen, isSeguidoresModalOpen, isSeguindoModalOpen]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -62,6 +92,52 @@ export default function ProfileStats(props: any) {
             linkedin: props.linkedin || ""
         });
         setIsModalOpen(false);
+    };
+
+    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
+            handleCancel();
+        }
+    };
+
+    const handleSeguidoresModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (seguidoresModalRef.current && !seguidoresModalRef.current.contains(e.target as Node)) {
+            setIsSeguidoresModalOpen(false);
+        }
+    };
+
+    const handleSeguindoModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (seguindoModalRef.current && !seguindoModalRef.current.contains(e.target as Node)) {
+            setIsSeguindoModalOpen(false);
+        }
+    };
+
+    const handleOpenSeguidores = async () => {
+        setIsSeguidoresModalOpen(true);
+        setIsLoadingLists(true);
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/followers-list/${props.userId}`);
+            setSeguidoresList(response.data.followers || []);
+        } catch (error) {
+            console.error('Erro ao buscar seguidores:', error);
+            setSeguidoresList([]);
+        } finally {
+            setIsLoadingLists(false);
+        }
+    };
+
+    const handleOpenSeguindo = async () => {
+        setIsSeguindoModalOpen(true);
+        setIsLoadingLists(true);
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/following-list/${props.userId}`);
+            setSeguindoList(response.data.following || []);
+        } catch (error) {
+            console.error('Erro ao buscar seguindo:', error);
+            setSeguindoList([]);
+        } finally {
+            setIsLoadingLists(false);
+        }
     };
 
     const handleFollowToggle = () => {
@@ -117,7 +193,19 @@ export default function ProfileStats(props: any) {
                                         className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
                                         aria-label="Editar perfil"
                                     >
-                                        <img className="h-5 w-5" src={PenIcon} alt="" />
+                                        <svg 
+                                            className="h-5 w-5 text-gray-700" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth={2} 
+                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" 
+                                            />
+                                        </svg>
                                     </button>
                                 ) : (
                                     <button 
@@ -145,21 +233,27 @@ export default function ProfileStats(props: any) {
                                 </p>
                             </div>
                             
-                            <div className="text-center">
-                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                    {props.likes}
-                                </p>
-                                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
-                                    Likes
-                                </p>
-                            </div>
-                            
-                            <div className="text-center">
+                            <div 
+                                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={handleOpenSeguidores}
+                            >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguidoresCount}
                                 </p>
                                 <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                                     Seguidores
+                                </p>
+                            </div>
+                            
+                            <div 
+                                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={handleOpenSeguindo}
+                            >
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                    {seguindoCount}
+                                </p>
+                                <p className="text-sm text-gray-600 mt-1 dark:text-gray-400">
+                                    Seguindo
                                 </p>
                             </div>
 
@@ -169,7 +263,8 @@ export default function ProfileStats(props: any) {
                                     onClick={() => setIsModalOpen(true)}
                                     className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
-                                    <img className="h-4 w-4 invert" src={PenIcon} alt="" />
+                                  <i className="fa-solid fa-pen"></i>
+
                                     Editar Perfil
                                 </button>
                             ) : (
@@ -207,9 +302,10 @@ export default function ProfileStats(props: any) {
             {isModalOpen && (
                 <div
                     className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                    onClick={handleCancel}
+                    onClick={handleOverlayClick}
                 >
                     <div
+                        ref={modalContentRef}
                         className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -392,6 +488,140 @@ export default function ProfileStats(props: any) {
                             >
                                 Salvar Alterações
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Seguidores */}
+            {isSeguidoresModalOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    onClick={handleSeguidoresModalClick}
+                >
+                    <div
+                        ref={seguidoresModalRef}
+                        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-[80vh] flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+                            <h2 className="text-xl font-bold text-gray-900">
+                                Seguidores
+                            </h2>
+                            <button
+                                onClick={() => setIsSeguidoresModalOpen(false)}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                aria-label="Fechar"
+                            >
+                                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Lista */}
+                        <div className="flex-1 overflow-y-auto p-4">
+                            {isLoadingLists ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            ) : seguidoresList.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-500">Nenhum seguidor ainda</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {seguidoresList.map((seguidor: any) => (
+                                        <div
+                                            key={seguidor.id}
+                                            className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                        >
+                                            <div 
+                                                className="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0"
+                                                style={{ 
+                                                    backgroundImage: `url(${seguidor.photoUrl || '/default-avatar.png'})` 
+                                                }}
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-gray-900 truncate">
+                                                    {seguidor.nickname || seguidor.name}
+                                                </p>
+                                                <p className="text-sm text-gray-500 truncate">
+                                                    @{seguidor.name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Seguindo */}
+            {isSeguindoModalOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    onClick={handleSeguindoModalClick}
+                >
+                    <div
+                        ref={seguindoModalRef}
+                        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-[80vh] flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+                            <h2 className="text-xl font-bold text-gray-900">
+                                Seguindo
+                            </h2>
+                            <button
+                                onClick={() => setIsSeguindoModalOpen(false)}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                aria-label="Fechar"
+                            >
+                                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Lista */}
+                        <div className="flex-1 overflow-y-auto p-4">
+                            {isLoadingLists ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </div>
+                            ) : seguindoList.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-500">Não está seguindo ninguém</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {seguindoList.map((seguindo: any) => (
+                                        <div
+                                            key={seguindo.id}
+                                            className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                        >
+                                            <div 
+                                                className="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0"
+                                                style={{ 
+                                                    backgroundImage: `url(${seguindo.photoUrl || '/default-avatar.png'})` 
+                                                }}
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-gray-900 truncate">
+                                                    {seguindo.nickname || seguindo.name}
+                                                </p>
+                                                <p className="text-sm text-gray-500 truncate">
+                                                    @{seguindo.name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import PenIcon from "../../assets/Profile/pen.svg";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg";
 import PhotoEditorModal from "../Profile/PhotoEditorModal";
 
@@ -40,7 +39,7 @@ export default function ProfileInnerHeader(props: any) {
         >
           {props.ownProfile && (
             <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300 flex items-center justify-center">
-              <i className="fas fa-pencil-alt text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+              <i className="fa-solid fa-pen text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
             </div>
           )}
         </div>
@@ -50,7 +49,7 @@ export default function ProfileInnerHeader(props: any) {
             className="w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center my-[10px] md:my-[20px] hover:cursor-pointer hover:bg-gray-100 transition-colors"
             onClick={props.onEditBannerClick}
           >
-            <img src={PenIcon} alt="Editar banner" className="h-[20px]" />
+           <i className="fa-solid fa-pen"></i>
           </button>
         )}
       </div>

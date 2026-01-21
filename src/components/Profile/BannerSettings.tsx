@@ -43,6 +43,15 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     };
   }, [onClose]);
 
+  // Bloquear scroll do body quando o modal estiver aberto
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     processFile(file);
@@ -217,9 +226,9 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                   </div>
                 ))}
 
-                {/* Banner Personalizado */}
+                {/* Banner Personalizado - Ocupa 2 colunas no mobile */}
                 {(previewUrl || selectedFile) ? (
-                  <div className="relative rounded-2xl overflow-hidden ring-4 ring-black ring-offset-0">
+                  <div className="relative rounded-2xl overflow-hidden ring-4 ring-black ring-offset-0 col-span-2 sm:col-span-1">
                     <div className="aspect-[2.5/1] w-full">
                       <img
                         src={previewUrl || URL.createObjectURL(selectedFile!)}
@@ -253,7 +262,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                   </div>
                 ) : (
                   <div
-                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${isDragging
+                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 col-span-2 sm:col-span-1 ${isDragging
                       ? 'ring-4 ring-blue-400'
                       : 'hover:opacity-90'
                       }`}
