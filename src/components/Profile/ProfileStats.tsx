@@ -95,7 +95,7 @@ export default function ProfileStats(props: any) {
     return (
         <>
             {/* Header do Perfil */}
-            <div className="w-full bg-white shadow-sm pt-20 dark:bg-zinc-900">
+            <div className="w-full bg-white pt-20 dark:bg-zinc-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                         {/* Informações do Usuário */}

@@ -305,20 +305,20 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
   }
 
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full h-auto bg-white dark:bg-zinc-900 pt-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Navegação de Abas */}
-        <div className="flex gap-8 border-b border-gray-200/60 mb-8">
+        <div className="flex gap-8 border-b border-gray-200/60 dark:border-gray-600/50 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`
-                relative pb-4 px-1 text-base font-medium transition-all duration-200
+                cursor-pointer relative pb-4 px-1 text-base font-medium transition-all duration-200
                 ${activeTab === tab.id 
-                  ? 'text-gray-900' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-gray-900 dark:text-white' 
+                  : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                 }
               `}
             >
