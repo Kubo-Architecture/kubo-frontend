@@ -386,7 +386,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   {mockProjects.map((project) => (
                     <div
                       key={project.id}
-                      className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
+                      className="bg-white dark:bg-[#232323] dark:border-none rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
                     >
                       <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                         <img

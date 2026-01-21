@@ -114,7 +114,7 @@ export default function ProfileStats(props: any) {
                                 {props.ownProfile ? (
                                     <button 
                                         onClick={() => setIsModalOpen(true)}
-                                        className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                        className="sm:hidden p-2 hover:bg-gray-100 dark:bg-gray-100 dark:hover:bg-gray-200 rounded-full transition-colors"
                                         aria-label="Editar perfil"
                                     >
                                         <img className="h-5 w-5" src={PenIcon} alt="" />
@@ -167,7 +167,7 @@ export default function ProfileStats(props: any) {
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsModalOpen(true)}
-                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-500 dark:hover:bg-gray-500/50 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <img className="h-4 w-4 invert" src={PenIcon} alt="" />
                                     Editar Perfil
