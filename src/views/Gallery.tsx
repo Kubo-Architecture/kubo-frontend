@@ -265,12 +265,6 @@ export default function Gallery() {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Debug - logs para verificar o estado
-  useEffect(() => {
-    console.log('Projects atualizado:', projects.length);
-    console.log('Works atualizado:', works.length);
-  }, [projects, works]);
-
   const filteredWorks = works.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
     return true;
@@ -365,27 +359,27 @@ export default function Gallery() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#151B23]">
       <main className="pt-20 pb-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
           <div className="mb-6 md:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                   Galeria de Obras
                 </h1>
-                <p className="text-gray-600 text-sm sm:text-base mt-1">
+                <p className="text-gray-600 dark:text-neutral-400 text-sm sm:text-base mt-1">
                   Explore arquitetura icônica mundial
                 </p>
               </div>
 
               <div className="flex items-center space-x-3 self-start sm:self-center">
-                <div className="flex space-x-1 bg-white border border-gray-300 p-1 rounded-lg">
+                <div className="flex space-x-1 bg-white dark:bg-[#202830] border border-gray-300 dark:border-[#3d444d] p-1 rounded-lg">
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded transition-colors cursor-pointer ${viewMode === 'grid'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                     title="Grade"
                   >
@@ -394,8 +388,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded cursor-pointer transition-colors ${viewMode === 'list'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                     title="Lista"
                   >
@@ -416,12 +410,12 @@ export default function Gallery() {
                   users={users}
                   projects={projects}
                 />
-                <div className="flex flex-wrap gap-1 bg-white border border-gray-300 rounded-lg p-1 w-full sm:w-auto self-start">
+                <div className="flex flex-wrap gap-1 bg-white dark:bg-[#202830] border border-gray-300 dark:border-[#3d444d] rounded-lg p-1 w-full sm:w-auto self-start">
                   <button
                     onClick={() => setFilter('all')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'all'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                   >
                     Todas
@@ -429,8 +423,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('Residencial')}
                     className={`px-4 pr-7 py-2 text-xs sm:text-sm font-medium cursor-pointer rounded-md transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Residencial'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                   >
                     Residencial
@@ -438,8 +432,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('Cultural')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Cultural'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                   >
                     Cultural
@@ -447,8 +441,8 @@ export default function Gallery() {
                   <button
                     onClick={() => setFilter('Religioso')}
                     className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-md cursor-pointer transition-all flex-1 min-w-[60px] sm:min-w-[80px] ${filter === 'Religioso'
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
                       }`}
                   >
                     Religioso
@@ -459,22 +453,18 @@ export default function Gallery() {
           </div>
 
           {filteredWorks.length === 0 ? (
-            <div className="text-center py-12 sm:py-16 bg-white rounded-lg border border-gray-300">
-              <i className="fas fa-building text-gray-300 text-4xl sm:text-5xl mb-4"></i>
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            <div className="text-center py-12 sm:py-16 bg-white dark:bg-[#151B23] min-h-52 rounded-lg border border-gray-300 dark:border-[#3d444d]">
+              <i className="fas fa-building text-gray-300 dark:text-neutral-600 text-4xl sm:text-5xl mb-4"></i>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
                 Nenhuma obra encontrada
               </h3>
-              <p className="text-gray-500 mb-4 text-sm sm:text-base">
-                {searchTerm ? 'Tente ajustar sua busca.' : 'Adicione sua primeira obra!'}
-              </p>
-              <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
             </div>
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               {filteredWorks.map((work: any) => (
                 <div
                   key={work.id}
-                  className="bg-white rounded-lg border border-gray-300 overflow-hidden hover:shadow-md transition-all duration-300 group"
+                  className="bg-white dark:bg-[#151B23] rounded-lg border border-gray-300 dark:border-[#3d444d] overflow-hidden hover:shadow-md transition-all duration-300 group"
                 >
                   <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                     <img
@@ -490,15 +480,15 @@ export default function Gallery() {
                           e.stopPropagation();
                           handleEditProject(work);
                         }}
-                        className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all shadow-md hover:shadow-lg z-10"
+                        className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm rounded-full hover:bg-white dark:hover:bg-[#202830] transition-all shadow-md hover:shadow-lg z-10"
                         title="Editar projeto"
                       >
-                        <i className="fas fa-edit text-gray-700 text-xs"></i>
+                        <i className="fas fa-edit text-gray-700 dark:text-neutral-400 text-xs"></i>
                       </button>
                     )}
 
                     <div className="absolute top-3 right-3">
-                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-medium rounded-full border border-gray-300">
+                      <span className="px-3 py-1 bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm text-gray-900 dark:text-neutral-400 text-xs font-medium rounded-full border border-gray-300 dark:border-[#3d444d]">
                         {work.usage_type || work.category}
                       </span>
                     </div>
@@ -515,46 +505,46 @@ export default function Gallery() {
 
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-base line-clamp-1">{work.title || work.name}</h3>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base line-clamp-1">{work.title || work.name}</h3>
                       <button 
                         onClick={() => toggleFavorite(work.id)}
                         className={`flex-shrink-0 ml-2 transition-colors ${
                           favorites.includes(work.id) 
                             ? 'text-yellow-400 hover:text-yellow-500' 
-                            : 'text-gray-400 hover:text-yellow-400'
+                            : 'text-gray-400 dark:text-neutral-500 hover:text-yellow-400 dark:hover:text-yellow-400'
                         }`}
                       >
                         <i className={`${favorites.includes(work.id) ? 'fas' : 'far'} fa-star text-sm sm:text-base`}></i>
                       </button>
                     </div>
 
-                    <div className="flex items-center text-gray-600 text-xs sm:text-sm mb-3">
-                      <i className="fas fa-map-marker-alt mr-2 text-gray-400 flex-shrink-0"></i>
+                    <div className="flex items-center text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-3">
+                      <i className="fas fa-map-marker-alt mr-2 text-gray-400 dark:text-neutral-500 flex-shrink-0"></i>
                       <span className="truncate">{work.location}</span>
                     </div>
 
-                    <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{work.description}</p>
+                    <p className="text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-4 line-clamp-2">{work.description}</p>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-[#3d444d]">
                       <div className="min-w-0">
-                        <div className="text-xs text-gray-500 mb-1 truncate">Arquiteto</div>
-                        <div className="text-sm font-medium text-gray-900 truncate">{work.architect || 'Dono do projeto'}</div>
+                        <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1 truncate">Arquiteto</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400 truncate">{work.architect || 'Dono do projeto'}</div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <div className="text-xs text-gray-500 mb-1">Ano</div>
-                        <div className="text-sm font-medium text-gray-900">{work.year || '2024'}</div>
+                        <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1">Ano</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400">{work.year || '2024'}</div>
                       </div>
                     </div>
 
                     <div className="mt-4 flex items-center justify-between">
                       <div className="flex flex-wrap gap-1 flex-1">
                         {work.tags?.slice(0, 2).map((tag: string, index: number) => (
-                          <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded truncate max-w-[70px] sm:max-w-[90px]">
+                          <span key={index} className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded truncate max-w-[70px] sm:max-w-[90px]">
                             {tag}
                           </span>
                         ))}
                         {work.tags && work.tags.length > 2 && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                          <span className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded">
                             +{work.tags.length - 2}
                           </span>
                         )}
@@ -564,7 +554,7 @@ export default function Gallery() {
                         className={`flex items-center space-x-1 transition-colors ml-2 ${
                           likedProjects.includes(work.id)
                             ? 'text-red-500 hover:text-red-600'
-                            : 'text-gray-500 hover:text-red-500'
+                            : 'text-gray-500 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-500'
                         }`}
                       >
                         <i className={`${likedProjects.includes(work.id) ? 'fas' : 'far'} fa-heart text-sm`}></i>
@@ -576,11 +566,11 @@ export default function Gallery() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white dark:bg-[#151B23] rounded-xl shadow-sm border border-gray-200 dark:border-[#3d444d] overflow-hidden">
               {filteredWorks.map((work: any, index: number) => (
                 <div
                   key={work.id}
-                  className={`p-6 hover:bg-gray-50 transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100' : ''}`}
+                  className={`p-6 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100 dark:border-[#3d444d]' : ''}`}
                 >
                   {/* Adicione o conteúdo do modo lista aqui se necessário */}
                 </div>
