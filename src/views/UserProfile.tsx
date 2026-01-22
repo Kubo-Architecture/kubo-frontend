@@ -61,14 +61,14 @@ export default function UserProfile() {
 
   if (!profileData) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23]">
         <Loading />
       </div>
     )
   }
 
   return (
-    <div className="w-full min-h-screen relative">
+    <div className="w-full min-h-screen relative bg-gray-50 dark:bg-[#151B23]">
       <div className="pt-16">
         {loading && <Loading />}
         <div className={loading ? "hidden" : "block"}>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ProjectImage from "../assets/images/project.svg";
 
 export default function ProjectPage() {
+    const location = useLocation();
     const pathSegments = location.pathname.split("/").filter(Boolean);
     const projectId = pathSegments[1];
     const navigate = useNavigate();
@@ -102,10 +103,10 @@ export default function ProjectPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23]">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-3 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
-                    <p className="text-gray-600 text-sm font-medium">Carregando projeto...</p>
+                    <div className="w-12 h-12 border-3 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
+                    <p className="text-gray-600 dark:text-neutral-400 text-sm font-medium">Carregando projeto...</p>
                 </div>
             </div>
         );
@@ -113,20 +114,20 @@ export default function ProjectPage() {
 
     if (!project) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white p-6">
+            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23] p-6">
                 <div className="text-center max-w-md">
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gray-50 flex items-center justify-center border border-gray-100">
-                        <i className="fas fa-building text-3xl text-gray-300"></i>
+                    <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gray-50 dark:bg-[#202830] flex items-center justify-center border border-gray-100 dark:border-[#3d444d]">
+                        <i className="fas fa-building text-3xl text-gray-300 dark:text-neutral-600"></i>
                     </div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-3">
+                    <h3 className="text-2xl font-medium text-gray-900 dark:text-white mb-3">
                         Projeto não encontrado
                     </h3>
-                    <p className="text-gray-500 text-sm mb-8 leading-relaxed">
+                    <p className="text-gray-500 dark:text-neutral-400 text-sm mb-8 leading-relaxed">
                         O projeto que você está procurando não existe ou foi removido.
                     </p>
                     <button
                         onClick={() => navigate('/gallery')}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-all active:scale-[0.98]"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all active:scale-[0.98]"
                     >
                         <i className="fas fa-arrow-left text-xs"></i>
                         <span>Voltar à galeria</span>
@@ -143,13 +144,13 @@ export default function ProjectPage() {
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
             />
             
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-white dark:bg-[#151B23]">
                 {/* Main Content */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-22 pb-12">
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center cursor-pointer gap-2 mb-16 text-gray-600 hover:text-gray-900 transition-colors group"
+                        className="inline-flex items-center cursor-pointer gap-2 mb-16 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors group"
                     >
                         <i className="fas fa-arrow-left text-base group-hover:-translate-x-1 transition-transform"></i>
                         <span className="text-base font-medium">Voltar</span>
@@ -160,16 +161,16 @@ export default function ProjectPage() {
                         {/* Left Column - Info */}
                         <div className="space-y-6">
                             <div>
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4">
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
                                     {project.name}
                                 </h1>
                                 
-                                <div className="flex items-center gap-2 text-gray-600 mb-6">
+                                <div className="flex items-center gap-2 text-gray-600 dark:text-neutral-400 mb-6">
                                     <i className="fas fa-location-dot text-base"></i>
                                     <span className="text-base font-medium">{project.location}</span>
                                 </div>
 
-                                <p className="text-gray-700 leading-relaxed text-base">
+                                <p className="text-gray-700 dark:text-neutral-400 leading-relaxed text-base">
                                     {project.description || 'Nenhuma descrição fornecida'}
                                 </p>
                             </div>
@@ -178,7 +179,7 @@ export default function ProjectPage() {
                         {/* Right Column - Hero Image */}
                         <div className="lg:pl-4">
                             <div 
-                                className="rounded-3xl overflow-hidden bg-gray-100 aspect-[5/5] cursor-pointer group relative"
+                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative"
                                 onClick={() => openLightbox(project.photo_url || ProjectImage)}
                             >
                                 <img
@@ -188,8 +189,8 @@ export default function ProjectPage() {
                                     onError={() => setImageError(true)}
                                 />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                                        <i className="fas fa-expand text-gray-900 text-sm"></i>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                                        <i className="fas fa-expand text-gray-900 dark:text-neutral-400 text-sm"></i>
                                     </div>
                                 </div>
                             </div>
@@ -197,16 +198,16 @@ export default function ProjectPage() {
                     </div>
 
                     {/* User Info and Actions */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-16 pb-8 border-b border-gray-100">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-16 pb-8 border-b border-gray-100 dark:border-[#3d444d]">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                                <i className="fas fa-user text-base text-gray-600"></i>
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-[#202830] dark:to-[#151B23] flex items-center justify-center">
+                                <i className="fas fa-user text-base text-gray-600 dark:text-neutral-400"></i>
                             </div>
                             <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">
+                                <p className="text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider font-medium">
                                     Autor do projeto
                                 </p>
-                                <p className="text-sm font-semibold text-gray-900">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {project.userId || 'Usuário anônimo'}
                                 </p>
                             </div>
@@ -218,8 +219,8 @@ export default function ProjectPage() {
                                 onClick={handleLike}
                                 className={`flex-1 sm:flex-initial cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isLiked 
-                                        ? 'border-red-200 bg-red-50 text-red-600' 
-                                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
+                                        ? 'border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
+                                        : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
                                 }`}
                                 aria-label={isLiked ? 'Remover curtida' : 'Curtir'}
                             >
@@ -231,8 +232,8 @@ export default function ProjectPage() {
                                 onClick={handleSave}
                                 className={`flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isSaved 
-                                        ? 'border-amber-200 bg-amber-50 text-amber-600' 
-                                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
+                                        ? 'border-amber-200 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
+                                        : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
                                 }`}
                                 aria-label={isSaved ? 'Remover dos salvos' : 'Salvar'}
                             >
@@ -244,7 +245,7 @@ export default function ProjectPage() {
 
                     {/* Specifications Grid */}
                     <div className="mb-16">
-                        <h2 className="text-2xl font-medium text-gray-900 mb-8">Especificações técnicas</h2>
+                        <h2 className="text-2xl font-medium text-gray-900 dark:text-white mb-8">Especificações técnicas</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {[
                                 {
@@ -282,17 +283,17 @@ export default function ProjectPage() {
                             ].map((spec, index) => (
                                 <div 
                                     key={index} 
-                                    className="group p-5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
+                                    className="group p-5 rounded-xl border border-gray-100 dark:border-[#3d444d] hover:border-gray-200 dark:hover:border-[#3d444d] hover:shadow-sm transition-all bg-white dark:bg-[#151B23]"
                                 >
                                     <div className="flex items-start gap-4">
-                                        <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <i className={`${spec.icon} text-base text-gray-700`}></i>
+                                        <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#202830] dark:to-[#151B23] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <i className={`${spec.icon} text-base text-gray-700 dark:text-neutral-400`}></i>
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                                            <h3 className="text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">
                                                 {spec.title}
                                             </h3>
-                                            <p className="text-gray-900 text-sm font-medium leading-relaxed break-words">
+                                            <p className="text-gray-900 dark:text-white text-sm font-medium leading-relaxed break-words">
                                                 {spec.value}
                                             </p>
                                         </div>
@@ -305,7 +306,7 @@ export default function ProjectPage() {
                     {/* Gallery */}
                     {project.gallery && project.gallery.length > 0 && (
                         <div>
-                            <h2 className="text-4xl font-bold text-gray-900 mb-8">Galeria</h2>
+                            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Galeria</h2>
                             
                             {/* Masonry Grid Layout */}
                             <div className="grid grid-cols-12 gap-4">
@@ -313,7 +314,7 @@ export default function ProjectPage() {
                                 {project.gallery[0] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(project.gallery[0])}
                                         >
                                             <img
@@ -334,7 +335,7 @@ export default function ProjectPage() {
                                 {project.gallery[1] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(project.gallery[1])}
                                         >
                                             <img
@@ -355,7 +356,7 @@ export default function ProjectPage() {
                                 {project.gallery[2] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(project.gallery[2])}
                                         >
                                             <img
@@ -376,7 +377,7 @@ export default function ProjectPage() {
                                 {project.gallery[3] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(project.gallery[3])}
                                         >
                                             <img
@@ -397,7 +398,7 @@ export default function ProjectPage() {
                                 {project.gallery[4] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(project.gallery[4])}
                                         >
                                             <img
@@ -418,7 +419,7 @@ export default function ProjectPage() {
                                 {project.gallery.slice(5).map((imageUrl: string, index: number) => (
                                     <div key={index + 5} className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(imageUrl)}
                                         >
                                             <img
