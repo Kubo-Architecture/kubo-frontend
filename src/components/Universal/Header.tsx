@@ -131,8 +131,11 @@ export default function HeaderFull({ userData }: any) {
                     <span className='dark:text-white'>Configurações</span>
                   </a>
                   <a
-                    href="/Favoritepage"
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/favorites');
+                    }}
+                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
                   >
                     <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Favoritos</span>
@@ -204,8 +207,11 @@ export default function HeaderFull({ userData }: any) {
                     <span className='dark:text-white'>Configurações</span>
                   </a>
                   <a
-                    href="/Favoritepage"
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/favorites');
+                    }}
+                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
                   >
                     <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Favoritos</span>
