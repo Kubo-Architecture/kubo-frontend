@@ -101,7 +101,7 @@ export default function HeaderFull({ userData }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-4 w-56 bg-white dark:bg-[#212121] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
+                <div className="absolute right-0 top-full mt-4 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
                   <div className="px-4 py-3 border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
                       {userData?.name || 'Usuário'}
@@ -174,7 +174,7 @@ export default function HeaderFull({ userData }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-1 mr-5 w-56 bg-white dark:bg-[#212121] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
+                <div className="absolute right-0 top-full mt-1 mr-5 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
                   <div className="px-4 py-3 border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
                       {userData?.name || 'Usuário'}

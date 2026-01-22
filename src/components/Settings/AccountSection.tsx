@@ -384,32 +384,32 @@ export default function AccountSection() {
 
   return (
     <>
-      <section className="bg-white rounded-2xl border border-neutral-200">
+      <section className="bg-white dark:bg-[#151B23] dark:border-[#3d444d] rounded-2xl border border-neutral-200">
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="mb-6 lg:mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-black mb-2">Informações da Conta</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-2">Informações da Conta</h2>
             <p className="text-sm sm:text-base text-neutral-500">Gerencie suas informações pessoais</p>
           </div>
 
           <div className="space-y-5 sm:space-y-6 mb-6 sm:mb-8">
             <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-2 sm:mb-3">
-                <i className="fa-solid fa-envelope text-neutral-600"></i>
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
+                <i className="fa-solid fa-envelope text-neutral-600 dark:text-neutral-500"></i>
                 Email
               </label>
-              <div className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-700">
+              <div className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 border border-neutral-200 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 rounded-xl text-sm font-medium text-neutral-700">
                 {userEmail}
               </div>
             </div>
 
             <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-2 sm:mb-3">
-                <i className="fa-solid fa-key text-neutral-600"></i>
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
+                <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
                 Senha
               </label>
               <button 
                 onClick={handleChangePassword}
-                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
+                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 dark:hover:bg-[#202830] dark:hover:border-[#3d444d] hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
               >
                 <span>Alterar senha</span>
                 <i className="fa-solid fa-chevron-right text-neutral-400 group-hover:text-neutral-600 transition-colors"></i>
@@ -424,7 +424,7 @@ export default function AccountSection() {
             </label>
             <button 
               onClick={handleDeleteAccount}
-              className="flex items-center justify-center cursor-pointer gap-2 px-3 sm:px-4 py-3 sm:py-3.5 bg-red-50 hover:bg-red-100 rounded-xl transition-all border border-red-200 hover:border-red-300 text-sm font-semibold text-red-700 w-full"
+              className="flex items-center justify-center cursor-pointer gap-2 px-3 sm:px-4 py-3 sm:py-3.5 bg-red-50 dark:bg-[#302020] dark:border-[#432c2c] dark:hover:bg-[#2d1e1e] dark:hover:border-[#432c2c] hover:bg-red-100 rounded-xl transition-all border border-red-200 hover:border-red-300 text-sm font-semibold text-red-700 w-full"
             >
               <Trash2 className="w-4 h-4" />
               <span>Excluir conta permanentemente</span>

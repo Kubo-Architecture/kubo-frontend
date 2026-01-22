@@ -30,7 +30,7 @@ export default function UserConfig() {
     <div className="min-h-screen bg-white">
       <div className="flex min-h-screen">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 flex-col scrollbar-overlay pt-16">
+        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col scrollbar-overlay pt-16">
           <div className="flex-1 p-6">
             <nav className="space-y-1">
               {menuSections.filter(section => section.id !== 'politica-privacidade').map((section) => (
@@ -40,13 +40,13 @@ export default function UserConfig() {
                   disabled={!section.available}
                   className={`cursor-pointer w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
                     activeSection === section.id
-                      ? 'bg-white text-black shadow-sm border border-neutral-200'
+                      ? 'bg-white dark:bg-[#202830] dark:border-none dark:text-white text-black shadow-sm border border-neutral-200'
                       : section.available
-                      ? 'text-neutral-600 hover:bg-white hover:text-black'
-                      : 'text-neutral-400 cursor-not-allowed opacity-60'
+                      ? 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] dark:hover:border-[#3d444d] dark:hover:text-white hover:text-black'
+                      : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-60'
                   }`}
                 >
-                  <i className={`${section.icon} text-lg ${activeSection === section.id ? 'text-black' : section.available ? 'text-neutral-500 group-hover:text-black' : 'text-neutral-400'}`}></i>
+                  <i className={`${section.icon} text-lg ${activeSection === section.id ? 'text-black dark:text-white' : section.available ? 'text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white' : 'text-neutral-400 dark:text-neutral-600'}`}></i>
                   <div className="flex-1">
                     <div className="font-medium text-[15px]">{section.label}</div>
                   </div>
@@ -56,16 +56,16 @@ export default function UserConfig() {
           </div>
 
           {/* Footer - Política de Privacidade */}
-          <div className="p-6 border-t border-neutral-200">
+          <div className="p-6 border-t border-neutral-200 dark:border-[#3d444d] ">
             <button
               onClick={() => setActiveSection('politica-privacidade')}
               className={`w-full flex items-center gap-3 px-4 py-3.5 cursor-pointer rounded-xl transition-all duration-200 text-left group ${
                 activeSection === 'politica-privacidade'
-                  ? 'bg-white text-black shadow-sm border border-neutral-200'
-                  : 'text-neutral-600 hover:bg-white hover:text-black'
+                  ? 'bg-white text-black shadow-sm border border-neutral-200 dark:bg-[#202830] dark:border-none dark:text-white'
+                  : 'text-neutral-600 hover:bg-white hover:text-black dark:hover:text-white dark:hover:bg-[#202830] dark:hover:border-[#3d444d] dark:text-neutral-400'
               }`}
             >
-              <i className={`fa-solid fa-shield-halved text-lg ${activeSection === 'politica-privacidade' ? 'text-black' : 'text-neutral-500 group-hover:text-black'}`}></i>
+              <i className={`fa-solid fa-shield-halved text-lg ${activeSection === 'politica-privacidade' ? 'text-black dark:text-white' : 'text-neutral-500 group-hover:text-black dark:group-hover:text-white dark:text-neutral-400'}`}></i>
               <div className="flex-1">
                 <div className="font-medium text-[15px]">Política de Privacidade</div>
               </div>
@@ -74,7 +74,7 @@ export default function UserConfig() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-80 bg-neutral-50 pt-16 lg:pt-16">
+        <main className="flex-1 lg:ml-80 bg-neutral-50 dark:bg-[#202830] pt-16 lg:pt-16">
           <div className={`mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 min-h-full ${activeSection === 'politica-privacidade' || activeSection === 'contato' ? 'max-w-6xl' : 'max-w-4xl'}`}>
             {activeSection === 'geral' && (
               <div className="space-y-6 lg:space-y-8">
