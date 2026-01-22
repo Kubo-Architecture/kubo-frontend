@@ -43,18 +43,26 @@ function App() {
     checkUser();
   }, [checkUser]);
 
+  // Garante que o body e html tenham scrollbar overlay
+  useEffect(() => {
+    if (CSS.supports('overflow', 'overlay')) {
+      document.documentElement.style.overflowY = 'overlay';
+      document.body.style.overflowY = 'overlay';
+    }
+  }, []);
+
   // Se estiver em modo manutenção, mostra apenas a tela de manutenção
   if (IS_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
-
-  if (loading) return <Loading />;
 
   return (
     <div className="min-h-screen">
       {!isHeaderDisabled && <HeaderFull userData={userData} />}
 
       <RouterLink isAuthenticated={!!userData} hasNick={!!userData?.nickname} onLoginSuccess={checkUser} />
+      
+      {loading && <Loading />}
     </div>
   );
 }

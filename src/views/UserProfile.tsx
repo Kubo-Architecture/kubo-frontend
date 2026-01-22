@@ -68,7 +68,7 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="w-full min-h-screen relative overflow-hidden">
+    <div className="w-full min-h-screen relative">
       <div className="pt-16">
         {loading && <Loading />}
         <div className={loading ? "hidden" : "block"}>
