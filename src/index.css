@@ -10,4 +10,41 @@
     html {
         font-family: 'Montserrat', sans-serif;
     }
+    
+    /* Aplica scrollbar overlay no html e body para que o scroll sobreponha TODO o conteúdo, incluindo header fixo */
+    html,
+    body {
+        overflow-y: overlay !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Garante que elementos fixos não bloqueiem o scroll */
+    body {
+        position: relative;
+    }
+    
+    /* Fallback para navegadores que não suportam overlay */
+    @supports not (overflow: overlay) {
+        html,
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+    }
+}
+
+@layer utilities {
+    /* Faz a barra de scroll sobrepor os elementos em vez de empurrá-los */
+    /* overflow: overlay ainda funciona em navegadores Chromium (Chrome, Edge, Opera) */
+    .scrollbar-overlay {
+        overflow-y: overlay;
+    }
+    
+    /* Fallback para navegadores que não suportam overlay (Firefox, Safari) */
+    /* Nestes casos, a barra pode empurrar o conteúdo, mas é o melhor que conseguimos com CSS puro */
+    @supports not (overflow: overlay) {
+        .scrollbar-overlay {
+            overflow-y: auto;
+        }
+    }
 }

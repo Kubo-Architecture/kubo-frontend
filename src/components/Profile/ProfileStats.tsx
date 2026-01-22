@@ -164,7 +164,7 @@ export default function ProfileStats(props: any) {
     return (
         <>
             {/* Header do Perfil */}
-            <div className="w-full bg-white pt-20 dark:bg-zinc-900">
+            <div className="w-full bg-white pt-20 dark:bg-[#131B24]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                         {/* Informações do Usuário */}
@@ -183,11 +183,11 @@ export default function ProfileStats(props: any) {
                                 {props.ownProfile ? (
                                     <button 
                                         onClick={() => setIsModalOpen(true)}
-                                        className="sm:hidden p-2 hover:bg-gray-100 dark:bg-gray-100 dark:hover:bg-gray-200 rounded-full transition-colors"
+                                        className="sm:hidden p-2 hover:bg-gray-100 dark:bg-[#27313D] dark:hover:bg-gray-500 rounded-full transition-colors"
                                         aria-label="Editar perfil"
                                     >
                                         <svg 
-                                            className="h-5 w-5 text-gray-700" 
+                                            className="h-5 w-5 text-gray-700 dark:text-white" 
                                             fill="none" 
                                             stroke="currentColor" 
                                             viewBox="0 0 24 24"
@@ -254,7 +254,7 @@ export default function ProfileStats(props: any) {
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsModalOpen(true)}
-                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-500 dark:hover:bg-gray-500/50 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                                    className="cursor-pointer hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-[#27313D] dark:hover:bg-gray-500/50 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                   <i className="fa-solid fa-pen"></i>
 

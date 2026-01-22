@@ -13,10 +13,10 @@ export default function LanguageSection({ language, onLanguageChange }: Language
   ];
 
   return (
-    <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+    <section className="bg-white dark:bg-[#151B23] dark:border-[#3d444d] rounded-2xl overflow-hidden border border-neutral-200">
       <div className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6 lg:mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-black mb-2">Idioma</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-2">Idioma</h2>
           <p className="text-sm sm:text-base text-neutral-500">Escolha o idioma da plataforma</p>
         </div>
 
@@ -24,7 +24,7 @@ export default function LanguageSection({ language, onLanguageChange }: Language
           <select
             value={language}
             onChange={(e) => onLanguageChange(e.target.value)}
-            className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black appearance-none cursor-pointer hover:border-neutral-300 transition-all focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:hover:border-[#3d444d] dark:active:border-[#3d444d] dark:focus:outline-none outline-none border border-neutral-200 rounded-xl text-sm font-medium text-black dark:text-neutral-400 appearance-none cursor-pointer hover:border-neutral-300 transition-all focus:outline-none"
           >
             {languageOptions.map((option) => (
               <option key={option.id} value={option.id}>

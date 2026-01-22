@@ -135,17 +135,17 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="bg-white rounded-2xl overflow-hidden border border-neutral-200">
+    <section className="bg-white dark:bg-[#151B23] dark:border-[#3d444d] rounded-2xl overflow-hidden border border-neutral-200">
       <div className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6 lg:mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-black mb-2">Contato</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-2">Contato</h2>
           <p className="text-sm sm:text-base text-neutral-500">Entre em contato conosco para dúvidas, suporte ou feedback</p>
         </div>
 
         <div className="space-y-5 sm:space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             <div>
-              <label className="block text-sm font-semibold text-black mb-2 sm:mb-3">
+              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
                 Nome completo <span className="text-red-500">*</span>
               </label>
               <input
@@ -154,12 +154,12 @@ export default function ContactForm() {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Seu nome completo"
-                className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent hover:border-neutral-300 transition-all"
+                className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none hover:border-neutral-300 dark:hover:border-[#3d444d] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-black mb-2 sm:mb-3">
+              <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
                 E-mail <span className="text-red-500">*</span>
               </label>
               <input
@@ -168,29 +168,29 @@ export default function ContactForm() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="seu@gmail.com"
-                className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent hover:border-neutral-300 transition-all"
+                className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none hover:border-neutral-300 dark:hover:border-[#3d444d] transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-black mb-2 sm:mb-3">
+            <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
               Assunto <span className="text-red-500">*</span>
             </label>
             <div className="relative" ref={subjectRef}>
               <button
                 type="button"
                 onClick={() => setIsSubjectOpen(!isSubjectOpen)}
-                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black hover:border-neutral-300 transition-all"
+                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:hover:border-[#3d444d] border border-neutral-200 rounded-xl text-sm font-medium text-black dark:text-neutral-400 hover:border-neutral-300 transition-all"
               >
-                <span className={formData.subject ? 'text-black' : 'text-neutral-400'}>
+                <span className={formData.subject ? 'text-black dark:text-neutral-400' : 'text-neutral-400 dark:text-neutral-500'}>
                   {formData.subject || 'Selecione um assunto'}
                 </span>
-                <i className={`fa-solid fa-chevron-down text-neutral-400 transition-transform ${isSubjectOpen ? 'rotate-180' : ''}`}></i>
+                <i className={`fa-solid fa-chevron-down text-neutral-400 dark:text-neutral-500 transition-transform ${isSubjectOpen ? 'rotate-180' : ''}`}></i>
               </button>
               
               {isSubjectOpen && (
-                <div className="absolute z-10 w-full mt-2 bg-white border border-neutral-200 rounded-xl shadow-lg overflow-hidden">
+                <div className="absolute z-10 w-full mt-2 bg-white dark:bg-[#202830] border border-neutral-200 dark:border-[#3d444d] rounded-xl shadow-lg overflow-hidden">
                   {subjects.map((subject) => (
                     <button
                       key={subject}
@@ -198,8 +198,8 @@ export default function ContactForm() {
                       onClick={() => handleSubjectSelect(subject)}
                       className={`w-full px-3 sm:px-4 py-3 text-left cursor-pointer text-sm font-medium transition-colors ${
                         formData.subject === subject
-                          ? 'bg-black text-white'
-                          : 'text-black hover:bg-neutral-50'
+                          ? 'bg-black dark:bg-black text-white'
+                          : 'text-black dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-[#151B23]'
                       }`}
                     >
                       {subject}
@@ -211,7 +211,7 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-black mb-2 sm:mb-3">
+            <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
               Mensagem <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -220,23 +220,23 @@ export default function ContactForm() {
               onChange={handleChange}
               placeholder="Como podemos ajudar você?"
               rows={6}
-              className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent hover:border-neutral-300 transition-all resize-none"
+              className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black placeholder:text-neutral-400 focus:outline-none hover:border-neutral-300 dark:hover:border-[#3d444d] transition-all resize-none"
             />
           </div>
 
           {submitStatus === 'success' && (
-            <div className="flex items-center gap-2 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-xl">
-              <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-              <p className="text-sm font-medium text-green-700">
+            <div className="flex items-center gap-2 p-3 sm:p-4 bg-green-50 dark:bg-[#1a2e1a] border border-green-200 dark:border-green-800 rounded-xl">
+              <Check className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+              <p className="text-sm font-medium text-green-700 dark:text-green-400">
                 Mensagem enviada com sucesso! Responderemos em breve.
               </p>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="flex items-center gap-2 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <p className="text-sm font-medium text-red-700">
+            <div className="flex items-center gap-2 p-3 sm:p-4 bg-red-50 dark:bg-[#2e1a1a] border border-red-200 dark:border-red-800 rounded-xl">
+              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
+              <p className="text-sm font-medium text-red-700 dark:text-red-400">
                 {errorMessage}
               </p>
             </div>
@@ -246,7 +246,7 @@ export default function ContactForm() {
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center cursor-pointer gap-2 px-4 py-3.5 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white transition-all"
+            className="w-full flex items-center justify-center cursor-pointer gap-2 px-4 py-3.5 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:cursor-not-allowed rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
           >
             {isSubmitting ? (
               <>

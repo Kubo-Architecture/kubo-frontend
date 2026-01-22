@@ -140,17 +140,17 @@ export default function AccountSection() {
           >
             <div 
               ref={deleteModalRef}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-black mb-2">Confirmar Exclusão</h3>
-                <p className="text-sm text-neutral-600">Digite sua senha para continuar</p>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Confirmar Exclusão</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua senha para continuar</p>
               </div>
 
               <div className="mb-6">
-                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                  <i className="fa-solid fa-key text-neutral-600"></i>
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
+                  <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
                   Senha
                 </label>
                 <input
@@ -158,7 +158,7 @@ export default function AccountSection() {
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
                   placeholder="Digite sua senha"
-                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && handleDeletePasswordSubmit()}
                 />
               </div>
@@ -169,7 +169,7 @@ export default function AccountSection() {
                     setShowDeleteModal(false);
                     setDeletePassword('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
                 >
                   Cancelar
                 </button>
@@ -192,21 +192,21 @@ export default function AccountSection() {
           >
             <div 
               ref={deleteConfirmModalRef}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 text-center">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
+                <div className="w-16 h-16 bg-red-100 dark:bg-[#2e1a1a] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fa-solid fa-triangle-exclamation text-2xl text-red-600 dark:text-red-400"></i>
                 </div>
-                <h3 className="text-xl font-bold text-black mb-2">Tem certeza absoluta?</h3>
-                <p className="text-sm text-neutral-600">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente excluídos.</p>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Tem certeza absoluta?</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente excluídos.</p>
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirmModal(false)}
-                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
                 >
                   Cancelar
                 </button>
@@ -232,17 +232,17 @@ export default function AccountSection() {
           >
             <div 
               ref={passwordModalRef}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-black mb-2">Alterar Senha</h3>
-                <p className="text-sm text-neutral-600">Digite sua senha atual para continuar</p>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Alterar Senha</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua senha atual para continuar</p>
               </div>
 
               <div className="mb-6">
-                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                  <i className="fa-solid fa-key text-neutral-600"></i>
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
+                  <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
                   Senha Atual
                 </label>
                 <input
@@ -250,7 +250,7 @@ export default function AccountSection() {
                   value={changePassword}
                   onChange={(e) => setChangePassword(e.target.value)}
                   placeholder="Digite sua senha atual"
-                  className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
                 />
               </div>
@@ -261,13 +261,13 @@ export default function AccountSection() {
                     setShowPasswordModal(false);
                     setChangePassword('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordSubmit}
-                  className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
                 >
                   Continuar
                 </button>
@@ -288,18 +288,18 @@ export default function AccountSection() {
           >
             <div 
               ref={passwordConfirmModalRef}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-black mb-2">Nova Senha</h3>
-                <p className="text-sm text-neutral-600">Digite sua nova senha</p>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Nova Senha</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua nova senha</p>
               </div>
 
               <div className="space-y-4 mb-6">
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                    <i className="fa-solid fa-lock text-neutral-600"></i>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
+                    <i className="fa-solid fa-lock text-neutral-600 dark:text-neutral-500"></i>
                     Nova Senha
                   </label>
                   <input
@@ -307,13 +307,13 @@ export default function AccountSection() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Digite a nova senha"
-                    className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-3">
-                    <i className="fa-solid fa-lock text-neutral-600"></i>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
+                    <i className="fa-solid fa-lock text-neutral-600 dark:text-neutral-500"></i>
                     Confirmar Nova Senha
                   </label>
                   <input
@@ -321,7 +321,7 @@ export default function AccountSection() {
                     value={confirmNewPassword}
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
                     placeholder="Confirme a nova senha"
-                    className="w-full px-4 py-3 bg-white border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                     onKeyPress={(e) => e.key === 'Enter' && handlePasswordConfirm()}
                   />
                 </div>
@@ -334,13 +334,13 @@ export default function AccountSection() {
                     setNewPassword('');
                     setConfirmNewPassword('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-sm font-semibold text-neutral-700 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordConfirm}
-                  className="flex-1 px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
                 >
                   Alterar Senha
                 </button>
@@ -357,20 +357,20 @@ export default function AccountSection() {
           >
             <div 
               ref={passwordSuccessModalRef}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl"
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fa-solid fa-check text-2xl text-green-600"></i>
+                <div className="w-16 h-16 bg-green-100 dark:bg-[#1a2e1a] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fa-solid fa-check text-2xl text-green-600 dark:text-green-400"></i>
                 </div>
-                <h3 className="text-xl font-bold text-black mb-2">Senha Alterada!</h3>
-                <p className="text-sm text-neutral-600">Sua senha foi alterada com sucesso.</p>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Senha Alterada!</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Sua senha foi alterada com sucesso.</p>
               </div>
 
               <button
                 onClick={() => setShowPasswordSuccessModal(false)}
-                className="w-full px-4 py-3 bg-black hover:bg-neutral-800 rounded-xl text-sm font-semibold text-white transition-all"
+                className="w-full px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
               >
                 Fechar
               </button>
@@ -384,32 +384,32 @@ export default function AccountSection() {
 
   return (
     <>
-      <section className="bg-white rounded-2xl border border-neutral-200">
+      <section className="bg-white dark:bg-[#151B23] dark:border-[#3d444d] rounded-2xl border border-neutral-200">
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="mb-6 lg:mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-black mb-2">Informações da Conta</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-2">Informações da Conta</h2>
             <p className="text-sm sm:text-base text-neutral-500">Gerencie suas informações pessoais</p>
           </div>
 
           <div className="space-y-5 sm:space-y-6 mb-6 sm:mb-8">
             <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-2 sm:mb-3">
-                <i className="fa-solid fa-envelope text-neutral-600"></i>
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
+                <i className="fa-solid fa-envelope text-neutral-600 dark:text-neutral-500"></i>
                 Email
               </label>
-              <div className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-700">
+              <div className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 border border-neutral-200 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 rounded-xl text-sm font-medium text-neutral-700">
                 {userEmail}
               </div>
             </div>
 
             <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 mb-2 sm:mb-3">
-                <i className="fa-solid fa-key text-neutral-600"></i>
+              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
+                <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
                 Senha
               </label>
               <button 
                 onClick={handleChangePassword}
-                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
+                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 dark:hover:bg-[#202830] dark:hover:border-[#3d444d] hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
               >
                 <span>Alterar senha</span>
                 <i className="fa-solid fa-chevron-right text-neutral-400 group-hover:text-neutral-600 transition-colors"></i>
@@ -424,7 +424,7 @@ export default function AccountSection() {
             </label>
             <button 
               onClick={handleDeleteAccount}
-              className="flex items-center justify-center cursor-pointer gap-2 px-3 sm:px-4 py-3 sm:py-3.5 bg-red-50 hover:bg-red-100 rounded-xl transition-all border border-red-200 hover:border-red-300 text-sm font-semibold text-red-700 w-full"
+              className="flex items-center justify-center cursor-pointer gap-2 px-3 sm:px-4 py-3 sm:py-3.5 bg-red-50 dark:bg-[#302020] dark:border-[#432c2c] dark:hover:bg-[#2d1e1e] dark:hover:border-[#432c2c] hover:bg-red-100 rounded-xl transition-all border border-red-200 hover:border-red-300 text-sm font-semibold text-red-700 w-full"
             >
               <Trash2 className="w-4 h-4" />
               <span>Excluir conta permanentemente</span>

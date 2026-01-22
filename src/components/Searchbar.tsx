@@ -86,7 +86,7 @@ export default function SearchBar({
     <div className="flex-1" ref={searchRef}>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-          <i className="fas fa-search text-gray-400 text-sm sm:text-base"></i>
+          <i className="fas fa-search text-gray-400 dark:text-neutral-500 text-sm sm:text-base"></i>
         </div>
 
         <input
@@ -95,7 +95,7 @@ export default function SearchBar({
           value={searchTerm}
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={() => searchTerm.trim() && setShowSuggestions(true)}
-          className="w-full pl-10 sm:pl-12 pr-10 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-shadow text-sm sm:text-base"
+          className="w-full pl-10 sm:pl-12 pr-10 py-2 sm:py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none transition-shadow text-sm sm:text-base"
         />
 
         {searchTerm && (
@@ -105,33 +105,33 @@ export default function SearchBar({
               onSearch('');
               setShowSuggestions(false);
             }}
-            className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 transition-colors"
           >
             <i className="fas fa-times text-sm sm:text-base"></i>
           </button>
         )}
 
         {showSuggestions && hasSuggestions && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#151B23] border border-gray-200 dark:border-[#3d444d] rounded-lg shadow-lg overflow-hidden z-50">
             {filteredUsers.length > 0 && (
               <div className="py-2">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wider">
                   Usuários
                 </div>
                 {filteredUsers.map((user, index) => (
                   <button
                     key={user.id || index}
                     onClick={() => handleSelectUser(user)}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group cursor-pointer"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors group cursor-pointer"
                   >
                     <div className="relative flex-shrink-0">
                       <img
                         src={user.photoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User')}
                         alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 group-hover:border-gray-200 transition-colors"
+                        className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-[#3d444d] group-hover:border-gray-200 dark:group-hover:border-[#3d444d] transition-colors"
                       />
                       {user.verified && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-[#151B23]">
                           <i className="fas fa-check text-white text-[8px]"></i>
                         </div>
                       )}
@@ -139,22 +139,22 @@ export default function SearchBar({
 
                     <div className="flex-1 text-left min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900 text-sm truncate">
+                        <span className="font-medium text-gray-900 dark:text-white text-sm truncate">
                           {user.name}
                         </span>
                         {user.role && (
-                          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+                          <span className="px-2 py-0.5 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded-full">
                             {user.role}
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500 truncate">
+                      <div className="text-xs text-gray-500 dark:text-neutral-500 truncate">
                         @{user.nickname || user.name?.toLowerCase().replace(/\s+/g, '')}
                       </div>
                     </div>
 
                     {user.projectCount && (
-                      <div className="flex-shrink-0 text-xs text-gray-400">
+                      <div className="flex-shrink-0 text-xs text-gray-400 dark:text-neutral-500">
                         <i className="fas fa-building mr-1"></i>
                         {user.projectCount}
                       </div>
@@ -165,29 +165,29 @@ export default function SearchBar({
             )}
 
             {filteredProjects.length > 0 && (
-              <div className="py-2 border-t border-gray-100">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="py-2 border-t border-gray-100 dark:border-[#3d444d]">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wider">
                   Obras
                 </div>
                 {filteredProjects.map((project, index) => (
                   <button
                     key={project.id || index}
                     onClick={() => handleSelectProject(project)}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors group"
                   >
                     <div className="relative flex-shrink-0">
                       <img
                         src={project.photo_url || project.imageUrl || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=100'}
                         alt={project.title}
-                        className="w-12 h-12 rounded-lg object-cover border border-gray-200 group-hover:border-gray-300 transition-colors"
+                        className="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-[#3d444d] group-hover:border-gray-300 dark:group-hover:border-[#3d444d] transition-colors"
                       />
                     </div>
 
                     <div className="flex-1 text-left min-w-0">
-                      <div className="font-medium text-gray-900 text-sm truncate">
+                      <div className="font-medium text-gray-900 dark:text-white text-sm truncate">
                         {project.title}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-neutral-400">
                         <i className="fas fa-map-marker-alt text-[10px]"></i>
                         <span className="truncate">{project.location}</span>
                       </div>
@@ -195,7 +195,7 @@ export default function SearchBar({
 
                     {project.category && (
                       <div className="flex-shrink-0">
-                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full capitalize">
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded-full capitalize">
                           {project.category}
                         </span>
                       </div>
@@ -215,7 +215,7 @@ export default function SearchBar({
             onSearch('brasil');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 dark:bg-[#202830] cursor-pointer text-gray-700 dark:text-neutral-400 rounded-full hover:bg-gray-200 dark:hover:bg-[#151B23] transition-colors"
         >
           #brasil
         </button>
@@ -225,7 +225,7 @@ export default function SearchBar({
             onSearch('concreto');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 dark:bg-[#202830] cursor-pointer text-gray-700 dark:text-neutral-400 rounded-full hover:bg-gray-200 dark:hover:bg-[#151B23] transition-colors"
         >
           #concreto
         </button>
@@ -235,7 +235,7 @@ export default function SearchBar({
             onSearch('modernista');
             setShowSuggestions(false);
           }}
-          className="text-xs px-3 py-1 bg-gray-100 cursor-pointer text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          className="text-xs px-3 py-1 bg-gray-100 dark:bg-[#202830] cursor-pointer text-gray-700 dark:text-neutral-400 rounded-full hover:bg-gray-200 dark:hover:bg-[#151B23] transition-colors"
         >
           #modernista
         </button>
