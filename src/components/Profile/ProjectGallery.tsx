@@ -4,12 +4,8 @@ import axios from 'axios';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('meus-projetos');
   const [editingProject, setEditingProject] = useState<any>(null);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [likes, setLikes] = useState<{ [key: number]: number }>({});
-  const [likedProjects, setLikedProjects] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | number | null>(null);
 
@@ -18,92 +14,9 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     { id: 'colecoes', label: 'Coleções' }
   ];
 
-  // Exemplos de dados mockados
-  const mockProjects = [
-    {
-      id: 101,
-      title: 'Residência Sustentável',
-      location: 'São Paulo, Brasil',
-      description: 'Casa moderna projetada com foco em sustentabilidade e eficiência energética...',
-      architect: 'Pedro Oliveira',
-      year: 2023,
-      category: 'residencial',
-      image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800',
-      tags: ['sustentavel', 'moderno', 'ecologico'],
-      isUserProject: true,
-      likes: 89,
-      materials: ['Madeira certificada', 'Vidro low-e'],
-      status: 'Concluído',
-      build_area: '320',
-      terrain_area: '800',
-      usage_type: 'Residencial',
-      style: 'Sustentável'
-    },
-    {
-      id: 102,
-      title: 'Edifício Comercial',
-      location: 'Rio de Janeiro, Brasil',
-      description: 'Complexo comercial com design contemporâneo e espaços integrados...',
-      architect: 'Carla Mendes',
-      year: 2022,
-      category: 'comercial',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800',
-      tags: ['comercial', 'corporativo', 'vidro'],
-      isUserProject: true,
-      likes: 156,
-      materials: ['Vidro', 'Aço', 'Concreto'],
-      status: 'Concluído',
-      build_area: '5500',
-      terrain_area: '8000',
-      usage_type: 'Comercial',
-      style: 'Contemporâneo'
-    },
-    {
-      id: 103,
-      title: 'Projeto Urbano',
-      location: 'Brasília, Brasil',
-      description: 'Revitalização de área urbana com foco em mobilidade e espaços públicos...',
-      architect: 'Roberto Lima',
-      year: 2024,
-      category: 'urbano',
-      image: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800',
-      tags: ['urbano', 'publico', 'revitalizacao'],
-      isUserProject: true,
-      likes: 203,
-      materials: ['Concreto permeável', 'Vegetação nativa'],
-      status: 'Em construção',
-      build_area: '12000',
-      terrain_area: '25000',
-      usage_type: 'Público',
-      style: 'Urbanismo'
-    }
-  ];
-
-  const mockCollections = [
-    {
-      id: 1,
-      name: 'Inspirações 2024',
-      count: 12,
-      preview: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400']
-    },
-    {
-      id: 2,
-      name: 'Arquitetura Moderna',
-      count: 8,
-      preview: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400']
-    },
-    {
-      id: 3,
-      name: 'Design de Interiores',
-      count: 15,
-      preview: ['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400']
-    }
-  ];
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}/projects`);
         const data = response.data;
         setProjects(data || []);
@@ -111,28 +24,10 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         if (onProjectsLoaded) {
           onProjectsLoaded(data ? data.length : 0);
         }
-
-        // Inicializar likes
-        const initialLikes: { [key: number]: number } = {};
-        if (data && Array.isArray(data)) {
-          data.forEach((project: any) => {
-            const projectId = project._id || project.id;
-            initialLikes[projectId] = project.likes || 0;
-          });
-        }
-        setLikes(initialLikes);
       } catch (err: any) {
         console.error("Erro ao buscar projetos:", err);
         setProjects([]);
-        
-        // Inicializar likes para projetos mockados
-        const initialLikes: { [key: number]: number } = {};
-        mockProjects.forEach((project: any) => {
-          initialLikes[project.id] = project.likes || 0;
-        });
-        setLikes(initialLikes);
       } finally {
-        setLoading(false);
         if (setIsLoadingChild) {
           setIsLoadingChild(false);
         }
@@ -152,32 +47,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
-
-  // Função para favoritar
-  const toggleFavorite = (projectId: number) => {
-    setFavorites(prev => 
-      prev.includes(projectId) 
-        ? prev.filter(id => id !== projectId)
-        : [...prev, projectId]
-    );
-  };
-
-  // Função para dar like
-  const toggleLike = (projectId: number) => {
-    if (likedProjects.includes(projectId)) {
-      setLikedProjects(prev => prev.filter(id => id !== projectId));
-      setLikes(prev => ({
-        ...prev,
-        [projectId]: Math.max((prev[projectId] || 0) - 1, 0)
-      }));
-    } else {
-      setLikedProjects(prev => [...prev, projectId]);
-      setLikes(prev => ({
-        ...prev,
-        [projectId]: (prev[projectId] || 0) + 1
-      }));
-    }
-  };
 
   // Função para editar projeto
   const handleEditProject = (project: any) => {
@@ -218,7 +87,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       );
 
       if (response.status === 200 || response.status === 204) {
-        // Atualizar a lista de projetos
         const updatedProjects: any = projects.map((p: any) => {
           const pId = p._id || p.id;
           return pId === projectId ? { ...p, ...updateData } : p;
@@ -226,7 +94,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         setProjects(updatedProjects);
         setEditingProject(null);
         
-        // Recarregar projetos do servidor para garantir sincronização
         const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${userId}`);
         if (refreshResponse.data) {
           setProjects(refreshResponse.data);
@@ -257,7 +124,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       );
 
       if (response.status === 200 || response.status === 204) {
-        // Remover projeto da lista
         const updatedProjects = projects.filter((p: any) => {
           const pId = p._id || p.id;
           return String(pId) !== String(projectId);
@@ -276,34 +142,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     }
   };
 
-  if (loading) {
-    return (
-      <div className="w-full min-h-screen bg-white dark:bg-[#151B23]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8">
-            {/* Tabs skeleton */}
-            <div className="flex gap-8 border-b border-gray-200/60 dark:border-[#3d444d]">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-10 bg-gray-100 dark:bg-[#202830] rounded w-28 mb-[-1px] animate-pulse" />
-              ))}
-            </div>
-            
-            {/* Grid skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="space-y-3">
-                  <div className="aspect-[4/3] bg-gray-100 dark:bg-[#202830] rounded-2xl animate-pulse" />
-                  <div className="h-4 bg-gray-100 dark:bg-[#202830] rounded w-3/4 animate-pulse" />
-                  <div className="h-3 bg-gray-100 dark:bg-[#202830] rounded w-1/2 animate-pulse" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full h-auto bg-white dark:bg-[#151B23] pt-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -315,7 +153,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`
-                cursor-pointer relative pb-4 px-1 text-base font-medium transition-all duration-200
+                relative pb-4 px-1 text-base cursor-pointer font-medium transition-all duration-200
                 ${activeTab === tab.id 
                   ? 'text-gray-900 dark:text-white' 
                   : 'text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-300'
@@ -331,7 +169,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         </div>
 
         {/* Conteúdo */}
-        <div className="pb-12">
+        <div className="pb-8">
           {/* Meus Projetos */}
           {activeTab === 'meus-projetos' && (
             <>
@@ -381,111 +219,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                     );
                   })}
                 </div>
-              ) : mockProjects.length > 0 ? (
-                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                  {mockProjects.map((project) => (
-                    <div
-                      key={project.id}
-                      className="bg-white dark:bg-[#151B23] rounded-lg border border-gray-300 dark:border-[#3d444d] overflow-hidden hover:shadow-md transition-all duration-300 group"
-                    >
-                      <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                        <img
-                          src={project.image}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                        
-                        {/* Botão de editar */}
-                        {project.isUserProject && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditProject(project);
-                            }}
-                            className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm rounded-full hover:bg-white dark:hover:bg-[#202830] transition-all shadow-md hover:shadow-lg z-10"
-                            title="Editar projeto"
-                          >
-                            <i className="fas fa-edit text-gray-700 dark:text-neutral-400 text-xs"></i>
-                          </button>
-                        )}
-
-                        <div className="absolute top-3 right-3">
-                          <span className="px-3 py-1 bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm text-gray-900 dark:text-neutral-400 text-xs font-medium rounded-full border border-gray-300 dark:border-[#3d444d]">
-                            {project.category}
-                          </span>
-                        </div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                          <button className="text-white text-sm font-medium flex items-center hover:text-gray-200">
-                            Ver detalhes
-                            <i className="fas fa-arrow-right ml-2"></i>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base line-clamp-1">{project.title}</h3>
-                          <button
-                            onClick={() => toggleFavorite(project.id)}
-                            className={`flex-shrink-0 ml-2 transition-colors ${
-                              favorites.includes(project.id) 
-                                ? 'text-yellow-400 hover:text-yellow-500' 
-                                : 'text-gray-400 dark:text-neutral-500 hover:text-yellow-400 dark:hover:text-yellow-400'
-                            }`}
-                          >
-                            <i className={`${favorites.includes(project.id) ? 'fas' : 'far'} fa-star text-sm sm:text-base`}></i>
-                          </button>
-                        </div>
-
-                        <div className="flex items-center text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-3">
-                          <i className="fas fa-map-marker-alt mr-2 text-gray-400 dark:text-neutral-500 flex-shrink-0"></i>
-                          <span className="truncate">{project.location}</span>
-                        </div>
-
-                        <p className="text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-4 line-clamp-2">{project.description}</p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-[#3d444d]">
-                          <div className="min-w-0">
-                            <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1 truncate">Arquiteto</div>
-                            <div className="text-sm font-medium text-gray-900 dark:text-neutral-400 truncate">{project.architect}</div>
-                          </div>
-                          <div className="text-right flex-shrink-0 ml-4">
-                            <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1">Ano</div>
-                            <div className="text-sm font-medium text-gray-900 dark:text-neutral-400">{project.year}</div>
-                          </div>
-                        </div>
-
-                        {/* Tags e Like */}
-                        <div className="mt-4 flex items-center justify-between">
-                          <div className="flex flex-wrap gap-1 flex-1">
-                            {project.tags.slice(0, 2).map((tag: string, index: number) => (
-                              <span key={index} className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded truncate max-w-[70px] sm:max-w-[90px]">
-                                {tag}
-                              </span>
-                            ))}
-                            {project.tags.length > 2 && (
-                              <span className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded">
-                                +{project.tags.length - 2}
-                              </span>
-                            )}
-                          </div>
-                          <button
-                            onClick={() => toggleLike(project.id)}
-                            className={`flex items-center space-x-1 transition-colors ml-2 ${
-                              likedProjects.includes(project.id)
-                                ? 'text-red-500 hover:text-red-600'
-                                : 'text-gray-500 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-500'
-                            }`}
-                          >
-                            <i className={`${likedProjects.includes(project.id) ? 'fas' : 'far'} fa-heart text-sm`}></i>
-                            <span className="text-xs font-medium">{likes[project.id] || 0}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               ) : (
                 <EmptyState
                   icon={
@@ -495,8 +228,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   }
                   title="Nenhum projeto ainda"
                   description="Comece compartilhando seu primeiro projeto com a comunidade"
-                  buttonText="Criar projeto"
-                  onButtonClick={() => console.log('Criar projeto')}
                 />
               )}
             </>
@@ -505,40 +236,17 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
           {/* Coleções */}
           {activeTab === 'colecoes' && (
             <>
-              {mockCollections.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {mockCollections.map((collection) => (
-                    <div key={collection.id} className="group cursor-pointer">
-                      <div className="aspect-[4/3] bg-gray-100 dark:bg-[#202830] rounded-2xl overflow-hidden mb-4 relative shadow-sm hover:shadow-md transition-all duration-300">
-                        <img 
-                          src={collection.preview[0]} 
-                          alt={collection.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute bottom-4 right-4 bg-white/95 dark:bg-[#202830]/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium text-gray-900 dark:text-neutral-400 shadow-sm">
-                          {collection.count} projetos
-                        </div>
-                      </div>
-                      <h3 className="text-base font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-neutral-300 transition-colors">
-                        {collection.name}
-                      </h3>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState
-                  icon={
-                    <svg className="w-16 h-16 text-gray-300 dark:text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                  }
-                  title="Nenhuma coleção criada"
-                  description="Organize seus projetos favoritos em coleções temáticas"
-                  buttonText="Criar coleção"
-                  onButtonClick={() => console.log('Criar coleção')}
-                />
-              )}
+              <EmptyState
+                icon={
+                  <svg className="w-16 h-16 text-gray-300 dark:text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                }
+                title="Nenhuma coleção criada"
+                description="Organize seus projetos favoritos em coleções temáticas"
+                buttonText="Criar coleção"
+                onButtonClick={() => console.log('Criar coleção')}
+              />
             </>
           )}
         </div>
