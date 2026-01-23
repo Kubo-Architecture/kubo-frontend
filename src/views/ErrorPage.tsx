@@ -2,7 +2,7 @@ import HouseError from '../assets/icons/Universal/kubo-empty.svg';
 
 export default function ErrorPage() {
   const errorCode = window.location.pathname.includes('500') ? '500' : '404';
-  const errorMessage = errorCode === '500' ? 'Internal server error' : 'Page not found';
+  const errorMessage = errorCode === '500' ? 'Erro interno no servidor' : 'Página não encontrada';
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
