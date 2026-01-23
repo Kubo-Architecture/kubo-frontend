@@ -16,7 +16,6 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState<any>(null)
   const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
   const [projectCount, setProjectCount] = useState(0);
-  const [refreshProjects, setRefreshProjects] = useState(0);
 
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
@@ -52,10 +51,6 @@ export default function UserProfile() {
       ...prev,
       banner: newBanner
     }));
-  };
-
-  const handleProjectCreated = () => {
-    setRefreshProjects(prev => prev + 1);
   };
 
   if (!profileData) {
@@ -98,7 +93,6 @@ export default function UserProfile() {
               userId={profileData.userId} 
               onProjectsLoaded={(count: number) => setProjectCount(count)} 
               setIsLoadingChild={setLoading}
-              refreshTrigger={refreshProjects}
             />
           </div>
 
