@@ -26,21 +26,29 @@ export default function PhotoEditorModal({
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const modalContentRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Bloquear scroll do body quando o modal estiver aberto
   useEffect(() => {
     if (isOpen) {
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
     }
     
     return () => {
-      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  // Fechar modal com tecla ESC
+  // Fechar modal ao clicar fora ou pressionar ESC
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' || event.key === 'Esc') {
         handleClose();
@@ -48,10 +56,12 @@ export default function PhotoEditorModal({
     };
 
     if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscKey);
     }
 
     return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscKey);
     };
   }, [isOpen]);
@@ -364,12 +374,6 @@ export default function PhotoEditorModal({
     onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
-      handleClose();
-    }
-  };
-
   const getImageDimensions = () => {
     if (!imageRef.current) return { width: 0, height: 0 };
     
@@ -405,33 +409,33 @@ export default function PhotoEditorModal({
                        !currentPhotoUrl.includes('defaultUserPhoto');
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-      onClick={handleBackdropClick}
-    >
-      <div 
-        ref={modalContentRef}
-        className="bg-white rounded-xl max-w-lg w-full overflow-hidden max-h-[90vh] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"
+        style={{ maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-black">
-            Editar foto
-          </h2>
-          <button
-            onClick={handleClose}
-            className="text-gray-400 hover:text-black transition-colors"
-            disabled={isLoading}
-            aria-label="Fechar"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Editar foto
+            </h2>
+            <button
+              onClick={handleClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg"
+              disabled={isLoading}
+              aria-label="Fechar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div className="p-4 sm:p-6 flex-1 overflow-hidden">
+        {/* Conteúdo */}
+        <div className="flex-1 px-4 sm:px-6 py-4 overflow-y-auto">
           {previewUrl ? (
             <div className="space-y-4">
               <div 
@@ -554,51 +558,53 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-200 flex gap-2 flex-shrink-0">
-          {!previewUrl && (
-            <>
-              {hasRealPhoto && (
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4">
+          <div className="flex gap-2">
+            {!previewUrl && (
+              <>
+                {hasRealPhoto && (
+                  <button
+                    onClick={handleRemovePhoto}
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoading}
+                    type="button"
+                  >
+                    {isLoading ? "Removendo..." : "Remover foto"}
+                  </button>
+                )}
+                
                 <button
-                  onClick={handleRemovePhoto}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleClose}
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
                   disabled={isLoading}
                   type="button"
                 >
-                  {isLoading ? "Removendo..." : "Remover foto"}
+                  Cancelar
                 </button>
-              )}
-              
-              <button
-                onClick={handleClose}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
-                disabled={isLoading}
-                type="button"
-              >
-                Cancelar
-              </button>
-            </>
-          )}
-          
-          {previewUrl && (
-            <>
-              <button
-                onClick={handleChooseNewPhoto}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
-                disabled={isLoading}
-                type="button"
-              >
-                Trocar
-              </button>
-              <button
-                onClick={handleSave}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-black hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isLoading}
-                    type="button"
-              >
-                {isLoading ? "Salvando..." : "Salvar"}
-              </button>
-            </>
-          )}
+              </>
+            )}
+            
+            {previewUrl && (
+              <>
+                <button
+                  onClick={handleChooseNewPhoto}
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
+                  disabled={isLoading}
+                  type="button"
+                >
+                  Trocar
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-black hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
+                  type="button"
+                >
+                  {isLoading ? "Salvando..." : "Salvar"}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

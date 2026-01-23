@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ProjectImage from "../assets/images/project.svg";
 
 export default function ProjectPage() {
     const location = useLocation();
@@ -180,19 +179,27 @@ export default function ProjectPage() {
                         <div className="lg:pl-4">
                             <div 
                                 className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative"
-                                onClick={() => openLightbox(project.photo_url || ProjectImage)}
+                                onClick={() => project.photo_url && openLightbox(project.photo_url)}
                             >
-                                <img
-                                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
-                                    src={project.photo_url || ProjectImage}
-                                    alt={project.name}
-                                    onError={() => setImageError(true)}
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                                        <i className="fas fa-expand text-gray-900 dark:text-neutral-400 text-sm"></i>
+                                {project.photo_url ? (
+                                    <>
+                                        <img
+                                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                                            src={project.photo_url}
+                                            alt={project.name}
+                                            onError={() => setImageError(true)}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                                                <i className="fas fa-expand text-gray-900 dark:text-neutral-400 text-sm"></i>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <i className="fas fa-image text-4xl text-gray-300 dark:text-neutral-600"></i>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
