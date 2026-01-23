@@ -4,9 +4,9 @@ export const signupSchema = yup.object().shape({
   name: yup
     .string()
     .required('Nome é obrigatório')
-    .min(1, 'Nome deve ter no mínimo 1 caractere')
-    .max(100, 'Nome deve ter no máximo 100 caracteres')
-    .matches(/^[^\s]+$/, 'O nome de usuário não pode conter espaços'),
+    .trim()
+    .min(1, 'Nome é obrigatório')
+    .max(100, 'Nome deve ter no máximo 100 caracteres'),
 
   email: yup
     .string()
