@@ -7,7 +7,6 @@ import MaintenanceScreen from './views/MaintenanceScreen';
 import './index.css';
 import { useLocation } from 'react-router-dom';
 
-// Flag de manutenção - você pode controlar isso via variável de ambiente
 const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 
 function App() {
@@ -31,12 +30,10 @@ function App() {
     try {
       const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${userId}`);
       setUserData(res.data);
-      // Notificar ThemeProvider que o usuário fez login
       window.dispatchEvent(new Event("userIdChanged"));
     } catch (error) {
       setUserData(null);
       localStorage.removeItem('userId');
-      // Notificar ThemeProvider que o usuário fez logout
       window.dispatchEvent(new Event("userIdChanged"));
     } finally {
       setLoading(false);
@@ -47,7 +44,6 @@ function App() {
     checkUser();
   }, [checkUser]);
 
-  // Garante que o body e html tenham scrollbar overlay
   useEffect(() => {
     if (CSS.supports('overflow', 'overlay')) {
       document.documentElement.style.overflowY = 'overlay';
@@ -55,7 +51,6 @@ function App() {
     }
   }, []);
 
-  // Se estiver em modo manutenção, mostra apenas a tela de manutenção
   if (IS_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
