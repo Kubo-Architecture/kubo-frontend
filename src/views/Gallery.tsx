@@ -216,6 +216,18 @@ export default function Gallery() {
     getProjects(searchValue);
   };
 
+  // Carregar projetos ao montar o componente
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_URL}/projects`)
+      .then((response) => {
+        setProjects(response.data);
+        setWorks(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar projetos:", error);
+      });
+  }, []);
+
   useEffect(() => {
     const initialLikes: { [key: number]: number } = {};
     works.forEach((work: any) => {
@@ -223,14 +235,6 @@ export default function Gallery() {
     });
     setLikes(initialLikes);
   }, [works]);
-
-  useEffect(() => {
-    const loadProjects = async () => {
-      // TODO: carregar projetos da API
-    };
-
-    loadProjects();
-  }, []);
 
   useEffect(() => {
     const checkUserLogged = async () => {
@@ -269,58 +273,6 @@ export default function Gallery() {
     if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
     return true;
   });
-
-  const handleNewProjectCreated = (projectData: any) => {
-    console.log('Novo projeto recebido:', projectData);
-    
-    // Formatar o projeto para o padrão esperado
-    const newProject = {
-      id: projectData.id,
-      title: projectData.name,
-      name: projectData.name,
-      location: projectData.location,
-      description: projectData.description,
-      photo_url: projectData.photo_url,
-      imageUrl: projectData.photo_url,
-      category: projectData.usage_type,
-      usage_type: projectData.usage_type,
-      status: projectData.status,
-      build_area: projectData.build_area,
-      terrain_area: projectData.terrain_area,
-      materials: projectData.materials,
-      architect: projectData.architect || 'Dono do projeto',
-      year: projectData.year || new Date().getFullYear(),
-      tags: projectData.tags || [],
-      likes: 0,
-      isUserProject: true,
-      userId: projectData.userId
-    };
-
-    // Atualizar estados IMEDIATAMENTE
-    setProjects(prev => [newProject, ...prev]);
-    setWorks(prev => [newProject, ...prev]);
-    
-    // Inicializar likes para o novo projeto
-    setLikes(prev => ({
-      ...prev,
-      [newProject.id]: 0
-    }));
-
-    console.log('Projeto adicionado localmente');
-    
-    // Recarregar da API em background para sincronizar
-    setTimeout(() => {
-      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-        .then((response) => {
-          setProjects(response.data);
-          setWorks(response.data);
-          console.log('Projetos recarregados da API');
-        })
-        .catch((error) => {
-          console.error("Erro ao recarregar projetos:", error);
-        });
-    }, 500);
-  };
 
   const toggleFavorite = (workId: number) => {
     setFavorites(prev => 
@@ -397,7 +349,7 @@ export default function Gallery() {
                   </button>
                 </div>
 
-                <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
+                <Btncriarprojeto />
               </div>
             </div>
 
