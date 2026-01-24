@@ -31,9 +31,13 @@ function App() {
     try {
       const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${userId}`);
       setUserData(res.data);
+      // Notificar ThemeProvider que o usuário fez login
+      window.dispatchEvent(new Event("userIdChanged"));
     } catch (error) {
       setUserData(null);
       localStorage.removeItem('userId');
+      // Notificar ThemeProvider que o usuário fez logout
+      window.dispatchEvent(new Event("userIdChanged"));
     } finally {
       setLoading(false);
     }
