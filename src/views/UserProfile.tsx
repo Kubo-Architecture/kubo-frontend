@@ -93,6 +93,7 @@ export default function UserProfile() {
               userId={profileData.userId} 
               onProjectsLoaded={(count: number) => setProjectCount(count)} 
               setIsLoadingChild={setLoading}
+              isOwnProfile={isOwnProfile}
             />
           </div>
 

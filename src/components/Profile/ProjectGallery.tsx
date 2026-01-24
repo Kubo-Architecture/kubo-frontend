@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
 
-const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger }: any) => {
+const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger, isOwnProfile }: any) => {
   const [projects, setProjects] = useState([]);
   const [activeTab, setActiveTab] = useState('meus-projetos');
   const [editingProject, setEditingProject] = useState<any>(null);
@@ -242,8 +242,9 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 }
-                title="Nenhuma coleção criada"
+                title={isOwnProfile ? "Nenhuma coleção criada" : "O perfil não possui coleções"}
                 description="Organize seus projetos favoritos em coleções temáticas"
+                isOwnProfile={isOwnProfile}
                 buttonText="Criar coleção"
                 onButtonClick={() => console.log('Criar coleção')}
               />
@@ -583,14 +584,14 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 };
 
 // Componente de Estado Vazio
-const EmptyState = ({ icon, title, description, buttonText, onButtonClick }: any) => (
+const EmptyState = ({ icon, title, description, buttonText, onButtonClick, isOwnProfile }: any) => (
   <div className="flex flex-col items-center justify-center py-24 px-6">
     <div className="mb-6 opacity-80">{icon}</div>
     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
-    <p className="text-sm text-gray-500 dark:text-neutral-400 mb-8 text-center max-w-md leading-relaxed">
+    {isOwnProfile && <p className="text-sm text-gray-500 dark:text-neutral-400 mb-8 text-center max-w-md leading-relaxed">
       {description}
-    </p>
-    {buttonText && (
+    </p>}
+    {buttonText && isOwnProfile && (
       <button 
         onClick={onButtonClick}
         className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all duration-200 shadow-sm hover:shadow-md"
