@@ -41,6 +41,23 @@ export default function PhotoEditorModal({
     };
   }, [isOpen]);
 
+  // Esconder header - useEffect separado para garantir execução
+  useEffect(() => {
+    if (isOpen) {
+      const header = document.getElementById('main-header');
+      if (header) {
+        header.style.display = 'none';
+      }
+      
+      return () => {
+        const header = document.getElementById('main-header');
+        if (header) {
+          header.style.display = '';
+        }
+      };
+    }
+  }, [isOpen]);
+
   // Fechar modal ao clicar fora ou pressionar ESC
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -409,7 +426,7 @@ export default function PhotoEditorModal({
                        !currentPhotoUrl.includes('defaultUserPhoto');
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
       <div
         ref={modalRef}
         className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"

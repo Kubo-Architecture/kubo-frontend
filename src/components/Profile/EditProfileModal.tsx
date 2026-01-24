@@ -51,7 +51,7 @@ export default function EditProfileModal({
     }
   }, [isOpen, userData]);
 
-  // Fechar modal ao pressionar ESC
+  // Fechar modal ao pressionar ESC e controlar scroll
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -68,6 +68,23 @@ export default function EditProfileModal({
       document.removeEventListener('keydown', handleEscKey);
       document.body.style.overflow = 'auto';
     };
+  }, [isOpen]);
+
+  // Esconder header quando modal abrir
+  useEffect(() => {
+    if (isOpen) {
+      const header = document.getElementById('main-header');
+      if (header) {
+        header.style.display = 'none';
+      }
+      
+      return () => {
+        const header = document.getElementById('main-header');
+        if (header) {
+          header.style.display = '';
+        }
+      };
+    }
   }, [isOpen]);
 
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -145,7 +162,7 @@ export default function EditProfileModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
       onClick={handleModalClick}
     >
       <div

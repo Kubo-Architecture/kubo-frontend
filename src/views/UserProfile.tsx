@@ -17,6 +17,20 @@ export default function UserProfile() {
   const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
   const [projectCount, setProjectCount] = useState(0);
 
+  // Bloqueia o scroll do body quando o componente está montado
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalHtmlStyle = window.getComputedStyle(document.documentElement).overflow;
+    
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    return () => {
+      document.body.style.overflow = originalStyle;
+      document.documentElement.style.overflow = originalHtmlStyle;
+    };
+  }, []);
+
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
     const currentUserId = window.localStorage.getItem('userId');
@@ -55,55 +69,57 @@ export default function UserProfile() {
 
   if (!profileData) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23]">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23] fixed inset-0">
         <Loading />
       </div>
     )
   }
 
   return (
-    <div className="w-full min-h-screen relative bg-gray-50 dark:bg-[#151B23]">
-      <div className="pt-16">
-        {loading && <Loading />}
-        <div className={loading ? "hidden" : "block"}>
-          <ProfileInnerHeader
-            banner={profileData.banner}
-            photoUrl={profileData.photoUrl}
-            ownProfile={isOwnProfile}
-            onEditBannerClick={() => setShowBannerSettings(true)}
-          />
-          <ProfileStats
-            name={profileData.nickname}
-            nickname={profileData.name}
-            likes={profileData.likes || 0}
-            projetos={projectCount || 0}
-            ownProfile={isOwnProfile}
-            userId={profileData.userId}
-            onFollowChange={(isFollowing: boolean) => {
-              setProfileData((prev: any) => ({
-                ...prev,
-                followers: isFollowing ? (prev.followers || 0) + 1 : Math.max(0, (prev.followers || 0) - 1)
-              }));
-            }}
-          />
-          <Biografy bio={profileData.bio} />
-
-          <div className="relative">
-            <ProjectGallery 
-              userId={profileData.userId} 
-              onProjectsLoaded={(count: number) => setProjectCount(count)} 
-              setIsLoadingChild={setLoading}
-              isOwnProfile={isOwnProfile}
+    <div className="min-h-screen bg-gray-50 dark:bg-[#151B23] fixed inset-0 overflow-hidden">
+      <div className="h-screen overflow-hidden">
+        <main className="h-full overflow-y-auto overflow-x-hidden pt-16">
+          {loading && <Loading />}
+          <div className={loading ? "hidden" : "block"}>
+            <ProfileInnerHeader
+              banner={profileData.banner}
+              photoUrl={profileData.photoUrl}
+              ownProfile={isOwnProfile}
+              onEditBannerClick={() => setShowBannerSettings(true)}
             />
+            <ProfileStats
+              name={profileData.nickname}
+              nickname={profileData.name}
+              likes={profileData.likes || 0}
+              projetos={projectCount || 0}
+              ownProfile={isOwnProfile}
+              userId={profileData.userId}
+              onFollowChange={(isFollowing: boolean) => {
+                setProfileData((prev: any) => ({
+                  ...prev,
+                  followers: isFollowing ? (prev.followers || 0) + 1 : Math.max(0, (prev.followers || 0) - 1)
+                }));
+              }}
+            />
+            <Biografy bio={profileData.bio} />
+
+            <div className="relative">
+              <ProjectGallery 
+                userId={profileData.userId} 
+                onProjectsLoaded={(count: number) => setProjectCount(count)} 
+                setIsLoadingChild={setLoading}
+                isOwnProfile={isOwnProfile}
+              />
+            </div>
+
+            {showBannerSettings && (
+              <BannerSettings 
+                onClose={handleCloseBannerSettings}
+                onBannerUpdated={handleBannerUpdated}
+              />
+            )}
           </div>
-
-          {showBannerSettings && (
-            <BannerSettings 
-              onClose={handleCloseBannerSettings}
-              onBannerUpdated={handleBannerUpdated}
-            />
-          )}
-        </div>
+        </main>
       </div>
     </div>
   )

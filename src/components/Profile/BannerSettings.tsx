@@ -43,12 +43,23 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     };
   }, [onClose]);
 
-  // Bloquear scroll do body quando o modal estiver aberto
+  // Bloquear scroll do body e esconder header quando o modal estiver aberto
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     
+    // Esconder o header
+    const header = document.getElementById('main-header');
+    if (header) {
+      header.style.display = 'none';
+    }
+    
     return () => {
       document.body.style.overflow = 'unset';
+      
+      // Mostrar o header novamente
+      if (header) {
+        header.style.display = '';
+      }
     };
   }, []);
 
@@ -172,7 +183,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     <>
       {/* Modal Overlay */}
       <div
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
+        className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-2 sm:p-4"
         onClick={handleOverlayClick}
       >
         {/* Modal Content */}
