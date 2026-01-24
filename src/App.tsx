@@ -6,6 +6,7 @@ import Loading from './components/Universal/Loading';
 import MaintenanceScreen from './views/MaintenanceScreen';
 import './index.css';
 import { useLocation } from 'react-router-dom';
+import { getUserIdFromToken } from './utils/jwt';
 
 const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 
@@ -20,7 +21,7 @@ function App() {
   const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
 
   const checkUser = useCallback(async () => {
-    const userId = localStorage.getItem('userId');
+    const userId = getUserIdFromToken();
     if (!userId) {
       setUserData(null);
       setLoading(false);
@@ -33,7 +34,7 @@ function App() {
       window.dispatchEvent(new Event("userIdChanged"));
     } catch (error) {
       setUserData(null);
-      localStorage.removeItem('userId');
+      localStorage.removeItem('token');
       window.dispatchEvent(new Event("userIdChanged"));
     } finally {
       setLoading(false);

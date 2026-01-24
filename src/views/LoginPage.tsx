@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from '../components/Universal/Loading';
 import LoginForm from '../components/LoginForm';
+import { getUserIdFromToken } from '../utils/jwt';
 
 export default function LoginPage({ onLoginSuccess }: any) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -10,7 +11,7 @@ export default function LoginPage({ onLoginSuccess }: any) {
 
   useEffect(() => {
     const checkUserLogged = async () => {
-      const userId = localStorage.getItem('userId');
+      const userId = getUserIdFromToken();
 
       if (userId) {
         try {
@@ -26,7 +27,7 @@ export default function LoginPage({ onLoginSuccess }: any) {
           return;
         } catch (error: any) {
           console.error("Erro ao verificar usuário:", error);
-          localStorage.removeItem('userId');
+          localStorage.removeItem('token');
         }
       }
 

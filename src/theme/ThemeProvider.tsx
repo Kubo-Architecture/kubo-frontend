@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
+import { getUserIdFromToken } from "../utils/jwt";
 
 type Theme = "light" | "dark";
 
@@ -20,7 +21,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTheme = useCallback(async () => {
-    const userId = localStorage.getItem("userId");
+    const userId = getUserIdFromToken();
     if (!userId) {
       setThemeState("light");
       applyTheme("light");
@@ -47,7 +48,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     fetchTheme();
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "userId") {
+      if (e.key === "token") {
         fetchTheme();
       }
     };
@@ -72,7 +73,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, isLoading]);
 
   const saveThemeToBackend = async (newTheme: Theme) => {
-    const userId = localStorage.getItem("userId");
+    const userId = getUserIdFromToken();
     if (!userId) {
       return;
     }

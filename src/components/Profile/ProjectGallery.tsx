@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
+import { getUserIdFromToken } from '../../utils/jwt';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger, isOwnProfile }: any) => {
   const [projects, setProjects] = useState([]);
@@ -177,7 +178,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {projects?.map((project: any) => {
                     const projectId = project._id || project.id;
-                    const currentUserId = localStorage.getItem('userId');
+                    const currentUserId = getUserIdFromToken();
                     const isOwnProject = project.userId === currentUserId || project.userId?._id === currentUserId || project.userId?._id?.toString() === currentUserId;
                     
                     return (

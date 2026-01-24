@@ -7,6 +7,7 @@ import BannerSettings from "../components/Profile/BannerSettings"
 import Biografy from "../components/Profile/Biografy"
 import ProjectGallery from "../components/Profile/ProjectGallery"
 import Loading from "../components/Universal/Loading"
+import { getUserIdFromToken } from "../utils/jwt"
 
 export default function UserProfile() {
   const [loading, setLoading] = useState<ConstrainBoolean>(true);
@@ -19,7 +20,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
-    const currentUserId = window.localStorage.getItem('userId');
+    const currentUserId = getUserIdFromToken();
     const username = pathSegments[1]
 
     const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
