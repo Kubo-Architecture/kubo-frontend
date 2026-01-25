@@ -1,8 +1,4 @@
 import React from 'react';
-import BasicInfoSection from './BasicInfoSection';
-import MediaSection from './MediaSection';
-import TechnicalSpecsSection from './TechnicalSpecsSection';
-import MaterialsSection from './MaterialsSection';
 
 interface GeneralSectionProps {
   formData: any;
@@ -43,7 +39,7 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fas fa-info-circle mr-2"></i>
+            <i className="fa-solid fa-file-lines mr-2"></i>
             Informações Básicas
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Dados principais do projeto</p>
@@ -86,7 +82,7 @@ export default function GeneralSection({
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-2">
-              Descrição
+              Descrição *
             </label>
             <textarea
               id="description"
@@ -95,6 +91,7 @@ export default function GeneralSection({
               rows={4}
               value={formData.description}
               onChange={handleChange}
+              required
               className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm resize-none text-zinc-900 dark:text-white"
             />
           </div>
@@ -172,7 +169,7 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fas fa-images mr-2"></i>
+            <i className="fa-solid fa-image mr-2"></i>
             Fotos e Mídia
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Imagens do projeto</p>
@@ -215,7 +212,7 @@ export default function GeneralSection({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full">
-                  <i className="fas fa-camera text-3xl text-zinc-400 dark:text-neutral-500 mb-2"></i>
+                  <i className="fa-solid fa-camera text-3xl text-zinc-400 dark:text-neutral-500 mb-2"></i>
                   <span className="text-xs text-zinc-600 dark:text-neutral-400">Clique para adicionar</span>
                 </div>
               )}
@@ -240,7 +237,7 @@ export default function GeneralSection({
               className="relative block h-48 w-full cursor-pointer rounded-xl border-2 border-dashed border-zinc-300 dark:border-[#3d444d] bg-zinc-50 dark:bg-[#202830] hover:bg-zinc-100 dark:hover:bg-[#151B23] transition"
             >
               <div className="flex flex-col items-center justify-center h-full">
-                <i className="fas fa-images text-3xl text-zinc-400 dark:text-neutral-500 mb-2"></i>
+                <i className="fa-solid fa-images text-3xl text-zinc-400 dark:text-neutral-500 mb-2"></i>
                 <span className="text-xs text-zinc-600 dark:text-neutral-400">
                   {galleryPreviews.length > 0 ? `${galleryPreviews.length} imagens` : 'Adicionar imagens'}
                 </span>
@@ -259,7 +256,7 @@ export default function GeneralSection({
                   onClick={() => removeGalleryImage(i)}
                   className="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 flex items-center justify-center"
                 >
-                  <i className="fas fa-times"></i>
+                  <i className="fa-solid fa-times"></i>
                 </button>
               </div>
             ))}
@@ -271,7 +268,7 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fas fa-cog mr-2"></i>
+            <i className="fa-solid fa-wrench mr-2"></i>
             Especificações Técnicas
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Detalhes técnicos</p>
@@ -280,7 +277,7 @@ export default function GeneralSection({
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-3">
-              Tipo de uso * <span className="text-xs text-zinc-500">(Até 3)</span>
+              Tipo de uso * <span className="text-xs text-zinc-500 dark:text-neutral-400">(Até 3)</span>
             </label>
             <div className="grid grid-cols-4 gap-2">
               {usageTypeOptions.map((type) => (
@@ -384,7 +381,7 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fas fa-layer-group mr-2"></i>
+            <i className="fa-solid fa-cubes mr-2"></i>
             Materiais Utilizados
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Lista de materiais</p>
@@ -406,7 +403,7 @@ export default function GeneralSection({
                   onClick={() => removeMaterialField(index)}
                   className="w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <i className="fas fa-times"></i>
+                  <i className="fa-solid fa-times"></i>
                 </button>
               )}
             </div>
@@ -417,7 +414,7 @@ export default function GeneralSection({
             onClick={addMaterialField}
             className="text-sm text-zinc-600 dark:text-neutral-400 hover:text-black dark:hover:text-white font-medium flex items-center"
           >
-            <i className="fas fa-plus mr-2"></i>
+            <i className="fa-solid fa-plus mr-2"></i>
             Adicionar material
           </button>
         </div>

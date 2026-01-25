@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BasicInfoSection from '../components/Project/BasicInfoSection';
 import MediaSection from '../components/Project/MediaSection';
 import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
 import MaterialsSection from '../components/Project/MaterialsSection';
@@ -47,12 +46,11 @@ export default function Newproject() {
   ];
 
   const menuSections = [
-    { id: 'geral', label: 'Geral', icon: 'fa-solid fa-list-check', description: 'Todas as configurações' },
-    { id: 'preview', label: 'Visualizar Projeto', icon: 'fa-solid fa-eye', description: 'Preview do resultado' },
-    { id: 'basic', label: 'Informações Básicas', icon: 'fa-solid fa-info-circle', description: 'Nome, local e descrição' },
-    { id: 'media', label: 'Fotos e Mídia', icon: 'fa-solid fa-images', description: 'Imagens do projeto' },
-    { id: 'technical', label: 'Especificações Técnicas', icon: 'fa-solid fa-cog', description: 'Detalhes técnicos' },
-    { id: 'materials', label: 'Materiais', icon: 'fa-solid fa-layer-group', description: 'Lista de materiais' },
+    { id: 'geral', label: 'Geral', icon: 'fa-solid fa-grip' },
+    { id: 'preview', label: 'Visualizar Projeto', icon: 'fa-solid fa-eye' },
+    { id: 'media', label: 'Fotos e Mídia', icon: 'fa-solid fa-image' },
+    { id: 'technical', label: 'Especificações Técnicas', icon: 'fa-solid fa-wrench' },
+    { id: 'materials', label: 'Materiais', icon: 'fa-solid fa-cubes' },
   ];
 
   useEffect(() => {
@@ -295,10 +293,10 @@ export default function Newproject() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#151B23]">
+    <div className="min-h-screen bg-neutral-50 dark:bg-[#202830]">
       <div className="flex min-h-screen">
-        {/* Sidebar */}
-        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col pt-16">
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col pt-16 z-10">
           <div className="flex-1 p-6 overflow-y-auto">
             {/* Header */}
             <div className="mb-6">
@@ -306,7 +304,7 @@ export default function Newproject() {
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 dark:text-neutral-400 dark:hover:text-white transition-colors mb-4"
               >
-                <i className="fas fa-arrow-left"></i>
+                <i className="fa-solid fa-arrow-left"></i>
                 <span className="text-sm font-medium">Voltar</span>
               </button>
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Novo Projeto</h1>
@@ -321,8 +319,8 @@ export default function Newproject() {
                   onClick={() => setActiveSection(section.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
                     activeSection === section.id
-                      ? 'bg-white dark:bg-[#202830] text-black dark:text-white shadow-sm border border-neutral-200 dark:border-none'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] hover:text-black dark:hover:text-white'
+                      ? 'bg-white dark:bg-[#202830] dark:border-none dark:text-white text-black shadow-sm border border-neutral-200'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] dark:hover:text-white hover:text-black'
                   }`}
                 >
                   <i className={`${section.icon} text-lg ${
@@ -332,9 +330,6 @@ export default function Newproject() {
                   }`}></i>
                   <div className="flex-1">
                     <div className="font-medium text-[15px]">{section.label}</div>
-                    {section.description && (
-                      <div className="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">{section.description}</div>
-                    )}
                   </div>
                 </button>
               ))}
@@ -343,7 +338,7 @@ export default function Newproject() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-80 bg-neutral-50 dark:bg-[#202830] pt-16">
+        <main className="flex-1 lg:ml-80 pt-16 min-h-screen">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
             {error && (
               <div
@@ -354,13 +349,13 @@ export default function Newproject() {
                 }`}
               >
                 <div className="flex items-center">
-                  <i className={`fas ${error.startsWith('success:') ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2`}></i>
+                  <i className={`fa-solid ${error.startsWith('success:') ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2`}></i>
                   {error.replace("success: ", "")}
                 </div>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 pb-8">
               {/* ABA GERAL */}
               {activeSection === 'geral' && (
                 <GeneralSection
@@ -387,14 +382,6 @@ export default function Newproject() {
                   formData={formData}
                   mainImagePreview={mainImagePreview}
                   galleryPreviews={galleryPreviews}
-                />
-              )}
-
-              {/* ABA INFORMAÇÕES BÁSICAS */}
-              {activeSection === 'basic' && (
-                <BasicInfoSection
-                  formData={formData}
-                  handleChange={handleChange}
                 />
               )}
 
@@ -431,7 +418,7 @@ export default function Newproject() {
                 />
               )}
 
-              {/* Botões de ação */}
+              {/* Botões de ação - agora no final da página */}
               <ActionButtons
                 isSubmitting={isSubmitting}
                 onCancel={() => navigate(-1)}
