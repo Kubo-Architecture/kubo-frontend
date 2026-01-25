@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { loginSchema } from '../validators/loginSchema';
 import LoginWithGoogleButton from './LoginWithGoogleButton';
 import { User } from 'lucide-react';
+import { getUserIdFromToken } from '../utils/jwt';
 
 const LoginForm = ({ onLoginSuccess }: any) => {
   const navigate = useNavigate();
@@ -80,14 +81,17 @@ const LoginForm = ({ onLoginSuccess }: any) => {
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/auth/login`;
       const response = await axios.post(apiUrl, formData);
-      const { token, name, userId } = response.data;
+      const { token } = response.data;
       
       localStorage.setItem('token', token);
-      localStorage.setItem('name', name);
-      localStorage.setItem('userId', userId);
 
       if (onLoginSuccess) {
         await onLoginSuccess();
+      }
+
+      const userId = getUserIdFromToken();
+      if (!userId) {
+        throw new Error('Não foi possível obter o userId do token');
       }
 
       const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);

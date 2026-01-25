@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Kuboadd from "../assets/icons/Universal/Kubo-add.svg";
+import { getUserIdFromToken } from '../utils/jwt';
 
 export default function Btncriarprojeto({ onProjectCreated }: any) {
   const navigate = useNavigate();
@@ -168,7 +170,7 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
     setIsSubmitting(true);
     setError('');
 
-    const userId = localStorage.getItem('userId');
+    const userId = getUserIdFromToken();
     if (!userId) {
       setError('Usuário não autenticado');
       setIsSubmitting(false);
@@ -220,16 +222,24 @@ export default function Btncriarprojeto({ onProjectCreated }: any) {
         onProjectCreated(result);
       }
 
-      setTimeout(() => {
+      setTimeout(async () => {
         setShowCreateModal(false);
         resetForm();
         
         // Navegar para o perfil se não estiver lá
         const currentPath = window.location.pathname;
         if (!currentPath.includes('/profile/')) {
-          const nickname = localStorage.getItem('nickname');
-          if (nickname) {
-            navigate(`/profile/${nickname}`);
+          try {
+            const userId = getUserIdFromToken();
+            if (userId) {
+              const userResponse = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+              const nickname = userResponse.data?.nickname;
+              if (nickname) {
+                navigate(`/profile/${nickname}`);
+              }
+            }
+          } catch (error) {
+            console.error('Erro ao buscar nickname do usuário:', error);
           }
         }
       }, 1500);

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg";
+import { getUserIdFromToken } from "../../utils/jwt";
 
 interface PhotoEditorModalProps {
   isOpen: boolean;
@@ -247,7 +248,7 @@ export default function PhotoEditorModal({
   };
 
   const handleSave = async () => {
-    const userId = localStorage.getItem("userId");
+    const userId = getUserIdFromToken();
     if (!userId) {
       alert("Usuário não identificado. Por favor, faça login novamente.");
       return;
@@ -289,7 +290,7 @@ export default function PhotoEditorModal({
   };
 
   const handleRemovePhoto = async () => {
-    const userId = localStorage.getItem("userId");
+    const userId = getUserIdFromToken();
     if (!userId) {
       alert("Usuário não identificado. Por favor, faça login novamente.");
       return;

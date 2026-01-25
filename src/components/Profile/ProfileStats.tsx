@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
+import { getUserIdFromToken } from "../../utils/jwt";
 
 export default function ProfileStats(props: any) {
     const [isFollowing, setIsFollowing] = useState(false);
@@ -14,7 +15,7 @@ export default function ProfileStats(props: any) {
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
     
-    const currentUserId = window.localStorage.getItem('userId');
+    const currentUserId = getUserIdFromToken();
     const seguidoresModalRef = useRef<HTMLDivElement>(null);
     const seguindoModalRef = useRef<HTMLDivElement>(null);
 

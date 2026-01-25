@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserIdFromToken } from '../utils/jwt';
 
 interface SearchBarProps {
   searchTerm: string;
@@ -20,7 +21,7 @@ export default function SearchBar({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [currentUserNickname, setCurrentUserNickname] = useState<string>('');
   const searchRef = useRef<HTMLDivElement>(null);
-  const currentuser = localStorage.getItem('userId');
+  const currentuser = getUserIdFromToken();
   const navigate = useNavigate();
   
   useEffect(() => {

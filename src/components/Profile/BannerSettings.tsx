@@ -5,6 +5,7 @@ import BannerBlue from "../../assets/Profile/Banners/blue.png"
 import BannerGreen from "../../assets/Profile/Banners/green.png"
 import BannerBlack from "../../assets/Profile/Banners/black.png"
 import BannerOrange from "../../assets/Profile/Banners/orange.png"
+import { getUserIdFromToken } from "../../utils/jwt";
 
 interface BannerSettingsProps {
   onClose: () => void;
@@ -122,7 +123,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
     setIsLoading(true);
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = getUserIdFromToken();
       if (!userId) {
         alert("Usuário não autenticado.");
         return;
