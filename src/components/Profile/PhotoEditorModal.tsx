@@ -457,7 +457,7 @@ export default function PhotoEditorModal({
         style={{ maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold text-gray-900">
               Editar foto
@@ -599,7 +599,7 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4 rounded-b-xl">
           <div className="flex gap-2">
             {!previewUrl && (
               <>
