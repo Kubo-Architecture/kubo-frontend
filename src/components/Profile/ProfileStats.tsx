@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
+import { getUserIdFromToken } from "../../utils/jwt";
 
 export default function ProfileStats(props: any) {
     const [isFollowing, setIsFollowing] = useState(false);
@@ -14,7 +15,7 @@ export default function ProfileStats(props: any) {
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
     
-    const currentUserId = window.localStorage.getItem('userId');
+    const currentUserId = getUserIdFromToken();
     const seguidoresModalRef = useRef<HTMLDivElement>(null);
     const seguindoModalRef = useRef<HTMLDivElement>(null);
 
@@ -45,14 +46,32 @@ export default function ProfileStats(props: any) {
     }, [isSeguidoresModalOpen, isSeguindoModalOpen, props.userId, currentUserId]);
 
     useEffect(() => {
-        if (isSeguidoresModalOpen || isSeguindoModalOpen) {
+        if (isSeguidoresModalOpen || isSeguindoModalOpen || isEditProfileModalOpen) {
+            const scrollY = window.scrollY;
+            
+            const originalBodyOverflow = document.body.style.overflow;
+            const originalBodyPosition = document.body.style.position;
+            const originalBodyTop = document.body.style.top;
+            const originalBodyWidth = document.body.style.width;
+            const originalHtmlOverflow = document.documentElement.style.overflow;
+            
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
+            
+            return () => {
+                document.body.style.overflow = originalBodyOverflow;
+                document.body.style.position = originalBodyPosition;
+                document.body.style.top = originalBodyTop;
+                document.body.style.width = originalBodyWidth;
+                document.documentElement.style.overflow = originalHtmlOverflow;
+                
+                window.scrollTo(0, scrollY);
+            };
         }
-        
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isSeguidoresModalOpen, isSeguindoModalOpen]);
+    }, [isSeguidoresModalOpen, isSeguindoModalOpen, isEditProfileModalOpen]);
 
     const handleSeguidoresModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (seguidoresModalRef.current && !seguidoresModalRef.current.contains(e.target as Node)) {

@@ -3,6 +3,7 @@ import Btncriarprojeto from "../components/BtnCriarProjeto";
 import axios from 'axios';
 import SearchBar from '../components/Searchbar';
 import { useNavigate } from 'react-router-dom';
+import { getUserIdFromToken } from '../utils/jwt';
 
 export default function Gallery() {
   const navigate = useNavigate();
@@ -238,7 +239,7 @@ export default function Gallery() {
 
   useEffect(() => {
     const checkUserLogged = async () => {
-      const userId = localStorage.getItem('userId');
+      const userId = getUserIdFromToken();
 
       if (userId) {
         try {
@@ -252,7 +253,7 @@ export default function Gallery() {
           return;
         } catch (error: any) {
           console.error("Erro ao verificar usuário:", error);
-          localStorage.removeItem('userId');
+          localStorage.removeItem('token');
         }
       }
     };

@@ -1,6 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getUserIdFromToken } from '../utils/jwt';
 
 function LoginWithGoogleButton({ onLoginSuccess }: any) {
     const navigate = useNavigate();
@@ -19,13 +20,16 @@ function LoginWithGoogleButton({ onLoginSuccess }: any) {
                 }
             );
 
-            const { token, name, userId } = response.data;
+            const { token } = response.data;
             localStorage.setItem('token', token);
-            localStorage.setItem('name', name);
-            localStorage.setItem('userId', userId);
 
             if (onLoginSuccess) {
                 await onLoginSuccess();
+            }
+
+            const userId = getUserIdFromToken();
+            if (!userId) {
+                throw new Error('Não foi possível obter o userId do token');
             }
 
             const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);

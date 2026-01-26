@@ -5,6 +5,7 @@ import BannerBlue from "../../assets/Profile/Banners/blue.png"
 import BannerGreen from "../../assets/Profile/Banners/green.png"
 import BannerBlack from "../../assets/Profile/Banners/black.png"
 import BannerOrange from "../../assets/Profile/Banners/orange.png"
+import { getUserIdFromToken } from "../../utils/jwt";
 
 interface BannerSettingsProps {
   onClose: () => void;
@@ -43,9 +44,20 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     };
   }, [onClose]);
 
-  // Bloquear scroll do body e esconder header quando o modal estiver aberto
   useEffect(() => {
+    const scrollY = window.scrollY;
+    
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyPosition = document.body.style.position;
+    const originalBodyTop = document.body.style.top;
+    const originalBodyWidth = document.body.style.width;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    document.documentElement.style.overflow = 'hidden';
     
     // Esconder o header
     const header = document.getElementById('main-header');
@@ -54,7 +66,13 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     }
     
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.position = originalBodyPosition;
+      document.body.style.top = originalBodyTop;
+      document.body.style.width = originalBodyWidth;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      
+      window.scrollTo(0, scrollY);
       
       // Mostrar o header novamente
       if (header) {
@@ -133,7 +151,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
     setIsLoading(true);
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = getUserIdFromToken();
       if (!userId) {
         alert("Usuário não autenticado.");
         return;

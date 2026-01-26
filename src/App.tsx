@@ -6,8 +6,8 @@ import Loading from './components/Universal/Loading';
 import MaintenanceScreen from './views/MaintenanceScreen';
 import './index.css';
 import { useLocation } from 'react-router-dom';
+import { getUserIdFromToken } from './utils/jwt';
 
-// Flag de manutenção - você pode controlar isso via variável de ambiente
 const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
   const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
 
   const checkUser = useCallback(async () => {
-    const userId = localStorage.getItem('userId');
+    const userId = getUserIdFromToken();
     if (!userId) {
       setUserData(null);
       setLoading(false);
@@ -31,9 +31,11 @@ function App() {
     try {
       const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${userId}`);
       setUserData(res.data);
+      window.dispatchEvent(new Event("userIdChanged"));
     } catch (error) {
       setUserData(null);
-      localStorage.removeItem('userId');
+      localStorage.removeItem('token');
+      window.dispatchEvent(new Event("userIdChanged"));
     } finally {
       setLoading(false);
     }
@@ -43,7 +45,6 @@ function App() {
     checkUser();
   }, [checkUser]);
 
-  // Garante que o body e html tenham scrollbar overlay
   useEffect(() => {
     if (CSS.supports('overflow', 'overlay')) {
       document.documentElement.style.overflowY = 'overlay';
@@ -51,7 +52,6 @@ function App() {
     }
   }, []);
 
-  // Se estiver em modo manutenção, mostra apenas a tela de manutenção
   if (IS_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }

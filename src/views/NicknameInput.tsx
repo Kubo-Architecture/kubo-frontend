@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Home } from 'lucide-react';
+import { getUserIdFromToken } from '../utils/jwt';
 
 export default function NicknameInput() {
   const [nickname, setNickname] = useState<string>('');
@@ -12,7 +13,7 @@ export default function NicknameInput() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedId = localStorage.getItem('userId');
+    const storedId = getUserIdFromToken();
     if (storedId) {
       setuserId(storedId);
     } else {
@@ -66,6 +67,7 @@ export default function NicknameInput() {
 
       if (response.status === 200) {
         navigate(`/gallery`);
+        window.location.reload();
       }
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';

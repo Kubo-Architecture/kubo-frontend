@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
+import { getUserIdFromToken } from '../../utils/jwt';
 
 const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTrigger, isOwnProfile }: any) => {
   const [projects, setProjects] = useState([]);
@@ -11,7 +12,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 
   const tabs = [
     { id: 'meus-projetos', label: 'Projetos' },
-    { id: 'colecoes', label: 'Coleções' }
+    //{ id: 'colecoes', label: 'Coleções' }
   ];
 
   useEffect(() => {
@@ -37,7 +38,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     if (userId) fetchProjects();
   }, [userId, refreshTrigger]);
 
-  // Fechar modal com ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -48,7 +48,34 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Função para editar projeto
+  useEffect(() => {
+    if (editingProject) {
+      const scrollY = window.scrollY;
+      
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalBodyPosition = document.body.style.position;
+      const originalBodyTop = document.body.style.top;
+      const originalBodyWidth = document.body.style.width;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+      
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.body.style.position = originalBodyPosition;
+        document.body.style.top = originalBodyTop;
+        document.body.style.width = originalBodyWidth;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [editingProject]);
+
   const handleEditProject = (project: any) => {
     setEditingProject({
       ...project,
@@ -62,7 +89,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     });
   };
 
-  // Função para salvar edição
   const handleSaveEdit = async () => {
     if (!editingProject) return;
 
@@ -177,7 +203,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {projects?.map((project: any) => {
                     const projectId = project._id || project.id;
-                    const currentUserId = localStorage.getItem('userId');
+                    const currentUserId = getUserIdFromToken();
                     const isOwnProject = project.userId === currentUserId || project.userId?._id === currentUserId || project.userId?._id?.toString() === currentUserId;
                     
                     return (
