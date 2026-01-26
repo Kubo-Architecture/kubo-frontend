@@ -216,7 +216,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     <>
       {/* Modal Overlay */}
       <div
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
         onClick={handleOverlayClick}
       >
         {/* Modal Content */}
