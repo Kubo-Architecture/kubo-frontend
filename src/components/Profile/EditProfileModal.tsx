@@ -63,11 +63,11 @@ export default function EditProfileModal({
       
       const scrollY = window.scrollY;
       
-      const originalBodyOverflow = document.body.style.overflow;
-      const originalBodyPosition = document.body.style.position;
-      const originalBodyTop = document.body.style.top;
-      const originalBodyWidth = document.body.style.width;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalBodyOverflow = document.body.style.overflow || '';
+      const originalBodyPosition = document.body.style.position || '';
+      const originalBodyTop = document.body.style.top || '';
+      const originalBodyWidth = document.body.style.width || '';
+      const originalHtmlOverflow = document.documentElement.style.overflow || '';
       
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
@@ -78,14 +78,47 @@ export default function EditProfileModal({
       return () => {
         document.removeEventListener('keydown', handleEscKey);
         
-        document.body.style.overflow = originalBodyOverflow;
-        document.body.style.position = originalBodyPosition;
-        document.body.style.top = originalBodyTop;
-        document.body.style.width = originalBodyWidth;
-        document.documentElement.style.overflow = originalHtmlOverflow;
+        // Restaurar valores originais (remover propriedade se estava vazia)
+        if (originalBodyOverflow) {
+          document.body.style.overflow = originalBodyOverflow;
+        } else {
+          document.body.style.removeProperty('overflow');
+        }
         
+        if (originalBodyPosition) {
+          document.body.style.position = originalBodyPosition;
+        } else {
+          document.body.style.removeProperty('position');
+        }
+        
+        if (originalBodyTop) {
+          document.body.style.top = originalBodyTop;
+        } else {
+          document.body.style.removeProperty('top');
+        }
+        
+        if (originalBodyWidth) {
+          document.body.style.width = originalBodyWidth;
+        } else {
+          document.body.style.removeProperty('width');
+        }
+        
+        if (originalHtmlOverflow) {
+          document.documentElement.style.overflow = originalHtmlOverflow;
+        } else {
+          document.documentElement.style.removeProperty('overflow');
+        }
+        
+        // Restaurar posição do scroll
         window.scrollTo(0, scrollY);
       };
+    } else {
+      // Garantir limpeza quando o modal fechar
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('position');
+      document.body.style.removeProperty('top');
+      document.body.style.removeProperty('width');
+      document.documentElement.style.removeProperty('overflow');
     }
   }, [isOpen]);
 

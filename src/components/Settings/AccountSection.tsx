@@ -54,15 +54,59 @@ export default function AccountSection() {
 
   // Bloquear scroll quando qualquer modal estiver aberto
   useEffect(() => {
-    if (showDeleteModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal) {
+    const isAnyModalOpen = showDeleteModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal;
+    
+    if (isAnyModalOpen) {
+      const scrollY = window.scrollY;
+      
+      const originalBodyOverflow = document.body.style.overflow || '';
+      const originalBodyPosition = document.body.style.position || '';
+      const originalBodyTop = document.body.style.top || '';
+      const originalBodyWidth = document.body.style.width || '';
+      const originalHtmlOverflow = document.documentElement.style.overflow || '';
+      
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+      
+      return () => {
+        // Restaurar valores originais (remover propriedade se estava vazia)
+        if (originalBodyOverflow) {
+          document.body.style.overflow = originalBodyOverflow;
+        } else {
+          document.body.style.removeProperty('overflow');
+        }
+        
+        if (originalBodyPosition) {
+          document.body.style.position = originalBodyPosition;
+        } else {
+          document.body.style.removeProperty('position');
+        }
+        
+        if (originalBodyTop) {
+          document.body.style.top = originalBodyTop;
+        } else {
+          document.body.style.removeProperty('top');
+        }
+        
+        if (originalBodyWidth) {
+          document.body.style.width = originalBodyWidth;
+        } else {
+          document.body.style.removeProperty('width');
+        }
+        
+        if (originalHtmlOverflow) {
+          document.documentElement.style.overflow = originalHtmlOverflow;
+        } else {
+          document.documentElement.style.removeProperty('overflow');
+        }
+        
+        // Restaurar posição do scroll
+        window.scrollTo(0, scrollY);
+      };
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [showDeleteModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
 
   const handleDeleteAccount = () => {
