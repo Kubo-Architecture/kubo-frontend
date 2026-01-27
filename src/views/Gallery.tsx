@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Btncriarprojeto from "../components/BtnCriarProjeto";
 import axios from 'axios';
 import SearchBar from '../components/Searchbar';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
+import ProjectCard from '../components/Profile/ProjectCard';
 
 export default function Gallery() {
   const navigate = useNavigate();
@@ -73,8 +74,56 @@ export default function Gallery() {
     }
   ]);
   
+
+  const [users, setUsers] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [works, setWorks] = useState<any[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const FEED_PAGE_SIZE = 20;
+
+  const loadFeedProjects = async (pageToLoad: number = 1) => {
+    if (isLoading || !hasMore) return;
+
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/projects/gallery/${userId}`,
+        {
+          params: {
+            page: pageToLoad,
+            limit: FEED_PAGE_SIZE,
+          },
+        }
+      );
+
+      const newProjects = response.data || [];
+
+      setProjects((prev) =>
+        pageToLoad === 1 ? newProjects : [...prev, ...newProjects]
+      );
+      setWorks((prev) =>
+        pageToLoad === 1 ? newProjects : [...prev, ...newProjects]
+      );
+
+      setPage(pageToLoad);
+      if (newProjects.length < FEED_PAGE_SIZE) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   function getUsers(user: string) {
     if (!user.trim()) {
@@ -88,104 +137,11 @@ export default function Gallery() {
     })
       .then((response) => {
         const apiUsers = response.data || [];
-        const exampleUsers = [
-          {
-            id: 1,
-            name: "Oscar Niemeyer",
-            nickname: "oscarniem",
-            photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 156
-          },
-          {
-            id: 2,
-            name: "Lina Bo Bardi",
-            nickname: "linabobardi",
-            photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100",
-            role: "Arquiteta",
-            verified: true,
-            projectCount: 89
-          },
-          {
-            id: 3,
-            name: "Paulo Mendes",
-            nickname: "paulomendes",
-            photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 124
-          },
-          {
-            id: 4,
-            name: "Ana Costa",
-            nickname: "anacosta",
-            photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100",
-            role: "Designer",
-            verified: false,
-            projectCount: 45
-          },
-          {
-            id: 5,
-            name: "Roberto Silva",
-            nickname: "robertosilva",
-            photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100",
-            role: "Engenheiro",
-            verified: false,
-            projectCount: 32
-          }
-        ];
         
-        setUsers([...apiUsers, ...exampleUsers]);
+        setUsers(apiUsers);
       })
       .catch(() => {
-        setUsers([
-          {
-            id: 1,
-            name: "Oscar Niemeyer",
-            nickname: "oscarniem",
-            photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 156
-          },
-          {
-            id: 2,
-            name: "Lina Bo Bardi",
-            nickname: "linabobardi",
-            photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100",
-            role: "Arquiteta",
-            verified: true,
-            projectCount: 89
-          },
-          {
-            id: 3,
-            name: "Paulo Mendes",
-            nickname: "paulomendes",
-            photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 124
-          },
-          {
-            id: 4,
-            name: "Ana Costa",
-            nickname: "anacosta",
-            photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100",
-            role: "Designer",
-            verified: false,
-            projectCount: 45
-          },
-          {
-            id: 5,
-            name: "Roberto Silva",
-            nickname: "robertosilva",
-            photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100",
-            role: "Engenheiro",
-            verified: false,
-            projectCount: 32
-          }
-        ]);
+        setUsers([]);
       });
   }
 
@@ -193,11 +149,16 @@ export default function Gallery() {
   function getProjects(project: string) {
     if (!project.trim()) {
       // Se vazio, não faz requisição (mostra array vazio ou mantém projetos atuais)
+      setUsers([]);
+      setProjects([]);
+      setWorks([]);
+      setPage(1);
+      setHasMore(true);
+      loadFeedProjects(1);
       return;
     }
   
-    // ✅ Busca com parâmetro title (backend espera isso)
-    axios.get(`${API_URL}/projects`, { 
+    axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
       params: { title: project } 
     })
       .then((response) => {
@@ -205,8 +166,7 @@ export default function Gallery() {
         setProjects(data);
         setWorks(data);
       })
-      .catch((error) => {
-        console.error("Erro ao buscar projetos:", error);
+      .catch(() => {
         setProjects([]);
         setWorks([]);
       });
@@ -244,6 +204,39 @@ export default function Gallery() {
     });
     setLikes(initialLikes);
   }, [works]);
+    loadFeedProjects(1);
+  }, []);
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (
+          firstEntry.isIntersecting &&
+          hasMore &&
+          !isLoading &&
+          !searchTerm.trim()
+        ) {
+          loadFeedProjects(page + 1);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '200px',
+        threshold: 0,
+      }
+    );
+
+    const current = loaderRef.current;
+    observer.observe(current);
+
+    return () => {
+      observer.unobserve(current);
+      observer.disconnect();
+    };
+  }, [hasMore, isLoading, page, searchTerm]);
 
   useEffect(() => {
     const checkUserLogged = async () => {
@@ -266,16 +259,9 @@ export default function Gallery() {
       }
     };
 
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setEditingProject(null);
-      }
-    };
-    window.addEventListener('keydown', handleEsc);
-
     checkUserLogged()
 
-    return () => window.removeEventListener('keydown', handleEsc);
+    return () => {};
   }, []);
 
   const filteredWorks = works.filter((work: any) => {
@@ -538,9 +524,27 @@ export default function Gallery() {
                       </button>
                     </div>
                   </div>
+            <>
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                {filteredWorks.map((work: any) => (
+                  <div key={work.id} className="group">
+                    <ProjectCard project={work} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Sentinela para carregamento infinito do feed (apenas quando não está pesquisando) */}
+              {!searchTerm.trim() && (
+                <div
+                  ref={loaderRef}
+                  className="h-12 flex items-center justify-center mt-6 mb-4 text-xs text-gray-500 dark:text-neutral-500"
+                >
+                  {isLoading
+                    ? 'Carregando mais projetos...'
+                    : !hasMore && ''}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="bg-white dark:bg-[#151B23] rounded-xl shadow-sm border border-gray-200 dark:border-[#3d444d] overflow-hidden">
               {filteredWorks.map((work: any, index: number) => (
