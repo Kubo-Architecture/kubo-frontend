@@ -100,17 +100,13 @@ export default function ProjectPage() {
         try {
             console.log('🗑️ Deletando projeto:', projectId);
             
-            // ✅ CORRIGIDO - Usar /projects/:projectId (não /projects/:id)
             const response = await axios.delete(`${API_URL}/projects/${projectId}`);
 
             if (response.status === 204 || response.status === 200) {
                 console.log('✅ Projeto deletado com sucesso');
                 setShowDeleteModal(false);
                 
-                // Mostrar mensagem de sucesso
                 alert('Projeto deletado com sucesso!');
-                
-                // Redirecionar para galeria
                 navigate('/gallery');
             }
         } catch (error: any) {
@@ -129,13 +125,117 @@ export default function ProjectPage() {
 
     const openLightbox = (imageUrl: string) => {
         setSelectedImage(imageUrl);
-        document.body.style.overflow = 'hidden';
     };
 
     const closeLightbox = () => {
         setSelectedImage(null);
-        document.body.style.overflow = 'unset';
     };
+
+    // Bloquear scroll quando modal de delete está aberto
+    useEffect(() => {
+        if (showDeleteModal) {
+            const scrollY = window.scrollY;
+            
+            const originalBodyOverflow = document.body.style.overflow || '';
+            const originalBodyPosition = document.body.style.position || '';
+            const originalBodyTop = document.body.style.top || '';
+            const originalBodyWidth = document.body.style.width || '';
+            const originalHtmlOverflow = document.documentElement.style.overflow || '';
+            
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
+            
+            return () => {
+                if (originalBodyOverflow) {
+                    document.body.style.overflow = originalBodyOverflow;
+                } else {
+                    document.body.style.removeProperty('overflow');
+                }
+                
+                if (originalBodyPosition) {
+                    document.body.style.position = originalBodyPosition;
+                } else {
+                    document.body.style.removeProperty('position');
+                }
+                
+                if (originalBodyTop) {
+                    document.body.style.top = originalBodyTop;
+                } else {
+                    document.body.style.removeProperty('top');
+                }
+                
+                if (originalBodyWidth) {
+                    document.body.style.width = originalBodyWidth;
+                } else {
+                    document.body.style.removeProperty('width');
+                }
+                
+                if (originalHtmlOverflow) {
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+                } else {
+                    document.documentElement.style.removeProperty('overflow');
+                }
+                
+                window.scrollTo(0, scrollY);
+            };
+        }
+    }, [showDeleteModal]);
+
+    // Bloquear scroll quando lightbox está aberto
+    useEffect(() => {
+        if (selectedImage) {
+            const scrollY = window.scrollY;
+            
+            const originalBodyOverflow = document.body.style.overflow || '';
+            const originalBodyPosition = document.body.style.position || '';
+            const originalBodyTop = document.body.style.top || '';
+            const originalBodyWidth = document.body.style.width || '';
+            const originalHtmlOverflow = document.documentElement.style.overflow || '';
+            
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
+            
+            return () => {
+                if (originalBodyOverflow) {
+                    document.body.style.overflow = originalBodyOverflow;
+                } else {
+                    document.body.style.removeProperty('overflow');
+                }
+                
+                if (originalBodyPosition) {
+                    document.body.style.position = originalBodyPosition;
+                } else {
+                    document.body.style.removeProperty('position');
+                }
+                
+                if (originalBodyTop) {
+                    document.body.style.top = originalBodyTop;
+                } else {
+                    document.body.style.removeProperty('top');
+                }
+                
+                if (originalBodyWidth) {
+                    document.body.style.width = originalBodyWidth;
+                } else {
+                    document.body.style.removeProperty('width');
+                }
+                
+                if (originalHtmlOverflow) {
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+                } else {
+                    document.documentElement.style.removeProperty('overflow');
+                }
+                
+                window.scrollTo(0, scrollY);
+            };
+        }
+    }, [selectedImage]);
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -153,7 +253,7 @@ export default function ProjectPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23]">
+            <div className="flex items-center justify-center min-h-screen bg-neutral-50 dark:bg-[#202830]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-3 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
                     <p className="text-gray-600 dark:text-neutral-400 text-sm font-medium">Carregando projeto...</p>
@@ -164,7 +264,7 @@ export default function ProjectPage() {
 
     if (!project) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23] p-6">
+            <div className="flex items-center justify-center min-h-screen bg-neutral-50 dark:bg-[#202830] p-6">
                 <div className="text-center max-w-md">
                     <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gray-50 dark:bg-[#202830] flex items-center justify-center border border-gray-100 dark:border-[#3d444d]">
                         <i className="fas fa-building text-3xl text-gray-300 dark:text-neutral-600"></i>
@@ -194,7 +294,7 @@ export default function ProjectPage() {
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
             />
             
-            <div className="min-h-screen bg-white dark:bg-[#151B23]">
+            <div className="min-h-screen bg-neutral-50 dark:bg-[#202830]">
                 {/* Main Content */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-22 pb-12">
                     {/* Back Button */}
@@ -226,10 +326,10 @@ export default function ProjectPage() {
                             </div>
                         </div>
 
-                        {/* Right Column - Hero Image */}
+                        {/* Right Column - Hero Image com Shadow */}
                         <div className="lg:pl-4">
                             <div 
-                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative"
+                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[4/3] cursor-pointer group relative shadow-2xl"
                                 onClick={() => project.photo_url && openLightbox(getImageUrl(project.photo_url))}
                             >
                                 {project.photo_url ? (
@@ -271,11 +371,13 @@ export default function ProjectPage() {
                             </div>
                         </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                        {/* Action Buttons - Layout dinâmico baseado se é dono ou não */}
+                        <div className={`flex items-center gap-3 w-full sm:w-auto flex-wrap ${
+                            isOwner ? 'justify-between sm:min-w-[500px]' : 'sm:justify-end'
+                        }`}>
                             <button
                                 onClick={handleLike}
-                                className={`flex-1 sm:flex-initial cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
+                                className={`${isOwner ? 'flex-1' : 'flex-1 sm:flex-initial'} cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isLiked 
                                         ? 'border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
                                         : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
@@ -288,7 +390,7 @@ export default function ProjectPage() {
 
                             <button
                                 onClick={handleSave}
-                                className={`flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
+                                className={`${isOwner ? 'flex-1' : 'flex-1 sm:flex-initial'} flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
                                     isSaved 
                                         ? 'border-amber-200 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
                                         : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
@@ -299,11 +401,23 @@ export default function ProjectPage() {
                                 <span className="text-sm font-medium">Salvar</span>
                             </button>
 
+                            {/* ✅ BOTÃO DE EDITAR - SÓ APARECE SE FOR O DONO - PRETO/BRANCO */}
+                            {isOwner && (
+                                <button
+                                    onClick={() => navigate(`/edit-project/${projectId}`)}
+                                    className="flex-1 flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 dark:border-[#3d444d] bg-gray-50 dark:bg-[#202830] text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23] transition-all active:scale-[0.98]"
+                                    aria-label="Editar projeto"
+                                >
+                                    <i className="fas fa-edit text-base"></i>
+                                    <span className="text-sm font-medium">Editar</span>
+                                </button>
+                            )}
+
                             {/* ✅ BOTÃO DE DELETAR - SÓ APARECE SE FOR O DONO */}
                             {isOwner && (
                                 <button
                                     onClick={() => setShowDeleteModal(true)}
-                                    className="flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all active:scale-[0.98]"
+                                    className="flex-1 flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all active:scale-[0.98]"
                                     aria-label="Deletar projeto"
                                 >
                                     <i className="fas fa-trash text-base"></i>
@@ -357,7 +471,7 @@ export default function ProjectPage() {
                                     show: project.status && project.status.trim() !== ''
                                 }
                             ]
-                            .filter(spec => spec.show) // ✅ Filtrar apenas os que têm valor
+                            .filter(spec => spec.show)
                             .map((spec, index) => (
                                 <div 
                                     key={index} 
@@ -380,7 +494,6 @@ export default function ProjectPage() {
                             ))}
                         </div>
                         
-                        {/* ✅ Mensagem se não houver especificações */}
                         {[
                             project.materials && project.materials.length > 0,
                             project.author && project.author.trim() !== '',
@@ -401,13 +514,12 @@ export default function ProjectPage() {
                         <div>
                             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Galeria</h2>
                             
-                            {/* Masonry Grid Layout */}
                             <div className="grid grid-cols-12 gap-4">
-                                {/* First large image - spans 4 columns and 2 rows */}
+                                {/* Primeira imagem - Grande vertical esquerda */}
                                 {project.gallery[0] && (
-                                    <div className="col-span-12 md:col-span-4 md:row-span-2">
+                                    <div className="col-span-12 md:col-span-5 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-full min-h-[300px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[0]))}
                                         >
                                             <img
@@ -424,11 +536,11 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Second image - top right, spans 4 columns */}
+                                {/* Segunda imagem - Horizontal topo direita */}
                                 {project.gallery[1] && (
-                                    <div className="col-span-12 md:col-span-4">
+                                    <div className="col-span-12 md:col-span-7 md:row-span-1">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-[200px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[1]))}
                                         >
                                             <img
@@ -445,11 +557,11 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Third image - spans 4 columns on right side */}
+                                {/* Terceira imagem - Quadrada */}
                                 {project.gallery[2] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-full min-h-[250px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[2]))}
                                         >
                                             <img
@@ -466,11 +578,11 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Fourth image - bottom middle */}
+                                {/* Quarta imagem - Pequena */}
                                 {project.gallery[3] && (
-                                    <div className="col-span-12 md:col-span-4">
+                                    <div className="col-span-6 md:col-span-3 md:row-span-1">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-[180px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[3]))}
                                         >
                                             <img
@@ -487,11 +599,11 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Fifth image if exists */}
+                                {/* Quinta imagem - Grande horizontal */}
                                 {project.gallery[4] && (
-                                    <div className="col-span-12 md:col-span-4">
+                                    <div className="col-span-12 md:col-span-8">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden shadow-2xl h-[250px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[4]))}
                                         >
                                             <img
@@ -508,17 +620,80 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Additional images */}
-                                {project.gallery.slice(5).map((imageUrl: string, index: number) => (
-                                    <div key={index + 5} className="col-span-12 md:col-span-4">
+                                {/* Sexta imagem - Vertical */}
+                                {project.gallery[5] && (
+                                    <div className="col-span-6 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-full min-h-[280px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            onClick={() => openLightbox(getImageUrl(project.gallery[5]))}
+                                        >
+                                            <img
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                src={getImageUrl(project.gallery[5])}
+                                                alt={`${project.name} - Imagem 6`}
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Sétima imagem - Média */}
+                                {project.gallery[6] && (
+                                    <div className="col-span-6 md:col-span-4 md:row-span-1">
+                                        <div 
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-[190px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            onClick={() => openLightbox(getImageUrl(project.gallery[6]))}
+                                        >
+                                            <img
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                src={getImageUrl(project.gallery[6])}
+                                                alt={`${project.name} - Imagem 7`}
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Oitava imagem - Média */}
+                                {project.gallery[7] && (
+                                    <div className="col-span-6 md:col-span-4 md:row-span-1">
+                                        <div 
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-[190px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            onClick={() => openLightbox(getImageUrl(project.gallery[7]))}
+                                        >
+                                            <img
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                src={getImageUrl(project.gallery[7])}
+                                                alt={`${project.name} - Imagem 8`}
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Imagens restantes - Grid padrão */}
+                                {project.gallery.slice(8).map((imageUrl: string, index: number) => (
+                                    <div key={index + 8} className="col-span-6 md:col-span-4">
+                                        <div 
+                                            className="rounded-2xl shadow-2xl overflow-hidden h-[220px] bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
                                             onClick={() => openLightbox(getImageUrl(imageUrl))}
                                         >
                                             <img
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 src={getImageUrl(imageUrl)}
-                                                alt={`${project.name} - Imagem ${index + 6}`}
+                                                alt={`${project.name} - Imagem ${index + 9}`}
                                             />
                                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                                                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -536,8 +711,14 @@ export default function ProjectPage() {
 
             {/* ✅ MODAL DE CONFIRMAÇÃO DE DELETE */}
             {showDeleteModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl">
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    onClick={() => setShowDeleteModal(false)}
+                >
+                    <div 
+                        className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
                                 <i className="fas fa-trash text-red-600 dark:text-red-400 text-xl"></i>
@@ -578,7 +759,7 @@ export default function ProjectPage() {
             {/* Lightbox Modal */}
             {selectedImage && (
                 <div 
-                    className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+                    className="fixed inset-0 z-50 bg-black/95  backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
                     onClick={closeLightbox}
                 >
                     <button
@@ -589,11 +770,11 @@ export default function ProjectPage() {
                         <i className="fas fa-times text-xl"></i>
                     </button>
                     
-                    <div className="max-w-7xl w-full h-full flex items-center justify-center">
+                    <div className="max-w-7xl  w-full h-full flex items-center justify-center">
                         <img
                             src={selectedImage}
                             alt="Visualização ampliada"
-                            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                            className="max-w-full max-h-full  object-contain rounded-lg shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
                         />
                     </div>

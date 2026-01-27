@@ -13,6 +13,7 @@ import UserConfig from "../views/UserConfig.tsx";
 import FavoritePage from "../views/FavoritePage.js";
 import MaintenanceScreen from "../views/MaintenanceScreen.tsx";
 import Newproject from "../views/Newproject.tsx";
+import EditProjectPage  from "../views/EditProjectPage.tsx";
 
 
 export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any) {
@@ -32,6 +33,7 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any)
             <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/MaintenanceScreen" element={<MaintenanceScreen />} />
             <Route path="/newproject" element={<Newproject />} />
+            <Route path="/edit-project/:projectId" element={<EditProjectPage/>} />
         </Routes>
     );
 }
