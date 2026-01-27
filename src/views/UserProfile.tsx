@@ -18,20 +18,6 @@ export default function UserProfile() {
   const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
   const [projectCount, setProjectCount] = useState(0);
 
-  // Bloqueia o scroll do body quando o componente está montado
-  useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    const originalHtmlStyle = window.getComputedStyle(document.documentElement).overflow;
-    
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    
-    return () => {
-      document.body.style.overflow = originalStyle;
-      document.documentElement.style.overflow = originalHtmlStyle;
-    };
-  }, []);
-
   useEffect(() => {
     const pathSegments = location.pathname.split("/").filter(Boolean)
     const currentUserId = getUserIdFromToken();
@@ -70,7 +56,7 @@ export default function UserProfile() {
 
   if (!profileData) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23] fixed inset-0">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23]">
         <Loading />
       </div>
     )
@@ -111,39 +97,15 @@ export default function UserProfile() {
               setIsLoadingChild={setLoading}
               isOwnProfile={isOwnProfile}
             />
-            <ProfileStats
-              name={profileData.nickname}
-              nickname={profileData.name}
-              likes={profileData.likes || 0}
-              projetos={projectCount || 0}
-              ownProfile={isOwnProfile}
-              userId={profileData.userId}
-              onFollowChange={(isFollowing: boolean) => {
-                setProfileData((prev: any) => ({
-                  ...prev,
-                  followers: isFollowing ? (prev.followers || 0) + 1 : Math.max(0, (prev.followers || 0) - 1)
-                }));
-              }}
-            />
-            <Biografy bio={profileData.bio} />
-
-            <div className="relative">
-              <ProjectGallery 
-                userId={profileData.userId} 
-                onProjectsLoaded={(count: number) => setProjectCount(count)} 
-                setIsLoadingChild={setLoading}
-                isOwnProfile={isOwnProfile}
-              />
-            </div>
-
-            {showBannerSettings && (
-              <BannerSettings 
-                onClose={handleCloseBannerSettings}
-                onBannerUpdated={handleBannerUpdated}
-              />
-            )}
           </div>
-        </main>
+
+          {showBannerSettings && (
+            <BannerSettings 
+              onClose={handleCloseBannerSettings}
+              onBannerUpdated={handleBannerUpdated}
+            />
+          )}
+        </div>
       </div>
     </div>
   )
