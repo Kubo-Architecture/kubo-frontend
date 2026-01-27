@@ -13,6 +13,11 @@ export default function Gallery() {
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [editingProject, setEditingProject] = useState<any>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [likes, setLikes] = useState<{ [key: number]: number }>({});
+  const [likedProjects, setLikedProjects] = useState<number[]>([]);
 
   const [users, setUsers] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
@@ -135,6 +140,12 @@ export default function Gallery() {
   }, []);
 
   useEffect(() => {
+    const initialLikes: { [key: number]: number } = {};
+    works.forEach((work: any) => {
+      initialLikes[work.id] = work.likes || 0;
+    });
+    setLikes(initialLikes);
+  }, [works]);
     loadFeedProjects(1);
   }, []);
 
@@ -351,17 +362,8 @@ export default function Gallery() {
               </p>
             </div>
           ) : viewMode === 'grid' ? (
-            <>
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                {filteredWorks.map((work: any) => (
-                  <div key={work.id} className="group">
-                    <ProjectCard project={work} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Sentinela para carregamento infinito do feed (apenas quando não está pesquisando) */}
-              {!searchTerm.trim() && (
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+              {filteredWorks.map((work: any) => (
                 <div
                   ref={loaderRef}
                   className="h-12 flex items-center justify-center mt-6 mb-4 text-xs text-gray-500 dark:text-neutral-500"
