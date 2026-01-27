@@ -33,11 +33,11 @@ export default function PhotoEditorModal({
     if (isOpen) {
       const scrollY = window.scrollY;
       
-      const originalBodyOverflow = document.body.style.overflow;
-      const originalBodyPosition = document.body.style.position;
-      const originalBodyTop = document.body.style.top;
-      const originalBodyWidth = document.body.style.width;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalBodyOverflow = document.body.style.overflow || '';
+      const originalBodyPosition = document.body.style.position || '';
+      const originalBodyTop = document.body.style.top || '';
+      const originalBodyWidth = document.body.style.width || '';
+      const originalHtmlOverflow = document.documentElement.style.overflow || '';
       
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
@@ -46,12 +46,38 @@ export default function PhotoEditorModal({
       document.documentElement.style.overflow = 'hidden';
       
       return () => {
-        document.body.style.overflow = originalBodyOverflow;
-        document.body.style.position = originalBodyPosition;
-        document.body.style.top = originalBodyTop;
-        document.body.style.width = originalBodyWidth;
-        document.documentElement.style.overflow = originalHtmlOverflow;
+        // Restaurar valores originais (remover propriedade se estava vazia)
+        if (originalBodyOverflow) {
+          document.body.style.overflow = originalBodyOverflow;
+        } else {
+          document.body.style.removeProperty('overflow');
+        }
         
+        if (originalBodyPosition) {
+          document.body.style.position = originalBodyPosition;
+        } else {
+          document.body.style.removeProperty('position');
+        }
+        
+        if (originalBodyTop) {
+          document.body.style.top = originalBodyTop;
+        } else {
+          document.body.style.removeProperty('top');
+        }
+        
+        if (originalBodyWidth) {
+          document.body.style.width = originalBodyWidth;
+        } else {
+          document.body.style.removeProperty('width');
+        }
+        
+        if (originalHtmlOverflow) {
+          document.documentElement.style.overflow = originalHtmlOverflow;
+        } else {
+          document.documentElement.style.removeProperty('overflow');
+        }
+        
+        // Restaurar posição do scroll
         window.scrollTo(0, scrollY);
       };
     }
@@ -424,14 +450,14 @@ export default function PhotoEditorModal({
                        !currentPhotoUrl.includes('defaultUserPhoto');
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div
         ref={modalRef}
         className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"
         style={{ maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold text-gray-900">
               Editar foto
@@ -573,7 +599,7 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4 rounded-b-xl">
           <div className="flex gap-2">
             {!previewUrl && (
               <>
