@@ -16,53 +16,7 @@ export default function Gallery() {
   const [likes, setLikes] = useState<{ [key: number]: number }>({});
   const [likedProjects, setLikedProjects] = useState<number[]>([]);
 
-  const [users, setUsers] = useState<any[]>([
-    {
-      id: 1,
-      name: "Oscar Niemeyer",
-      nickname: "oscarniem",
-      photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100",
-      role: "Arquiteto",
-      verified: true,
-      projectCount: 156
-    },
-    {
-      id: 2,
-      name: "Lina Bo Bardi",
-      nickname: "linabobardi",
-      photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100",
-      role: "Arquiteta",
-      verified: true,
-      projectCount: 89
-    },
-    {
-      id: 3,
-      name: "Paulo Mendes",
-      nickname: "paulomendes",
-      photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100",
-      role: "Arquiteto",
-      verified: true,
-      projectCount: 124
-    },
-    {
-      id: 4,
-      name: "Ana Costa",
-      nickname: "anacosta",
-      photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100",
-      role: "Designer",
-      verified: false,
-      projectCount: 45
-    },
-    {
-      id: 5,
-      name: "Roberto Silva",
-      nickname: "robertosilva",
-      photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100",
-      role: "Engenheiro",
-      verified: false,
-      projectCount: 32
-    }
-  ]);
+  const [users, setUsers] = useState<any[]>([]);
   
   const [projects, setProjects] = useState<any[]>([]);
   const [works, setWorks] = useState<any[]>([]);
@@ -79,124 +33,28 @@ export default function Gallery() {
     })
       .then((response) => {
         const apiUsers = response.data || [];
-        const exampleUsers = [
-          {
-            id: 1,
-            name: "Oscar Niemeyer",
-            nickname: "oscarniem",
-            photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 156
-          },
-          {
-            id: 2,
-            name: "Lina Bo Bardi",
-            nickname: "linabobardi",
-            photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100",
-            role: "Arquiteta",
-            verified: true,
-            projectCount: 89
-          },
-          {
-            id: 3,
-            name: "Paulo Mendes",
-            nickname: "paulomendes",
-            photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 124
-          },
-          {
-            id: 4,
-            name: "Ana Costa",
-            nickname: "anacosta",
-            photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100",
-            role: "Designer",
-            verified: false,
-            projectCount: 45
-          },
-          {
-            id: 5,
-            name: "Roberto Silva",
-            nickname: "robertosilva",
-            photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100",
-            role: "Engenheiro",
-            verified: false,
-            projectCount: 32
-          }
-        ];
         
-        setUsers([...apiUsers, ...exampleUsers]);
+        setUsers(apiUsers);
       })
       .catch(() => {
-        setUsers([
-          {
-            id: 1,
-            name: "Oscar Niemeyer",
-            nickname: "oscarniem",
-            photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 156
-          },
-          {
-            id: 2,
-            name: "Lina Bo Bardi",
-            nickname: "linabobardi",
-            photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100",
-            role: "Arquiteta",
-            verified: true,
-            projectCount: 89
-          },
-          {
-            id: 3,
-            name: "Paulo Mendes",
-            nickname: "paulomendes",
-            photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100",
-            role: "Arquiteto",
-            verified: true,
-            projectCount: 124
-          },
-          {
-            id: 4,
-            name: "Ana Costa",
-            nickname: "anacosta",
-            photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100",
-            role: "Designer",
-            verified: false,
-            projectCount: 45
-          },
-          {
-            id: 5,
-            name: "Roberto Silva",
-            nickname: "robertosilva",
-            photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100",
-            role: "Engenheiro",
-            verified: false,
-            projectCount: 32
-          }
-        ]);
+        setUsers([]);
       });
   }
 
   function getProjects(project: string) {
     if (!project.trim()) {
-      // Recarrega todos os projetos quando a busca está vazia
       axios.get(`${import.meta.env.VITE_API_URL}/projects`)
         .then((response) => {
           setProjects(response.data);
           setWorks(response.data);
         })
-        .catch((error) => {
-          console.error("Erro ao carregar projetos:", error);
+        .catch(() => {
           setProjects([]);
           setWorks([]);
         });
       return;
     }
   
-    // Busca por nome ou localização
     axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
       params: { name: project, location: project } 
     })
@@ -204,8 +62,7 @@ export default function Gallery() {
         setProjects(response.data);
         setWorks(response.data);
       })
-      .catch((error) => {
-        console.error("Erro ao buscar projetos:", error);
+      .catch(() => {
         setProjects([]);
         setWorks([]);
       });
