@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserIdFromToken } from '../utils/jwt';
 import MediaSection from '../components/Project/MediaSection';
 import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
 import MaterialsSection from '../components/Project/MaterialsSection';
@@ -145,6 +146,8 @@ export default function Newproject() {
         setError('A foto principal deve ter no máximo 10MB');
         return;
       }
+      
+      console.log('📷 Foto principal selecionada:', file.name, file.type, file.size);
       setPhoto(file);
 
       const reader = new FileReader();
@@ -158,6 +161,16 @@ export default function Newproject() {
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
+
+    if (newFiles.length === 0) {
+      console.log('⚠️ Nenhum arquivo selecionado');
+      return;
+    }
+
+    console.log('📸 Arquivos da galeria selecionados:', newFiles.length);
+    newFiles.forEach((file, i) => {
+      console.log(`  ${i + 1}. ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
+    });
 
     const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
     if (totalSize > 50 * 1024 * 1024) {
@@ -203,6 +216,8 @@ export default function Newproject() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('🚀 Iniciando envio do formulário...');
     
     // Validação de campos obrigatórios
     if (formData.usage_types.length === 0) {
@@ -250,11 +265,41 @@ export default function Newproject() {
     setIsSubmitting(true);
     setError('');
 
-    const userId = localStorage.getItem('userId');
+    // ✅ CORRIGIDO - Pegar nome do usuário (tentar vários campos)
+    const userId = getUserIdFromToken();
+    const userName = localStorage.getItem('name') || 
+                     localStorage.getItem('username') || 
+                     localStorage.getItem('nickname') || 
+                     'Usuário';
+    
+    console.log('👤 UserId:', userId);
+    console.log('👤 UserName que será usado:', userName);
+    console.log('📦 LocalStorage completo:');
+    console.log('  - name:', localStorage.getItem('name'));
+    console.log('  - username:', localStorage.getItem('username'));
+    console.log('  - nickname:', localStorage.getItem('nickname'));
+    
     if (!userId) {
-      setError('Usuário não autenticado');
+      setError('Você precisa estar logado para cadastrar um projeto');
       setIsSubmitting(false);
+      navigate('/login');
       return;
+    }
+
+    // ✅ Se ainda for "Usuário", buscar do backend
+    let finalUserName = userName;
+    if (userName === 'Usuário' && userId) {
+      try {
+        console.log('⚠️ Nome não encontrado no localStorage, buscando do backend...');
+        const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          finalUserName = userData.name || userData.username || userData.nickname || 'Usuário';
+          console.log('✅ Nome obtido do backend:', finalUserName);
+        }
+      } catch (err) {
+        console.error('❌ Erro ao buscar nome do backend:', err);
+      }
     }
 
     const finalUsageTypes = formData.usage_types.map(type => 
@@ -266,19 +311,26 @@ export default function Newproject() {
     data.append('location', formData.location);
     data.append('description', formData.description);
     data.append('status', formData.status);
-    data.append('build_area', formData.build_area);
-    data.append('terrain_area', formData.terrain_area);
+    data.append('build_area', formData.build_area || '');
+    data.append('terrain_area', formData.terrain_area || '');
     data.append('userId', userId);
 
+    // Enviar tipos de uso
     finalUsageTypes.forEach((type, index) => {
       data.append(`usage_types[${index}]`, type);
     });
     data.append('usage_type', finalUsageTypes.join(', '));
 
-    if (!formData.isAuthor && formData.author) {
+    // ✅ CORRIGIDO - Enviar autor corretamente
+    if (formData.isAuthor) {
+      data.append('author', finalUserName);
+      console.log('✅ Autor: Eu sou o autor -', finalUserName);
+    } else if (formData.author && formData.author.trim()) {
       data.append('author', formData.author);
+      console.log('✅ Autor: Campo personalizado -', formData.author);
     }
 
+    // Datas
     if (formData.startDate) {
       data.append('startDate', formData.startDate);
     }
@@ -286,32 +338,62 @@ export default function Newproject() {
       data.append('endDate', formData.endDate);
     }
 
+    // Materiais
     formData.materials.forEach((material: string, index: number) => {
       if (material.trim()) {
         data.append(`materials[${index}]`, material);
       }
     });
 
+    // ✅ VERIFICAÇÃO CRÍTICA - Foto principal
     if (photo) {
-      data.append('photo', photo);
+      console.log('📷 Adicionando foto principal ao FormData:', photo.name, photo.type, photo.size);
+      data.append('photo', photo, photo.name); // ✅ Adicionar nome do arquivo
+    } else {
+      console.error('❌ ERRO: Foto principal não encontrada!');
     }
 
-    gallery.forEach((file) => {
-      data.append('gallery', file);
+    // ✅ VERIFICAÇÃO CRÍTICA - Galeria
+    console.log('📸 Total de imagens na galeria:', gallery.length);
+    gallery.forEach((file, index) => {
+      console.log(`  ${index + 1}. Adicionando: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
+      data.append('gallery', file, file.name); // ✅ Adicionar nome do arquivo
     });
 
+    // Debug: mostrar o que está sendo enviado
+    console.log('=== DADOS SENDO ENVIADOS ===');
+    console.log('Nome:', formData.name);
+    console.log('Localização:', formData.location);
+    console.log('Descrição:', formData.description);
+    console.log('Status:', formData.status);
+    console.log('Área construída:', formData.build_area);
+    console.log('Área do terreno:', formData.terrain_area);
+    console.log('Tipos de uso:', finalUsageTypes);
+    console.log('Autor:', formData.isAuthor ? finalUserName : formData.author);
+    console.log('Materiais:', formData.materials.filter(m => m.trim()));
+    console.log('Foto principal:', photo?.name);
+    console.log('Galeria:', gallery.map(f => f.name));
+    console.log('===========================');
+
     try {
+      console.log('📤 Enviando requisição para:', `${import.meta.env.VITE_API_URL}/projects/`);
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/`, {
         method: 'POST',
         body: data
+        // ✅ NÃO definir Content-Type - o navegador faz isso automaticamente com boundary
       });
+
+      console.log('📥 Resposta recebida:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Erro da API:', errorData);
         throw new Error(errorData.error || 'Erro ao cadastrar projeto');
       }
 
       const result = await response.json();
+      console.log('✅ Resposta da API:', result);
       
       setError('success: Projeto cadastrado com sucesso!');
 
@@ -325,6 +407,7 @@ export default function Newproject() {
       }, 1500);
 
     } catch (err: any) {
+      console.error('❌ Erro ao cadastrar:', err);
       setError(err.message || 'Erro desconhecido');
     } finally {
       setIsSubmitting(false);

@@ -7,6 +7,8 @@ import { getUserIdFromToken } from '../utils/jwt';
 
 export default function Gallery() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+  
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,6 +17,13 @@ export default function Gallery() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [likes, setLikes] = useState<{ [key: number]: number }>({});
   const [likedProjects, setLikedProjects] = useState<number[]>([]);
+
+  // ✅ Helper para URLs de imagem
+  const getImageUrl = (path: string | null | undefined): string => {
+    if (!path) return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800';
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+  };
 
   const [users, setUsers] = useState<any[]>([
     {
@@ -74,7 +83,7 @@ export default function Gallery() {
 
     const searchQuery = user.startsWith('@') ? user.slice(1) : user;
   
-    axios.get(`${import.meta.env.VITE_API_URL}/users`, { 
+    axios.get(`${API_URL}/users`, { 
       params: { name: searchQuery } 
     })
       .then((response) => {
@@ -180,29 +189,21 @@ export default function Gallery() {
       });
   }
 
+  // ✅ CORRIGIDO - Função de busca de projetos
   function getProjects(project: string) {
     if (!project.trim()) {
-      // Recarrega todos os projetos quando a busca está vazia
-      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-        .then((response) => {
-          setProjects(response.data);
-          setWorks(response.data);
-        })
-        .catch((error) => {
-          console.error("Erro ao carregar projetos:", error);
-          setProjects([]);
-          setWorks([]);
-        });
+      // Se vazio, não faz requisição (mostra array vazio ou mantém projetos atuais)
       return;
     }
   
-    // Busca por nome ou localização
-    axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
-      params: { name: project, location: project } 
+    // ✅ Busca com parâmetro title (backend espera isso)
+    axios.get(`${API_URL}/projects`, { 
+      params: { title: project } 
     })
       .then((response) => {
-        setProjects(response.data);
-        setWorks(response.data);
+        const data = response.data || [];
+        setProjects(data);
+        setWorks(data);
       })
       .catch((error) => {
         console.error("Erro ao buscar projetos:", error);
@@ -217,16 +218,23 @@ export default function Gallery() {
     getProjects(searchValue);
   };
 
-  // Carregar projetos ao montar o componente
+  // ✅ CORRIGIDO - Carregar todos os projetos ao montar
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-      .then((response) => {
-        setProjects(response.data);
-        setWorks(response.data);
-      })
-      .catch((error) => {
-        console.error("Erro ao carregar projetos:", error);
-      });
+    // Backend não tem rota para listar TODOS os projetos sem filtro
+    // Por enquanto, deixa vazio ou faz uma busca genérica
+    // Opção 1: Deixar vazio
+    setProjects([]);
+    setWorks([]);
+    
+    // Opção 2: Buscar com termo genérico (descomentar se quiser)
+    // axios.get(`${API_URL}/projects`, { params: { title: '' } })
+    //   .then((response) => {
+    //     setProjects(response.data || []);
+    //     setWorks(response.data || []);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Erro ao carregar projetos:", error);
+    //   });
   }, []);
 
   useEffect(() => {
@@ -243,7 +251,7 @@ export default function Gallery() {
 
       if (userId) {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+          const response = await axios.get(`${API_URL}/users/${userId}`);
           const user = response.data;
 
           if (!user.nickname) {
@@ -309,6 +317,11 @@ export default function Gallery() {
       terrain_area: work.terrain_area || '',
       usage_type: work.usage_type || '',
     });
+  };
+
+  // ✅ Função para navegar para página do projeto
+  const handleViewProject = (projectId: string) => {
+    navigate(`/project/${projectId}`);
   };
 
   return (
@@ -411,20 +424,27 @@ export default function Gallery() {
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
                 Nenhuma obra encontrada
               </h3>
+              <p className="text-gray-500 dark:text-neutral-400 text-sm">
+                Use a busca acima para encontrar projetos
+              </p>
             </div>
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               {filteredWorks.map((work: any) => (
                 <div
-                  key={work.id}
-                  className="bg-white dark:bg-[#151B23] rounded-lg border border-gray-300 dark:border-[#3d444d] overflow-hidden hover:shadow-md transition-all duration-300 group"
+                  key={work.id || work._id}
+                  onClick={() => handleViewProject(work.id || work._id)}
+                  className="bg-white dark:bg-[#151B23] rounded-lg border border-gray-300 dark:border-[#3d444d] overflow-hidden hover:shadow-md transition-all duration-300 group cursor-pointer"
                 >
                   <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                     <img
-                      src={work.photo_url || work.imageUrl}
+                      src={getImageUrl(work.photo_url || work.imageUrl)}
                       alt={work.name || work.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800';
+                      }}
                     />
                     
                     {work.isUserProject && (
@@ -442,17 +462,14 @@ export default function Gallery() {
 
                     <div className="absolute top-3 right-3">
                       <span className="px-3 py-1 bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm text-gray-900 dark:text-neutral-400 text-xs font-medium rounded-full border border-gray-300 dark:border-[#3d444d]">
-                        {work.usage_type || work.category}
+                        {work.usage_type || work.category || 'Projeto'}
                       </span>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                      <button
-                        onClick={() => setSelectedImage(work)}
-                        className="text-white text-sm font-medium flex items-center hover:text-gray-200"
-                      >
+                      <div className="text-white text-sm font-medium flex items-center hover:text-gray-200">
                         Ver detalhes
                         <i className="fas fa-arrow-right ml-2"></i>
-                      </button>
+                      </div>
                     </div>
                   </div>
 
@@ -460,7 +477,10 @@ export default function Gallery() {
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base line-clamp-1">{work.title || work.name}</h3>
                       <button 
-                        onClick={() => toggleFavorite(work.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(work.id);
+                        }}
                         className={`flex-shrink-0 ml-2 transition-colors ${
                           favorites.includes(work.id) 
                             ? 'text-yellow-400 hover:text-yellow-500' 
@@ -473,37 +493,40 @@ export default function Gallery() {
 
                     <div className="flex items-center text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-3">
                       <i className="fas fa-map-marker-alt mr-2 text-gray-400 dark:text-neutral-500 flex-shrink-0"></i>
-                      <span className="truncate">{work.location}</span>
+                      <span className="truncate">{work.location || 'Localização não informada'}</span>
                     </div>
 
-                    <p className="text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-4 line-clamp-2">{work.description}</p>
+                    <p className="text-gray-600 dark:text-neutral-400 text-xs sm:text-sm mb-4 line-clamp-2">{work.description || 'Sem descrição'}</p>
 
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-[#3d444d]">
                       <div className="min-w-0">
                         <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1 truncate">Arquiteto</div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400 truncate">{work.architect || 'Dono do projeto'}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400 truncate">{work.author || work.architect || 'Não informado'}</div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1">Ano</div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400">{work.year || '2024'}</div>
+                        <div className="text-xs text-gray-500 dark:text-neutral-500 mb-1">Status</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-neutral-400">{work.status || '2024'}</div>
                       </div>
                     </div>
 
                     <div className="mt-4 flex items-center justify-between">
                       <div className="flex flex-wrap gap-1 flex-1">
-                        {work.tags?.slice(0, 2).map((tag: string, index: number) => (
+                        {work.materials?.slice(0, 2).map((material: string, index: number) => (
                           <span key={index} className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded truncate max-w-[70px] sm:max-w-[90px]">
-                            {tag}
+                            {material}
                           </span>
                         ))}
-                        {work.tags && work.tags.length > 2 && (
+                        {work.materials && work.materials.length > 2 && (
                           <span className="px-2 py-1 bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 text-xs rounded">
-                            +{work.tags.length - 2}
+                            +{work.materials.length - 2}
                           </span>
                         )}
                       </div>
                       <button
-                        onClick={() => toggleLike(work.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(work.id);
+                        }}
                         className={`flex items-center space-x-1 transition-colors ml-2 ${
                           likedProjects.includes(work.id)
                             ? 'text-red-500 hover:text-red-600'
