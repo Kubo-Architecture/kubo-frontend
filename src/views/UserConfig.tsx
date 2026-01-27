@@ -3,14 +3,14 @@ import { useTheme } from '../theme/ThemeProvider';
 
 import LanguageSection from '../components/Settings/LanguageSection';
 import AccountSection from '../components/Settings/AccountSection';
-import VisibilitySection from '../components/Settings/VisibilitySection';
+// import VisibilitySection from '../components/Settings/VisibilitySection';
 import ThemeSection from '../components/Settings/ThemeSection';
 import ContactSection from '../components/Settings/ContactSection';
 
 export default function UserConfig() {
   const [activeSection, setActiveSection] = useState('geral');
   const [language, setLanguage] = useState('portuguese');
-  const [accountVisibility, setAccountVisibility] = useState('public');
+  // const [accountVisibility, setAccountVisibility] = useState('public');
 
   const { theme, setTheme } = useTheme();
 
@@ -31,7 +31,7 @@ export default function UserConfig() {
   const menuSections = [
     { id: 'geral', label: 'Geral', icon: 'fa-solid fa-gear', available: true },
     { id: 'conta', label: 'Conta', icon: 'fa-solid fa-user', available: true },
-    { id: 'privacidade', label: 'Privacidade', icon: 'fa-solid fa-lock', available: true },
+    // { id: 'privacidade', label: 'Privacidade', icon: 'fa-solid fa-lock', available: true },
     { id: 'interface', label: 'Interface', icon: 'fa-solid fa-laptop', available: true },
     { id: 'plans', label: 'Plans Upgrade', icon: 'fa-solid fa-crown', available: false },
     { id: 'estatisticas', label: 'Estatísticas', icon: 'fa-solid fa-chart-simple', available: false },
@@ -94,7 +94,7 @@ export default function UserConfig() {
               <div className="space-y-6 lg:space-y-8">
                 <LanguageSection language={language} onLanguageChange={setLanguage} />
                 <AccountSection />
-                <VisibilitySection accountVisibility={accountVisibility} onVisibilityChange={setAccountVisibility} />
+                {/* <VisibilitySection accountVisibility={accountVisibility} onVisibilityChange={setAccountVisibility} /> */}
                 <ThemeSection theme={theme} onThemeChange={setTheme} />
                 <ContactSection />
               </div>
@@ -106,11 +106,11 @@ export default function UserConfig() {
               </div>
             )}
 
-            {activeSection === 'privacidade' && (
+            {/* {activeSection === 'privacidade' && (
               <div className="space-y-6 lg:space-y-8">
                 <VisibilitySection accountVisibility={accountVisibility} onVisibilityChange={setAccountVisibility} />
               </div>
-            )}
+            )} */}
 
             {activeSection === 'interface' && (
               <div className="space-y-6 lg:space-y-8">

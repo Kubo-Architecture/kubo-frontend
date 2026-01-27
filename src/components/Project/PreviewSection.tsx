@@ -10,6 +10,8 @@ interface PreviewSectionProps {
     build_area: string;
     terrain_area: string;
     materials: string[];
+    author: string;
+    isAuthor: boolean;
   };
   mainImagePreview: string | null;
   galleryPreviews: string[];
@@ -19,7 +21,6 @@ export default function PreviewSection({ formData, mainImagePreview, galleryPrev
   return (
     <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8">
       <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">
-        <i className="fas fa-eye mr-2"></i>
         Preview do Projeto
       </h2>
 
@@ -72,7 +73,7 @@ export default function PreviewSection({ formData, mainImagePreview, galleryPrev
               Autor do projeto
             </p>
             <p className="text-sm font-semibold text-zinc-900 dark:text-white">
-              Autor
+              {formData.isAuthor ? (localStorage.getItem('name') || 'Você') : (formData.author || 'Não informado')}
             </p>
           </div>
         </div>

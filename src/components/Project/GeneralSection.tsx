@@ -38,8 +38,10 @@ export default function GeneralSection({
       {/* Informações Básicas */}
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fa-solid fa-file-lines mr-2"></i>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">Novo Projeto</h1>
+          <p className="text-sm text-zinc-500 dark:text-neutral-400 mb-4">Configure seu projeto</p>
+          
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2 mt-6">
             Informações Básicas
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Dados principais do projeto</p>
@@ -110,14 +112,26 @@ export default function GeneralSection({
               disabled={formData.isAuthor}
               className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm disabled:bg-zinc-50 dark:disabled:bg-[#151B23] disabled:text-zinc-500 dark:disabled:text-neutral-500 text-zinc-900 dark:text-white"
             />
-            <label className="flex items-center mt-3 cursor-pointer">
-              <input
-                type="checkbox"
-                name="isAuthor"
-                checked={formData.isAuthor}
-                onChange={handleChange}
-                className="w-4 h-4 rounded border-zinc-300 dark:border-[#3d444d] text-black dark:text-white focus:ring-black dark:focus:ring-white"
-              />
+            <label htmlFor="isAuthor" className="flex items-center mt-3 cursor-pointer group">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="isAuthor"
+                  name="isAuthor"
+                  checked={formData.isAuthor}
+                  onChange={handleChange}
+                  className="sr-only"
+                />
+                <div className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center ${
+                  formData.isAuthor
+                    ? 'bg-black dark:bg-white border-black dark:border-white'
+                    : 'bg-white dark:bg-[#202830] border-zinc-300 dark:border-[#3d444d] group-hover:border-black dark:group-hover:border-white'
+                }`}>
+                  {formData.isAuthor && (
+                    <i className="fas fa-check text-white dark:text-black text-xs"></i>
+                  )}
+                </div>
+              </div>
               <span className="ml-2 text-sm text-zinc-600 dark:text-neutral-400">Eu sou o autor</span>
             </label>
           </div>
@@ -150,14 +164,26 @@ export default function GeneralSection({
                 disabled={formData.isOngoing}
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm disabled:bg-zinc-50 dark:disabled:bg-[#151B23] disabled:text-zinc-500 dark:disabled:text-neutral-500 text-zinc-900 dark:text-white"
               />
-              <label className="flex items-center mt-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="isOngoing"
-                  checked={formData.isOngoing}
-                  onChange={handleChange}
-                  className="w-4 h-4 rounded border-zinc-300 dark:border-[#3d444d] text-black dark:text-white focus:ring-black dark:focus:ring-white"
-                />
+              <label htmlFor="isOngoing" className="flex items-center mt-3 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    id="isOngoing"
+                    name="isOngoing"
+                    checked={formData.isOngoing}
+                    onChange={handleChange}
+                    className="sr-only"
+                  />
+                  <div className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center ${
+                    formData.isOngoing
+                      ? 'bg-black dark:bg-white border-black dark:border-white'
+                      : 'bg-white dark:bg-[#202830] border-zinc-300 dark:border-[#3d444d] group-hover:border-black dark:group-hover:border-white'
+                  }`}>
+                    {formData.isOngoing && (
+                      <i className="fas fa-check text-white dark:text-black text-xs"></i>
+                    )}
+                  </div>
+                </div>
                 <span className="ml-2 text-sm text-zinc-600 dark:text-neutral-400">Projeto ainda em andamento</span>
               </label>
             </div>
@@ -169,7 +195,6 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fa-solid fa-image mr-2"></i>
             Fotos e Mídia
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Imagens do projeto</p>
@@ -268,7 +293,6 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fa-solid fa-wrench mr-2"></i>
             Especificações Técnicas
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Detalhes técnicos</p>
@@ -381,7 +405,6 @@ export default function GeneralSection({
       <div className="bg-white dark:bg-[#151B23] rounded-2xl border border-zinc-200 dark:border-[#3d444d] p-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-            <i className="fa-solid fa-cubes mr-2"></i>
             Materiais Utilizados
           </h2>
           <p className="text-sm text-zinc-500 dark:text-neutral-400">Lista de materiais</p>

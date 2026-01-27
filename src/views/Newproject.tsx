@@ -5,7 +5,7 @@ import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
 import MaterialsSection from '../components/Project/MaterialsSection';
 import GeneralSection from '../components/Project/GeneralSection';
 import PreviewSection from '../components/Project/PreviewSection';
-import ActionButtons from '../components/Project/ActionButtons';
+import RequirementsSection from '../components/Project/RequirementsSection';
 
 export default function Newproject() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export default function Newproject() {
     location: '',
     description: '',
     author: '',
-    isAuthor: true,
+    isAuthor: false,
     startDate: '',
     endDate: '',
     isOngoing: false,
@@ -47,10 +47,11 @@ export default function Newproject() {
 
   const menuSections = [
     { id: 'geral', label: 'Geral', icon: 'fa-solid fa-grip' },
-    { id: 'preview', label: 'Visualizar Projeto', icon: 'fa-solid fa-eye' },
     { id: 'media', label: 'Fotos e Mídia', icon: 'fa-solid fa-image' },
     { id: 'technical', label: 'Especificações Técnicas', icon: 'fa-solid fa-wrench' },
     { id: 'materials', label: 'Materiais', icon: 'fa-solid fa-cubes' },
+    { id: 'requirements', label: 'Requisitos', icon: 'fa-solid fa-clipboard-check' },
+    { id: 'preview', label: 'Visualizar Projeto', icon: 'fa-solid fa-eye' },
   ];
 
   useEffect(() => {
@@ -203,8 +204,46 @@ export default function Newproject() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validação de campos obrigatórios
     if (formData.usage_types.length === 0) {
       setError('Selecione pelo menos um tipo de uso');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.status) {
+      setError('Selecione o status do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (formData.usage_types.includes('Outro') && !formData.custom_usage_type.trim()) {
+      setError('Especifique o tipo de uso "Outro"');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.name.trim()) {
+      setError('Preencha o nome do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.location.trim()) {
+      setError('Preencha a localização do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      setError('Preencha a descrição do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!photo) {
+      setError('Adicione uma foto principal do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -298,19 +337,6 @@ export default function Newproject() {
         {/* Desktop Sidebar */}
         <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col pt-16 z-10">
           <div className="flex-1 p-6 overflow-y-auto">
-            {/* Header */}
-            <div className="mb-6">
-              <button
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 dark:text-neutral-400 dark:hover:text-white transition-colors mb-4"
-              >
-                <i className="fa-solid fa-arrow-left"></i>
-                <span className="text-sm font-medium">Voltar</span>
-              </button>
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Novo Projeto</h1>
-              <p className="text-sm text-zinc-500 dark:text-neutral-400 mt-1">Configure seu projeto</p>
-            </div>
-
             {/* Navigation */}
             <nav className="space-y-1">
               {menuSections.map((section) => (
@@ -334,6 +360,39 @@ export default function Newproject() {
                 </button>
               ))}
             </nav>
+          </div>
+
+          {/* Footer - Action Buttons */}
+          <div className="px-6 py-6 border-t border-zinc-200 dark:border-[#3d444d] bg-white dark:bg-[#151B23]">
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                disabled={isSubmitting}
+                className="px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+                className="px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Cadastrando...</span>
+                  </>
+                ) : (
+                  <span>Cadastrar</span>
+                )}
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -385,6 +444,15 @@ export default function Newproject() {
                 />
               )}
 
+              {/* REQUISITOS */}
+              {activeSection === 'requirements' && (
+                <RequirementsSection
+                  formData={formData}
+                  photo={photo}
+                  showCustomUsageType={showCustomUsageType}
+                />
+              )}
+
               {/* ABA FOTOS E MÍDIA */}
               {activeSection === 'media' && (
                 <MediaSection
@@ -401,6 +469,7 @@ export default function Newproject() {
               {activeSection === 'technical' && (
                 <TechnicalSpecsSection
                   formData={formData}
+                  setFormData={setFormData}
                   handleChange={handleChange}
                   handleUsageTypeToggle={handleUsageTypeToggle}
                   showCustomUsageType={showCustomUsageType}
@@ -417,12 +486,6 @@ export default function Newproject() {
                   removeMaterialField={removeMaterialField}
                 />
               )}
-
-              {/* Botões de ação - agora no final da página */}
-              <ActionButtons
-                isSubmitting={isSubmitting}
-                onCancel={() => navigate(-1)}
-              />
             </form>
           </div>
         </main>
