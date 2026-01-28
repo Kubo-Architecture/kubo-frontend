@@ -13,12 +13,14 @@ const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 function App() {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [galleryLoaded, setGalleryLoaded] = useState<boolean>(false);
   const location = useLocation();
 
   const disabledRoutes: string[] = ['/login', '/register', '/forgotpassword', '/profile/nickname'];
 
   const isAuthRoute: boolean = location.pathname.startsWith('/auth/');
   const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
+  const isGalleryRoute: boolean = location.pathname === '/gallery';
 
   const checkUser = useCallback(async () => {
     const userId = getUserIdFromToken();
@@ -52,6 +54,12 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (isGalleryRoute) {
+      setGalleryLoaded(false);
+    }
+  }, [isGalleryRoute]);
+
   if (IS_MAINTENANCE_MODE) {
     return <MaintenanceScreen />;
   }
@@ -60,9 +68,14 @@ function App() {
     <div className="min-h-screen">
       {!isHeaderDisabled && <HeaderFull userData={userData} />}
 
-      <RouterLink isAuthenticated={!!userData} hasNick={!!userData?.nickname} onLoginSuccess={checkUser} />
+      <RouterLink
+        isAuthenticated={!!userData}
+        hasNick={!!userData?.nickname}
+        onLoginSuccess={checkUser}
+        onGalleryLoaded={() => setGalleryLoaded(true)}
+      />
       
-      {loading && <Loading />}
+      {(loading || (isGalleryRoute && !galleryLoaded)) && <Loading />}
     </div>
   );
 }

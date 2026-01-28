@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
+import axios from 'axios';
 import MediaSection from '../components/Project/MediaSection';
 import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
 import MaterialsSection from '../components/Project/MaterialsSection';
@@ -8,9 +9,11 @@ import GeneralSection from '../components/Project/GeneralSection';
 import PreviewSection from '../components/Project/PreviewSection';
 import RequirementsSection from '../components/Project/RequirementsSection';
 
-export default function Newproject() {
+export default function NewProject() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('geral');
+  const [userName, setUserName] = useState('Usuário');
+  const [nickName, setNickName] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -57,7 +60,48 @@ export default function Newproject() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const fetchUserNickname = async () => {
+      const userId = getUserIdFromToken();
+      if (!userId) return;
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+        const userData = response.data;
+        setNickName(userData.nickname || '');
+      } catch (err) {
+        console.error('Erro ao buscar nickname do usuário:', err);
+      }
+    };
+
+    fetchUserNickname();
   }, []);
+
+  useEffect(() => {
+    const fetchUserNameIfAuthor = async () => {
+      if (!formData.isAuthor) return;
+
+      const userId = getUserIdFromToken();
+      if (!userId) return;
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+        const userData = response.data;
+        const resolvedName =
+          userData.name || userData.username || userData.nickname || 'Usuário';
+
+        setUserName(resolvedName);
+        setFormData((prev) => ({
+          ...prev,
+          author: resolvedName,
+        }));
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário para autor:', err);
+      }
+    };
+
+    fetchUserNameIfAuthor();
+  }, [formData.isAuthor]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -147,7 +191,6 @@ export default function Newproject() {
         return;
       }
       
-      console.log('📷 Foto principal selecionada:', file.name, file.type, file.size);
       setPhoto(file);
 
       const reader = new FileReader();
@@ -163,11 +206,9 @@ export default function Newproject() {
     const newFiles = Array.from(e.target.files || []);
 
     if (newFiles.length === 0) {
-      console.log('⚠️ Nenhum arquivo selecionado');
       return;
     }
 
-    console.log('📸 Arquivos da galeria selecionados:', newFiles.length);
     newFiles.forEach((file, i) => {
       console.log(`  ${i + 1}. ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
     });
@@ -217,9 +258,6 @@ export default function Newproject() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('🚀 Iniciando envio do formulário...');
-    
-    // Validação de campos obrigatórios
     if (formData.usage_types.length === 0) {
       setError('Selecione pelo menos um tipo de uso');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -265,20 +303,8 @@ export default function Newproject() {
     setIsSubmitting(true);
     setError('');
 
-    // ✅ CORRIGIDO - Pegar nome do usuário (tentar vários campos)
     const userId = getUserIdFromToken();
-    const userName = localStorage.getItem('name') || 
-                     localStorage.getItem('username') || 
-                     localStorage.getItem('nickname') || 
-                     'Usuário';
-    
-    console.log('👤 UserId:', userId);
-    console.log('👤 UserName que será usado:', userName);
-    console.log('📦 LocalStorage completo:');
-    console.log('  - name:', localStorage.getItem('name'));
-    console.log('  - username:', localStorage.getItem('username'));
-    console.log('  - nickname:', localStorage.getItem('nickname'));
-    
+
     if (!userId) {
       setError('Você precisa estar logado para cadastrar um projeto');
       setIsSubmitting(false);
@@ -286,19 +312,15 @@ export default function Newproject() {
       return;
     }
 
-    // ✅ Se ainda for "Usuário", buscar do backend
     let finalUserName = userName;
     if (userName === 'Usuário' && userId) {
       try {
-        console.log('⚠️ Nome não encontrado no localStorage, buscando do backend...');
-        const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          finalUserName = userData.name || userData.username || userData.nickname || 'Usuário';
-          console.log('✅ Nome obtido do backend:', finalUserName);
-        }
+        const userResponse = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+        const userData = userResponse.data;
+        finalUserName = userData.name || 'Usuário';
+
       } catch (err) {
-        console.error('❌ Erro ao buscar nome do backend:', err);
+        console.error('Erro ao buscar nome do backend:', err);
       }
     }
 
@@ -315,22 +337,17 @@ export default function Newproject() {
     data.append('terrain_area', formData.terrain_area || '');
     data.append('userId', userId);
 
-    // Enviar tipos de uso
     finalUsageTypes.forEach((type, index) => {
       data.append(`usage_types[${index}]`, type);
     });
     data.append('usage_type', finalUsageTypes.join(', '));
 
-    // ✅ CORRIGIDO - Enviar autor corretamente
     if (formData.isAuthor) {
       data.append('author', finalUserName);
-      console.log('✅ Autor: Eu sou o autor -', finalUserName);
     } else if (formData.author && formData.author.trim()) {
       data.append('author', formData.author);
-      console.log('✅ Autor: Campo personalizado -', formData.author);
     }
 
-    // Datas
     if (formData.startDate) {
       data.append('startDate', formData.startDate);
     }
@@ -338,77 +355,40 @@ export default function Newproject() {
       data.append('endDate', formData.endDate);
     }
 
-    // Materiais
     formData.materials.forEach((material: string, index: number) => {
       if (material.trim()) {
         data.append(`materials[${index}]`, material);
       }
     });
 
-    // ✅ VERIFICAÇÃO CRÍTICA - Foto principal
     if (photo) {
-      console.log('📷 Adicionando foto principal ao FormData:', photo.name, photo.type, photo.size);
-      data.append('photo', photo, photo.name); // ✅ Adicionar nome do arquivo
+      data.append('photo', photo, photo.name);
     } else {
-      console.error('❌ ERRO: Foto principal não encontrada!');
+      console.error('ERRO: Foto principal não encontrada!');
     }
 
-    // ✅ VERIFICAÇÃO CRÍTICA - Galeria
-    console.log('📸 Total de imagens na galeria:', gallery.length);
-    gallery.forEach((file, index) => {
-      console.log(`  ${index + 1}. Adicionando: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
-      data.append('gallery', file, file.name); // ✅ Adicionar nome do arquivo
+    gallery.forEach((file, _) => {
+      data.append('gallery', file, file.name);
     });
 
-    // Debug: mostrar o que está sendo enviado
-    console.log('=== DADOS SENDO ENVIADOS ===');
-    console.log('Nome:', formData.name);
-    console.log('Localização:', formData.location);
-    console.log('Descrição:', formData.description);
-    console.log('Status:', formData.status);
-    console.log('Área construída:', formData.build_area);
-    console.log('Área do terreno:', formData.terrain_area);
-    console.log('Tipos de uso:', finalUsageTypes);
-    console.log('Autor:', formData.isAuthor ? finalUserName : formData.author);
-    console.log('Materiais:', formData.materials.filter(m => m.trim()));
-    console.log('Foto principal:', photo?.name);
-    console.log('Galeria:', gallery.map(f => f.name));
-    console.log('===========================');
-
     try {
-      console.log('📤 Enviando requisição para:', `${import.meta.env.VITE_API_URL}/projects/`);
-      
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/`, {
-        method: 'POST',
-        body: data
-        // ✅ NÃO definir Content-Type - o navegador faz isso automaticamente com boundary
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/projects/`,
+        data,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
 
-      console.log('📥 Resposta recebida:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('❌ Erro da API:', errorData);
-        throw new Error(errorData.error || 'Erro ao cadastrar projeto');
+      if (!nickName) {
+        navigate('/profile/nickname');
+      } else {
+        navigate(`/profile/${nickName}`);
       }
-
-      const result = await response.json();
-      console.log('✅ Resposta da API:', result);
-      
-      setError('success: Projeto cadastrado com sucesso!');
-
-      setTimeout(() => {
-        const nickname = localStorage.getItem('nickname');
-        if (nickname) {
-          navigate(`/profile/${nickname}`);
-        } else {
-          navigate('/gallery');
-        }
-      }, 1500);
-
     } catch (err: any) {
-      console.error('❌ Erro ao cadastrar:', err);
-      setError(err.message || 'Erro desconhecido');
+      const errorMessage =
+        err?.response?.data?.error ||
+        err?.message ||
+        'Erro desconhecido';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -434,7 +414,7 @@ export default function Newproject() {
                 >
                   <i className={`${section.icon} text-lg ${
                     activeSection === section.id 
-                      ? 'text-black dark:text-white' 
+                      ? 'text-black dark:text-white'
                       : 'text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white'
                   }`}></i>
                   <div className="flex-1">
@@ -452,7 +432,7 @@ export default function Newproject() {
                 type="button"
                 onClick={() => navigate(-1)}
                 disabled={isSubmitting}
-                className="px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="cursor-pointer px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 Cancelar
               </button>
@@ -461,7 +441,7 @@ export default function Newproject() {
                 type="submit"
                 disabled={isSubmitting}
                 onClick={handleSubmit}
-                className="px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="cursor-pointer px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
                 {isSubmitting ? (
                   <>

@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import Btncriarprojeto from "../components/BtnCriarProjeto";
+import CreateProjectButton from '../components/CreateProjectButton';
 import axios from 'axios';
 import SearchBar from '../components/Searchbar';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
 import ProjectCard from '../components/Profile/ProjectCard';
 
-export default function Gallery() {
+interface GalleryProps {
+  onInitialLoadComplete?: () => void;
+}
+
+export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
@@ -26,6 +30,9 @@ export default function Gallery() {
 
     const userId = getUserIdFromToken();
     if (!userId) {
+      if (pageToLoad === 1 && onInitialLoadComplete) {
+        onInitialLoadComplete();
+      }
       return;
     }
 
@@ -59,6 +66,9 @@ export default function Gallery() {
       setHasMore(false);
     } finally {
       setIsLoading(false);
+      if (pageToLoad === 1 && onInitialLoadComplete) {
+        onInitialLoadComplete();
+      }
     }
   };
 
@@ -97,8 +107,9 @@ export default function Gallery() {
       params: { title: project } 
     })
       .then((response) => {
-        setProjects(response.data);
-        setWorks(response.data);
+        const apiProjects = response.data || [];
+        setProjects(apiProjects);
+        setWorks(apiProjects);
       })
       .catch(() => {
         setProjects([]);
@@ -173,56 +184,18 @@ export default function Gallery() {
     return () => {};
   }, []);
 
-  const filteredWorks = works.filter((work: any) => {
+  const safeWorks = Array.isArray(works) ? works : [];
+
+  const filteredWorks = safeWorks.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
     return true;
   });
 
-  const handleNewProjectCreated = (projectData: any) => {
-    console.log('Novo projeto recebido:', projectData);
-    
-    // Formatar o projeto para o padrão esperado
-    const newProject = {
-      id: projectData.id,
-      title: projectData.name,
-      name: projectData.name,
-      location: projectData.location,
-      description: projectData.description,
-      photo_url: projectData.photo_url,
-      imageUrl: projectData.photo_url,
-      category: projectData.usage_type,
-      usage_type: projectData.usage_type,
-      status: projectData.status,
-      build_area: projectData.build_area,
-      terrain_area: projectData.terrain_area,
-      materials: projectData.materials,
-      architect: projectData.architect || 'Dono do projeto',
-      year: projectData.year || new Date().getFullYear(),
-      tags: projectData.tags || [],
-      likes: 0,
-      isUserProject: true,
-      userId: projectData.userId
-    };
-
-    // Atualizar estados IMEDIATAMENTE
-    setProjects(prev => [newProject, ...prev]);
-    setWorks(prev => [newProject, ...prev]);
-
-    console.log('Projeto adicionado localmente');
-    
-    // Recarregar da API em background para sincronizar
-    setTimeout(() => {
-      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-        .then((response) => {
-          setProjects(response.data);
-          setWorks(response.data);
-          console.log('Projetos recarregados da API');
-        })
-        .catch((error) => {
-          console.error("Erro ao recarregar projetos:", error);
-        });
-    }, 500);
-  };
+  const isInitialLoading =
+    isLoading &&
+    !searchTerm.trim() &&
+    page === 1 &&
+    safeWorks.length === 0;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#151B23]">
@@ -263,7 +236,7 @@ export default function Gallery() {
                   </button>
                 </div>
 
-                <Btncriarprojeto/>
+                <CreateProjectButton/>
               </div>
             </div>
 
@@ -318,7 +291,7 @@ export default function Gallery() {
             </div>
           </div>
 
-          {filteredWorks.length === 0 ? (
+          {isInitialLoading ? null : filteredWorks.length === 0 ? (
             <div className="text-center py-12 sm:py-16 bg-white dark:bg-[#151B23] min-h-52 rounded-lg border border-gray-300 dark:border-[#3d444d]">
               <i className="fas fa-building text-gray-300 dark:text-neutral-600 text-4xl sm:text-5xl mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">

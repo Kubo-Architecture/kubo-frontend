@@ -1,13 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Kuboadd from "../assets/icons/Universal/Kubo-add.svg";
-import { getUserIdFromToken } from '../utils/jwt';
 
-export default function Btncriarprojeto() {
+export default function CreateProjectButton() {
   const navigate = useNavigate();
   return (
     <button
-      onClick={() => navigate('/newproject')}
+      onClick={() => navigate('/project/new')}
       className="inline-flex cursor-pointer items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
       title="Criar projeto"
     >

@@ -14,21 +14,18 @@ export default function ProjectPage() {
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [likesCount, setLikesCount] = useState<number>(0);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [imageError, setImageError] = useState<boolean>(false);
+    const [, setImageError] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-    // ✅ Helper para URLs de imagem
     const API_URL = import.meta.env.VITE_API_URL;
     
     const getImageUrl = (path: string | null | undefined): string => {
         if (!path) return '';
         if (path.startsWith('http')) return path;
         const fullUrl = `${API_URL}${path}`;
-        console.log('🖼️ getImageUrl:', { path, API_URL, fullUrl });
         return fullUrl;
     };
 
-    // ✅ Verificar se é o dono do projeto
     const currentUserId = getUserIdFromToken();
     const isOwner = project?.userId === currentUserId;
 
@@ -49,9 +46,6 @@ export default function ProjectPage() {
                 }
 
                 const data = await response.json();
-                console.log("📊 Project data:", data);
-                console.log("📸 Gallery data:", data.gallery);
-                console.log("🖼️ Photo URL:", data.photo_url);
                 setProject(data);
                 setLikesCount(data.likes || 0);
                 
@@ -73,13 +67,10 @@ export default function ProjectPage() {
         const savedLikes = JSON.parse(localStorage.getItem('likedProjects') || '[]');
         
         if (isLiked) {
-            const updated = savedLikes.filter((id: string) => id !== projectId);
-            localStorage.setItem('likedProjects', JSON.stringify(updated));
             setIsLiked(false);
             setLikesCount(prev => Math.max(0, prev - 1));
         } else {
             savedLikes.push(projectId);
-            localStorage.setItem('likedProjects', JSON.stringify(savedLikes));
             setIsLiked(true);
             setLikesCount(prev => prev + 1);
         }
@@ -89,38 +80,23 @@ export default function ProjectPage() {
         const savedBookmarks = JSON.parse(localStorage.getItem('savedProjects') || '[]');
         
         if (isSaved) {
-            const updated = savedBookmarks.filter((id: string) => id !== projectId);
-            localStorage.setItem('savedProjects', JSON.stringify(updated));
             setIsSaved(false);
         } else {
             savedBookmarks.push(projectId);
-            localStorage.setItem('savedProjects', JSON.stringify(savedBookmarks));
             setIsSaved(true);
         }
     };
 
-    // ✅ FUNÇÃO DE DELETAR PROJETO
     const handleDeleteProject = async () => {
         try {
-            console.log('🗑️ Deletando projeto:', projectId);
-            
-            // ✅ CORRIGIDO - Usar /projects/:projectId (não /projects/:id)
             const response = await axios.delete(`${API_URL}/projects/${projectId}`);
 
             if (response.status === 204 || response.status === 200) {
-                console.log('✅ Projeto deletado com sucesso');
                 setShowDeleteModal(false);
                 
-                // Mostrar mensagem de sucesso
-                alert('Projeto deletado com sucesso!');
-                
-                // Redirecionar para galeria
                 navigate('/gallery');
             }
         } catch (error: any) {
-            console.error('❌ Erro ao deletar projeto:', error);
-            console.error('❌ Resposta do servidor:', error.response?.data);
-            
             if (error.response?.status === 400) {
                 alert('ID do projeto inválido');
             } else if (error.response?.status === 404) {

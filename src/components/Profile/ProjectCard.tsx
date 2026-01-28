@@ -2,47 +2,25 @@ import { useNavigate } from 'react-router-dom';
 
 const ProjectCard = ({ project }: any) => {
     const navigate = useNavigate();
-    const API_URL = import.meta.env.VITE_API_URL;
     const ProjectID = project._id || project.id;
-
-    // ✅ Helper para construir URL da imagem
-    const getImageUrl = (path: string | null | undefined): string => {
-        if (!path) return '';
-        if (path.startsWith('http')) return path;
-        return `${API_URL}${path}`;
-    };
 
     const handleClick = () => {
         navigate(`/project/${ProjectID}`);
     };
-
-    const imageUrl = getImageUrl(project.photo_url || project.imageUrl);
-
-    console.log('🖼️ Imagem do projeto:', {
-        photo_url: project.photo_url,
-        imageUrl: project.imageUrl,
-        API_URL,
-        finalUrl: imageUrl
-    });
 
     return (
         <div
             className="bg-white dark:bg-[#151B23] rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer border border-gray-200 dark:border-[#3d444d]"
             onClick={handleClick}
         >
-            {imageUrl ? (
+            {project.photo_url ? (
                 <div className="h-48 overflow-hidden bg-gray-100 dark:bg-[#202830]">
                     <img
-                        src={imageUrl}
+                        src={project.photo_url}
                         alt={project.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                         onError={(e) => {
-                            console.error('❌ Erro ao carregar imagem:', imageUrl);
-                            // Fallback se imagem não carregar
                             e.currentTarget.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
-                        }}
-                        onLoad={() => {
-                            console.log('✅ Imagem carregada com sucesso:', imageUrl);
                         }}
                     />
                 </div>
@@ -56,15 +34,6 @@ const ProjectCard = ({ project }: any) => {
             )}
 
             <div className="p-5">
-                {project.is_verified && (
-                    <div className="flex items-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-sm text-blue-600 dark:text-blue-400 ml-1">Verificado</span>
-                    </div>
-                )}
-
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-1 truncate">
                     {project.name}
                 </h2>
