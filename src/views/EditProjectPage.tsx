@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { getUserIdFromToken } from '../utils/jwt';
+import { decodeJWT } from '../utils/jwt';
 
-// Componentes
 import EditProjectSidebar from '../components/EditProject/EditProjectSidebar';
 import GeneralSection from '../components/EditProject/GeneralSection';
 import MediaSection from '../components/EditProject/MediaSection';
@@ -11,6 +10,20 @@ import TechnicalSection from '../components/EditProject/TechnicalSection';
 import MaterialsSection from '../components/EditProject/MaterialsSection';
 import RequirementsSection from '../components/EditProject/RequirementsSection';
 import ProjectPreview from '../components/EditProject/ProjectPreview';
+
+// Obtém o nome do usuário a partir do token JWT armazenado
+const getUserNameFromToken = (): string | null => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+        const decoded: any = decodeJWT(token);
+        if (!decoded) return null;
+        return decoded.name || decoded.username || decoded.nickname || decoded.email || null;
+    } catch {
+        return null;
+    }
+};
 
 export default function EditProjectPage() {
     const { projectId } = useParams();
@@ -23,7 +36,6 @@ export default function EditProjectPage() {
     const [activeSection, setActiveSection] = useState('geral');
     const [showPreview, setShowPreview] = useState(false);
 
-    // Form states
     const [name, setName] = useState('');
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
@@ -40,7 +52,6 @@ export default function EditProjectPage() {
     const [status, setStatus] = useState('');
     const [materials, setMaterials] = useState<string[]>(['']);
 
-    // Imagens
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [mainImagePreview, setMainImagePreview] = useState<string>('');
     const [galleryImages, setGalleryImages] = useState<File[]>([]);
@@ -63,25 +74,40 @@ export default function EditProjectPage() {
             try {
                 const response = await axios.get(`${API_URL}/projects/${projectId}`);
                 const data = response.data;
-                
+
                 setName(data.name || '');
                 setLocation(data.location || '');
                 setDescription(data.description || '');
                 setAuthor(data.author || '');
-                setStartDate(data.startDate || '');
-                setEndDate(data.endDate || '');
+                setStartDate(data.start_date || '');
+                setEndDate(data.end_date || '');
                 setIsOngoing(data.isOngoing || false);
-                setUsageTypes(data.usage_types || []);
-                setTerrainArea(data.terrain_area || '');
-                setBuildArea(data.build_area || '');
+
+                if (data.usage_type) {
+                    const typesArray = String(data.usage_type)
+                        .split(',')
+                        .map((t: string) => t.trim())
+                        .filter((t: string) => t.length > 0);
+                    setUsageTypes(typesArray);
+                } else {
+                    setUsageTypes([]);
+                }
+
+                setTerrainArea(
+                    typeof data.terrain_area === 'number'
+                        ? String(data.terrain_area)
+                        : data.terrain_area || ''
+                );
+                setBuildArea(
+                    typeof data.build_area === 'number'
+                        ? String(data.build_area)
+                        : data.build_area || ''
+                );
                 setStatus(data.status || '');
                 setMaterials(data.materials && data.materials.length > 0 ? data.materials : ['']);
-                
-                const userName = localStorage.getItem('name') || 
-                                 localStorage.getItem('username') || 
-                                 localStorage.getItem('nickname') || 
-                                 'Usuário';
-                setIsAuthor(data.author === userName);
+
+                const tokenUserName = getUserNameFromToken();
+                setIsAuthor(!!tokenUserName && data.author === tokenUserName);
                 
                 if (data.photo_url) {
                     setMainImagePreview(getImageUrl(data.photo_url));
@@ -92,7 +118,7 @@ export default function EditProjectPage() {
                     setGalleryPreviews(data.gallery.map((url: string) => getImageUrl(url)));
                 }
                 
-                if (data.usage_types && data.usage_types.includes('Outro')) {
+                if (data.usage_type && String(data.usage_type).includes('Outro')) {
                     setShowCustomUsageType(true);
                     setCustomUsageType(data.custom_usage_type || '');
                 }
@@ -246,46 +272,54 @@ export default function EditProjectPage() {
         setError('');
 
         try {
-            const userId = getUserIdFromToken();
-            const userName = localStorage.getItem('name') || 
-                             localStorage.getItem('username') || 
-                             localStorage.getItem('nickname') || 
-                             'Usuário';
+            const tokenUserName = getUserNameFromToken();
 
             const finalUsageTypes = usageTypes.map(type => 
                 type === 'Outro' ? customUsageType : type
             ).filter(type => type.trim() !== '');
 
-            const updateData = {
+            const updateData: any = {
                 id: projectId,
                 name: name,
                 location: location,
                 description: description,
                 status: status,
-                build_area: buildArea || '',
-                terrain_area: terrainArea || '',
                 usage_type: finalUsageTypes.join(', '),
                 materials: materials.filter((m: string) => m.trim())
             };
 
-            if (isAuthor) {
-                Object.assign(updateData, { author: userName });
+            if (buildArea && buildArea.trim()) {
+                const parsed = parseFloat(buildArea.replace(',', '.'));
+                if (!isNaN(parsed)) {
+                    updateData.build_area = parsed;
+                }
+            }
+
+            if (terrainArea && terrainArea.trim()) {
+                const parsed = parseFloat(terrainArea.replace(',', '.'));
+                if (!isNaN(parsed)) {
+                    updateData.terrain_area = parsed;
+                }
+            }
+
+            if (isAuthor && tokenUserName) {
+                Object.assign(updateData, { author: tokenUserName });
             } else if (author && author.trim()) {
                 Object.assign(updateData, { author: author });
             }
 
             if (startDate) {
-                Object.assign(updateData, { startDate: startDate });
+                Object.assign(updateData, { start_date: startDate });
             }
             if (endDate && !isOngoing) {
-                Object.assign(updateData, { endDate: endDate });
+                Object.assign(updateData, { end_date: endDate });
             }
             if (isOngoing) {
                 Object.assign(updateData, { isOngoing: true });
             }
 
             const response = await axios.put(
-                `${API_URL}/projects/`,
+                `${API_URL}/projects/${projectId}`,
                 updateData
             );
 
