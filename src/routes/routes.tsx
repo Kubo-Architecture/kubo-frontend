@@ -16,7 +16,7 @@ import Newproject from "../views/Newproject.tsx";
 import EditProjectPage  from "../views/EditProjectPage.tsx";
 
 
-export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any) {
+export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess, onGalleryLoaded }: any) {
     return (
         <Routes>
             <Route path="/" element={isAuthenticated ? hasNick ? <Navigate to="/gallery" /> : <Navigate to="/profile/nickname" /> : <LandingPage />} />
@@ -28,7 +28,7 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess }: any)
             <Route path="/profile/nickname" element={<NicknameInput />} />
             <Route path="/project/:projectID" element={<ProjectPage />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
-            <Route path="/gallery" element={<Gallery/>} />
+            <Route path="/gallery" element={<Gallery onInitialLoadComplete={onGalleryLoaded} />} />
             <Route path="/config" element={<UserConfig />} />
             <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/MaintenanceScreen" element={<MaintenanceScreen />} />

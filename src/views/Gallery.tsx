@@ -6,7 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
 import ProjectCard from '../components/Profile/ProjectCard';
 
-export default function Gallery() {
+interface GalleryProps {
+  onInitialLoadComplete?: () => void;
+}
+
+export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
   const [filter, setFilter] = useState('all');
@@ -26,6 +30,9 @@ export default function Gallery() {
 
     const userId = getUserIdFromToken();
     if (!userId) {
+      if (pageToLoad === 1 && onInitialLoadComplete) {
+        onInitialLoadComplete();
+      }
       return;
     }
 
@@ -59,6 +66,9 @@ export default function Gallery() {
       setHasMore(false);
     } finally {
       setIsLoading(false);
+      if (pageToLoad === 1 && onInitialLoadComplete) {
+        onInitialLoadComplete();
+      }
     }
   };
 
@@ -97,8 +107,9 @@ export default function Gallery() {
       params: { title: project } 
     })
       .then((response) => {
-        setProjects(response.data);
-        setWorks(response.data);
+        const apiProjects = response.data || [];
+        setProjects(apiProjects);
+        setWorks(apiProjects);
       })
       .catch(() => {
         setProjects([]);
@@ -173,10 +184,18 @@ export default function Gallery() {
     return () => {};
   }, []);
 
-  const filteredWorks = works.filter((work: any) => {
+  const safeWorks = Array.isArray(works) ? works : [];
+
+  const filteredWorks = safeWorks.filter((work: any) => {
     if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
     return true;
   });
+
+  const isInitialLoading =
+    isLoading &&
+    !searchTerm.trim() &&
+    page === 1 &&
+    safeWorks.length === 0;
 
   const handleNewProjectCreated = (projectData: any) => {
     console.log('Novo projeto recebido:', projectData);
@@ -214,8 +233,9 @@ export default function Gallery() {
     setTimeout(() => {
       axios.get(`${import.meta.env.VITE_API_URL}/projects`)
         .then((response) => {
-          setProjects(response.data);
-          setWorks(response.data);
+          const apiProjects = response.data || [];
+          setProjects(apiProjects);
+          setWorks(apiProjects);
           console.log('Projetos recarregados da API');
         })
         .catch((error) => {
@@ -318,7 +338,7 @@ export default function Gallery() {
             </div>
           </div>
 
-          {filteredWorks.length === 0 ? (
+          {isInitialLoading ? null : filteredWorks.length === 0 ? (
             <div className="text-center py-12 sm:py-16 bg-white dark:bg-[#151B23] min-h-52 rounded-lg border border-gray-300 dark:border-[#3d444d]">
               <i className="fas fa-building text-gray-300 dark:text-neutral-600 text-4xl sm:text-5xl mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
