@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Btncriarprojeto from "../components/BtnCriarProjeto";
+import CreateProjectButton from '../components/CreateProjectButton';
 import axios from 'axios';
 import SearchBar from '../components/Searchbar';
 import { useNavigate } from 'react-router-dom';
@@ -197,53 +197,6 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
     page === 1 &&
     safeWorks.length === 0;
 
-  const handleNewProjectCreated = (projectData: any) => {
-    console.log('Novo projeto recebido:', projectData);
-    
-    // Formatar o projeto para o padrão esperado
-    const newProject = {
-      id: projectData.id,
-      title: projectData.name,
-      name: projectData.name,
-      location: projectData.location,
-      description: projectData.description,
-      photo_url: projectData.photo_url,
-      imageUrl: projectData.photo_url,
-      category: projectData.usage_type,
-      usage_type: projectData.usage_type,
-      status: projectData.status,
-      build_area: projectData.build_area,
-      terrain_area: projectData.terrain_area,
-      materials: projectData.materials,
-      architect: projectData.architect || 'Dono do projeto',
-      year: projectData.year || new Date().getFullYear(),
-      tags: projectData.tags || [],
-      likes: 0,
-      isUserProject: true,
-      userId: projectData.userId
-    };
-
-    // Atualizar estados IMEDIATAMENTE
-    setProjects(prev => [newProject, ...prev]);
-    setWorks(prev => [newProject, ...prev]);
-
-    console.log('Projeto adicionado localmente');
-    
-    // Recarregar da API em background para sincronizar
-    setTimeout(() => {
-      axios.get(`${import.meta.env.VITE_API_URL}/projects`)
-        .then((response) => {
-          const apiProjects = response.data || [];
-          setProjects(apiProjects);
-          setWorks(apiProjects);
-          console.log('Projetos recarregados da API');
-        })
-        .catch((error) => {
-          console.error("Erro ao recarregar projetos:", error);
-        });
-    }, 500);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#151B23]">
       <main className="pt-20 pb-8">
@@ -283,7 +236,7 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                   </button>
                 </div>
 
-                <Btncriarprojeto/>
+                <CreateProjectButton/>
               </div>
             </div>
 
