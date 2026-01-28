@@ -1,30 +1,57 @@
 import { useNavigate } from 'react-router-dom';
-import KuboIcon from '../../assets/icons/Universal/kubo-main-icon.svg';
 
 const ProjectCard = ({ project }: any) => {
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
     const ProjectID = project._id || project.id;
+
+    // ✅ Helper para construir URL da imagem
+    const getImageUrl = (path: string | null | undefined): string => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        return `${API_URL}${path}`;
+    };
 
     const handleClick = () => {
         navigate(`/project/${ProjectID}`);
     };
+
+    const imageUrl = getImageUrl(project.photo_url || project.imageUrl);
+
+    console.log('🖼️ Imagem do projeto:', {
+        photo_url: project.photo_url,
+        imageUrl: project.imageUrl,
+        API_URL,
+        finalUrl: imageUrl
+    });
 
     return (
         <div
             className="bg-white dark:bg-[#151B23] rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer border border-gray-200 dark:border-[#3d444d]"
             onClick={handleClick}
         >
-            {project.photo_url ? (
-                <div className="h-48 overflow-hidden">
+            {imageUrl ? (
+                <div className="h-48 overflow-hidden bg-gray-100 dark:bg-[#202830]">
                     <img
-                        src={project.photo_url}
+                        src={imageUrl}
                         alt={project.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        onError={(e) => {
+                            console.error('❌ Erro ao carregar imagem:', imageUrl);
+                            // Fallback se imagem não carregar
+                            e.currentTarget.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
+                        }}
+                        onLoad={() => {
+                            console.log('✅ Imagem carregada com sucesso:', imageUrl);
+                        }}
                     />
                 </div>
             ) : (
                 <div className="bg-gray-200 dark:bg-[#202830] border-2 border-dashed border-gray-300 dark:border-[#3d444d] rounded-xl w-full h-48 flex items-center justify-center">
-                    <span className="text-gray-500 dark:text-neutral-500">Sem imagem</span>
+                    <div className="text-center">
+                        <i className="fas fa-image text-3xl text-gray-400 dark:text-neutral-600 mb-2"></i>
+                        <p className="text-gray-500 dark:text-neutral-500 text-sm">Sem imagem</p>
+                    </div>
                 </div>
             )}
 
@@ -50,14 +77,14 @@ const ProjectCard = ({ project }: any) => {
                     <span className="text-sm truncate">{project.location}</span>
                 </div>
 
-        <div className="mt-3">
-          <span className="inline-block bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 px-3 py-1 rounded-full text-xs font-medium">
-            {project.usage_type || 'Sem tipo definido'}
-          </span>
+                <div className="mt-3">
+                    <span className="inline-block bg-gray-100 dark:bg-[#202830] text-gray-600 dark:text-neutral-400 px-3 py-1 rounded-full text-xs font-medium">
+                        {project.usage_type || 'Sem tipo definido'}
+                    </span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ProjectCard;
