@@ -83,6 +83,23 @@ export default function PhotoEditorModal({
     }
   }, [isOpen]);
 
+  // Esconder header - useEffect separado para garantir execução
+  useEffect(() => {
+    if (isOpen) {
+      const header = document.getElementById('main-header');
+      if (header) {
+        header.style.display = 'none';
+      }
+      
+      return () => {
+        const header = document.getElementById('main-header');
+        if (header) {
+          header.style.display = '';
+        }
+      };
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {

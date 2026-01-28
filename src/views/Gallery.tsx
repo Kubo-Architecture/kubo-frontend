@@ -263,7 +263,7 @@ export default function Gallery() {
                   </button>
                 </div>
 
-                <Btncriarprojeto onProjectCreated={handleNewProjectCreated} />
+                <Btncriarprojeto/>
               </div>
             </div>
 

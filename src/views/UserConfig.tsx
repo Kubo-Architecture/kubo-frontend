@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../theme/ThemeProvider';
 
 import LanguageSection from '../components/Settings/LanguageSection';
@@ -14,6 +14,20 @@ export default function UserConfig() {
 
   const { theme, setTheme } = useTheme();
 
+  // Bloqueia o scroll do body quando o componente está montado
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalHtmlStyle = window.getComputedStyle(document.documentElement).overflow;
+    
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    return () => {
+      document.body.style.overflow = originalStyle;
+      document.documentElement.style.overflow = originalHtmlStyle;
+    };
+  }, []);
+
   const menuSections = [
     { id: 'geral', label: 'Geral', icon: 'fa-solid fa-gear', available: true },
     { id: 'conta', label: 'Conta', icon: 'fa-solid fa-user', available: true },
@@ -27,8 +41,8 @@ export default function UserConfig() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="flex min-h-screen">
+    <div className="min-h-screen bg-white fixed inset-0 overflow-hidden">
+      <div className="flex h-screen overflow-hidden">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col scrollbar-overlay pt-16">
           <div className="flex-1 p-6">
@@ -74,7 +88,7 @@ export default function UserConfig() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-80 bg-neutral-50 dark:bg-[#202830] pt-16 lg:pt-16">
+        <main className="flex-1 lg:ml-80 bg-neutral-50 dark:bg-[#202830] pt-16 lg:pt-16 overflow-y-auto h-screen">
           <div className={`mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 min-h-full ${activeSection === 'politica-privacidade' || activeSection === 'contato' ? 'max-w-6xl' : 'max-w-4xl'}`}>
             {activeSection === 'geral' && (
               <div className="space-y-6 lg:space-y-8">

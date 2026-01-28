@@ -1,0 +1,578 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUserIdFromToken } from '../utils/jwt';
+import MediaSection from '../components/Project/MediaSection';
+import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
+import MaterialsSection from '../components/Project/MaterialsSection';
+import GeneralSection from '../components/Project/GeneralSection';
+import PreviewSection from '../components/Project/PreviewSection';
+import RequirementsSection from '../components/Project/RequirementsSection';
+
+export default function Newproject() {
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('geral');
+  const [formData, setFormData] = useState({
+    name: '',
+    location: '',
+    description: '',
+    author: '',
+    isAuthor: false,
+    startDate: '',
+    endDate: '',
+    isOngoing: false,
+    materials: [''],
+    status: '',
+    build_area: '',
+    terrain_area: '',
+    usage_types: [] as string[],
+    custom_usage_type: '',
+  });
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [gallery, setGallery] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [showCustomUsageType, setShowCustomUsageType] = useState(false);
+
+  const usageTypeOptions = [
+    'Residencial',
+    'Comercial',
+    'Industrial',
+    'Público',
+    'Religioso',
+    'Cultural',
+    'Educacional',
+    'Outro'
+  ];
+
+  const menuSections = [
+    { id: 'geral', label: 'Geral', icon: 'fa-solid fa-grip' },
+    { id: 'media', label: 'Fotos e Mídia', icon: 'fa-solid fa-image' },
+    { id: 'technical', label: 'Especificações Técnicas', icon: 'fa-solid fa-wrench' },
+    { id: 'materials', label: 'Materiais', icon: 'fa-solid fa-cubes' },
+    { id: 'requirements', label: 'Requisitos', icon: 'fa-solid fa-clipboard-check' },
+    { id: 'preview', label: 'Visualizar Projeto', icon: 'fa-solid fa-eye' },
+  ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleUsageTypeToggle = (type: string) => {
+    setFormData((prev) => {
+      const currentTypes = prev.usage_types;
+      
+      if (currentTypes.includes(type)) {
+        const newTypes = currentTypes.filter(t => t !== type);
+        
+        if (type === 'Outro') {
+          setShowCustomUsageType(false);
+          return {
+            ...prev,
+            usage_types: newTypes,
+            custom_usage_type: ''
+          };
+        }
+        
+        return {
+          ...prev,
+          usage_types: newTypes
+        };
+      } else {
+        if (currentTypes.length < 3) {
+          const newTypes = [...currentTypes, type];
+          
+          if (type === 'Outro') {
+            setShowCustomUsageType(true);
+          }
+          
+          return {
+            ...prev,
+            usage_types: newTypes
+          };
+        }
+        return prev;
+      }
+    });
+  };
+
+  const handleMaterialChange = (index: number, value: string) => {
+    const newMaterials = [...formData.materials];
+    newMaterials[index] = value;
+    setFormData((prev) => ({
+      ...prev,
+      materials: newMaterials
+    }));
+  };
+
+  const addMaterialField = () => {
+    setFormData((prev) => ({
+      ...prev,
+      materials: [...prev.materials, '']
+    }));
+  };
+
+  const removeMaterialField = (index: number) => {
+    if (formData.materials.length === 1) return;
+    const newMaterials = formData.materials.filter((_, i) => i !== index);
+    setFormData((prev) => ({
+      ...prev,
+      materials: newMaterials
+    }));
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        setError('A foto principal deve ter no máximo 10MB');
+        return;
+      }
+      
+      console.log('📷 Foto principal selecionada:', file.name, file.type, file.size);
+      setPhoto(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMainImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setError('');
+    }
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = Array.from(e.target.files || []);
+
+    if (newFiles.length === 0) {
+      console.log('⚠️ Nenhum arquivo selecionado');
+      return;
+    }
+
+    console.log('📸 Arquivos da galeria selecionados:', newFiles.length);
+    newFiles.forEach((file, i) => {
+      console.log(`  ${i + 1}. ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
+    });
+
+    const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 50 * 1024 * 1024) {
+      setError('A galeria não pode exceder 50MB no total');
+      return;
+    }
+
+    if (gallery.length + newFiles.length > 20) {
+      setError('Máximo de 20 imagens na galeria');
+      return;
+    }
+
+    setGallery((prevGallery) => {
+      const allFiles = [...prevGallery, ...newFiles];
+      const uniqueMap = new Map();
+      allFiles.forEach((file) => {
+        uniqueMap.set(file.name + file.size, file);
+      });
+      const uniqueFiles = Array.from(uniqueMap.values()) as File[];
+
+      newFiles.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setGalleryPreviews((prev) => [...prev, reader.result as string]);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      return uniqueFiles;
+    });
+    setError('');
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setGallery((prevGallery) => prevGallery.filter((_, i) => i !== index));
+    setGalleryPreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+  };
+
+  const removeMainImage = () => {
+    setPhoto(null);
+    setMainImagePreview(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log('🚀 Iniciando envio do formulário...');
+    
+    // Validação de campos obrigatórios
+    if (formData.usage_types.length === 0) {
+      setError('Selecione pelo menos um tipo de uso');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.status) {
+      setError('Selecione o status do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (formData.usage_types.includes('Outro') && !formData.custom_usage_type.trim()) {
+      setError('Especifique o tipo de uso "Outro"');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.name.trim()) {
+      setError('Preencha o nome do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.location.trim()) {
+      setError('Preencha a localização do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      setError('Preencha a descrição do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!photo) {
+      setError('Adicione uma foto principal do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
+    // ✅ CORRIGIDO - Pegar nome do usuário (tentar vários campos)
+    const userId = getUserIdFromToken();
+    const userName = localStorage.getItem('name') || 
+                     localStorage.getItem('username') || 
+                     localStorage.getItem('nickname') || 
+                     'Usuário';
+    
+    console.log('👤 UserId:', userId);
+    console.log('👤 UserName que será usado:', userName);
+    console.log('📦 LocalStorage completo:');
+    console.log('  - name:', localStorage.getItem('name'));
+    console.log('  - username:', localStorage.getItem('username'));
+    console.log('  - nickname:', localStorage.getItem('nickname'));
+    
+    if (!userId) {
+      setError('Você precisa estar logado para cadastrar um projeto');
+      setIsSubmitting(false);
+      navigate('/login');
+      return;
+    }
+
+    // ✅ Se ainda for "Usuário", buscar do backend
+    let finalUserName = userName;
+    if (userName === 'Usuário' && userId) {
+      try {
+        console.log('⚠️ Nome não encontrado no localStorage, buscando do backend...');
+        const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          finalUserName = userData.name || userData.username || userData.nickname || 'Usuário';
+          console.log('✅ Nome obtido do backend:', finalUserName);
+        }
+      } catch (err) {
+        console.error('❌ Erro ao buscar nome do backend:', err);
+      }
+    }
+
+    const finalUsageTypes = formData.usage_types.map(type => 
+      type === 'Outro' ? formData.custom_usage_type : type
+    ).filter(type => type.trim() !== '');
+
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('location', formData.location);
+    data.append('description', formData.description);
+    data.append('status', formData.status);
+    data.append('build_area', formData.build_area || '');
+    data.append('terrain_area', formData.terrain_area || '');
+    data.append('userId', userId);
+
+    // Enviar tipos de uso
+    finalUsageTypes.forEach((type, index) => {
+      data.append(`usage_types[${index}]`, type);
+    });
+    data.append('usage_type', finalUsageTypes.join(', '));
+
+    // ✅ CORRIGIDO - Enviar autor corretamente
+    if (formData.isAuthor) {
+      data.append('author', finalUserName);
+      console.log('✅ Autor: Eu sou o autor -', finalUserName);
+    } else if (formData.author && formData.author.trim()) {
+      data.append('author', formData.author);
+      console.log('✅ Autor: Campo personalizado -', formData.author);
+    }
+
+    // Datas
+    if (formData.startDate) {
+      data.append('startDate', formData.startDate);
+    }
+    if (formData.endDate && !formData.isOngoing) {
+      data.append('endDate', formData.endDate);
+    }
+
+    // Materiais
+    formData.materials.forEach((material: string, index: number) => {
+      if (material.trim()) {
+        data.append(`materials[${index}]`, material);
+      }
+    });
+
+    // ✅ VERIFICAÇÃO CRÍTICA - Foto principal
+    if (photo) {
+      console.log('📷 Adicionando foto principal ao FormData:', photo.name, photo.type, photo.size);
+      data.append('photo', photo, photo.name); // ✅ Adicionar nome do arquivo
+    } else {
+      console.error('❌ ERRO: Foto principal não encontrada!');
+    }
+
+    // ✅ VERIFICAÇÃO CRÍTICA - Galeria
+    console.log('📸 Total de imagens na galeria:', gallery.length);
+    gallery.forEach((file, index) => {
+      console.log(`  ${index + 1}. Adicionando: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
+      data.append('gallery', file, file.name); // ✅ Adicionar nome do arquivo
+    });
+
+    // Debug: mostrar o que está sendo enviado
+    console.log('=== DADOS SENDO ENVIADOS ===');
+    console.log('Nome:', formData.name);
+    console.log('Localização:', formData.location);
+    console.log('Descrição:', formData.description);
+    console.log('Status:', formData.status);
+    console.log('Área construída:', formData.build_area);
+    console.log('Área do terreno:', formData.terrain_area);
+    console.log('Tipos de uso:', finalUsageTypes);
+    console.log('Autor:', formData.isAuthor ? finalUserName : formData.author);
+    console.log('Materiais:', formData.materials.filter(m => m.trim()));
+    console.log('Foto principal:', photo?.name);
+    console.log('Galeria:', gallery.map(f => f.name));
+    console.log('===========================');
+
+    try {
+      console.log('📤 Enviando requisição para:', `${import.meta.env.VITE_API_URL}/projects/`);
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/`, {
+        method: 'POST',
+        body: data
+        // ✅ NÃO definir Content-Type - o navegador faz isso automaticamente com boundary
+      });
+
+      console.log('📥 Resposta recebida:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Erro da API:', errorData);
+        throw new Error(errorData.error || 'Erro ao cadastrar projeto');
+      }
+
+      const result = await response.json();
+      console.log('✅ Resposta da API:', result);
+      
+      setError('success: Projeto cadastrado com sucesso!');
+
+      setTimeout(() => {
+        const nickname = localStorage.getItem('nickname');
+        if (nickname) {
+          navigate(`/profile/${nickname}`);
+        } else {
+          navigate('/gallery');
+        }
+      }, 1500);
+
+    } catch (err: any) {
+      console.error('❌ Erro ao cadastrar:', err);
+      setError(err.message || 'Erro desconhecido');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-50 dark:bg-[#202830]">
+      <div className="flex min-h-screen">
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col pt-16 z-10">
+          <div className="flex-1 p-6 overflow-y-auto">
+            {/* Navigation */}
+            <nav className="space-y-1">
+              {menuSections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
+                    activeSection === section.id
+                      ? 'bg-white dark:bg-[#202830] dark:border-none dark:text-white text-black shadow-sm border border-neutral-200'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] dark:hover:text-white hover:text-black'
+                  }`}
+                >
+                  <i className={`${section.icon} text-lg ${
+                    activeSection === section.id 
+                      ? 'text-black dark:text-white' 
+                      : 'text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white'
+                  }`}></i>
+                  <div className="flex-1">
+                    <div className="font-medium text-[15px]">{section.label}</div>
+                  </div>
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* Footer - Action Buttons */}
+          <div className="px-6 py-6 border-t border-zinc-200 dark:border-[#3d444d] bg-white dark:bg-[#151B23]">
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                disabled={isSubmitting}
+                className="px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+                className="px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Cadastrando...</span>
+                  </>
+                ) : (
+                  <span>Cadastrar</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 lg:ml-80 pt-16 min-h-screen">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+            {error && (
+              <div
+                className={`mb-6 rounded-xl border px-4 py-3 text-sm ${
+                  error.startsWith("success:")
+                    ? "border-green-300 bg-green-50 text-green-700 dark:bg-green-900/20 dark:border-green-800"
+                    : "border-red-300 bg-red-50 text-red-700 dark:bg-red-900/20 dark:border-red-800"
+                }`}
+              >
+                <div className="flex items-center">
+                  <i className={`fa-solid ${error.startsWith('success:') ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2`}></i>
+                  {error.replace("success: ", "")}
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6 pb-8">
+              {/* ABA GERAL */}
+              {activeSection === 'geral' && (
+                <GeneralSection
+                  formData={formData}
+                  handleChange={handleChange}
+                  handleUsageTypeToggle={handleUsageTypeToggle}
+                  mainImagePreview={mainImagePreview}
+                  galleryPreviews={galleryPreviews}
+                  handlePhotoChange={handlePhotoChange}
+                  handleGalleryChange={handleGalleryChange}
+                  removeMainImage={removeMainImage}
+                  removeGalleryImage={removeGalleryImage}
+                  handleMaterialChange={handleMaterialChange}
+                  addMaterialField={addMaterialField}
+                  removeMaterialField={removeMaterialField}
+                  showCustomUsageType={showCustomUsageType}
+                  usageTypeOptions={usageTypeOptions}
+                />
+              )}
+
+              {/* PREVIEW */}
+              {activeSection === 'preview' && (
+                <PreviewSection
+                  formData={formData}
+                  mainImagePreview={mainImagePreview}
+                  galleryPreviews={galleryPreviews}
+                />
+              )}
+
+              {/* REQUISITOS */}
+              {activeSection === 'requirements' && (
+                <RequirementsSection
+                  formData={formData}
+                  photo={photo}
+                  showCustomUsageType={showCustomUsageType}
+                />
+              )}
+
+              {/* ABA FOTOS E MÍDIA */}
+              {activeSection === 'media' && (
+                <MediaSection
+                  mainImagePreview={mainImagePreview}
+                  galleryPreviews={galleryPreviews}
+                  handlePhotoChange={handlePhotoChange}
+                  handleGalleryChange={handleGalleryChange}
+                  removeMainImage={removeMainImage}
+                  removeGalleryImage={removeGalleryImage}
+                />
+              )}
+
+              {/* ABA ESPECIFICAÇÕES TÉCNICAS */}
+              {activeSection === 'technical' && (
+                <TechnicalSpecsSection
+                  formData={formData}
+                  setFormData={setFormData}
+                  handleChange={handleChange}
+                  handleUsageTypeToggle={handleUsageTypeToggle}
+                  showCustomUsageType={showCustomUsageType}
+                  usageTypeOptions={usageTypeOptions}
+                />
+              )}
+
+              {/* ABA MATERIAIS */}
+              {activeSection === 'materials' && (
+                <MaterialsSection
+                  materials={formData.materials}
+                  handleMaterialChange={handleMaterialChange}
+                  addMaterialField={addMaterialField}
+                  removeMaterialField={removeMaterialField}
+                />
+              )}
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}

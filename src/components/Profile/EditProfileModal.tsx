@@ -122,6 +122,23 @@ export default function EditProfileModal({
     }
   }, [isOpen]);
 
+  // Esconder header quando modal abrir
+  useEffect(() => {
+    if (isOpen) {
+      const header = document.getElementById('main-header');
+      if (header) {
+        header.style.display = 'none';
+      }
+      
+      return () => {
+        const header = document.getElementById('main-header');
+        if (header) {
+          header.style.display = '';
+        }
+      };
+    }
+  }, [isOpen]);
+
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       handleClose();

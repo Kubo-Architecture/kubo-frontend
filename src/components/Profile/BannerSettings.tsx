@@ -59,6 +59,12 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     document.body.style.width = '100%';
     document.documentElement.style.overflow = 'hidden';
     
+    // Esconder o header
+    const header = document.getElementById('main-header');
+    if (header) {
+      header.style.display = 'none';
+    }
+    
     return () => {
       // Restaurar valores originais (remover propriedade se estava vazia)
       if (originalBodyOverflow) {
@@ -93,6 +99,11 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       
       // Restaurar posição do scroll
       window.scrollTo(0, scrollY);
+      
+      // Mostrar o header novamente
+      if (header) {
+        header.style.display = '';
+      }
     };
   }, []);
 
@@ -216,7 +227,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     <>
       {/* Modal Overlay */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
+        className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-2 sm:p-4"
         onClick={handleOverlayClick}
       >
         {/* Modal Content */}
