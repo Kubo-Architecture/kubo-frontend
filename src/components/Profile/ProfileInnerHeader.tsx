@@ -22,7 +22,7 @@ export default function ProfileInnerHeader(props: any) {
   return (
     <>
       <div
-        className="h-[150px] md:h-[200px] lg:h-[300px] xl:h-[350px] w-screen min-w-[380px] flex px-[20px] md:px-[110px] relative justify-end"
+        className="h-[150px] md:h-[200px] lg:h-[300px] xl:h-[350px] w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 flex relative justify-end"
         style={{
           backgroundColor: props.banner ? undefined : "#C4C4C4",
           backgroundImage: props.banner ? `url(${props.banner})` : undefined,
@@ -34,7 +34,7 @@ export default function ProfileInnerHeader(props: any) {
         {props.ownProfile && props.onEditBannerClick && (
           <button
             onClick={props.onEditBannerClick}
-            className="absolute top-4 right-4 md:right-8 bg-white hover:bg-gray-100 text-neutral-700 w-9 h-9 md:w-10 md:h-10 rounded-full transition-all shadow-md hover:shadow-lg z-10 flex items-center justify-center"
+            className="absolute top-4 right-4 sm:right-6 md:right-8 lg:right-12 xl:right-16 2xl:right-24 bg-white hover:bg-gray-100 text-neutral-700 w-9 h-9 md:w-10 md:h-10 rounded-full transition-all shadow-md hover:shadow-lg z-10 flex items-center justify-center"
             aria-label="Editar banner"
           >
             <i className="fa-solid fa-pen text-xs md:text-sm"></i>
@@ -42,9 +42,8 @@ export default function ProfileInnerHeader(props: any) {
         )}
 
         <div
-          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white dark:border-[#181E29] border-3 absolute left-[20px] md:left-[40px] lg:left-[50px] xl:left-[60px] top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${
-            props.ownProfile ? "hover:cursor-pointer group" : ""
-          }`}
+          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white dark:border-[#181E29] border-3 absolute left-2 sm:left-3 md:left-4 lg:left-6 xl:left-8 2xl:left-12 top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${props.ownProfile ? "hover:cursor-pointer group" : ""
+            }`}
           style={{ backgroundImage: profileImageUrl }}
           onClick={handleImageClick}
         >

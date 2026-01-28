@@ -12,7 +12,9 @@ interface GalleryProps {
 
 export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState('grid');
+  const [viewMode, setViewMode] = useState(() => {
+    return localStorage.getItem('galleryViewMode') || 'grid';
+  });
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -215,7 +217,10 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
               <div className="flex items-center space-x-3 self-start sm:self-center">
                 <div className="flex space-x-1 bg-white dark:bg-[#202830] border border-gray-300 dark:border-[#3d444d] p-1 rounded-lg">
                   <button
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => {
+                      setViewMode('grid');
+                      localStorage.setItem('galleryViewMode', 'grid');
+                    }}
                     className={`p-2 rounded transition-colors cursor-pointer ${viewMode === 'grid'
                       ? 'bg-black dark:bg-white text-white dark:text-black'
                       : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
@@ -225,7 +230,10 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                     <i className="fas fa-th-large text-sm sm:text-base"></i>
                   </button>
                   <button
-                    onClick={() => setViewMode('list')}
+                    onClick={() => {
+                      setViewMode('list');
+                      localStorage.setItem('galleryViewMode', 'list');
+                    }}
                     className={`p-2 rounded cursor-pointer transition-colors ${viewMode === 'list'
                       ? 'bg-black dark:bg-white text-white dark:text-black'
                       : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-[#151B23]'
@@ -320,15 +328,111 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
               )}
             </>
           ) : (
-            <div className="bg-white dark:bg-[#151B23] rounded-xl shadow-sm border border-gray-200 dark:border-[#3d444d] overflow-hidden">
-              {filteredWorks.map((work: any, index: number) => (
+            <>
+              <div className="space-y-6">
+                {filteredWorks.map((work: any) => (
+                  <div 
+                    key={work.id} 
+                    className="flex gap-6 p-6 bg-[#1a2128] rounded-xl border border-gray-700 hover:border-gray-600 transition-all cursor-pointer group"
+                    onClick={() => navigate(`/project/${work.id}`)}
+                  >
+                    {/* Imagem */}
+                    <div className="relative flex-shrink-0 w-80 h-64 rounded-lg overflow-hidden">
+                      <img 
+                        src={work.images?.[0] || '/placeholder.jpg'} 
+                        alt={work.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Conteúdo */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        {/* Título e Ano */}
+                        <div className="flex items-center gap-3 mb-3">
+                          <h2 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
+                            {work.title}
+                          </h2>
+                          {work.year && <span className="text-gray-400">{work.year}</span>}
+                        </div>
+
+                        {/* Metadados */}
+                        <div className="flex items-center gap-4 text-gray-400 text-sm mb-4">
+                          {work.location && (
+                            <div className="flex items-center gap-2">
+                              <i className="fas fa-map-marker-alt"></i>
+                              <span>{work.location}</span>
+                            </div>
+                          )}
+                          {(work.user?.nickname || work.author) && (
+                            <div className="flex items-center gap-2">
+                              <i className="fas fa-user"></i>
+                              <span>{work.user?.nickname || work.author}</span>
+                            </div>
+                          )}
+                          {work.style && (
+                            <div className="flex items-center gap-2">
+                              <i className="fas fa-palette"></i>
+                              <span>{work.style}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Descrição */}
+                        {work.description && (
+                          <p className="text-gray-300 leading-relaxed mb-4">
+                            {work.description}
+                          </p>
+                        )}
+
+                        {/* Tags */}
+                        {work.tags && work.tags.length > 0 && (
+                          <div className="flex gap-2 flex-wrap">
+                            {work.tags.map((tag: string, index: number) => (
+                              <span 
+                                key={index}
+                                className="px-3 py-1 bg-gray-800 text-gray-400 text-sm rounded-full hover:bg-gray-700 transition-colors"
+                              >
+                                {tag.startsWith('#') ? tag : `#${tag}`}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Footer com info adicional */}
+                      {(work.year || work.category || work.usage_type) && (
+                        <div className="flex items-center gap-4 text-gray-400 text-sm mt-4 pt-4 border-t border-gray-700">
+                          {work.year && (
+                            <div className="flex items-center gap-2">
+                              <i className="far fa-clock"></i>
+                              <span>{work.year}</span>
+                            </div>
+                          )}
+                          {(work.category || work.usage_type) && (
+                            <div className="flex items-center gap-2">
+                              <i className="fas fa-building"></i>
+                              <span>{work.category || work.usage_type}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {!searchTerm.trim() && (
                 <div
-                  key={work.id}
-                  className={`p-6 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100 dark:border-[#3d444d]' : ''}`}
+                  ref={loaderRef}
+                  className="h-12 flex items-center justify-center mt-6 mb-4 text-xs text-gray-500 dark:text-neutral-500"
                 >
+                  {isLoading
+                    ? 'Carregando mais projetos...'
+                    : !hasMore && ''}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </main>

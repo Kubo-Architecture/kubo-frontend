@@ -42,7 +42,7 @@ export default function HeaderFull({ userData }: any) {
               </div>
             </button>
 
-            <nav className="hidden md:flex items-center space-x-8 ml-4 w-20">
+            <nav className="hidden md:flex items-center space-x-8 w-20">
               <a
                 onClick={() => navigate('/gallery')}
                 className={`cursor-pointer transition-colors ${isActiveLink('/gallery') ? 'text-black font-medium dark:text-white' : 'text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-gray-300 font-normal'}`}
