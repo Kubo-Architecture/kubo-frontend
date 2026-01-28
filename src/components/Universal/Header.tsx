@@ -17,8 +17,8 @@ export default function HeaderFull({ userData }: any) {
   };
 
   return (
-    <header id="main-header" className="fixed top-0 left-0 right-0 bg-white dark:bg-[#0E1116] border-b dark:border-[#1b1f23] border-neutral-200 z-50 flex justify-center">
-      <div className="w-full max-w-7xl px-4 sm:px-6">
+    <header id="main-header" className="fixed top-0 left-0 right-0 bg-white dark:bg-[#0E1116] border-b dark:border-[#1b1f23] border-neutral-200 z-50">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <button

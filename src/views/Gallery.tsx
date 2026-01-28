@@ -200,7 +200,7 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#151B23]">
       <main className="pt-20 pb-8">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
           <div className="mb-6 md:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
@@ -308,7 +308,6 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                 ))}
               </div>
 
-              {/* Sentinela para carregamento infinito do feed (apenas quando não está pesquisando) */}
               {!searchTerm.trim() && (
                 <div
                   ref={loaderRef}
@@ -327,7 +326,6 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                   key={work.id}
                   className={`p-6 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors duration-200 ${index !== filteredWorks.length - 1 ? 'border-b border-gray-100 dark:border-[#3d444d]' : ''}`}
                 >
-                  {/* Adicione o conteúdo do modo lista aqui se necessário */}
                 </div>
               ))}
             </div>
