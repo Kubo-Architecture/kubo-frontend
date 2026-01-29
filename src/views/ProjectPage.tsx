@@ -39,24 +39,19 @@ export default function ProjectPage() {
                 const url = currentUserId
                     ? `${API_URL}/projects/${projectId}?userId=${currentUserId}`
                     : `${API_URL}/projects/${projectId}`;
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('Projeto não encontrado');
-                    }
-                    throw new Error('Erro ao buscar projeto');
-                }
-
-                const data = await response.json();
+                const response = await axios.get(url);
+                const data = response.data;
                 setProject(data);
                 setLikesCount(data.likes ?? 0);
                 setIsLiked(data.isLiked ?? false);
 
                 const savedBookmarks = JSON.parse(localStorage.getItem('savedProjects') || '[]');
                 setIsSaved(savedBookmarks.includes(projectId));
-            } catch (err) {
+            } catch (err: any) {
                 console.error('Error fetching project:', err);
+                if (err.response?.status === 404) {
+                    setProject(null);
+                }
             } finally {
                 setLoading(false);
             }
@@ -73,17 +68,11 @@ export default function ProjectPage() {
 
         try {
             if (isLiked) {
-                const response = await fetch(`${API_URL}/projects/${projectId}/like/${currentUserId}`, { method: 'DELETE' });
-                if (!response.ok) throw new Error('Erro ao remover curtida');
+                await axios.delete(`${API_URL}/projects/${projectId}/like/${currentUserId}`);
                 setIsLiked(false);
                 setLikesCount(prev => Math.max(0, prev - 1));
             } else {
-                const response = await fetch(`${API_URL}/projects/${projectId}/like`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUserId }),
-                });
-                if (!response.ok) throw new Error('Erro ao curtir');
+                await axios.post(`${API_URL}/projects/${projectId}/like`, { userId: currentUserId });
                 setIsLiked(true);
                 setLikesCount(prev => prev + 1);
             }
