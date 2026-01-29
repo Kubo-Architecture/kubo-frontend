@@ -72,7 +72,7 @@ const ForgotPasswordForm = () => {
           {/* Botão voltar */}
           <button
             onClick={handleGoBack}
-            className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group"
+            className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             <span>Voltar</span>
@@ -98,7 +98,7 @@ const ForgotPasswordForm = () => {
           {/* Botão voltar para login */}
           <button
             onClick={() => navigate('/login')}
-            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 text-sm"
+            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 text-sm cursor-pointer"
           >
             Voltar para o login
           </button>
@@ -114,7 +114,7 @@ const ForgotPasswordForm = () => {
         {/* Botão voltar - DENTRO DO CARD */}
         <button
           onClick={handleGoBack}
-          className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group"
+          className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
           <span>Voltar</span>
@@ -169,7 +169,7 @@ const ForgotPasswordForm = () => {
           <button
             type="submit"
             disabled={isLoading || !email}
-            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm"
+            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm cursor-pointer"
           >
             {isLoading ? 'Enviando...' : 'Enviar link'}
           </button>
@@ -180,7 +180,7 @@ const ForgotPasswordForm = () => {
           Não tem uma conta?{' '}
           <button
             onClick={() => navigate('/register')}
-            className="font-semibold text-blue-600 hover:underline"
+            className="font-semibold text-blue-600 hover:underline cursor-pointer"
           >
             Criar conta
           </button>

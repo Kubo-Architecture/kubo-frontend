@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Home } from 'lucide-react';
+import { Home, User } from 'lucide-react';
 import { getUserIdFromToken } from '../utils/jwt';
 
 export default function NicknameInput() {
@@ -95,7 +95,7 @@ export default function NicknameInput() {
         {/* Ícone de casa */}
         <div className="flex justify-center mb-2">
           <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-            <a href="/"><Home className="w-7 h-7 text-white" strokeWidth={2} /></a>
+            <a href="/"><User className="w-7 h-7 text-white" strokeWidth={2} /></a>
           </div>
         </div>
 
