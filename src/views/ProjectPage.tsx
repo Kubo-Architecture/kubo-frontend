@@ -36,7 +36,10 @@ export default function ProjectPage() {
                     throw new Error('ID do projeto não fornecido');
                 }
 
-                const response = await fetch(`${API_URL}/projects/${projectId}`);
+                const url = currentUserId
+                    ? `${API_URL}/projects/${projectId}?userId=${currentUserId}`
+                    : `${API_URL}/projects/${projectId}`;
+                const response = await fetch(url);
 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -47,11 +50,10 @@ export default function ProjectPage() {
 
                 const data = await response.json();
                 setProject(data);
-                setLikesCount(data.likes || 0);
-                
-                const savedLikes = JSON.parse(localStorage.getItem('likedProjects') || '[]');
+                setLikesCount(data.likes ?? 0);
+                setIsLiked(data.isLiked ?? false);
+
                 const savedBookmarks = JSON.parse(localStorage.getItem('savedProjects') || '[]');
-                setIsLiked(savedLikes.includes(projectId));
                 setIsSaved(savedBookmarks.includes(projectId));
             } catch (err) {
                 console.error('Error fetching project:', err);
@@ -61,18 +63,33 @@ export default function ProjectPage() {
         };
 
         fetchProject();
-    }, [projectId, navigate]);
+    }, [projectId, navigate, currentUserId]);
 
-    const handleLike = () => {
-        const savedLikes = JSON.parse(localStorage.getItem('likedProjects') || '[]');
-        
-        if (isLiked) {
-            setIsLiked(false);
-            setLikesCount(prev => Math.max(0, prev - 1));
-        } else {
-            savedLikes.push(projectId);
-            setIsLiked(true);
-            setLikesCount(prev => prev + 1);
+    const handleLike = async () => {
+        if (!currentUserId) {
+            alert('Faça login para curtir projetos.');
+            return;
+        }
+
+        try {
+            if (isLiked) {
+                const response = await fetch(`${API_URL}/projects/${projectId}/like/${currentUserId}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Erro ao remover curtida');
+                setIsLiked(false);
+                setLikesCount(prev => Math.max(0, prev - 1));
+            } else {
+                const response = await fetch(`${API_URL}/projects/${projectId}/like`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUserId }),
+                });
+                if (!response.ok) throw new Error('Erro ao curtir');
+                setIsLiked(true);
+                setLikesCount(prev => prev + 1);
+            }
+        } catch (err) {
+            console.error('Error toggling like:', err);
+            alert('Não foi possível atualizar a curtida. Tente novamente.');
         }
     };
 
@@ -171,7 +188,7 @@ export default function ProjectPage() {
         <>  
             <div className="min-h-screen bg-white dark:bg-[#151B23]">
                 {/* Main Content */}
-                <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 lg:px-8 pt-8 sm:pt-22 pb-12">
+                <div className="w-full px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24 lg:px-8 pt-8 sm:pt-22 pb-12">
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
