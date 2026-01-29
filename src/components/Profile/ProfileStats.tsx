@@ -210,7 +210,7 @@ export default function ProfileStats(props: any) {
 
             {/* Header do Perfil */}
             <div className="w-full bg-white pt-20 dark:bg-[#131B24]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+                <div className="py-6 sm:py-8 w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                         {/* Informações do Usuário */}
                         <div className="flex-1 lg:pt-10">

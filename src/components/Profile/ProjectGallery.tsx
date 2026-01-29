@@ -181,7 +181,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
 
   return (
     <div className="w-full h-auto bg-white dark:bg-[#151B23] pt-5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
         
         {/* Navegação de Abas */}
         <div className="flex gap-8 border-b border-gray-200/60 dark:border-[#3d444d] mb-8">

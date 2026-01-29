@@ -381,7 +381,6 @@ export default function EditProjectPage() {
             
             <div className="min-h-screen bg-neutral-50 dark:bg-[#202830]">
                 <div className="flex min-h-screen">
-                    {/* Sidebar Desktop */}
                     <EditProjectSidebar
                         activeSection={activeSection}
                         setActiveSection={setActiveSection}
@@ -392,11 +391,9 @@ export default function EditProjectPage() {
                         onSubmit={handleSubmit}
                     />
 
-                    {/* Main Content */}
                     <main className="flex-1 lg:ml-80 pt-16 min-h-screen">
-                        <div className={`${showPreview ? 'max-w-7xl' : 'max-w-4xl'} mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8`}>
+                        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 lg:py-8">
                             <div className={`${showPreview ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' : ''}`}>
-                                {/* Formulário */}
                                 <div className={showPreview ? 'lg:pr-4' : ''}>
                                     {error && (
                                         <div
@@ -507,7 +504,6 @@ export default function EditProjectPage() {
                                     </form>
                                 </div>
 
-                                {/* Preview Lateral */}
                                 {showPreview && (
                                     <ProjectPreview
                                         name={name}
