@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { Mail, ArrowLeft, CreditCard, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CreditCard, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import axios from 'axios';
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -16,9 +16,11 @@ const VerificationCodeInput = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [isResending, setIsResending] = useState<boolean>(false);
+  const [resendTimer, setResendTimer] = useState<number>(0);
   const inputs = useRef<any>([]);
 
   const maxAttempts = 4;
+  const resendCooldown = 120; // 2 minutos em segundos
 
   useEffect(() => {
     inputs.current[0]?.focus();
@@ -29,6 +31,23 @@ const VerificationCodeInput = () => {
       handleSubmit();
     }
   }, [code]);
+
+  // Timer para o cooldown do reenvio
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => {
+        setResendTimer(resendTimer - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
+
+  // Função para formatar o tempo restante (mm:ss)
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleChange = (index: number, value: any) => {
     const cleanedValue = value.replace(/\s/g, '').slice(-1).toUpperCase();
@@ -47,15 +66,12 @@ const VerificationCodeInput = () => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').replace(/\s/g, '').toUpperCase();
     
-    // Verifica se o código colado tem 4 caracteres
     if (pastedData.length === 4) {
       const newCode = pastedData.split('');
       setCode(newCode);
       setErrorMessage('');
-      // Foca no último input após colar
       inputs.current[3]?.focus();
     } else if (pastedData.length > 0) {
-      // Se colar menos de 4 caracteres, preenche sequencialmente
       const newCode = [...code];
       const chars = pastedData.split('').slice(0, 4);
       chars.forEach((char, i) => {
@@ -63,7 +79,6 @@ const VerificationCodeInput = () => {
       });
       setCode(newCode);
       setErrorMessage('');
-      // Foca no próximo input vazio ou no último
       const nextIndex = Math.min(chars.length, 3);
       inputs.current[nextIndex]?.focus();
     }
@@ -132,12 +147,10 @@ const VerificationCodeInput = () => {
       if (response.ok) {
         const data = await response.json();
         
-        // Se houver token na resposta, armazena e faz login automático
         if (data.token) {
           localStorage.setItem('token', data.token);
-          navigate('/gallery');
+          navigate('/profile/nickname');
         } else {
-          // Caso não tenha token, redireciona para o login
           navigate('/login');
         }
         return;
@@ -180,6 +193,8 @@ const VerificationCodeInput = () => {
   };
 
   const resendCode = async () => {
+    if (resendTimer > 0) return;
+
     try {
       setIsResending(true);
       setErrorMessage('');
@@ -195,11 +210,13 @@ const VerificationCodeInput = () => {
 
       if (response.ok) {
         setSuccessMessage('Código reenviado com sucesso!');
-        // Reseta as tentativas quando reenvia o código
         setAttempts(0);
         setLimitReached(false);
         setCode(['', '', '', '']);
         inputs.current[0]?.focus();
+        
+        // Inicia o timer de 2 minutos
+        setResendTimer(resendCooldown);
         
         setTimeout(() => {
           setSuccessMessage('');
@@ -263,7 +280,7 @@ const VerificationCodeInput = () => {
 
               {/* Mensagem de sucesso (código reenviado) */}
               {successMessage && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+                <div className="mb-6 p-3  bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-green-900">Código reenviado!</p>
@@ -274,7 +291,7 @@ const VerificationCodeInput = () => {
 
               {/* Mensagem de erro geral */}
               {errorMessage && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                <div className="mb-6 p-3  bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-red-900">Erro na verificação</p>
@@ -315,14 +332,22 @@ const VerificationCodeInput = () => {
               <div className="text-center mb-6">
                 <button
                   onClick={resendCode}
-                  disabled={isResending}
+                  disabled={isResending || resendTimer > 0}
                   className="text-gray-600 hover:text-black text-sm font-medium transition flex items-center justify-center gap-2 w-full disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  <Mail className="w-4 h-4" />
-                  {isResending ? (
-                    'Reenviando...'
+                  {resendTimer > 0 ? (
+                    <>
+                      <Clock className="w-4 h-4" />
+                      <span>Aguarde {formatTime(resendTimer)} para reenviar</span>
+                    </>
+                  ) : isResending ? (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      <span>Reenviando...</span>
+                    </>
                   ) : (
                     <>
+                      <Mail className="w-4 h-4" />
                       Não recebeu o código? <span className="font-semibold text-black">Reenviar</span>
                     </>
                   )}
@@ -361,7 +386,7 @@ const VerificationCodeInput = () => {
 
               {/* Mensagem de erro se houver */}
               {errorMessage && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-red-900">Erro</p>
@@ -372,7 +397,7 @@ const VerificationCodeInput = () => {
 
               {/* Mensagem de sucesso se houver */}
               {successMessage && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+                <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-green-900">Código reenviado!</p>
@@ -403,11 +428,25 @@ const VerificationCodeInput = () => {
               <div className="space-y-3">
                 <button
                   onClick={resendCode}
-                  disabled={isResending}
+                  disabled={isResending || resendTimer > 0}
                   className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  <Mail className="w-4 h-4" />
-                  {isResending ? 'Reenviando...' : 'Solicitar Novo Código'}
+                  {resendTimer > 0 ? (
+                    <>
+                      <Clock className="w-4 h-4" />
+                      <span>Aguarde {formatTime(resendTimer)}</span>
+                    </>
+                  ) : isResending ? (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      <span>Reenviando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      <span>Solicitar Novo Código</span>
+                    </>
+                  )}
                 </button>
 
                 <button
