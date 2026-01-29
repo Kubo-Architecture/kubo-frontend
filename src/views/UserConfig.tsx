@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '../theme/ThemeProvider';
 
-import LanguageSection from '../components/Settings/LanguageSection';
 import AccountSection from '../components/Settings/AccountSection';
-// import VisibilitySection from '../components/Settings/VisibilitySection';
 import ThemeSection from '../components/Settings/ThemeSection';
 import ContactSection from '../components/Settings/ContactSection';
 
 export default function UserConfig() {
   const [activeSection, setActiveSection] = useState('geral');
   const [language, setLanguage] = useState('portuguese');
-  // const [accountVisibility, setAccountVisibility] = useState('public');
 
   const { theme, setTheme } = useTheme();
 
-  // Bloqueia o scroll do body quando o componente está montado
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     const originalHtmlStyle = window.getComputedStyle(document.documentElement).overflow;
@@ -31,7 +27,6 @@ export default function UserConfig() {
   const menuSections = [
     { id: 'geral', label: 'Geral', icon: 'fa-solid fa-gear', available: true },
     { id: 'conta', label: 'Conta', icon: 'fa-solid fa-user', available: true },
-    // { id: 'privacidade', label: 'Privacidade', icon: 'fa-solid fa-lock', available: true },
     { id: 'interface', label: 'Interface', icon: 'fa-solid fa-laptop', available: true },
     { id: 'plans', label: 'Plans Upgrade', icon: 'fa-solid fa-crown', available: false },
     { id: 'estatisticas', label: 'Estatísticas', icon: 'fa-solid fa-chart-simple', available: false },
@@ -43,9 +38,8 @@ export default function UserConfig() {
   return (
     <div className="min-h-screen bg-white fixed inset-0 overflow-hidden">
       <div className="flex h-screen overflow-hidden">
-        {/* Desktop Sidebar */}
         <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-neutral-200 dark:bg-[#151B23] dark:border-[#3d444d] flex-col scrollbar-overlay pt-16">
-          <div className="flex-1 p-6">
+          <div className="flex-1 px-8 py-6">
             <nav className="space-y-1">
               {menuSections.filter(section => section.id !== 'politica-privacidade').map((section) => (
                 <button
@@ -69,8 +63,7 @@ export default function UserConfig() {
             </nav>
           </div>
 
-          {/* Footer - Política de Privacidade */}
-          <div className="p-6 border-t border-neutral-200 dark:border-[#3d444d] ">
+          <div className="px-8 py-6 border-t border-neutral-200 dark:border-[#3d444d] ">
             <button
               onClick={() => setActiveSection('politica-privacidade')}
               className={`w-full flex items-center gap-3 px-4 py-3.5 cursor-pointer rounded-xl transition-all duration-200 text-left group ${
@@ -87,14 +80,11 @@ export default function UserConfig() {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 lg:ml-80 bg-neutral-50 dark:bg-[#202830] pt-16 lg:pt-16 overflow-y-auto h-screen">
-          <div className={`mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 min-h-full ${activeSection === 'politica-privacidade' || activeSection === 'contato' ? 'max-w-6xl' : 'max-w-4xl'}`}>
+          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 lg:py-8 min-h-full">
             {activeSection === 'geral' && (
               <div className="space-y-6 lg:space-y-8">
-                <LanguageSection language={language} onLanguageChange={setLanguage} />
                 <AccountSection />
-                {/* <VisibilitySection accountVisibility={accountVisibility} onVisibilityChange={setAccountVisibility} /> */}
                 <ThemeSection theme={theme} onThemeChange={setTheme} />
                 <ContactSection />
               </div>
@@ -105,12 +95,6 @@ export default function UserConfig() {
                 <AccountSection />
               </div>
             )}
-
-            {/* {activeSection === 'privacidade' && (
-              <div className="space-y-6 lg:space-y-8">
-                <VisibilitySection accountVisibility={accountVisibility} onVisibilityChange={setAccountVisibility} />
-              </div>
-            )} */}
 
             {activeSection === 'interface' && (
               <div className="space-y-6 lg:space-y-8">

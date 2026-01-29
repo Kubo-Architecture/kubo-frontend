@@ -168,15 +168,10 @@ export default function ProjectPage() {
     }
 
     return (
-        <>
-            <link 
-                rel="stylesheet" 
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-            />
-            
+        <>  
             <div className="min-h-screen bg-white dark:bg-[#151B23]">
                 {/* Main Content */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-22 pb-12">
+                <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 lg:px-8 pt-8 sm:pt-22 pb-12">
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
