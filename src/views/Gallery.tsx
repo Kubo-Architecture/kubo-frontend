@@ -51,9 +51,6 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
 
       const newProjects = response.data || [];
 
-      setProjects((prev) =>
-        pageToLoad === 1 ? newProjects : [...prev, ...newProjects]
-      );
       setWorks((prev) =>
         pageToLoad === 1 ? newProjects : [...prev, ...newProjects]
       );
@@ -96,31 +93,34 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
     if (!project.trim()) {
       setUsers([]);
       setProjects([]);
-      setWorks([]);
-      setPage(1);
-      setHasMore(true);
-      loadFeedProjects(1);
       return;
     }
-  
-    axios.get(`${import.meta.env.VITE_API_URL}/projects`, { 
-      params: { title: project } 
+
+    const userId = getUserIdFromToken();
+
+    axios.get(`${import.meta.env.VITE_API_URL}/projects`, {
+      params: {
+        title: project,
+        userId: userId || undefined,
+      },
     })
       .then((response) => {
         const apiProjects = response.data || [];
         setProjects(apiProjects);
-        setWorks(apiProjects);
       })
       .catch(() => {
         setProjects([]);
-        setWorks([]);
       });
   }
 
   const handleSearch = (searchValue: string) => {
     setSearchTerm(searchValue);
-    getUsers(searchValue);
-    getProjects(searchValue);
+    if (searchValue.startsWith('@')) {
+      getUsers(searchValue);
+    } else {
+      getUsers('');
+      getProjects(searchValue);
+    }
   };
 
   useEffect(() => {
@@ -308,17 +308,15 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                 ))}
               </div>
 
-              {/* Sentinela para carregamento infinito do feed (apenas quando não está pesquisando) */}
-              {!searchTerm.trim() && (
-                <div
-                  ref={loaderRef}
-                  className="h-12 flex items-center justify-center mt-6 mb-4 text-xs text-gray-500 dark:text-neutral-500"
-                >
-                  {isLoading
-                    ? 'Carregando mais projetos...'
-                    : !hasMore && ''}
-                </div>
-              )}
+              {/* Sentinela sempre visível para manter o layout; o ref só é usado quando não está pesquisando */}
+              <div
+                ref={!searchTerm.trim() ? loaderRef : null}
+                className="h-12 flex items-center justify-center mt-6 mb-4 text-xs text-gray-500 dark:text-neutral-500"
+              >
+                {!searchTerm.trim() && (isLoading
+                  ? 'Carregando mais projetos...'
+                  : !hasMore ? '' : '')}
+              </div>
             </>
           ) : (
             <div className="bg-white dark:bg-[#151B23] rounded-xl shadow-sm border border-gray-200 dark:border-[#3d444d] overflow-hidden">

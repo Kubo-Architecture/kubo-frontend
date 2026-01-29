@@ -57,10 +57,12 @@ export default function SearchBar({
     : [];
 
   const filteredProjects = !isUserSearch && searchTerm.trim()
-    ? projects.filter(project => 
-        project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.location?.toLowerCase().includes(searchTerm.toLowerCase())
-      ).slice(0, 5)
+    ? projects.filter(project => {
+        const projectName = (project.name || project.title || '').toLowerCase();
+        const projectLocation = (project.location || '').toLowerCase();
+        const term = searchTerm.toLowerCase();
+        return projectName.includes(term) || projectLocation.includes(term);
+      }).slice(0, 5)
     : [];
 
   const hasSuggestions = filteredUsers.length > 0 || filteredProjects.length > 0;
@@ -78,9 +80,11 @@ export default function SearchBar({
   };
 
   const handleSelectProject = (project: any) => {
-    setSearchTerm(project.title);
-    onSearch(project.title);
+    const value = project.name || project.title || '';
+    setSearchTerm(value);
+    onSearch(value);
     setShowSuggestions(false);
+    navigate(`/project/${project.id}`);
   };
 
   return (
@@ -174,7 +178,7 @@ export default function SearchBar({
                   <button
                     key={project.id || index}
                     onClick={() => handleSelectProject(project)}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors group"
+                    className="cursor-pointer w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors group"
                   >
                     <div className="relative flex-shrink-0">
                       <img
@@ -186,7 +190,7 @@ export default function SearchBar({
 
                     <div className="flex-1 text-left min-w-0">
                       <div className="font-medium text-gray-900 dark:text-white text-sm truncate">
-                        {project.title}
+                        {project.name}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-neutral-400">
                         <i className="fas fa-map-marker-alt text-[10px]"></i>
