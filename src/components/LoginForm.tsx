@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { loginSchema } from '../validators/loginSchema';
 import LoginWithGoogleButton from './LoginWithGoogleButton';
 import { User } from 'lucide-react';
 import { getUserIdFromToken } from '../utils/jwt';
+import Loading from './Universal/Loading';
 
 const LoginForm = ({ onLoginSuccess }: any) => {
   const navigate = useNavigate();
   const [mostrarSenha, setMostrarSenha] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<any>({
     email: '',
@@ -55,6 +58,10 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       ...prev,
       [name]: value
     }));
+    // Limpa erros quando o usuário começa a digitar
+    if (errors.email || errors.password || errors.general) {
+      setErrors({});
+    }
   };
 
   const handleBlur = (field: any) => {
@@ -75,8 +82,15 @@ const LoginForm = ({ onLoginSuccess }: any) => {
     const isValidForm = await validate();
     if (!isValidForm) {
       setIsValid(false);
+      // Mostra mensagem de erro se os campos não forem válidos
+      setErrors((prev: any) => ({
+        ...prev,
+        general: 'Por favor, preencha todos os campos corretamente'
+      }));
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/auth/login`;
@@ -96,11 +110,18 @@ const LoginForm = ({ onLoginSuccess }: any) => {
 
       const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
 
-      if (user.data.nickname) {
+      // Remove o loading e mostra mensagem de sucesso
+      setIsLoading(false);
+      setShowSuccessMessage(true);
+
+      // Aguarda 2 segundos antes de redirecionar
+      setTimeout(() => {
+        if (user.data.nickname) {
           navigate(`/gallery`);
-      } else {
+        } else {
           navigate(`/profile/nickname`);
-      }
+        }
+      }, 2000);
       
     } catch (error: any) {
       console.error('Erro no login:', error);
@@ -108,18 +129,39 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       if (error.response?.status === 404) {
         navigate(`/error/404`);
       } else if (error.response?.status === 401) {
-        setErrors((prev: any) => ({
-          ...prev,
-          password: 'Email ou senha incorretos'
-        }));
+        setErrors({
+          email: '',
+          password: '',
+          general: 'Email ou senha incorretos'
+        });
+        setTouched({
+          email: true,
+          password: true
+        });
+      } else {
+        setErrors({
+          email: '',
+          password: '',
+          general: 'Erro ao fazer login. Tente novamente.'
+        });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
+    <>
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
+          <Loading />
+        </div>
+      )}
 
-      {/* Ícone de casa */}
+      <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
+
+      {/* Ícone de usuário */}
       <div className="flex justify-center mb-2">
         <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
           <User className="w-7 h-7 text-white" strokeWidth={2} />
@@ -135,6 +177,28 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       <p className="text-center text-gray-600 mb-3 text-sm">
         Entre na sua conta Kubo
       </p>
+
+      {/* Mensagem de sucesso */}
+      {showSuccessMessage && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-green-900">Login bem-sucedido!</p>
+            <p className="text-xs text-green-700">Redirecionando...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Mensagem de erro geral */}
+      {errors.general && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-red-900">Erro no login</p>
+            <p className="text-xs text-red-700">{errors.general}</p>
+          </div>
+        </div>
+      )}
 
       {/* Formulário */}
       <form onSubmit={handleSubmit} className="space-y-0">
@@ -152,8 +216,9 @@ const LoginForm = ({ onLoginSuccess }: any) => {
               onChange={handleChange}
               onBlur={() => handleBlur('email')}
               placeholder="Digite seu email"
-              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.email && errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
+              className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                (touched.email && errors.email) || errors.general ? 'border-red-500' : 'border-gray-300'
+              }`}
             />
           </div>
           {/* Altura fixa para mensagem de erro */}
@@ -178,13 +243,14 @@ const LoginForm = ({ onLoginSuccess }: any) => {
               onChange={handleChange}
               onBlur={() => handleBlur('password')}
               placeholder="Digite sua senha"
-              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched.password && errors.password ? 'border-red-500' : 'border-gray-300'
-                }`}
+              className={`w-full pl-10 pr-10 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
+                (touched.password && errors.password) || errors.general ? 'border-red-500' : 'border-gray-300'
+              }`}
             />
             <button
               type="button"
               onClick={() => setMostrarSenha(!mostrarSenha)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition cursor-pointer"
             >
               {mostrarSenha ? (
                 <EyeOff className="w-4 h-4" />
@@ -206,7 +272,7 @@ const LoginForm = ({ onLoginSuccess }: any) => {
             <button
               type="button"
               onClick={() => navigate('/forgotpassword')}
-              className="text-xs text-blue-600 hover:text-blue-800 hover:underline transition font-semibold"
+              className="text-xs text-blue-600 hover:text-blue-800 hover:underline transition font-semibold cursor-pointer"
             >
               Esqueceu a senha?
             </button>
@@ -216,10 +282,10 @@ const LoginForm = ({ onLoginSuccess }: any) => {
         {/* Botão de submissão */}
         <button
           type="submit"
-          disabled={!isValid}
-          className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm"
+          disabled={!isValid || isLoading}
+          className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm cursor-pointer"
         >
-          Entrar
+          {isLoading ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
 
@@ -239,17 +305,6 @@ const LoginForm = ({ onLoginSuccess }: any) => {
         <div className="w-full">
           <LoginWithGoogleButton onLoginSuccess={onLoginSuccess} />
         </div>
-
-        {/* <button
-          type="button"
-          onClick={handleLinkedInLogin}
-          className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-[#0A66C2] text-white rounded-lg hover:bg-[#004182] transition text-sm font-medium"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-          </svg>
-          <span className="text-xs">Continuar com LinkedIn</span>
-        </button> */}
       </div>
 
       {/* Link para cadastro */}
@@ -263,6 +318,7 @@ const LoginForm = ({ onLoginSuccess }: any) => {
         </button>
       </p>
     </div>
+    </>
   );
 };
 
