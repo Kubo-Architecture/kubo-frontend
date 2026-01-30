@@ -27,15 +27,18 @@ export default function EditProfileModal({
   const [formData, setFormData] = useState({
     nickname: '',
     name: '',
-    profession: '',
     bio: '',
-    phone: '',
-    email: '',
   });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
+  const [usernameError, setUsernameError] = useState(''); // ✅ Erro de validação do username
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const MAX_BIO_LENGTH = 500;
+  const MAX_USERNAME_LENGTH = 25; // ✅ Mesmo limite do NicknameInput
+  
+  // ✅ REGEX IGUAL AO NicknameInput
+  const usernameRegex = /^[a-zA-Z0-9._]+$/;
 
   // Carregar dados do usuário quando o modal abrir
   useEffect(() => {
@@ -43,11 +46,9 @@ export default function EditProfileModal({
       setFormData({
         nickname: userData.nickname || '',
         name: userData.name || '',
-        profession: userData.profession || '',
         bio: userData.bio || '',
-        phone: userData.phone || '',
-        email: userData.email || '',
       });
+      setUsernameError('');
     }
   }, [isOpen, userData]);
 
@@ -78,7 +79,6 @@ export default function EditProfileModal({
       return () => {
         document.removeEventListener('keydown', handleEscKey);
         
-        // Restaurar valores originais (remover propriedade se estava vazia)
         if (originalBodyOverflow) {
           document.body.style.overflow = originalBodyOverflow;
         } else {
@@ -109,11 +109,9 @@ export default function EditProfileModal({
           document.documentElement.style.removeProperty('overflow');
         }
         
-        // Restaurar posição do scroll
         window.scrollTo(0, scrollY);
       };
     } else {
-      // Garantir limpeza quando o modal fechar
       document.body.style.removeProperty('overflow');
       document.body.style.removeProperty('position');
       document.body.style.removeProperty('top');
@@ -150,11 +148,53 @@ export default function EditProfileModal({
     resetForm();
   };
 
+  // ✅ Validar formato do username (IGUAL ao NicknameInput)
+  const validateUsername = (username: string): string => {
+    if (!username.trim()) {
+      return 'Por favor, insira um nome de usuário';
+    }
+
+    if (!usernameRegex.test(username)) {
+      return 'Use apenas letras, números, underline (_) ou ponto (.) sem espaços';
+    }
+
+    if (username.length > MAX_USERNAME_LENGTH) {
+      return `O nome de usuário deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`;
+    }
+
+    return '';
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // ✅ Limitar bio
+    if (name === 'bio') {
+      processedValue = value.replace(/\n/g, ' ');
+      if (processedValue.length > MAX_BIO_LENGTH) {
+        return;
+      }
+    }
+
+    // ✅ USERNAME (name): converter para minúsculas e limitar a 25 caracteres
+    if (name === 'name') {
+      processedValue = value.toLowerCase();
+      
+      if (processedValue.length > MAX_USERNAME_LENGTH) {
+        return;
+      }
+
+      // Limpar erro ao digitar
+      if (usernameError) {
+        setUsernameError('');
+      }
+    }
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
   };
 
@@ -162,22 +202,35 @@ export default function EditProfileModal({
     e.preventDefault();
     if (isSaving) return;
 
+    // ✅ Validar username antes de enviar
+    const usernameValidationError = validateUsername(formData.name);
+    if (usernameValidationError) {
+      setUsernameError(usernameValidationError);
+      return;
+    }
+
     setIsSaving(true);
     setError('');
+    setUsernameError('');
 
-    const data = new FormData();
-    data.append('nickname', formData.nickname);
-    data.append('name', formData.name);
-    data.append('profession', formData.profession);
-    data.append('bio', formData.bio);
-    data.append('phone', formData.phone);
-    data.append('email', formData.email);
-    data.append('userId', userData.userId);
+    const payload = {
+      nickname: formData.nickname,
+      name: formData.name,
+      bio: formData.bio,
+    };
 
     try {
+      const token = localStorage.getItem('token');
+      
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/users/profile`,
-        data
+        `${import.meta.env.VITE_API_URL}/users/${userData.userId}`,
+        payload,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
       );
 
       setError('success: Perfil atualizado com sucesso!');
@@ -187,12 +240,28 @@ export default function EditProfileModal({
       }
 
       setTimeout(() => {
+        const usernameChanged = formData.name !== userData.name;
         handleClose();
-      }, 1500);
+        
+        if (usernameChanged) {
+          window.location.href = `/profile/${formData.name}`;
+        } else {
+          window.location.reload();
+        }
+      }, 1000);
 
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Erro ao atualizar perfil');
-    } finally {
+      console.error('Erro ao atualizar:', err);
+      
+      if (err.response?.status === 409) {
+        setError('Este nome de usuário já está em uso');
+      } else {
+        setError(
+          err.response?.data?.error || 
+          err.response?.data?.message || 
+          'Erro ao atualizar perfil'
+        );
+      }
       setIsSaving(false);
     }
   };
@@ -201,12 +270,10 @@ export default function EditProfileModal({
     setFormData({
       nickname: '',
       name: '',
-      profession: '',
       bio: '',
-      phone: '',
-      email: '',
     });
     setError('');
+    setUsernameError('');
     setIsSaving(false);
   };
 
@@ -268,6 +335,7 @@ export default function EditProfileModal({
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* ✅ NOME DE EXIBIÇÃO PRIMEIRO (nickname) - SEM @ */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Nome de exibição
@@ -277,89 +345,77 @@ export default function EditProfileModal({
                     name="nickname"
                     value={formData.nickname}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="LucasAndradeFonseca"
+                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Lucas Andrade"
                   />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Este é o nome que aparece no seu perfil
+                  </p>
                 </div>
 
+                {/* ✅ NOME DE USUÁRIO DEPOIS (name) - COM @ e validações */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Nome de usuário
                   </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="lucas.andrade"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-sm pointer-events-none">
+                      @
+                    </span>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      maxLength={MAX_USERNAME_LENGTH}
+                      className={`w-full pl-8 pr-16 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                        usernameError
+                          ? 'border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 dark:border-gray-600 focus:ring-gray-900 dark:focus:ring-white'
+                      }`}
+                      placeholder="lucas"
+                    />
+                    {/* ✅ Contador de caracteres */}
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                      {formData.name.length}/{MAX_USERNAME_LENGTH}
+                    </div>
+                  </div>
+                  {/* ✅ Mensagem de erro */}
+                  {usernameError && (
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      {usernameError}
+                    </p>
+                  )}
+                  {!usernameError && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Usado na URL do seu perfil
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Profissão
-                </label>
-                <input
-                  type="text"
-                  name="profession"
-                  value={formData.profession}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Ex: Arquiteto(a) Urbanista"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Descrição
-                </label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Descrição
+                  </label>
+                  <span className={`text-xs ${
+                    formData.bio.length > MAX_BIO_LENGTH * 0.9 
+                      ? 'text-red-600 dark:text-red-400 font-semibold' 
+                      : 'text-gray-500 dark:text-gray-400'
+                  }`}>
+                    {formData.bio.length}/{MAX_BIO_LENGTH}
+                  </span>
+                </div>
                 <textarea
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  maxLength={MAX_BIO_LENGTH}
+                  className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Conte um pouco sobre você, sua experiência e áreas de atuação..."
                 ></textarea>
-              </div>
-            </div>
-
-            {/* Contato e Redes Sociais */}
-            <div className="space-y-5">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-                Contato e Redes Sociais
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Telefone
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="(00) 00000-0000"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    E-mail
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="seu@email.com"
-                  />
-                </div>
               </div>
             </div>
           </form>
@@ -377,12 +433,12 @@ export default function EditProfileModal({
           <button
             type="submit"
             onClick={handleSubmit}
-            disabled={isSaving}
+            disabled={isSaving || !formData.name.trim()}
             className={`
               px-6 py-2.5 rounded-lg text-white font-medium text-sm
               transition-colors
               ${
-                isSaving
+                isSaving || !formData.name.trim()
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer'
               }

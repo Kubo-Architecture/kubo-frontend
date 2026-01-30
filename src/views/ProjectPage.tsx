@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
 import axios from 'axios';
@@ -17,6 +17,8 @@ export default function ProjectPage() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [, setImageError] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    
+    const deleteModalRef = useRef<HTMLDivElement>(null);
 
     const API_URL = import.meta.env.VITE_API_URL;
     
@@ -58,6 +60,65 @@ export default function ProjectPage() {
 
         fetchProject();
     }, [projectId, navigate, currentUserId]);
+
+    // Gerenciar scroll quando modal de delete abre/fecha
+    useEffect(() => {
+        if (showDeleteModal) {
+            const scrollY = window.scrollY;
+            
+            const originalBodyOverflow = document.body.style.overflow || '';
+            const originalBodyPosition = document.body.style.position || '';
+            const originalBodyTop = document.body.style.top || '';
+            const originalBodyWidth = document.body.style.width || '';
+            const originalHtmlOverflow = document.documentElement.style.overflow || '';
+            
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
+            
+            return () => {
+                if (originalBodyOverflow) {
+                    document.body.style.overflow = originalBodyOverflow;
+                } else {
+                    document.body.style.removeProperty('overflow');
+                }
+                
+                if (originalBodyPosition) {
+                    document.body.style.position = originalBodyPosition;
+                } else {
+                    document.body.style.removeProperty('position');
+                }
+                
+                if (originalBodyTop) {
+                    document.body.style.top = originalBodyTop;
+                } else {
+                    document.body.style.removeProperty('top');
+                }
+                
+                if (originalBodyWidth) {
+                    document.body.style.width = originalBodyWidth;
+                } else {
+                    document.body.style.removeProperty('width');
+                }
+                
+                if (originalHtmlOverflow) {
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+                } else {
+                    document.documentElement.style.removeProperty('overflow');
+                }
+                
+                window.scrollTo(0, scrollY);
+            };
+        } else {
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('position');
+            document.body.style.removeProperty('top');
+            document.body.style.removeProperty('width');
+            document.documentElement.style.removeProperty('overflow');
+        }
+    }, [showDeleteModal]);
 
     const handleLike = async () => {
         if (!currentUserId) {
@@ -107,7 +168,6 @@ export default function ProjectPage() {
 
             if (response.status === 204 || response.status === 200) {
                 setShowDeleteModal(false);
-                
                 navigate('/gallery');
             }
         } catch (error: any) {
@@ -118,6 +178,12 @@ export default function ProjectPage() {
             } else {
                 alert('Erro ao deletar projeto: ' + (error.response?.data?.error || 'Erro desconhecido'));
             }
+        }
+    };
+
+    const handleDeleteModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (deleteModalRef.current && !deleteModalRef.current.contains(e.target as Node)) {
+            setShowDeleteModal(false);
         }
     };
 
@@ -281,7 +347,6 @@ export default function ProjectPage() {
                                 <span className="text-sm font-medium">Favoritar</span>
                             </button>
 
-                            {/* ✅ BOTÃO DE EDITAR - SÓ APARECE SE FOR O DONO */}
                             {isOwner && (
                                 <button
                                     onClick={() => navigate(`/edit-project/${projectId}`)}
@@ -293,7 +358,6 @@ export default function ProjectPage() {
                                 </button>
                             )}
 
-                            {/* ✅ BOTÃO DE DELETAR - SÓ APARECE SE FOR O DONO */}
                             {isOwner && (
                                 <button
                                     onClick={() => setShowDeleteModal(true)}
@@ -374,7 +438,6 @@ export default function ProjectPage() {
                             ))}
                         </div>
                         
-                        {/* ✅ Mensagem se não houver especificações */}
                         {[
                             project.materials && project.materials.length > 0,
                             project.author && project.author.trim() !== '',
@@ -395,9 +458,7 @@ export default function ProjectPage() {
                         <div>
                             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Galeria</h2>
                             
-                            {/* Masonry Grid Layout */}
                             <div className="grid grid-cols-12 gap-4">
-                                {/* First large image - spans 4 columns and 2 rows */}
                                 {project.gallery[0] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
@@ -418,7 +479,6 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Second image - top right, spans 4 columns */}
                                 {project.gallery[1] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
@@ -439,7 +499,6 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Third image - spans 4 columns on right side */}
                                 {project.gallery[2] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
@@ -460,7 +519,6 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Fourth image - bottom middle */}
                                 {project.gallery[3] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
@@ -481,7 +539,6 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Fifth image if exists */}
                                 {project.gallery[4] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
@@ -502,7 +559,6 @@ export default function ProjectPage() {
                                     </div>
                                 )}
 
-                                {/* Additional images */}
                                 {project.gallery.slice(5).map((imageUrl: string, index: number) => (
                                     <div key={index + 5} className="col-span-12 md:col-span-4">
                                         <div 
@@ -528,10 +584,17 @@ export default function ProjectPage() {
                 </div>
             </div>
 
-            {/* ✅ MODAL DE CONFIRMAÇÃO DE DELETE */}
+            {/* Modal de Confirmação de Delete */}
             {showDeleteModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl">
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    onClick={handleDeleteModalClick}
+                >
+                    <div 
+                        ref={deleteModalRef}
+                        className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
                                 <i className="fas fa-trash text-red-600 dark:text-red-400 text-xl"></i>
