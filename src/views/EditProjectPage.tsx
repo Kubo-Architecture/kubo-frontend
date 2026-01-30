@@ -59,6 +59,10 @@ export default function EditProjectPage() {
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
     const [existingGallery, setExistingGallery] = useState<string[]>([]);
 
+    // Estados para autocomplete de localização
+    const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+    const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+
     const usageTypeOptions = [
         'Residencial',
         'Comercial',
@@ -136,6 +140,60 @@ export default function EditProjectPage() {
             fetchProject();
         }
     }, [projectId]);
+
+    // Função para buscar sugestões de localização usando Nominatim (OpenStreetMap)
+    const fetchLocationSuggestions = async (query: string) => {
+        if (query.length < 3) {
+            setLocationSuggestions([]);
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=br&limit=5&addressdetails=1`,
+                {
+                    headers: {
+                        'Accept-Language': 'pt-BR,pt;q=0.9'
+                    }
+                }
+            );
+
+            const suggestions: string[] = response.data.map((item: any) => {
+                // Formatar endereço de forma mais limpa
+                const parts = [];
+                if (item.address.city) parts.push(item.address.city);
+                else if (item.address.town) parts.push(item.address.town);
+                else if (item.address.municipality) parts.push(item.address.municipality);
+                
+                if (item.address.state) parts.push(item.address.state);
+                
+                return parts.join(', ');
+            });
+
+            // Remover duplicatas
+            const uniqueSuggestions = [...new Set(suggestions)];
+            setLocationSuggestions(uniqueSuggestions);
+        } catch (err) {
+            console.error('Erro ao buscar sugestões de localização:', err);
+        }
+    };
+
+    // Debounce para evitar muitas requisições
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (location) {
+                fetchLocationSuggestions(location);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [location]);
+
+    const handleLocationSelect = (suggestion: string) => {
+        setLocation(suggestion);
+        setShowLocationSuggestions(false);
+        setLocationSuggestions([]);
+    };
 
     const getImageUrl = (path: string | null | undefined): string => {
         if (!path) return '';
@@ -245,6 +303,34 @@ export default function EditProjectPage() {
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
 
+        // VALIDAÇÃO: Nome do projeto obrigatório e máximo 70 caracteres
+        if (!name.trim()) {
+            setError('Preencha o nome do projeto');
+            setActiveSection('geral');
+            return;
+        }
+
+        if (name.length > 70) {
+            setError('O nome do projeto deve ter no máximo 70 caracteres');
+            setActiveSection('geral');
+            return;
+        }
+
+        // VALIDAÇÃO: Descrição obrigatória e máximo 1000 caracteres
+        if (!description.trim()) {
+            setError('Preencha a descrição do projeto');
+            setActiveSection('geral');
+            return;
+        }
+
+        if (description.length > 1000) {
+            setError('A descrição deve ter no máximo 1000 caracteres');
+            setActiveSection('geral');
+            return;
+        }
+
+        // NOTA: Localização NÃO é obrigatória - validação removida
+
         if (usageTypes.length === 0) {
             setError('Selecione pelo menos um tipo de uso');
             setActiveSection('technical');
@@ -260,12 +346,6 @@ export default function EditProjectPage() {
         if (usageTypes.includes('Outro') && !customUsageType.trim()) {
             setError('Especifique o tipo de uso "Outro"');
             setActiveSection('technical');
-            return;
-        }
-
-        if (!name.trim() || !location.trim() || !description.trim()) {
-            setError('Preencha todos os campos obrigatórios');
-            setActiveSection('geral');
             return;
         }
 
@@ -445,6 +525,10 @@ export default function EditProjectPage() {
                                                 handleMaterialChange={handleMaterialChange}
                                                 addMaterialField={addMaterialField}
                                                 removeMaterialField={removeMaterialField}
+                                                locationSuggestions={locationSuggestions}
+                                                showLocationSuggestions={showLocationSuggestions}
+                                                setShowLocationSuggestions={setShowLocationSuggestions}
+                                                handleLocationSelect={handleLocationSelect}
                                             />
                                         )}
 

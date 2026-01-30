@@ -211,13 +211,13 @@ export default function ProjectPage() {
                         {/* Right Column - Hero Image */}
                         <div className="lg:pl-4">
                             <div 
-                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative"
+                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative shadow-lg hover:shadow-2xl transition-all duration-300"
                                 onClick={() => project.photo_url && openLightbox(getImageUrl(project.photo_url))}
                             >
                                 {project.photo_url ? (
                                     <>
                                         <img
-                                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.02] transition-all duration-700"
                                             src={getImageUrl(project.photo_url)}
                                             alt={project.name}
                                             onError={() => setImageError(true)}
@@ -351,7 +351,7 @@ export default function ProjectPage() {
                                     show: project.status && project.status.trim() !== ''
                                 }
                             ]
-                            .filter(spec => spec.show) // ✅ Filtrar apenas os que têm valor
+                            .filter(spec => spec.show)
                             .map((spec, index) => (
                                 <div 
                                     key={index} 
@@ -401,11 +401,11 @@ export default function ProjectPage() {
                                 {project.gallery[0] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[0]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[0])}
                                                 alt={`${project.name} - Imagem 1`}
                                             />
@@ -422,11 +422,11 @@ export default function ProjectPage() {
                                 {project.gallery[1] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[1]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[1])}
                                                 alt={`${project.name} - Imagem 2`}
                                             />
@@ -443,11 +443,11 @@ export default function ProjectPage() {
                                 {project.gallery[2] && (
                                     <div className="col-span-12 md:col-span-4 md:row-span-2">
                                         <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[2]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[2])}
                                                 alt={`${project.name} - Imagem 3`}
                                             />
@@ -464,11 +464,11 @@ export default function ProjectPage() {
                                 {project.gallery[3] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[3]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[3])}
                                                 alt={`${project.name} - Imagem 4`}
                                             />
@@ -485,11 +485,11 @@ export default function ProjectPage() {
                                 {project.gallery[4] && (
                                     <div className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(project.gallery[4]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[4])}
                                                 alt={`${project.name} - Imagem 5`}
                                             />
@@ -506,11 +506,11 @@ export default function ProjectPage() {
                                 {project.gallery.slice(5).map((imageUrl: string, index: number) => (
                                     <div key={index + 5} className="col-span-12 md:col-span-4">
                                         <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative"
+                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
                                             onClick={() => openLightbox(getImageUrl(imageUrl))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(imageUrl)}
                                                 alt={`${project.name} - Imagem ${index + 6}`}
                                             />

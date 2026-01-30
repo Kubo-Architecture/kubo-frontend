@@ -37,6 +37,10 @@ export default function NewProject() {
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [showCustomUsageType, setShowCustomUsageType] = useState(false);
+  
+  // Novos estados para autocomplete de localização
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
 
   const usageTypeOptions = [
     'Residencial',
@@ -103,6 +107,54 @@ export default function NewProject() {
     fetchUserNameIfAuthor();
   }, [formData.isAuthor]);
 
+  // Função para buscar sugestões de localização usando Nominatim (OpenStreetMap)
+  const fetchLocationSuggestions = async (query: string) => {
+    if (query.length < 3) {
+      setLocationSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=br&limit=5&addressdetails=1`,
+        {
+          headers: {
+            'Accept-Language': 'pt-BR,pt;q=0.9'
+          }
+        }
+      );
+
+      const suggestions: string[] = response.data.map((item: any) => {
+        // Formatar endereço de forma mais limpa
+        const parts = [];
+        if (item.address.city) parts.push(item.address.city);
+        else if (item.address.town) parts.push(item.address.town);
+        else if (item.address.municipality) parts.push(item.address.municipality);
+        
+        if (item.address.state) parts.push(item.address.state);
+        
+        return parts.join(', ');
+      });
+
+      // Remover duplicatas
+      const uniqueSuggestions = [...new Set(suggestions)];
+      setLocationSuggestions(uniqueSuggestions);
+    } catch (err) {
+      console.error('Erro ao buscar sugestões de localização:', err);
+    }
+  };
+
+  // Debounce para evitar muitas requisições
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (formData.location) {
+        fetchLocationSuggestions(formData.location);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [formData.location]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
@@ -118,6 +170,15 @@ export default function NewProject() {
         [name]: value
       }));
     }
+  };
+
+  const handleLocationSelect = (suggestion: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: suggestion
+    }));
+    setShowLocationSuggestions(false);
+    setLocationSuggestions([]);
   };
 
   const handleUsageTypeToggle = (type: string) => {
@@ -258,6 +319,34 @@ export default function NewProject() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // VALIDAÇÃO: Nome do projeto obrigatório e máximo 70 caracteres
+    if (!formData.name.trim()) {
+      setError('Preencha o nome do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (formData.name.length > 70) {
+      setError('O nome do projeto deve ter no máximo 70 caracteres');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // VALIDAÇÃO: Descrição obrigatória e máximo 1000 caracteres
+    if (!formData.description.trim()) {
+      setError('Preencha a descrição do projeto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (formData.description.length > 1000) {
+      setError('A descrição deve ter no máximo 1000 caracteres');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // NOTA: Localização NÃO é obrigatória - removida a validação
+
     if (formData.usage_types.length === 0) {
       setError('Selecione pelo menos um tipo de uso');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -272,24 +361,6 @@ export default function NewProject() {
 
     if (formData.usage_types.includes('Outro') && !formData.custom_usage_type.trim()) {
       setError('Especifique o tipo de uso "Outro"');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (!formData.name.trim()) {
-      setError('Preencha o nome do projeto');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (!formData.location.trim()) {
-      setError('Preencha a localização do projeto');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (!formData.description.trim()) {
-      setError('Preencha a descrição do projeto');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -495,6 +566,10 @@ export default function NewProject() {
                   removeMaterialField={removeMaterialField}
                   showCustomUsageType={showCustomUsageType}
                   usageTypeOptions={usageTypeOptions}
+                  locationSuggestions={locationSuggestions}
+                  showLocationSuggestions={showLocationSuggestions}
+                  setShowLocationSuggestions={setShowLocationSuggestions}
+                  handleLocationSelect={handleLocationSelect}
                 />
               )}
 

@@ -15,6 +15,10 @@ interface GeneralSectionProps {
   removeMaterialField: (index: number) => void;
   showCustomUsageType: boolean;
   usageTypeOptions: string[];
+  locationSuggestions: string[];
+  showLocationSuggestions: boolean;
+  setShowLocationSuggestions: (show: boolean) => void;
+  handleLocationSelect: (suggestion: string) => void;
 }
 
 export default function GeneralSection({
@@ -32,7 +36,14 @@ export default function GeneralSection({
   removeMaterialField,
   showCustomUsageType,
   usageTypeOptions,
+  locationSuggestions,
+  showLocationSuggestions,
+  setShowLocationSuggestions,
+  handleLocationSelect,
 }: GeneralSectionProps) {
+  const nameCharCount = formData.name.length;
+  const descCharCount = formData.description.length;
+
   return (
     <div className="space-y-6">
       {/* Informações Básicas */}
@@ -49,6 +60,7 @@ export default function GeneralSection({
 
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
+            {/* Nome do Projeto - máximo 70 caracteres */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-2">
                 Nome do projeto *
@@ -60,14 +72,21 @@ export default function GeneralSection({
                 placeholder="Casa Moderna em São Paulo"
                 value={formData.name}
                 onChange={handleChange}
+                maxLength={70}
                 required
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm text-zinc-900 dark:text-white"
               />
+              <div className="mt-1 text-xs text-right">
+                <span className={`${nameCharCount > 70 ? 'text-red-600 dark:text-red-400' : 'text-zinc-500 dark:text-neutral-400'}`}>
+                  {nameCharCount}/70
+                </span>
+              </div>
             </div>
 
-            <div>
+            {/* Localização - NÃO obrigatória, com autocomplete */}
+            <div className="relative">
               <label htmlFor="location" className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-2">
-                Localização *
+                Localização
               </label>
               <input
                 type="text"
@@ -76,12 +95,34 @@ export default function GeneralSection({
                 placeholder="São Paulo, SP"
                 value={formData.location}
                 onChange={handleChange}
-                required
+                onFocus={() => setShowLocationSuggestions(true)}
+                onBlur={() => {
+                  // Delay para permitir o clique nas sugestões
+                  setTimeout(() => setShowLocationSuggestions(false), 200);
+                }}
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm text-zinc-900 dark:text-white"
               />
+              
+              {/* Dropdown de sugestões */}
+              {showLocationSuggestions && locationSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white dark:bg-[#151B23] border border-zinc-300 dark:border-[#3d444d] rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  {locationSuggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleLocationSelect(suggestion)}
+                      className="w-full px-4 py-2.5 text-left text-sm text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-[#202830] transition-colors first:rounded-t-xl last:rounded-b-xl"
+                    >
+                      <i className="fa-solid fa-location-dot mr-2 text-zinc-400 dark:text-neutral-500"></i>
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
+          {/* Descrição - obrigatória, máximo 1000 caracteres */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-2">
               Descrição *
@@ -93,9 +134,15 @@ export default function GeneralSection({
               rows={4}
               value={formData.description}
               onChange={handleChange}
+              maxLength={1000}
               required
               className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm resize-none text-zinc-900 dark:text-white"
             />
+            <div className="mt-1 text-xs text-right">
+              <span className={`${descCharCount > 1000 ? 'text-red-600 dark:text-red-400' : 'text-zinc-500 dark:text-neutral-400'}`}>
+                {descCharCount}/1000
+              </span>
+            </div>
           </div>
 
           <div>

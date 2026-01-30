@@ -42,6 +42,11 @@ interface GeneralSectionProps {
     handleMaterialChange: (index: number, value: string) => void;
     addMaterialField: () => void;
     removeMaterialField: (index: number) => void;
+    // Props para autocomplete de localização
+    locationSuggestions: string[];
+    showLocationSuggestions: boolean;
+    setShowLocationSuggestions: (show: boolean) => void;
+    handleLocationSelect: (suggestion: string) => void;
 }
 
 export default function GeneralSection({
@@ -83,7 +88,14 @@ export default function GeneralSection({
     handleMaterialChange,
     addMaterialField,
     removeMaterialField,
+    locationSuggestions,
+    showLocationSuggestions,
+    setShowLocationSuggestions,
+    handleLocationSelect,
 }: GeneralSectionProps) {
+    const nameCharCount = name.length;
+    const descCharCount = description.length;
+
     return (
         <div className="space-y-6">
             <div>
@@ -106,6 +118,7 @@ export default function GeneralSection({
 
                 <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Nome do projeto - máximo 70 caracteres */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                                 Nome do projeto *
@@ -114,27 +127,56 @@ export default function GeneralSection({
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                maxLength={70}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm"
                                 placeholder="Casa Moderna em São Paulo"
                                 required
                             />
+                            <div className="mt-1 text-xs text-right">
+                                <span className={`${nameCharCount > 70 ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-neutral-400'}`}>
+                                    {nameCharCount}/70
+                                </span>
+                            </div>
                         </div>
 
-                        <div>
+                        {/* Localização - NÃO obrigatória, com autocomplete */}
+                        <div className="relative">
                             <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
-                                Localização *
+                                Localização
                             </label>
                             <input
                                 type="text"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
+                                onFocus={() => setShowLocationSuggestions(true)}
+                                onBlur={() => {
+                                    // Delay para permitir o clique nas sugestões
+                                    setTimeout(() => setShowLocationSuggestions(false), 200);
+                                }}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm"
                                 placeholder="São Paulo, SP"
-                                required
                             />
+                            
+                            {/* Dropdown de sugestões */}
+                            {showLocationSuggestions && locationSuggestions.length > 0 && (
+                                <div className="absolute z-10 w-full mt-1 bg-white dark:bg-[#151B23] border border-gray-300 dark:border-[#3d444d] rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                                    {locationSuggestions.map((suggestion, index) => (
+                                        <button
+                                            key={index}
+                                            type="button"
+                                            onClick={() => handleLocationSelect(suggestion)}
+                                            className="w-full px-4 py-2.5 text-left text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-[#202830] transition-colors first:rounded-t-xl last:rounded-b-xl"
+                                        >
+                                            <i className="fas fa-location-dot mr-2 text-gray-400 dark:text-neutral-500"></i>
+                                            {suggestion}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
+                    {/* Descrição - obrigatória, máximo 1000 caracteres */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                             Descrição *
@@ -142,11 +184,17 @@ export default function GeneralSection({
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            maxLength={1000}
                             rows={4}
                             className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all resize-none text-sm"
                             placeholder="Descreva os conceitos, inspirações e características principais..."
                             required
                         />
+                        <div className="mt-1 text-xs text-right">
+                            <span className={`${descCharCount > 1000 ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-neutral-400'}`}>
+                                {descCharCount}/1000
+                            </span>
+                        </div>
                     </div>
 
                     <div>
