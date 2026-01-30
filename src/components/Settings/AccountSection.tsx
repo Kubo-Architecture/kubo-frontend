@@ -18,7 +18,7 @@ export default function AccountSection() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+  const [hasPassword, setHasPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
@@ -29,22 +29,24 @@ export default function AccountSection() {
   const passwordConfirmModalRef = useRef<HTMLDivElement>(null);
   const passwordSuccessModalRef = useRef<HTMLDivElement>(null);
 
-  // Buscar dados do usuário (email e se tem senha definida)
-  useEffect(() => {
+  const fetchUser = () => {
     const userId = getUserIdFromToken();
-    if (!userId) {
-      setHasPassword(false);
-      return;
-    }
+    const baseUrl = API_URL || import.meta.env.VITE_API_URL || '';
+    if (!userId || !baseUrl) return;
     axios
-      .get(`${API_URL}/users/${userId}`)
+      .get(`${baseUrl}/users/${userId}`)
       .then((res) => {
-        setUserEmail(res.data.email || '');
-        setHasPassword(!!res.data.hasPassword);
+        const data = res.data || {};
+        setUserEmail((data.email ?? data.Email ?? '').trim());
+        setHasPassword(!!data.hasPassword);
       })
-      .catch(() => {
-        setHasPassword(false);
-      });
+      .catch(() => setHasPassword(false));
+  };
+
+  useEffect(() => {
+    fetchUser();
+    window.addEventListener('focus', fetchUser);
+    return () => window.removeEventListener('focus', fetchUser);
   }, []);
 
   // Fechar modais com ESC
@@ -61,6 +63,7 @@ export default function AccountSection() {
         if (showPasswordModal) {
           setShowPasswordModal(false);
           setChangePassword('');
+          setPasswordError('');
         }
         if (showPasswordConfirmModal) {
           setShowPasswordConfirmModal(false);
@@ -155,6 +158,8 @@ export default function AccountSection() {
     setShowDeleteConfirmModal(false);
   };
 
+  const getBaseUrl = () => API_URL || import.meta.env.VITE_API_URL || '';
+
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
     return token ? { Authorization: `Bearer ${token}` } : {};
@@ -168,14 +173,23 @@ export default function AccountSection() {
 
   const handlePasswordSubmit = async () => {
     if (!changePassword.trim()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setPasswordError('Configuração da API indisponível.');
+      return;
+    }
     setPasswordError('');
     setIsVerifying(true);
     try {
-      await axios.post(
-        `${API_URL}/users/verify-password`,
+      const res = await axios.post(
+        `${baseUrl}/users/verify-password`,
         { currentPassword: changePassword },
         { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
       );
+      if (res.status !== 200) {
+        setPasswordError('Senha atual incorreta. Tente novamente.');
+        return;
+      }
       setCurrentPasswordForChange(changePassword);
       setChangePassword('');
       setShowPasswordModal(false);
@@ -196,11 +210,16 @@ export default function AccountSection() {
       return;
     }
     if (!newPassword.trim()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setPasswordError('Configuração da API indisponível.');
+      return;
+    }
     setPasswordError('');
     setIsChanging(true);
     try {
       await axios.put(
-        `${API_URL}/users/password`,
+        `${baseUrl}/users/password`,
         { currentPassword: currentPasswordForChange, newPassword },
         { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
       );
@@ -326,7 +345,7 @@ export default function AccountSection() {
           </div>
         )}
 
-        {/* Modal de Senha para Alterar Senha */}
+        {/* Modal 1: Senha atual (verificação no backend - senha criptografada no banco) */}
         {showPasswordModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -375,14 +394,14 @@ export default function AccountSection() {
                     setPasswordError('');
                   }}
                   disabled={isVerifying}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordSubmit}
                   disabled={isVerifying || !changePassword.trim()}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isVerifying ? 'Verificando...' : 'Continuar'}
                 </button>
@@ -391,7 +410,7 @@ export default function AccountSection() {
           </div>
         )}
 
-        {/* Modal de Confirmação para Alterar Senha */}
+        {/* Modal 2: Nova senha (inserir duas vezes) */}
         {showPasswordConfirmModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -410,7 +429,7 @@ export default function AccountSection() {
             >
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-black dark:text-white mb-2">Nova Senha</h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua nova senha</p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua nova senha duas vezes</p>
               </div>
 
               {passwordError && (
@@ -460,14 +479,14 @@ export default function AccountSection() {
                     setPasswordError('');
                   }}
                   disabled={isChanging}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordConfirm}
                   disabled={isChanging || !newPassword.trim() || !confirmNewPassword.trim()}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all disabled:opacity-50"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isChanging ? 'Alterando...' : 'Alterar Senha'}
                 </button>
@@ -496,11 +515,8 @@ export default function AccountSection() {
               </div>
 
               <button
-                onClick={() => {
-                  setShowPasswordSuccessModal(false);
-                  setPasswordError('');
-                }}
-                className="w-full px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
+                onClick={() => setShowPasswordSuccessModal(false)}
+                className="w-full px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
               >
                 Fechar
               </button>
@@ -528,11 +544,11 @@ export default function AccountSection() {
                 Email
               </label>
               <div className="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 border border-neutral-200 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 rounded-xl text-sm font-medium text-neutral-700">
-                {userEmail || (hasPassword === null ? '...' : '—')}
+                {userEmail}
               </div>
             </div>
 
-            {hasPassword === true && (
+            {hasPassword && (
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
                   <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
