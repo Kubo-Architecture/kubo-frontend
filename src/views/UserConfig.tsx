@@ -7,7 +7,6 @@ import ContactSection from '../components/Settings/ContactSection';
 
 export default function UserConfig() {
   const [activeSection, setActiveSection] = useState('geral');
-  const [language, setLanguage] = useState('portuguese');
 
   const { theme, setTheme } = useTheme();
 

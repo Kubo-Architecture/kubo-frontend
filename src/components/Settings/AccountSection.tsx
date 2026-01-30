@@ -1,6 +1,10 @@
 import { Trash2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import axios from 'axios';
+import { getUserIdFromToken } from '../../utils/jwt';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AccountSection() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -10,8 +14,14 @@ export default function AccountSection() {
   const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [changePassword, setChangePassword] = useState('');
+  const [currentPasswordForChange, setCurrentPasswordForChange] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [hasPassword, setHasPassword] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isChanging, setIsChanging] = useState(false);
 
   const deleteModalRef = useRef<HTMLDivElement>(null);
   const deleteConfirmModalRef = useRef<HTMLDivElement>(null);
@@ -19,8 +29,25 @@ export default function AccountSection() {
   const passwordConfirmModalRef = useRef<HTMLDivElement>(null);
   const passwordSuccessModalRef = useRef<HTMLDivElement>(null);
 
-  // Simulação do email do usuário - substituir pela lógica real de autenticação
-  const userEmail = "usuario@exemplo.com";
+  const fetchUser = () => {
+    const userId = getUserIdFromToken();
+    const baseUrl = API_URL || import.meta.env.VITE_API_URL || '';
+    if (!userId || !baseUrl) return;
+    axios
+      .get(`${baseUrl}/users/${userId}`)
+      .then((res) => {
+        const data = res.data || {};
+        setUserEmail((data.email ?? data.Email ?? '').trim());
+        setHasPassword(!!data.hasPassword);
+      })
+      .catch(() => setHasPassword(false));
+  };
+
+  useEffect(() => {
+    fetchUser();
+    window.addEventListener('focus', fetchUser);
+    return () => window.removeEventListener('focus', fetchUser);
+  }, []);
 
   // Fechar modais com ESC
   useEffect(() => {
@@ -36,11 +63,14 @@ export default function AccountSection() {
         if (showPasswordModal) {
           setShowPasswordModal(false);
           setChangePassword('');
+          setPasswordError('');
         }
         if (showPasswordConfirmModal) {
           setShowPasswordConfirmModal(false);
           setNewPassword('');
           setConfirmNewPassword('');
+          setCurrentPasswordForChange('');
+          setPasswordError('');
         }
         if (showPasswordSuccessModal) {
           setShowPasswordSuccessModal(false);
@@ -128,33 +158,83 @@ export default function AccountSection() {
     setShowDeleteConfirmModal(false);
   };
 
+  const getBaseUrl = () => API_URL || import.meta.env.VITE_API_URL || '';
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   const handleChangePassword = () => {
+    setPasswordError('');
+    setChangePassword('');
     setShowPasswordModal(true);
   };
 
-  const handlePasswordSubmit = () => {
-    // Validar senha aqui
-    if (changePassword.trim()) {
+  const handlePasswordSubmit = async () => {
+    if (!changePassword.trim()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setPasswordError('Configuração da API indisponível.');
+      return;
+    }
+    setPasswordError('');
+    setIsVerifying(true);
+    try {
+      const res = await axios.post(
+        `${baseUrl}/users/verify-password`,
+        { currentPassword: changePassword },
+        { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
+      );
+      if (res.status !== 200) {
+        setPasswordError('Senha atual incorreta. Tente novamente.');
+        return;
+      }
+      setCurrentPasswordForChange(changePassword);
+      setChangePassword('');
       setShowPasswordModal(false);
       setShowPasswordConfirmModal(true);
-      setChangePassword('');
+    } catch (err: unknown) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.error) ||
+        'Senha atual incorreta. Tente novamente.';
+      setPasswordError(msg);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
-  const handlePasswordConfirm = () => {
-    // Validar se as senhas coincidem
+  const handlePasswordConfirm = async () => {
     if (newPassword !== confirmNewPassword) {
-      alert('As senhas não coincidem');
+      setPasswordError('As senhas não coincidem');
       return;
     }
-
-    if (newPassword.trim()) {
-      // Lógica para alterar a senha
-      console.log('Senha alterada');
+    if (!newPassword.trim()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setPasswordError('Configuração da API indisponível.');
+      return;
+    }
+    setPasswordError('');
+    setIsChanging(true);
+    try {
+      await axios.put(
+        `${baseUrl}/users/password`,
+        { currentPassword: currentPasswordForChange, newPassword },
+        { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
+      );
       setShowPasswordConfirmModal(false);
       setShowPasswordSuccessModal(true);
       setNewPassword('');
       setConfirmNewPassword('');
+      setCurrentPasswordForChange('');
+    } catch (err: unknown) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.error) ||
+        'Não foi possível alterar a senha. Tente novamente.';
+      setPasswordError(msg);
+    } finally {
+      setIsChanging(false);
     }
   };
 
@@ -265,13 +345,14 @@ export default function AccountSection() {
           </div>
         )}
 
-        {/* Modal de Senha para Alterar Senha */}
+        {/* Modal 1: Senha atual (verificação no backend - senha criptografada no banco) */}
         {showPasswordModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
             onClick={(e) => handleOverlayClick(e, passwordModalRef, () => {
               setShowPasswordModal(false);
               setChangePassword('');
+              setPasswordError('');
             })}
           >
             <div 
@@ -284,6 +365,12 @@ export default function AccountSection() {
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua senha atual para continuar</p>
               </div>
 
+              {passwordError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                  {passwordError}
+                </div>
+              )}
+
               <div className="mb-6">
                 <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
                   <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
@@ -292,7 +379,7 @@ export default function AccountSection() {
                 <input
                   type="password"
                   value={changePassword}
-                  onChange={(e) => setChangePassword(e.target.value)}
+                  onChange={(e) => { setChangePassword(e.target.value); setPasswordError(''); }}
                   placeholder="Digite sua senha atual"
                   className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
@@ -304,23 +391,26 @@ export default function AccountSection() {
                   onClick={() => {
                     setShowPasswordModal(false);
                     setChangePassword('');
+                    setPasswordError('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer"
+                  disabled={isVerifying}
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordSubmit}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
+                  disabled={isVerifying || !changePassword.trim()}
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer disabled:opacity-50"
                 >
-                  Continuar
+                  {isVerifying ? 'Verificando...' : 'Continuar'}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Modal de Confirmação para Alterar Senha */}
+        {/* Modal 2: Nova senha (inserir duas vezes) */}
         {showPasswordConfirmModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -328,6 +418,8 @@ export default function AccountSection() {
               setShowPasswordConfirmModal(false);
               setNewPassword('');
               setConfirmNewPassword('');
+              setCurrentPasswordForChange('');
+              setPasswordError('');
             })}
           >
             <div 
@@ -337,8 +429,14 @@ export default function AccountSection() {
             >
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-black dark:text-white mb-2">Nova Senha</h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua nova senha</p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua nova senha duas vezes</p>
               </div>
+
+              {passwordError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                  {passwordError}
+                </div>
+              )}
 
               <div className="space-y-4 mb-6">
                 <div>
@@ -377,16 +475,20 @@ export default function AccountSection() {
                     setShowPasswordConfirmModal(false);
                     setNewPassword('');
                     setConfirmNewPassword('');
+                    setCurrentPasswordForChange('');
+                    setPasswordError('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer"
+                  disabled={isChanging}
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordConfirm}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
+                  disabled={isChanging || !newPassword.trim() || !confirmNewPassword.trim()}
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer disabled:opacity-50"
                 >
-                  Alterar Senha
+                  {isChanging ? 'Alterando...' : 'Alterar Senha'}
                 </button>
               </div>
             </div>
@@ -446,19 +548,21 @@ export default function AccountSection() {
               </div>
             </div>
 
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
-                <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
-                Senha
-              </label>
-              <button 
-                onClick={handleChangePassword}
-                className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 dark:hover:bg-[#202830] dark:hover:border-[#3d444d] hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
-              >
-                <span>Alterar senha</span>
-                <i className="fa-solid fa-chevron-right text-neutral-400 group-hover:text-neutral-600 transition-colors"></i>
-              </button>
-            </div>
+            {hasPassword && (
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-2 sm:mb-3">
+                  <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
+                  Senha
+                </label>
+                <button 
+                  onClick={handleChangePassword}
+                  className="w-full flex items-center cursor-pointer justify-between px-3 sm:px-4 py-3 sm:py-3.5 bg-neutral-50 dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-500 dark:hover:bg-[#202830] dark:hover:border-[#3d444d] hover:bg-neutral-100 border border-neutral-200 hover:border-neutral-300 rounded-xl text-sm font-semibold text-neutral-700 transition-all group"
+                >
+                  <span>Alterar senha</span>
+                  <i className="fa-solid fa-chevron-right text-neutral-400 group-hover:text-neutral-600 transition-colors"></i>
+                </button>
+              </div>
+            )}
           </div>
 
           <div>
