@@ -23,7 +23,7 @@ export default function HeaderFull({ userData }: any) {
           <div className="flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden relative w-10 h-8 focus:outline-none mr-2"
+              className="md:hidden relative w-10 h-8 focus:outline-none mr-2 cursor-pointer"
               aria-label="Menu"
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
@@ -130,16 +130,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                  <a
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      navigate('/favorites');
-                    }}
-                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
-                  >
-                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Favoritos</span>
-                  </a>
+                
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
@@ -159,7 +150,7 @@ export default function HeaderFull({ userData }: any) {
           <div className="md:hidden flex items-center">
           {userData ? (<button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="focus:outline-none"
+              className="focus:outline-none cursor-pointer"
               aria-label="Menu do usuário"
             >
               <img
@@ -206,16 +197,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                  <a
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      navigate('/favorites');
-                    }}
-                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
-                  >
-                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Favoritos</span>
-                  </a>
+                 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {

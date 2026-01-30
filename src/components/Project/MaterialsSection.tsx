@@ -43,7 +43,7 @@ export default function MaterialsSection({
                 <button
                   type="button"
                   onClick={() => removeMaterialField(index)}
-                  className="mt-6 w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                  className="mt-6 w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
                   title="Remover material"
                 >
                   <i className="fas fa-times"></i>
@@ -55,7 +55,7 @@ export default function MaterialsSection({
           <button
             type="button"
             onClick={addMaterialField}
-            className="w-full px-4 py-3 border-2 border-dashed border-zinc-300 dark:border-[#3d444d] rounded-xl hover:border-black dark:hover:border-white hover:bg-zinc-50 dark:hover:bg-[#202830] transition-all"
+            className="w-full px-4 py-3 border-2 border-dashed border-zinc-300 dark:border-[#3d444d] rounded-xl hover:border-black dark:hover:border-white hover:bg-zinc-50 dark:hover:bg-[#202830] transition-all cursor-pointer"
           >
             <div className="flex items-center justify-center gap-2 text-zinc-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors">
               <i className="fas fa-plus"></i>

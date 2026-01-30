@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { decodeJWT } from '../utils/jwt';
 
+import Loading from '../components/Universal/Loading';
 import EditProjectSidebar from '../components/EditProject/EditProjectSidebar';
 import GeneralSection from '../components/EditProject/GeneralSection';
 import MediaSection from '../components/EditProject/MediaSection';
@@ -57,6 +58,10 @@ export default function EditProjectPage() {
     const [galleryImages, setGalleryImages] = useState<File[]>([]);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
     const [existingGallery, setExistingGallery] = useState<string[]>([]);
+
+    // Estados para autocomplete de localização
+    const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+    const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
 
     const usageTypeOptions = [
         'Residencial',
@@ -135,6 +140,60 @@ export default function EditProjectPage() {
             fetchProject();
         }
     }, [projectId]);
+
+    // Função para buscar sugestões de localização usando Nominatim (OpenStreetMap)
+    const fetchLocationSuggestions = async (query: string) => {
+        if (query.length < 3) {
+            setLocationSuggestions([]);
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=br&limit=5&addressdetails=1`,
+                {
+                    headers: {
+                        'Accept-Language': 'pt-BR,pt;q=0.9'
+                    }
+                }
+            );
+
+            const suggestions: string[] = response.data.map((item: any) => {
+                // Formatar endereço de forma mais limpa
+                const parts = [];
+                if (item.address.city) parts.push(item.address.city);
+                else if (item.address.town) parts.push(item.address.town);
+                else if (item.address.municipality) parts.push(item.address.municipality);
+                
+                if (item.address.state) parts.push(item.address.state);
+                
+                return parts.join(', ');
+            });
+
+            // Remover duplicatas
+            const uniqueSuggestions = [...new Set(suggestions)];
+            setLocationSuggestions(uniqueSuggestions);
+        } catch (err) {
+            console.error('Erro ao buscar sugestões de localização:', err);
+        }
+    };
+
+    // Debounce para evitar muitas requisições
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (location) {
+                fetchLocationSuggestions(location);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [location]);
+
+    const handleLocationSelect = (suggestion: string) => {
+        setLocation(suggestion);
+        setShowLocationSuggestions(false);
+        setLocationSuggestions([]);
+    };
 
     const getImageUrl = (path: string | null | undefined): string => {
         if (!path) return '';
@@ -244,6 +303,34 @@ export default function EditProjectPage() {
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
 
+        // VALIDAÇÃO: Nome do projeto obrigatório e máximo 70 caracteres
+        if (!name.trim()) {
+            setError('Preencha o nome do projeto');
+            setActiveSection('geral');
+            return;
+        }
+
+        if (name.length > 70) {
+            setError('O nome do projeto deve ter no máximo 70 caracteres');
+            setActiveSection('geral');
+            return;
+        }
+
+        // VALIDAÇÃO: Descrição obrigatória e máximo 1000 caracteres
+        if (!description.trim()) {
+            setError('Preencha a descrição do projeto');
+            setActiveSection('geral');
+            return;
+        }
+
+        if (description.length > 1000) {
+            setError('A descrição deve ter no máximo 1000 caracteres');
+            setActiveSection('geral');
+            return;
+        }
+
+        // NOTA: Localização NÃO é obrigatória - validação removida
+
         if (usageTypes.length === 0) {
             setError('Selecione pelo menos um tipo de uso');
             setActiveSection('technical');
@@ -259,12 +346,6 @@ export default function EditProjectPage() {
         if (usageTypes.includes('Outro') && !customUsageType.trim()) {
             setError('Especifique o tipo de uso "Outro"');
             setActiveSection('technical');
-            return;
-        }
-
-        if (!name.trim() || !location.trim() || !description.trim()) {
-            setError('Preencha todos os campos obrigatórios');
-            setActiveSection('geral');
             return;
         }
 
@@ -362,14 +443,7 @@ export default function EditProjectPage() {
     };
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-neutral-50 dark:bg-[#202830]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-3 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
-                    <p className="text-gray-600 dark:text-neutral-400 text-sm font-medium">Carregando projeto...</p>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     return (
@@ -451,6 +525,10 @@ export default function EditProjectPage() {
                                                 handleMaterialChange={handleMaterialChange}
                                                 addMaterialField={addMaterialField}
                                                 removeMaterialField={removeMaterialField}
+                                                locationSuggestions={locationSuggestions}
+                                                showLocationSuggestions={showLocationSuggestions}
+                                                setShowLocationSuggestions={setShowLocationSuggestions}
+                                                handleLocationSelect={handleLocationSelect}
                                             />
                                         )}
 

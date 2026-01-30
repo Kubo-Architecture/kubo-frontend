@@ -88,19 +88,18 @@ export default function UserProfile() {
             }}
           />
 
-          {profileData.bio && <Biografy bio={profileData.bio} />}
-
+          {profileData?.bio && profileData.bio.trim() !== "" && (<Biografy bio={profileData.bio} />)}
           <div className="relative">
-            <ProjectGallery 
-              userId={profileData.userId} 
-              onProjectsLoaded={(count: number) => setProjectCount(count)} 
+            <ProjectGallery
+              userId={profileData.userId}
+              onProjectsLoaded={(count: number) => setProjectCount(count)}
               setIsLoadingChild={setLoading}
               isOwnProfile={isOwnProfile}
             />
           </div>
 
           {showBannerSettings && (
-            <BannerSettings 
+            <BannerSettings
               onClose={handleCloseBannerSettings}
               onBannerUpdated={handleBannerUpdated}
             />

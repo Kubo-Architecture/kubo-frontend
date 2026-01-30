@@ -13,7 +13,7 @@ export default function ActionButtons({ isSubmitting, onCancel }: ActionButtonsP
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-6 py-3.5 border border-zinc-300 dark:border-[#3d444d] text-zinc-700 dark:text-neutral-300 rounded-xl hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors text-sm font-medium"
+          className="flex-1 px-6 py-3.5 border border-zinc-300 dark:border-[#3d444d] text-zinc-700 dark:text-neutral-300 rounded-xl hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors text-sm font-medium cursor-pointer"
         >
           Cancelar
         </button>
@@ -24,7 +24,7 @@ export default function ActionButtons({ isSubmitting, onCancel }: ActionButtonsP
           className={`flex-1 px-6 py-3.5 rounded-xl text-white text-sm font-medium transition-colors ${
             isSubmitting
               ? 'bg-zinc-400 dark:bg-neutral-600 cursor-not-allowed'
-              : 'bg-black dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-neutral-200'
+              : 'bg-black dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-neutral-200 cursor-pointer'
           }`}
         >
           {isSubmitting ? (
