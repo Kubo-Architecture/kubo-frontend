@@ -11,7 +11,7 @@ export default function ProjectPage() {
     const [project, setProject] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [isLiked, setIsLiked] = useState<boolean>(false);
-    const [isSaved, setIsSaved] = useState<boolean>(false);
+    const [isFavorited, setIsFavorited] = useState<boolean>(false);
     const [likesCount, setLikesCount] = useState<number>(0);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [, setImageError] = useState<boolean>(false);
@@ -44,9 +44,7 @@ export default function ProjectPage() {
                 setProject(data);
                 setLikesCount(data.likes ?? 0);
                 setIsLiked(data.isLiked ?? false);
-
-                const savedBookmarks = JSON.parse(localStorage.getItem('savedProjects') || '[]');
-                setIsSaved(savedBookmarks.includes(projectId));
+                setIsFavorited(data.isFavorited ?? false);
             } catch (err: any) {
                 console.error('Error fetching project:', err);
                 if (err.response?.status === 404) {
@@ -82,14 +80,23 @@ export default function ProjectPage() {
         }
     };
 
-    const handleSave = () => {
-        const savedBookmarks = JSON.parse(localStorage.getItem('savedProjects') || '[]');
-        
-        if (isSaved) {
-            setIsSaved(false);
-        } else {
-            savedBookmarks.push(projectId);
-            setIsSaved(true);
+    const handleFavorite = async () => {
+        if (!currentUserId) {
+            alert('Faça login para favoritar projetos.');
+            return;
+        }
+
+        try {
+            if (isFavorited) {
+                await axios.delete(`${API_URL}/projects/${projectId}/favorite/${currentUserId}`);
+                setIsFavorited(false);
+            } else {
+                await axios.post(`${API_URL}/projects/${projectId}/favorite`, { userId: currentUserId });
+                setIsFavorited(true);
+            }
+        } catch (err) {
+            console.error('Error toggling favorite:', err);
+            alert('Não foi possível atualizar o favorito. Tente novamente.');
         }
     };
 
@@ -268,16 +275,16 @@ export default function ProjectPage() {
                             </button>
 
                             <button
-                                onClick={handleSave}
+                                onClick={handleFavorite}
                                 className={`flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
-                                    isSaved 
+                                    isFavorited 
                                         ? 'border-amber-200 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
                                         : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
                                 }`}
-                                aria-label={isSaved ? 'Remover dos salvos' : 'Salvar'}
+                                aria-label={isFavorited ? 'Remover dos favoritos' : 'Favoritar'}
                             >
-                                <i className={`${isSaved ? 'fas' : 'far'} fa-star text-base`}></i>
-                                <span className="text-sm font-medium">Salvar</span>
+                                <i className={`${isFavorited ? 'fas' : 'far'} fa-star text-base`}></i>
+                                <span className="text-sm font-medium">Favoritar</span>
                             </button>
 
                             {/* ✅ BOTÃO DE EDITAR - SÓ APARECE SE FOR O DONO */}
