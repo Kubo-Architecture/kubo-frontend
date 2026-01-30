@@ -54,7 +54,7 @@ export default function TechnicalSection({
                             key={type}
                             type="button"
                             onClick={() => handleUsageTypeToggle(type)}
-                            className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                            className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all cursor-pointer ${
                                 usageTypes.includes(type)
                                     ? 'border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-black'
                                     : 'border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-300 hover:border-gray-400 dark:hover:border-gray-500'

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
 import axios from 'axios';
+import Loading from '../components/Universal/Loading';
 
 export default function ProjectPage() {
     const location = useLocation();
@@ -145,14 +146,7 @@ export default function ProjectPage() {
     }, [selectedImage, showDeleteModal]);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-3 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
-                    <p className="text-gray-600 dark:text-neutral-400 text-sm font-medium">Carregando projeto...</p>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     if (!project) {
@@ -170,7 +164,7 @@ export default function ProjectPage() {
                     </p>
                     <button
                         onClick={() => navigate('/gallery')}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all active:scale-[0.98]"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all active:scale-[0.98] cursor-pointer"
                     >
                         <i className="fas fa-arrow-left text-xs"></i>
                         <span>Voltar à galeria</span>
@@ -560,13 +554,13 @@ export default function ProjectPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors"
+                                className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors cursor-pointer"
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleDeleteProject}
-                                className="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors"
+                                className="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors cursor-pointer"
                             >
                                 Sim, Deletar
                             </button>
@@ -583,7 +577,7 @@ export default function ProjectPage() {
                 >
                     <button
                         onClick={closeLightbox}
-                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
                         aria-label="Fechar"
                     >
                         <i className="fas fa-times text-xl"></i>

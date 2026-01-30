@@ -305,13 +305,13 @@ export default function AccountSection() {
                     setShowPasswordModal(false);
                     setChangePassword('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordSubmit}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
                 >
                   Continuar
                 </button>
@@ -378,13 +378,13 @@ export default function AccountSection() {
                     setNewPassword('');
                     setConfirmNewPassword('');
                   }}
-                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
+                  className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handlePasswordConfirm}
-                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
+                  className="flex-1 px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
                 >
                   Alterar Senha
                 </button>
@@ -414,7 +414,7 @@ export default function AccountSection() {
 
               <button
                 onClick={() => setShowPasswordSuccessModal(false)}
-                className="w-full px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all"
+                className="w-full px-4 py-3 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl text-sm font-semibold text-white dark:text-black transition-all cursor-pointer"
               >
                 Fechar
               </button>

@@ -229,7 +229,7 @@ export default function EditProfileModal({
           </h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -370,7 +370,7 @@ export default function EditProfileModal({
           <button
             type="button"
             onClick={handleClose}
-            className="px-6 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm font-medium"
+            className="px-6 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>
@@ -384,7 +384,7 @@ export default function EditProfileModal({
               ${
                 isSaving
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700'
+                  : 'bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer'
               }
             `}
           >

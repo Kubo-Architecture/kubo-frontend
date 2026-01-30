@@ -467,21 +467,21 @@ export default function PhotoEditorModal({
                        !currentPhotoUrl.includes('defaultUserPhoto');
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div
         ref={modalRef}
-        className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"
+        className="relative w-full max-w-lg bg-white dark:bg-[#151B23] rounded-xl shadow-2xl border border-gray-200 dark:border-[#3d444d] flex flex-col"
         style={{ maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
+        <div className="flex-shrink-0 bg-white dark:bg-[#151B23] border-b border-gray-200 dark:border-[#3d444d] px-6 py-4 rounded-t-xl">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               Editar foto
             </h2>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg"
+              className="text-gray-400 hover:text-gray-600 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors p-2 hover:bg-gray-100 dark:hover:bg-[#202830] rounded-lg cursor-pointer"
               disabled={isLoading}
               aria-label="Fechar"
             >
@@ -493,7 +493,7 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Conteúdo */}
-        <div className="flex-1 px-4 sm:px-6 py-4 overflow-y-auto">
+        <div className="flex-1 px-4 sm:px-6 py-4 overflow-y-auto bg-white dark:bg-[#151B23]">
           {previewUrl ? (
             <div className="space-y-4">
               <div 
@@ -551,7 +551,7 @@ export default function PhotoEditorModal({
 
               {/* Zoom Control */}
               <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-400 dark:text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
                 </svg>
                 <input
@@ -561,9 +561,9 @@ export default function PhotoEditorModal({
                   step="0.1"
                   value={zoom}
                   onChange={(e) => setZoom(parseFloat(e.target.value))}
-                  className="flex-1 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                  className="flex-1 h-1 bg-gray-200 dark:bg-[#3d444d] rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
                 />
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-400 dark:text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
                 </svg>
               </div>
@@ -574,17 +574,17 @@ export default function PhotoEditorModal({
             <div className="space-y-4">
               <div className="flex justify-center">
                 <div 
-                  className="w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] rounded-full bg-cover bg-center border-4 border-gray-200"
+                  className="w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] rounded-full bg-cover bg-center border-4 border-gray-200 dark:border-[#3d444d]"
                   style={{ backgroundImage: `url(${displayPhotoUrl})` }}
                 />
               </div>
 
               <div 
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-12 text-center cursor-pointer hover:border-black transition-colors"
+                className="border-2 border-dashed border-gray-300 dark:border-[#3d444d] rounded-lg p-6 sm:p-12 text-center cursor-pointer hover:border-black dark:hover:border-white transition-colors"
                 onClick={handleChooseNewPhoto}
               >
                 <svg
-                  className="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mb-2 sm:mb-3"
+                  className="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-gray-400 dark:text-neutral-500 mb-2 sm:mb-3"
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 48 48"
@@ -596,10 +596,10 @@ export default function PhotoEditorModal({
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-sm text-gray-600 mb-1">
+                <p className="text-sm text-gray-600 dark:text-neutral-400 mb-1">
                   Clique para escolher uma foto
                 </p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-400 dark:text-neutral-500">
                   PNG ou JPEG até 5MB
                 </p>
               </div>
@@ -616,14 +616,14 @@ export default function PhotoEditorModal({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 sm:px-6 py-4 rounded-b-xl">
+        <div className="flex-shrink-0 bg-white dark:bg-[#151B23] border-t border-gray-200 dark:border-[#3d444d] px-4 sm:px-6 py-4 rounded-b-xl">
           <div className="flex gap-2">
             {!previewUrl && (
               <>
                 {hasRealPhoto && (
                   <button
                     onClick={handleRemovePhoto}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                     type="button"
                   >
@@ -633,7 +633,7 @@ export default function PhotoEditorModal({
                 
                 <button
                   onClick={handleClose}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-neutral-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-[#3d444d] hover:border-gray-400 dark:hover:border-[#3d444d] rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                   disabled={isLoading}
                   type="button"
                 >
@@ -646,7 +646,7 @@ export default function PhotoEditorModal({
               <>
                 <button
                   onClick={handleChooseNewPhoto}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-black border border-gray-300 hover:border-gray-400 rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-neutral-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-[#3d444d] hover:border-gray-400 dark:hover:border-[#3d444d] rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                   disabled={isLoading}
                   type="button"
                 >
@@ -654,7 +654,7 @@ export default function PhotoEditorModal({
                 </button>
                 <button
                   onClick={handleSave}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-black hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white dark:text-black bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-neutral-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isLoading}
                   type="button"
                 >
