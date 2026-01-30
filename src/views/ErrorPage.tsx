@@ -1,22 +1,41 @@
-import HouseError from '../assets/icons/Universal/kubo-empty.svg';
+import Kubo404 from '../assets/icons/Universal/Kubo404.png';
+import Kubo500 from '../assets/icons/Universal/Kubo500.png';
 
 export default function ErrorPage() {
-  const errorCode = window.location.pathname.includes('500') ? '500' : '404';
-  const errorMessage = errorCode === '500' ? 'Erro interno no servidor' : 'Página não encontrada';
+  const is500 = window.location.pathname.includes('500');
+
+  const errorCode = is500 ? '500' : '404';
+  const errorMessage = is500
+    ? 'Erro interno no servidor'
+    : 'Página não encontrada';
+
+  const errorImage = is500 ?  Kubo500 : Kubo404;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="text-center">
-        {/* Error Icon */}
-        <div className="relative inline-block mb-8">
-          <img src={HouseError} alt="Error icon" className="w-64 h-64" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl font-extralight">{errorCode}</span>
-          </div>
-        </div>
+        {/* IMAGEM — QUASE COLADA */}
+        <img
+          src={errorImage}
+          alt="Erro"
+          className="
+            mx-auto
+            w-[500px]
+            md:w-[650px]
+            lg:w-[750px]
+            -mb-12
+          "
+        />
 
-        {/* Error message */}
-        <p className="text-xl text-gray-700">{errorMessage}</p>
+        {/* CÓDIGO — SEM ESPAÇO */}
+        <h1 className="text-6xl font-bold text-gray-900 leading-none mb-0">
+          {errorCode}
+        </h1>
+
+        {/* TEXTO */}
+        <p className="text-sm tracking-widest text-gray-600 uppercase mt-0">
+          {errorMessage}
+        </p>
       </div>
     </div>
   );
