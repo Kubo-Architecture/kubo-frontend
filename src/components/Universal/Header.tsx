@@ -23,7 +23,7 @@ export default function HeaderFull({ userData }: any) {
           <div className="flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden relative w-10 h-8 focus:outline-none mr-2"
+              className="md:hidden relative w-10 h-8 focus:outline-none mr-2 cursor-pointer"
               aria-label="Menu"
             >
               <div className="w-6 h-5 relative transform transition-all duration-300">
@@ -159,7 +159,7 @@ export default function HeaderFull({ userData }: any) {
           <div className="md:hidden flex items-center">
           {userData ? (<button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="focus:outline-none"
+              className="focus:outline-none cursor-pointer"
               aria-label="Menu do usuário"
             >
               <img

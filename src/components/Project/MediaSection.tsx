@@ -59,7 +59,7 @@ export default function MediaSection({
                       e.preventDefault();
                       removeMainImage();
                     }}
-                    className="bg-white text-red-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-50 flex items-center gap-2"
+                    className="bg-white text-red-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-50 flex items-center gap-2 cursor-pointer"
                   >
                     <i className="fas fa-trash"></i>
                     Remover
@@ -137,7 +137,7 @@ export default function MediaSection({
                       <button
                         type="button"
                         onClick={() => removeGalleryImage(i)}
-                        className="bg-white text-red-600 p-2 rounded-lg hover:bg-red-50"
+                        className="bg-white text-red-600 p-2 rounded-lg hover:bg-red-50 cursor-pointer"
                       >
                         <i className="fas fa-trash text-lg"></i>
                       </button>

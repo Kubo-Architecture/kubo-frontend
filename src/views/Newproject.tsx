@@ -406,7 +406,7 @@ export default function NewProject() {
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group cursor-pointer ${
                     activeSection === section.id
                       ? 'bg-white dark:bg-[#202830] dark:border-none dark:text-white text-black shadow-sm border border-neutral-200'
                       : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] dark:hover:text-white hover:text-black'

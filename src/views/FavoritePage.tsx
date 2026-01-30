@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../components/Universal/Loading';
 
 export default function FavoritePage() {
   const [viewMode, setViewMode] = useState<string>(() => {
@@ -106,14 +107,7 @@ export default function FavoritePage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#151B23] flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-          <p className="text-gray-400">Carregando favoritos...</p>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -176,7 +170,7 @@ export default function FavoritePage() {
                     {searchTerm && (
                       <button
                         onClick={() => setSearchTerm('')}
-                        className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 transition-colors"
+                        className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 transition-colors cursor-pointer"
                       >
                         <i className="fas fa-times text-sm sm:text-base"></i>
                       </button>

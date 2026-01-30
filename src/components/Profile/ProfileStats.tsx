@@ -197,7 +197,7 @@ export default function ProfileStats(props: any) {
                             </div>
                             <button 
                                 onClick={() => setShowLoginToast(false)}
-                                className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                                className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -228,7 +228,7 @@ export default function ProfileStats(props: any) {
                                 {props.ownProfile ? (
                                     <button 
                                         onClick={() => setIsEditProfileModalOpen(true)}
-                                        className="sm:hidden p-2 hover:bg-gray-100 dark:bg-[#27313D] dark:hover:bg-gray-500 rounded-full transition-colors"
+                                        className="sm:hidden p-2 hover:bg-gray-100 dark:bg-[#27313D] dark:hover:bg-gray-500 rounded-full transition-colors cursor-pointer"
                                         aria-label="Editar perfil"
                                     >
                                         <svg 
@@ -248,7 +248,7 @@ export default function ProfileStats(props: any) {
                                 ) : (
                                     <button 
                                         onClick={handleFollowToggle}
-                                        className={`sm:hidden px-4 py-2 rounded-lg transition-colors text-sm font-medium w-[110px] flex items-center justify-center ${
+                                        className={`sm:hidden px-4 py-2 rounded-lg transition-colors text-sm font-medium w-[110px] flex items-center justify-center cursor-pointer ${
                                             isFollowing 
                                                 ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
                                                 : 'bg-gray-900 text-white hover:bg-gray-800'
@@ -272,8 +272,8 @@ export default function ProfileStats(props: any) {
                             </div>
                             
                             <div 
-                                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
-                                onClick={handleOpenSeguidores}
+                                className="text-center"
+                                //onClick={handleOpenSeguidores}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguidoresCount}
@@ -284,8 +284,8 @@ export default function ProfileStats(props: any) {
                             </div>
                             
                             <div 
-                                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
-                                onClick={handleOpenSeguindo}
+                                className="text-center"
+                                //onClick={handleOpenSeguindo}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguindoCount}
@@ -352,7 +352,7 @@ export default function ProfileStats(props: any) {
                             </h2>
                             <button 
                                 onClick={() => setIsSeguidoresModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -413,7 +413,7 @@ export default function ProfileStats(props: any) {
                             </h2>
                             <button 
                                 onClick={() => setIsSeguindoModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -42,7 +42,7 @@ export default function TechnicalSpecsSection({
                 type="button"
                 onClick={() => handleUsageTypeToggle(type)}
                 disabled={!formData.usage_types.includes(type) && formData.usage_types.length >= 3}
-                className={`px-4 py-3.5 rounded-xl text-sm font-medium transition-all border-2 ${
+                className={`px-4 py-3.5 rounded-xl text-sm font-medium transition-all border-2 cursor-pointer ${
                   formData.usage_types.includes(type)
                     ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-md'
                     : 'bg-white text-zinc-700 border-zinc-300 hover:border-black hover:shadow-sm dark:bg-[#202830] dark:text-neutral-300 dark:border-[#3d444d] dark:hover:border-white'
@@ -110,7 +110,7 @@ export default function TechnicalSpecsSection({
                   status: prev.status === status.value ? '' : status.value
                 }));
               }}
-              className={`p-4 rounded-xl border-2 transition-all ${
+              className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
                 formData.status === status.value
                   ? 'border-black dark:border-white bg-black dark:bg-white shadow-md'
                   : 'border-zinc-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] hover:border-black dark:hover:border-white hover:shadow-sm'

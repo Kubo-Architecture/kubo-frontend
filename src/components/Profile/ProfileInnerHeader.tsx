@@ -34,7 +34,7 @@ export default function ProfileInnerHeader(props: any) {
         {props.ownProfile && props.onEditBannerClick && (
           <button
             onClick={props.onEditBannerClick}
-            className="absolute top-4 right-4 sm:right-6 md:right-8 lg:right-12 xl:right-16 2xl:right-24 bg-white hover:bg-gray-100 text-neutral-700 w-9 h-9 md:w-10 md:h-10 rounded-full transition-all shadow-md hover:shadow-lg z-10 flex items-center justify-center"
+            className="absolute top-4 right-4 sm:right-6 md:right-8 lg:right-12 xl:right-16 2xl:right-24 bg-white hover:bg-gray-100 text-neutral-700 w-9 h-9 md:w-10 md:h-10 rounded-full transition-all shadow-md hover:shadow-lg z-10 flex items-center justify-center cursor-pointer"
             aria-label="Editar banner"
           >
             <i className="fa-solid fa-pen text-xs md:text-sm"></i>

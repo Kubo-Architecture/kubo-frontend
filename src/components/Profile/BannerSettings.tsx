@@ -227,7 +227,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     <>
       {/* Modal Overlay */}
       <div
-        className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-2 sm:p-4"
+        className="fixed inset-0 bg-black/90 dark:bg-black/95 z-[100] flex items-center justify-center p-2 sm:p-4"
         onClick={handleOverlayClick}
       >
         {/* Modal Content */}
@@ -236,12 +236,12 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
           className="relative max-w-3xl w-full"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="bg-white rounded-lg overflow-hidden max-h-[85vh] flex flex-col">
-            <div className="p-4 sm:p-6 border-b border-gray-200 flex-shrink-0 flex items-center justify-between">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Escolha seu banner</h2>
+          <div className="bg-white dark:bg-[#151B23] rounded-lg overflow-hidden max-h-[85vh] flex flex-col border border-gray-200 dark:border-[#3d444d]">
+            <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-[#3d444d] flex-shrink-0 flex items-center justify-between">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Escolha seu banner</h2>
               <button
                 onClick={handleCloseClick}
-                className="text-gray-400 hover:text-gray-600 transition-colors text-2xl"
+                className="text-gray-400 hover:text-gray-600 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors text-2xl cursor-pointer"
                 type="button"
               >
                 <i className="fas fa-times"></i>
@@ -256,7 +256,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                   <div
                     key={index}
                     className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
-                      ? 'ring-4 ring-black ring-offset-0'
+                      ? 'ring-4 ring-black dark:ring-white ring-offset-0'
                       : 'hover:opacity-90'
                       }`}
                     onClick={() => {
@@ -283,7 +283,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
                 {/* Banner Personalizado - Ocupa 2 colunas no mobile */}
                 {(previewUrl || selectedFile) ? (
-                  <div className="relative rounded-2xl overflow-hidden ring-4 ring-black ring-offset-0 col-span-2 sm:col-span-1">
+                  <div className="relative rounded-2xl overflow-hidden ring-4 ring-black dark:ring-white ring-offset-0 col-span-2 sm:col-span-1">
                     <div className="aspect-[2.5/1] w-full">
                       <img
                         src={previewUrl || URL.createObjectURL(selectedFile!)}
@@ -292,7 +292,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                       />
                     </div>
                     <div className="absolute top-3 right-3">
-                      <div className="bg-black text-white rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                      <div className="bg-black dark:bg-white text-white dark:text-black rounded-full p-1 w-6 h-6 flex items-center justify-center">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
@@ -307,7 +307,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                           fileInputRef.current.value = '';
                         }
                       }}
-                      className="absolute top-3 left-3 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                      className="absolute top-3 left-3 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors cursor-pointer"
                       type="button"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -318,7 +318,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                 ) : (
                   <div
                     className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 col-span-2 sm:col-span-1 ${isDragging
-                      ? 'ring-4 ring-blue-400'
+                      ? 'ring-4 ring-blue-400 dark:ring-blue-500'
                       : 'hover:opacity-90'
                       }`}
                     onClick={handleCustomBannerClick}
@@ -326,7 +326,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                   >
-                    <div className="absolute inset-0 bg-gray-700"></div>
+                    <div className="absolute inset-0 bg-gray-700 dark:bg-[#202830]"></div>
 
                     <div className="relative aspect-[2.5/1] w-full flex flex-col items-center justify-center p-4">
                       <div className="mb-2">
@@ -358,7 +358,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                 <button 
                   onClick={handleCloseClick}
                   type="button"
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base font-medium"
+                  className="px-6 py-2 border border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#202830] transition-colors text-sm sm:text-base font-medium cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -368,13 +368,13 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                   onClick={handleSave}
                   disabled={(!selectedBanner && !selectedFile) || isLoading}
                   className={`px-6 py-2 rounded-lg transition-colors text-sm sm:text-base font-medium ${(!selectedBanner && !selectedFile) || isLoading
-                    ? 'bg-gray-400 cursor-not-allowed text-gray-600'
-                    : 'bg-black text-white hover:bg-gray-800'
+                    ? 'bg-gray-400 dark:bg-neutral-600 cursor-not-allowed text-gray-600 dark:text-neutral-400'
+                    : 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-neutral-200 cursor-pointer'
                     }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-5 w-5 mr-2 text-white dark:text-black" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
