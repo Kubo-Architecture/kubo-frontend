@@ -10,7 +10,7 @@ const ProjectCard = ({ project }: any) => {
 
     return (
         <div
-            className="group bg-[#1a2128] rounded-xl border border-gray-700 hover:border-gray-600 transition-all cursor-pointer overflow-hidden"
+            className="group bg-white dark:bg-[#1a2128] rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all cursor-pointer overflow-hidden shadow-sm hover:shadow-md"
             onClick={handleClick}
         >
             <div className="relative w-full h-48 sm:h-56 overflow-hidden">
@@ -33,15 +33,15 @@ const ProjectCard = ({ project }: any) => {
 
             <div className="p-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                    <h3 className="text-lg font-bold text-white transition-colors truncate">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white transition-colors truncate">
                         {project.name || project.title}
                     </h3>
                     {project.year && (
-                        <span className="text-gray-400 text-sm flex-shrink-0">{project.year}</span>
+                        <span className="text-gray-600 dark:text-gray-400 text-sm flex-shrink-0">{project.year}</span>
                     )}
                 </div>
 
-                <div className="flex flex-wrap gap-3 text-gray-400 text-xs mb-3">
+                <div className="flex flex-wrap gap-3 text-gray-600 dark:text-gray-400 text-xs mb-3">
                     {project.location && (
                         <div className="flex items-center gap-1">
                             <i className="fas fa-map-marker-alt"></i>
@@ -57,7 +57,7 @@ const ProjectCard = ({ project }: any) => {
                 </div>
 
                 {project.description && (
-                    <p className="text-gray-300 text-sm leading-relaxed mb-3 line-clamp-2">
+                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-3 line-clamp-2">
                         {project.description}
                     </p>
                 )}
@@ -67,13 +67,13 @@ const ProjectCard = ({ project }: any) => {
                         {project.tags.slice(0, 3).map((tag: string, index: number) => (
                             <span 
                                 key={index}
-                                className="px-2 py-0.5 bg-gray-800 text-gray-400 text-xs rounded-full hover:bg-gray-700 transition-colors"
+                                className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400 text-xs rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                             >
                                 {tag.startsWith('#') ? tag : `#${tag}`}
                             </span>
                         ))}
                         {project.tags.length > 3 && (
-                            <span className="px-2 py-0.5 text-gray-500 text-xs">
+                            <span className="px-2 py-0.5 text-gray-500 dark:text-gray-500 text-xs">
                                 +{project.tags.length - 3}
                             </span>
                         )}
@@ -81,7 +81,7 @@ const ProjectCard = ({ project }: any) => {
                 )}
 
                 {(project.category || project.usage_type || project.style) && (
-                    <div className="flex items-center gap-3 text-gray-400 text-xs pt-3 border-t border-gray-700">
+                    <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-xs pt-3 border-t border-gray-200 dark:border-gray-700">
                         {(project.category || project.usage_type) && (
                             <div className="flex items-center gap-1">
                                 <i className="fas fa-building"></i>
