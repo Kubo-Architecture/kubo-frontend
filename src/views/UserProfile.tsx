@@ -25,8 +25,15 @@ export default function UserProfile() {
 
     const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
 
+    console.log('🔍 [USER PROFILE] Buscando perfil:', username);
+
     axios.get(apiUrl)
       .then((res) => {
+        console.log('✅ [USER PROFILE] Dados recebidos do backend:', res.data);
+        console.log('   - name (username):', res.data.name);
+        console.log('   - nickname (exibição):', res.data.nickname);
+        console.log('   - bio:', res.data.bio);
+
         if (res.data.nickname === "") {
           navigate("/profile/nickname")
         }
@@ -35,7 +42,7 @@ export default function UserProfile() {
         setProfileData(res.data)
       })
       .catch((err) => {
-        console.error("Erro ao buscar perfil:", err)
+        console.error("❌ [USER PROFILE] Erro ao buscar perfil:", err)
         if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
           navigate("/error/404")
         }
@@ -62,6 +69,10 @@ export default function UserProfile() {
     )
   }
 
+  console.log('📊 [USER PROFILE] Renderizando ProfileStats com:');
+  console.log('   - name (passando):', profileData.name);
+  console.log('   - nickname (passando):', profileData.nickname);
+
   return (
     <div className="w-full min-h-screen relative bg-gray-50 dark:bg-[#151B23]">
       <div className="pt-16">
@@ -73,9 +84,10 @@ export default function UserProfile() {
             ownProfile={isOwnProfile}
             onEditBannerClick={() => setShowBannerSettings(true)}
           />
+          {/* ✅ CORREÇÃO: Passar os valores na ordem CORRETA */}
           <ProfileStats
-            name={profileData.nickname}
-            nickname={profileData.name}
+            name={profileData.name}        // ✅ Username (ex: "luksssf")
+            nickname={profileData.nickname} // ✅ Nome de exibição (ex: "Lucas Andrade")
             likes={profileData.likes || 0}
             projetos={projectCount || 0}
             ownProfile={isOwnProfile}
@@ -88,7 +100,10 @@ export default function UserProfile() {
             }}
           />
 
-          {profileData?.bio && profileData.bio.trim() !== "" && (<Biografy bio={profileData.bio} />)}
+          {profileData?.bio && profileData.bio.trim() !== "" && (
+            <Biografy bio={profileData.bio} />
+          )}
+          
           <div className="relative">
             <ProjectGallery
               userId={profileData.userId}
