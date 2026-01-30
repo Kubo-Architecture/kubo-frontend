@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectCard from './ProjectCard';
+import Loading from '../Universal/Loading';
 import axios from 'axios';
 import { getUserIdFromToken } from '../../utils/jwt';
 
@@ -269,9 +270,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
           {activeTab === 'favoritos' && (
             <>
               {favoritedLoading ? (
-                <div className="flex justify-center py-12">
-                  <div className="w-10 h-10 border-2 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin" />
-                </div>
+                <Loading />
               ) : favoritedProjects?.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {favoritedProjects?.map((project: any) => {
@@ -340,7 +339,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                   setShowDeleteModal(false);
                   setProjectToDelete(null);
                 }}
-                className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors"
+                className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors cursor-pointer"
                 disabled={isDeleting !== null}
               >
                 Cancelar
@@ -351,7 +350,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
                 className={`flex-1 px-4 py-3 rounded-xl font-medium transition-colors ${
                   isDeleting !== null
                     ? 'bg-red-400 cursor-not-allowed'
-                    : 'bg-red-500 hover:bg-red-600'
+                    : 'bg-red-500 hover:bg-red-600 cursor-pointer'
                 } text-white`}
               >
                 {isDeleting !== null ? (
@@ -382,7 +381,7 @@ const EmptyState = ({ icon, title, description, buttonText, onButtonClick, isOwn
     {buttonText && isOwnProfile && (
       <button 
         onClick={onButtonClick}
-        className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all duration-200 shadow-sm hover:shadow-md"
+        className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
       >
         {buttonText}
       </button>

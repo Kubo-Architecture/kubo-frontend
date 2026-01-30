@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { decodeJWT } from '../utils/jwt';
 
+import Loading from '../components/Universal/Loading';
 import EditProjectSidebar from '../components/EditProject/EditProjectSidebar';
 import GeneralSection from '../components/EditProject/GeneralSection';
 import MediaSection from '../components/EditProject/MediaSection';
@@ -442,14 +443,7 @@ export default function EditProjectPage() {
     };
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-neutral-50 dark:bg-[#202830]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-3 border-gray-200 dark:border-[#3d444d] border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
-                    <p className="text-gray-600 dark:text-neutral-400 text-sm font-medium">Carregando projeto...</p>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     return (

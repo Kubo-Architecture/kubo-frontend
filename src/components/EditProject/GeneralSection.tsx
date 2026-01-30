@@ -314,7 +314,7 @@ export default function GeneralSection({
                                                 e.stopPropagation();
                                                 removeMainImage();
                                             }}
-                                            className="bg-white text-gray-900 px-3 py-2 rounded-lg font-medium text-xs hover:bg-gray-100"
+                                            className="bg-white text-gray-900 px-3 py-2 rounded-lg font-medium text-xs hover:bg-gray-100 cursor-pointer"
                                         >
                                             Remover
                                         </button>
@@ -364,7 +364,7 @@ export default function GeneralSection({
                                 <button
                                     type="button"
                                     onClick={() => removeGalleryImage(i)}
-                                    className="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 flex items-center justify-center"
+                                    className="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 flex items-center justify-center cursor-pointer"
                                 >
                                     <i className="fas fa-times"></i>
                                 </button>
@@ -395,7 +395,7 @@ export default function GeneralSection({
                                     type="button"
                                     onClick={() => handleUsageTypeToggle(type)}
                                     disabled={!usageTypes.includes(type) && usageTypes.length >= 3}
-                                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border-2 ${
+                                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border-2 cursor-pointer ${
                                         usageTypes.includes(type)
                                             ? 'bg-gray-900 text-white border-gray-900 dark:bg-white dark:text-black dark:border-white'
                                             : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 dark:bg-[#202830] dark:text-neutral-300 dark:border-[#3d444d]'
@@ -503,7 +503,7 @@ export default function GeneralSection({
                                 <button
                                     type="button"
                                     onClick={() => removeMaterialField(index)}
-                                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                                 >
                                     <i className="fas fa-times"></i>
                                 </button>
@@ -514,7 +514,7 @@ export default function GeneralSection({
                     <button
                         type="button"
                         onClick={addMaterialField}
-                        className="text-sm text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white font-medium flex items-center"
+                        className="text-sm text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white font-medium flex items-center cursor-pointer"
                     >
                         <i className="fas fa-plus mr-2"></i>
                         Adicionar material

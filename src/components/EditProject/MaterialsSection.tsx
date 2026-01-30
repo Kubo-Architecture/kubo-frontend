@@ -39,7 +39,7 @@ export default function MaterialsSection({
                                 <button
                                     type="button"
                                     onClick={() => removeMaterialField(index)}
-                                    className="px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                                    className="px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors cursor-pointer"
                                 >
                                     <i className="fas fa-times"></i>
                                 </button>
@@ -50,7 +50,7 @@ export default function MaterialsSection({
                     <button
                         type="button"
                         onClick={addMaterialField}
-                        className="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-[#3d444d] text-gray-600 dark:text-neutral-400 rounded-xl hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-all text-sm font-medium"
+                        className="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-[#3d444d] text-gray-600 dark:text-neutral-400 rounded-xl hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-all text-sm font-medium cursor-pointer"
                     >
                         <i className="fas fa-plus mr-2"></i>
                         Adicionar Material

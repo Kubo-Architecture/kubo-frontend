@@ -43,7 +43,7 @@ export default function MediaSection({
                         <button
                             type="button"
                             onClick={removeMainImage}
-                            className="absolute top-3 right-3 w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors flex items-center justify-center shadow-lg"
+                            className="absolute top-3 right-3 w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors flex items-center justify-center shadow-lg cursor-pointer"
                         >
                             <i className="fas fa-times"></i>
                         </button>
@@ -89,7 +89,7 @@ export default function MediaSection({
                                 <button
                                     type="button"
                                     onClick={() => removeGalleryImage(index)}
-                                    className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600"
+                                    className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600 cursor-pointer"
                                 >
                                     <i className="fas fa-times text-sm"></i>
                                 </button>

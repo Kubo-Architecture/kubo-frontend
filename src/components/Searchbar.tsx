@@ -110,7 +110,7 @@ export default function SearchBar({
               onSearch('');
               setShowSuggestions(false);
             }}
-            className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 transition-colors cursor-pointer"
           >
             <i className="fas fa-times text-sm sm:text-base"></i>
           </button>

@@ -41,7 +41,7 @@ export default function EditProjectSidebar({
                         <button
                             key={section.id}
                             onClick={() => setActiveSection(section.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group ${
+                            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left group cursor-pointer ${
                                 activeSection === section.id
                                     ? 'bg-white dark:bg-[#202830] dark:border-none dark:text-white text-black shadow-sm border border-neutral-200'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-[#202830] dark:hover:text-white hover:text-black'
@@ -63,7 +63,7 @@ export default function EditProjectSidebar({
                     <button
                         type="button"
                         onClick={() => setShowPreview(!showPreview)}
-                        className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 ${
+                        className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 cursor-pointer ${
                             showPreview
                                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                                 : 'bg-gray-100 dark:bg-[#202830] text-gray-700 dark:text-neutral-400 hover:bg-gray-200 dark:hover:bg-[#2a3340]'
@@ -87,7 +87,7 @@ export default function EditProjectSidebar({
                         type="button"
                         onClick={onCancel}
                         disabled={saving}
-                        className="px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        className="px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
                         Cancelar
                     </button>
@@ -95,7 +95,7 @@ export default function EditProjectSidebar({
                     <button
                         onClick={onSubmit}
                         disabled={saving}
-                        className="px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                        className="px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
                     >
                         {saving ? (
                             <>
