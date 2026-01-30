@@ -1,4 +1,4 @@
-import KuboIcon from "../../../assets/icons/Universal/kubo-main-icon.svg";
+import KuboIcon from "../../../assets/icons/Universal/kubo.png";
 
 export default function Logocontainer() {
   return (
