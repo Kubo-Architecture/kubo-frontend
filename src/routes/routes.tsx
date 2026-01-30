@@ -10,7 +10,6 @@ import ProjectPage from "../views/ProjectPage.tsx";
 import ForgotPassword from "../views/ForgotPassword.tsx";
 import Gallery from "../views/Gallery.tsx";
 import UserConfig from "../views/UserConfig.tsx";
-import FavoritePage from "../views/FavoritePage.js";
 import MaintenanceScreen from "../views/MaintenanceScreen.tsx";
 import NewProject from "../views/Newproject.tsx";
 import EditProjectPage  from "../views/EditProjectPage.tsx";
@@ -30,7 +29,6 @@ export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess, onGall
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/gallery" element={<Gallery onInitialLoadComplete={onGalleryLoaded} />} />
             <Route path="/config" element={<UserConfig />} />
-            <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/MaintenanceScreen" element={<MaintenanceScreen />} />
             <Route path="/project/new" element={<NewProject />} />
             <Route path="/edit-project/:projectId" element={<EditProjectPage/>} />

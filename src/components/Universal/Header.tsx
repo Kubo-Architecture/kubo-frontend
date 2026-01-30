@@ -130,16 +130,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                  <a
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      navigate('/favorites');
-                    }}
-                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
-                  >
-                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Favoritos</span>
-                  </a>
+                
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
@@ -206,16 +197,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                  <a
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      navigate('/favorites');
-                    }}
-                    className="cursor-pointer flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors"
-                  >
-                    <i className="fas fa-star mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Favoritos</span>
-                  </a>
+                 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
