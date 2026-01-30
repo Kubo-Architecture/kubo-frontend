@@ -12,9 +12,8 @@ export default function ErrorPage() {
   const errorImage = is500 ?  Kubo500 : Kubo404;
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white dark:bg-[#151B23] flex items-center justify-center px-4">
       <div className="text-center">
-        {/* IMAGEM — QUASE COLADA */}
         <img
           src={errorImage}
           alt="Erro"
@@ -27,13 +26,11 @@ export default function ErrorPage() {
           "
         />
 
-        {/* CÓDIGO — SEM ESPAÇO */}
-        <h1 className="text-6xl font-bold text-gray-900 leading-none mb-0">
+        <h1 className="text-6xl font-bold text-gray-900 dark:text-white leading-none mb-0">
           {errorCode}
         </h1>
 
-        {/* TEXTO */}
-        <p className="text-sm tracking-widest text-gray-600 uppercase mt-0">
+        <p className="text-sm tracking-widest text-gray-600 dark:text-gray-400 uppercase mt-0">
           {errorMessage}
         </p>
       </div>

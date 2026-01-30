@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import KuboIcon from "../../assets/icons/Universal/kubo-main-icon.svg";
-import KuboIconWhite from "../../assets/icons/Universal/kubo-main-icon-white.svg";
+import KuboIcon from "../../assets/icons/Universal/kubo.png";
+import KuboIconWhite from "../../assets/icons/Universal/KuboIcon.png";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
 import { useNavigate } from 'react-router-dom';
 
@@ -53,22 +53,22 @@ export default function HeaderFull({ userData }: any) {
             </nav>
           </div>
 
-          <div className="w-6 h-7 flex justify-center items-center">
-            <a href="/" className='flex dark:hidden w-full h-full justify-center items-center'>
+          <div className="flex items-center">
+            <a href="/" className="flex dark:hidden">
               <img
                 src={KuboIcon}
                 alt="Kubo Icon"
                 draggable={false}
-                className="h-full w-full"
+                className="w-15 h-15 object-contain"
               />
             </a>
 
-            <a href="/" className='hidden dark:flex w-full h-full justify-center items-center'>
+            <a href="/" className="hidden dark:flex">
               <img
                 src={KuboIconWhite}
                 alt="Kubo Icon"
                 draggable={false}
-                className="h-full w-full"
+                className="w-15 h-15 object-contain"
               />
             </a>
           </div>
@@ -76,22 +76,22 @@ export default function HeaderFull({ userData }: any) {
           <div className="hidden md:flex relative justify-end w-20">
             {userData ? (
               <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center space-x-3 focus:outline-none cursor-pointer"
-              aria-label="Menu do usuário"
-            >
-              <div className="relative">
-                <img
-                  className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                  src={userData?.photoUrl || DefaultProfile}
-                  alt="Foto do perfil"
-                />
-              </div>
-              <i
-                className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''
-                  }`}
-              ></i>
-            </button>) : (
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="flex items-center space-x-3 focus:outline-none cursor-pointer"
+                aria-label="Menu do usuário"
+              >
+                <div className="relative">
+                  <img
+                    className="h-10 w-10 rounded-full border border-gray-300 object-cover"
+                    src={userData?.photoUrl || DefaultProfile}
+                    alt="Foto do perfil"
+                  />
+                </div>
+                <i
+                  className={`fas fa-chevron-down text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''
+                    }`}
+                ></i>
+              </button>) : (
               <span className='cursor-pointer' onClick={() => navigate('/login')}>Entrar</span>
             )}
 
@@ -130,7 +130,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                
+
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {
@@ -148,7 +148,7 @@ export default function HeaderFull({ userData }: any) {
           </div>
 
           <div className="md:hidden flex items-center">
-          {userData ? (<button
+            {userData ? (<button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none cursor-pointer"
               aria-label="Menu do usuário"
@@ -197,7 +197,7 @@ export default function HeaderFull({ userData }: any) {
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
                   </a>
-                 
+
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
                   <a
                     onClick={() => {

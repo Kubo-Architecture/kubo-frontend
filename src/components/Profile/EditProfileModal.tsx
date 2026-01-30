@@ -31,24 +31,48 @@ export default function EditProfileModal({
   });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
-  const [usernameError, setUsernameError] = useState(''); // ✅ Erro de validação do username
+  const [usernameError, setUsernameError] = useState('');
 
   const modalRef = useRef<HTMLDivElement>(null);
   const MAX_BIO_LENGTH = 500;
-  const MAX_USERNAME_LENGTH = 25; // ✅ Mesmo limite do NicknameInput
+  const MAX_USERNAME_LENGTH = 25;
+  const MIN_USERNAME_LENGTH = 4;
   
-  // ✅ REGEX IGUAL AO NicknameInput
   const usernameRegex = /^[a-zA-Z0-9._]+$/;
 
-  // Carregar dados do usuário quando o modal abrir
+  const detectAndFixInversion = (name: string, nickname: string) => {
+    const nameHasSpaces = /\s/.test(name);
+    const nameHasSpecialChars = /[^a-zA-Z0-9._]/.test(name);
+    const nicknameIsUsername = usernameRegex.test(nickname) && !/\s/.test(nickname);
+    const isInverted = (nameHasSpaces || nameHasSpecialChars) && nicknameIsUsername;
+
+    if (isInverted) {
+      return {
+        name: nickname,
+        nickname: name,
+        wasInverted: true
+      };
+    }
+
+    return {
+      name: name,
+      nickname: nickname,
+      wasInverted: false
+    };
+  };
+
   useEffect(() => {
     if (isOpen && userData) {
+      const corrected = detectAndFixInversion(userData.name, userData.nickname);
+
       setFormData({
-        nickname: userData.nickname || '',
-        name: userData.name || '',
+        nickname: corrected.nickname || '',
+        name: corrected.name || '',
         bio: userData.bio || '',
       });
+      
       setUsernameError('');
+      setError('');
     }
   }, [isOpen, userData]);
 
@@ -120,7 +144,6 @@ export default function EditProfileModal({
     }
   }, [isOpen]);
 
-  // Esconder header quando modal abrir
   useEffect(() => {
     if (isOpen) {
       const header = document.getElementById('main-header');
@@ -148,18 +171,25 @@ export default function EditProfileModal({
     resetForm();
   };
 
-  // ✅ Validar formato do username (IGUAL ao NicknameInput)
   const validateUsername = (username: string): string => {
     if (!username.trim()) {
       return 'Por favor, insira um nome de usuário';
     }
 
-    if (!usernameRegex.test(username)) {
-      return 'Use apenas letras, números, underline (_) ou ponto (.) sem espaços';
+    if (username.length < MIN_USERNAME_LENGTH) {
+      return `O nome de usuário deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`;
     }
 
     if (username.length > MAX_USERNAME_LENGTH) {
       return `O nome de usuário deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`;
+    }
+
+    if (username.endsWith('.')) {
+      return 'O nome de usuário não pode terminar com ponto (.)';
+    }
+
+    if (!usernameRegex.test(username)) {
+      return 'Use apenas letras, números, underline (_) ou ponto (.) sem espaços';
     }
 
     return '';
@@ -170,7 +200,6 @@ export default function EditProfileModal({
     
     let processedValue = value;
     
-    // ✅ Limitar bio
     if (name === 'bio') {
       processedValue = value.replace(/\n/g, ' ');
       if (processedValue.length > MAX_BIO_LENGTH) {
@@ -178,7 +207,6 @@ export default function EditProfileModal({
       }
     }
 
-    // ✅ USERNAME (name): converter para minúsculas e limitar a 25 caracteres
     if (name === 'name') {
       processedValue = value.toLowerCase();
       
@@ -186,7 +214,6 @@ export default function EditProfileModal({
         return;
       }
 
-      // Limpar erro ao digitar
       if (usernameError) {
         setUsernameError('');
       }
@@ -202,7 +229,6 @@ export default function EditProfileModal({
     e.preventDefault();
     if (isSaving) return;
 
-    // ✅ Validar username antes de enviar
     const usernameValidationError = validateUsername(formData.name);
     if (usernameValidationError) {
       setUsernameError(usernameValidationError);
@@ -239,20 +265,21 @@ export default function EditProfileModal({
         onProfileUpdate(response.data);
       }
 
+      const originalUsername = userData.name;
+      const newUsername = formData.name;
+      const usernameChanged = originalUsername !== newUsername;
+
       setTimeout(() => {
-        const usernameChanged = formData.name !== userData.name;
         handleClose();
         
         if (usernameChanged) {
-          window.location.href = `/profile/${formData.name}`;
+          window.location.href = `/profile/${newUsername}`;
         } else {
           window.location.reload();
         }
-      }, 1000);
+      }, 800);
 
     } catch (err: any) {
-      console.error('Erro ao atualizar:', err);
-      
       if (err.response?.status === 409) {
         setError('Este nome de usuário já está em uso');
       } else {
@@ -289,7 +316,6 @@ export default function EditProfileModal({
         className="relative w-full max-w-2xl bg-white dark:bg-[#1a2332] rounded-2xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex justify-between items-center px-6 py-5 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Editar Perfil
@@ -305,9 +331,7 @@ export default function EditProfileModal({
           </button>
         </div>
 
-        {/* Conteúdo com scroll */}
         <div className="overflow-y-auto max-h-[calc(100vh-220px)] px-6 py-6">
-          {/* Mensagens de feedback */}
           {error && (
             <div className={`mb-6 p-4 rounded-lg ${
               error.startsWith('success:')
@@ -328,14 +352,12 @@ export default function EditProfileModal({
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Informações Básicas */}
             <div className="space-y-5">
               <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                 Informações Básicas
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* ✅ NOME DE EXIBIÇÃO PRIMEIRO (nickname) - SEM @ */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Nome de exibição
@@ -346,14 +368,13 @@ export default function EditProfileModal({
                     value={formData.nickname}
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Lucas Andrade"
+                    placeholder="Seu nome completo"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Este é o nome que aparece no seu perfil
                   </p>
                 </div>
 
-                {/* ✅ NOME DE USUÁRIO DEPOIS (name) - COM @ e validações */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Nome de usuário
@@ -373,14 +394,12 @@ export default function EditProfileModal({
                           ? 'border-red-500 focus:ring-red-500'
                           : 'border-gray-300 dark:border-gray-600 focus:ring-gray-900 dark:focus:ring-white'
                       }`}
-                      placeholder="lucas"
+                      placeholder="nomedeusuario"
                     />
-                    {/* ✅ Contador de caracteres */}
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
                       {formData.name.length}/{MAX_USERNAME_LENGTH}
                     </div>
                   </div>
-                  {/* ✅ Mensagem de erro */}
                   {usernameError && (
                     <p className="text-xs text-red-600 dark:text-red-400">
                       {usernameError}
@@ -388,7 +407,7 @@ export default function EditProfileModal({
                   )}
                   {!usernameError && (
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Usado na URL do seu perfil
+                      Mínimo {MIN_USERNAME_LENGTH} caracteres, não pode terminar com ponto
                     </p>
                   )}
                 </div>
@@ -414,14 +433,13 @@ export default function EditProfileModal({
                   rows={4}
                   maxLength={MAX_BIO_LENGTH}
                   className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Conte um pouco sobre você, sua experiência e áreas de atuação..."
+                  placeholder="Conte um pouco sobre você..."
                 ></textarea>
               </div>
             </div>
           </form>
         </div>
 
-        {/* Footer com botões fixos */}
         <div className="flex justify-end items-center gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a2332]">
           <button
             type="button"

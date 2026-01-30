@@ -14,6 +14,7 @@ export default function ProfileStats(props: any) {
     const [seguindoList, setSeguindoList] = useState<any[]>([]);
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+    const [bio, setBio] = useState(''); // ✅ ADICIONADO
     
     const currentUserId = getUserIdFromToken();
     const seguidoresModalRef = useRef<HTMLDivElement>(null);
@@ -41,6 +42,16 @@ export default function ProfileStats(props: any) {
                 .then((res: any) => setIsFollowing(res.data.isFollowing))
         }
 
+        // ✅ BUSCAR BIO DO USUÁRIO
+        axios.get(`${import.meta.env.VITE_API_URL}/users/${props.userId}`)
+            .then((res: any) => {
+                console.log('✅ [PROFILE STATS] Bio carregada:', res.data.bio);
+                setBio(res.data.bio || '');
+            })
+            .catch((err) => {
+                console.error('❌ [PROFILE STATS] Erro ao buscar bio:', err);
+            });
+
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
     }, [isSeguidoresModalOpen, isSeguindoModalOpen, props.userId, currentUserId]);
@@ -62,7 +73,6 @@ export default function ProfileStats(props: any) {
             document.documentElement.style.overflow = 'hidden';
             
             return () => {
-                // Restaurar valores originais (remover propriedade se estava vazia)
                 if (originalBodyOverflow) {
                     document.body.style.overflow = originalBodyOverflow;
                 } else {
@@ -93,7 +103,6 @@ export default function ProfileStats(props: any) {
                     document.documentElement.style.removeProperty('overflow');
                 }
                 
-                // Restaurar posição do scroll
                 window.scrollTo(0, scrollY);
             };
         }
@@ -170,6 +179,11 @@ export default function ProfileStats(props: any) {
     };
 
     const handleProfileUpdate = (updatedData: any) => {
+        // ✅ ATUALIZAR BIO LOCALMENTE
+        if (updatedData.bio !== undefined) {
+            setBio(updatedData.bio);
+        }
+        
         if (props.onProfileUpdate) {
             props.onProfileUpdate(updatedData);
         }
@@ -457,7 +471,7 @@ export default function ProfileStats(props: any) {
                 </div>
             )}
 
-            {/* Modal de Editar Perfil */}
+            {/* ✅ Modal de Editar Perfil - COM BIO */}
             <EditProfileModal
                 isOpen={isEditProfileModalOpen}
                 onClose={() => setIsEditProfileModalOpen(false)}
@@ -465,7 +479,7 @@ export default function ProfileStats(props: any) {
                     userId: props.userId,
                     nickname: props.nickname || '',
                     name: props.name || '',
-                    bio: props.bio || '',
+                    bio: bio, // ✅ PASSANDO A BIO DO ESTADO
                     profession: props.profession || '',
                     phone: props.phone || '',
                     email: props.email || '',

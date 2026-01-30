@@ -22,6 +22,8 @@ export default function NicknameInput() {
   }, []);
 
   const nicknameRegex = /^[a-zA-Z0-9._]+$/;
+  const MIN_USERNAME_LENGTH = 4; // ✅ ADICIONADO
+  const MAX_USERNAME_LENGTH = 25;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -32,13 +34,25 @@ export default function NicknameInput() {
       return;
     }
 
-    if (!nicknameRegex.test(nickname)) {
-      setError('Use apenas letras, números, underline (_) ou ponto (.) sem espaços.');
+    // ✅ VALIDAÇÃO DE COMPRIMENTO MÍNIMO
+    if (nickname.length < MIN_USERNAME_LENGTH) {
+      setError(`O nome de usuário deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`);
       return;
     }
 
-    if (nickname.length > 25) {
-      setError('O apelido deve ter no máximo 25 caracteres.');
+    if (nickname.length > MAX_USERNAME_LENGTH) {
+      setError(`O nome de usuário deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`);
+      return;
+    }
+
+    // ✅ NÃO PERMITIR PONTO NO FINAL
+    if (nickname.endsWith('.')) {
+      setError('O nome de usuário não pode terminar com ponto (.)');
+      return;
+    }
+
+    if (!nicknameRegex.test(nickname)) {
+      setError('Use apenas letras, números, underline (_) ou ponto (.) sem espaços');
       return;
     }
 
@@ -127,10 +141,10 @@ export default function NicknameInput() {
                 className={`w-full pl-3 pr-13 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched && error ? 'border-red-500' : 'border-gray-300'
                   }`}
                 autoFocus={true}
-                maxLength={25}
+                maxLength={MAX_USERNAME_LENGTH}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs">
-                {nickname.length}/25
+                {nickname.length}/{MAX_USERNAME_LENGTH}
               </div>
             </div>
             {/* Altura fixa para mensagem de erro */}
