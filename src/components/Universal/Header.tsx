@@ -4,7 +4,7 @@ import KuboIconWhite from "../../assets/icons/Universal/KuboIcon.png";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
 import { useNavigate } from 'react-router-dom';
 
-export default function HeaderFull({ userData }: any) {
+export default function HeaderFull({ userData, loading }: any) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -74,7 +74,9 @@ export default function HeaderFull({ userData }: any) {
           </div>
 
           <div className="hidden md:flex relative justify-end w-20">
-            {userData ? (
+            {loading ? (
+              <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            ) : userData ? (
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="flex items-center space-x-3 focus:outline-none cursor-pointer"
@@ -148,7 +150,9 @@ export default function HeaderFull({ userData }: any) {
           </div>
 
           <div className="md:hidden flex items-center">
-            {userData ? (<button
+            {loading ? (
+              <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            ) : userData ? (<button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="focus:outline-none cursor-pointer"
               aria-label="Menu do usuário"

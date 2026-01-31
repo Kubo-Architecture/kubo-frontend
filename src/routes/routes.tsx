@@ -15,10 +15,10 @@ import NewProject from "../views/Newproject.tsx";
 import EditProjectPage  from "../views/EditProjectPage.tsx";
 
 
-export default function Rotas({ isAuthenticated, hasNick, onLoginSuccess, onGalleryLoaded }: any) {
+export default function Rotas({ isAuthenticated, hasNick, authPending, onLoginSuccess, onGalleryLoaded }: any) {
     return (
         <Routes>
-            <Route path="/" element={isAuthenticated ? hasNick ? <Navigate to="/gallery" /> : <Navigate to="/profile/nickname" /> : <LandingPage />} />
+            <Route path="/" element={authPending ? null : (isAuthenticated ? (hasNick ? <Navigate to="/gallery" replace /> : <Navigate to="/profile/nickname" replace />) : <LandingPage />)} />
             <Route path="/login" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
             <Route path="/error/:errorCode" element={<ErrorPage />} />
             <Route path="/register" element={<SignUpPage />} />

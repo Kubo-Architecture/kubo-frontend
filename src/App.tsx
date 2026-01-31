@@ -12,7 +12,7 @@ const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
 
 function App() {
   const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(() => !!getUserIdFromToken());
   const [galleryLoaded, setGalleryLoaded] = useState<boolean>(false);
   const location = useLocation();
 
@@ -66,11 +66,12 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      {!isHeaderDisabled && <HeaderFull userData={userData} />}
+      {!isHeaderDisabled && <HeaderFull userData={userData} loading={loading} />}
 
       <RouterLink
         isAuthenticated={!!userData}
         hasNick={!!userData?.nickname}
+        authPending={loading}
         onLoginSuccess={checkUser}
         onGalleryLoaded={() => setGalleryLoaded(true)}
       />
