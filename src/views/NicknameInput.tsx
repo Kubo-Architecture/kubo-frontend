@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Home, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { getUserIdFromToken } from '../utils/jwt';
 
 export default function NicknameInput() {
@@ -65,7 +65,18 @@ export default function NicknameInput() {
     setError('');
 
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/users/`;
+      const baseUrl = import.meta.env.VITE_API_URL || '';
+      // Verificar se o nickname já existe no banco
+      const checkRes = await axios.get(
+        `${baseUrl}/users/check-username`,
+        { params: { username: nickname.trim(), userId } }
+      );
+      if (checkRes.data?.available === false) {
+        setError(checkRes.data?.message || 'Este nome de usuário já está em uso');
+        return;
+      }
+
+      const apiUrl = `${baseUrl}/users/`;
       const response = await axios.put(
         apiUrl,
         {
@@ -84,7 +95,10 @@ export default function NicknameInput() {
         window.location.reload();
       }
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || 'Erro ao enviar apelido';
+      const errorMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        'Erro ao enviar apelido';
       setError(errorMsg);
       console.error('Erro na requisição:', err);
     } finally {

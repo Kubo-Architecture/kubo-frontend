@@ -42,15 +42,10 @@ export default function ProfileStats(props: any) {
                 .then((res: any) => setIsFollowing(res.data.isFollowing))
         }
 
-        // ✅ BUSCAR BIO DO USUÁRIO
+        // Buscar bio do usuário
         axios.get(`${import.meta.env.VITE_API_URL}/users/${props.userId}`)
-            .then((res: any) => {
-                console.log('✅ [PROFILE STATS] Bio carregada:', res.data.bio);
-                setBio(res.data.bio || '');
-            })
-            .catch((err) => {
-                console.error('❌ [PROFILE STATS] Erro ao buscar bio:', err);
-            });
+            .then((res: any) => setBio(res.data.bio || ''))
+            .catch(() => setBio(''));
 
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
@@ -125,8 +120,7 @@ export default function ProfileStats(props: any) {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/followers-list/${props.userId}`);
             setSeguidoresList(response.data.followers || []);
-        } catch (error) {
-            console.error('Erro ao buscar seguidores:', error);
+        } catch {
             setSeguidoresList([]);
         }
     };
@@ -136,8 +130,7 @@ export default function ProfileStats(props: any) {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/following-list/${props.userId}`);
             setSeguindoList(response.data.following || []);
-        } catch (error) {
-            console.error('Erro ao buscar seguindo:', error);
+        } catch {
             setSeguindoList([]);
         }
     };
@@ -170,8 +163,7 @@ export default function ProfileStats(props: any) {
             .then(() => {
                 setIsFollowLoading(false);
             })
-            .catch((err) => {
-                console.error('Erro ao seguir/deseguir:', err);
+            .catch(() => {
                 setIsFollowing(isFollowing);
                 setSeguidoresCount((prev: number) => isFollowing ? (prev || 0) + 1 : Math.max(0, (prev || 0) - 1));
                 setIsFollowLoading(false);

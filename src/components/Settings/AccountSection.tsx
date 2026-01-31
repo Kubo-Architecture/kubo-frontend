@@ -1,18 +1,24 @@
 import { Trash2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { getUserIdFromToken } from '../../utils/jwt';
+import { getUserIdFromToken, isTokenExpired } from '../../utils/jwt';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+type ValidatedCredential = { type: 'password'; value: string } | { type: 'email'; value: string } | null;
+
 export default function AccountSection() {
+  const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteEmailModal, setShowDeleteEmailModal] = useState(false);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPasswordConfirmModal, setShowPasswordConfirmModal] = useState(false);
   const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
+  const [deleteEmail, setDeleteEmail] = useState('');
   const [changePassword, setChangePassword] = useState('');
   const [currentPasswordForChange, setCurrentPasswordForChange] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -20,10 +26,14 @@ export default function AccountSection() {
   const [userEmail, setUserEmail] = useState('');
   const [hasPassword, setHasPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [validatedCredential, setValidatedCredential] = useState<ValidatedCredential>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteModalRef = useRef<HTMLDivElement>(null);
+  const deleteEmailModalRef = useRef<HTMLDivElement>(null);
   const deleteConfirmModalRef = useRef<HTMLDivElement>(null);
   const passwordModalRef = useRef<HTMLDivElement>(null);
   const passwordConfirmModalRef = useRef<HTMLDivElement>(null);
@@ -56,9 +66,16 @@ export default function AccountSection() {
         if (showDeleteModal) {
           setShowDeleteModal(false);
           setDeletePassword('');
+          setDeleteError('');
+        }
+        if (showDeleteEmailModal) {
+          setShowDeleteEmailModal(false);
+          setDeleteEmail('');
+          setDeleteError('');
         }
         if (showDeleteConfirmModal) {
           setShowDeleteConfirmModal(false);
+          setValidatedCredential(null);
         }
         if (showPasswordModal) {
           setShowPasswordModal(false);
@@ -80,11 +97,11 @@ export default function AccountSection() {
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [showDeleteModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
+  }, [showDeleteModal, showDeleteEmailModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
 
   // Bloquear scroll quando qualquer modal estiver aberto
   useEffect(() => {
-    const isAnyModalOpen = showDeleteModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal;
+    const isAnyModalOpen = showDeleteModal || showDeleteEmailModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal;
     
     if (isAnyModalOpen) {
       const scrollY = window.scrollY;
@@ -137,32 +154,140 @@ export default function AccountSection() {
         window.scrollTo(0, scrollY);
       };
     }
-  }, [showDeleteModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
+  }, [showDeleteModal, showDeleteEmailModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
 
   const handleDeleteAccount = () => {
-    setShowDeleteModal(true);
-  };
-
-  const handleDeletePasswordSubmit = () => {
-    // Validar senha aqui
-    if (deletePassword.trim()) {
-      setShowDeleteModal(false);
-      setShowDeleteConfirmModal(true);
-      setDeletePassword('');
+    setDeleteError('');
+    setValidatedCredential(null);
+    if (hasPassword) {
+      setShowDeleteModal(true);
+    } else {
+      setShowDeleteEmailModal(true);
     }
   };
 
-  const handleDeleteConfirm = () => {
-    // Lógica para excluir a conta
-    console.log('Conta excluída');
-    setShowDeleteConfirmModal(false);
+  const handleDeletePasswordSubmit = async () => {
+    if (!deletePassword.trim()) return;
+    if (!ensureValidToken()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setDeleteError('Configuração da API indisponível.');
+      return;
+    }
+    setDeleteError('');
+    setIsVerifying(true);
+    try {
+      const res = await axios.post(
+        `${baseUrl}/users/verify-password`,
+        { currentPassword: deletePassword },
+        { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
+      );
+      if (res.status === 200) {
+        setValidatedCredential({ type: 'password', value: deletePassword });
+        setShowDeleteModal(false);
+        setDeletePassword('');
+        setShowDeleteConfirmModal(true);
+      }
+    } catch (err: unknown) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.error) ||
+        'Senha incorreta. Tente novamente.';
+      setDeleteError(msg);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleDeleteEmailSubmit = async () => {
+    if (!deleteEmail.trim()) return;
+    if (!ensureValidToken()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      setDeleteError('Configuração da API indisponível.');
+      return;
+    }
+    setDeleteError('');
+    setIsVerifying(true);
+    try {
+      const res = await axios.post(
+        `${baseUrl}/users/verify-email-for-deletion`,
+        { email: deleteEmail.trim() },
+        getAuthConfig()
+      );
+      if (res.status === 200) {
+        setValidatedCredential({ type: 'email', value: deleteEmail.trim() });
+        setShowDeleteEmailModal(false);
+        setDeleteEmail('');
+        setShowDeleteConfirmModal(true);
+      }
+    } catch (err: unknown) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.error) ||
+        'Email não confere. Tente novamente.';
+      setDeleteError(msg);
+      if (typeof msg === 'string' && msg.includes('login novamente')) {
+        localStorage.removeItem('token');
+        navigate('/login', { replace: true });
+      }
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!validatedCredential) return;
+    if (!ensureValidToken()) return;
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) return;
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      const body = validatedCredential.type === 'password'
+        ? { password: validatedCredential.value }
+        : { email: validatedCredential.value };
+      await axios.delete(`${baseUrl}/users/account`, {
+        ...getAuthConfig(),
+        data: body,
+      });
+      localStorage.removeItem('token');
+      setShowDeleteConfirmModal(false);
+      setValidatedCredential(null);
+      navigate('/login', { replace: true });
+    } catch (err: unknown) {
+      const msg =
+        (axios.isAxiosError(err) && err.response?.data?.error) ||
+        'Não foi possível excluir a conta. Tente novamente.';
+      setDeleteError(msg);
+      if (typeof msg === 'string' && msg.includes('login novamente')) {
+        localStorage.removeItem('token');
+        navigate('/login', { replace: true });
+      }
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const getBaseUrl = () => API_URL || import.meta.env.VITE_API_URL || '';
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    if (!token || token === 'null' || token === 'undefined') return {};
+    const trimmed = token.trim();
+    return trimmed ? { Authorization: `Bearer ${trimmed}` } : {};
+  };
+
+  const getAuthConfig = () => ({
+    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+    withCredentials: true,
+  });
+
+  const ensureValidToken = (): boolean => {
+    if (isTokenExpired() || !getAuthHeaders().Authorization) {
+      localStorage.removeItem('token');
+      navigate('/login', { replace: true });
+      return false;
+    }
+    return true;
   };
 
   const handleChangePassword = () => {
@@ -173,6 +298,7 @@ export default function AccountSection() {
 
   const handlePasswordSubmit = async () => {
     if (!changePassword.trim()) return;
+    if (!ensureValidToken()) return;
     const baseUrl = getBaseUrl();
     if (!baseUrl) {
       setPasswordError('Configuração da API indisponível.');
@@ -184,7 +310,7 @@ export default function AccountSection() {
       const res = await axios.post(
         `${baseUrl}/users/verify-password`,
         { currentPassword: changePassword },
-        { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
+        getAuthConfig()
       );
       if (res.status !== 200) {
         setPasswordError('Senha atual incorreta. Tente novamente.');
@@ -199,6 +325,10 @@ export default function AccountSection() {
         (axios.isAxiosError(err) && err.response?.data?.error) ||
         'Senha atual incorreta. Tente novamente.';
       setPasswordError(msg);
+      if (typeof msg === 'string' && msg.includes('login novamente')) {
+        localStorage.removeItem('token');
+        navigate('/login', { replace: true });
+      }
     } finally {
       setIsVerifying(false);
     }
@@ -210,6 +340,7 @@ export default function AccountSection() {
       return;
     }
     if (!newPassword.trim()) return;
+    if (!ensureValidToken()) return;
     const baseUrl = getBaseUrl();
     if (!baseUrl) {
       setPasswordError('Configuração da API indisponível.');
@@ -221,7 +352,7 @@ export default function AccountSection() {
       await axios.put(
         `${baseUrl}/users/password`,
         { currentPassword: currentPasswordForChange, newPassword },
-        { headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' } }
+        getAuthConfig()
       );
       setShowPasswordConfirmModal(false);
       setShowPasswordSuccessModal(true);
@@ -233,6 +364,10 @@ export default function AccountSection() {
         (axios.isAxiosError(err) && err.response?.data?.error) ||
         'Não foi possível alterar a senha. Tente novamente.';
       setPasswordError(msg);
+      if (typeof msg === 'string' && msg.includes('login novamente')) {
+        localStorage.removeItem('token');
+        navigate('/login', { replace: true });
+      }
     } finally {
       setIsChanging(false);
     }
@@ -253,13 +388,14 @@ export default function AccountSection() {
 
     return createPortal(
       <>
-        {/* Modal de Senha para Excluir Conta */}
+        {/* Modal de Senha para Excluir Conta (usuário com senha) */}
         {showDeleteModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
             onClick={(e) => handleOverlayClick(e, deleteModalRef, () => {
               setShowDeleteModal(false);
               setDeletePassword('');
+              setDeleteError('');
             })}
           >
             <div 
@@ -269,8 +405,14 @@ export default function AccountSection() {
             >
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-black dark:text-white mb-2">Confirmar Exclusão</h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua senha para continuar</p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite sua senha para continuar com a exclusão da conta</p>
               </div>
+
+              {deleteError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                  {deleteError}
+                </div>
+              )}
 
               <div className="mb-6">
                 <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
@@ -280,7 +422,7 @@ export default function AccountSection() {
                 <input
                   type="password"
                   value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
+                  onChange={(e) => { setDeletePassword(e.target.value); setDeleteError(''); }}
                   placeholder="Digite sua senha"
                   className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && handleDeletePasswordSubmit()}
@@ -292,16 +434,84 @@ export default function AccountSection() {
                   onClick={() => {
                     setShowDeleteModal(false);
                     setDeletePassword('');
+                    setDeleteError('');
                   }}
-                  className="cursor-pointer flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
+                  disabled={isVerifying}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleDeletePasswordSubmit}
-                  className="cursor-pointer flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
+                  disabled={isVerifying || !deletePassword.trim()}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
                 >
-                  Continuar
+                  {isVerifying ? 'Verificando...' : 'Continuar'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Email para Excluir Conta (usuário sem senha) */}
+        {showDeleteEmailModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => handleOverlayClick(e, deleteEmailModalRef, () => {
+              setShowDeleteEmailModal(false);
+              setDeleteEmail('');
+              setDeleteError('');
+            })}
+          >
+            <div 
+              ref={deleteEmailModalRef}
+              className="bg-white dark:bg-[#151B23] rounded-2xl max-w-md w-full p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Confirmar Exclusão</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Digite seu email para continuar com a exclusão da conta</p>
+              </div>
+
+              {deleteError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                  {deleteError}
+                </div>
+              )}
+
+              <div className="mb-6">
+                <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
+                  <i className="fa-solid fa-envelope text-neutral-600 dark:text-neutral-500"></i>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={deleteEmail}
+                  onChange={(e) => { setDeleteEmail(e.target.value); setDeleteError(''); }}
+                  placeholder="Digite seu email"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && handleDeleteEmailSubmit()}
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowDeleteEmailModal(false);
+                    setDeleteEmail('');
+                    setDeleteError('');
+                  }}
+                  disabled={isVerifying}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeleteEmailSubmit}
+                  disabled={isVerifying || !deleteEmail.trim()}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
+                >
+                  {isVerifying ? 'Verificando...' : 'Continuar'}
                 </button>
               </div>
             </div>
@@ -312,7 +522,13 @@ export default function AccountSection() {
         {showDeleteConfirmModal && (
           <div 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            onClick={(e) => handleOverlayClick(e, deleteConfirmModalRef, () => setShowDeleteConfirmModal(false))}
+            onClick={(e) => handleOverlayClick(e, deleteConfirmModalRef, () => {
+              if (!isDeleting) {
+                setShowDeleteConfirmModal(false);
+                setValidatedCredential(null);
+                setDeleteError('');
+              }
+            })}
           >
             <div 
               ref={deleteConfirmModalRef}
@@ -323,22 +539,34 @@ export default function AccountSection() {
                 <div className="w-16 h-16 bg-red-100 dark:bg-[#2e1a1a] rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="fa-solid fa-triangle-exclamation text-2xl text-red-600 dark:text-red-400"></i>
                 </div>
-                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Tem certeza absoluta?</h3>
+                <h3 className="text-xl font-bold text-black dark:text-white mb-2">Excluir conta definitivamente?</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente excluídos.</p>
               </div>
 
+              {deleteError && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                  {deleteError}
+                </div>
+              )}
+
               <div className="flex gap-3">
                 <button
-                  onClick={() => setShowDeleteConfirmModal(false)}
-                  className="cursor-pointer flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all"
+                  onClick={() => {
+                    setShowDeleteConfirmModal(false);
+                    setValidatedCredential(null);
+                    setDeleteError('');
+                  }}
+                  disabled={isDeleting}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-neutral-100 dark:bg-[#202830] dark:border dark:border-[#3d444d] hover:bg-neutral-200 dark:hover:bg-[#151B23] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-400 transition-all disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleDeleteConfirm}
-                  className="cursor-pointer flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all"
+                  disabled={isDeleting}
+                  className="cursor-pointer flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
                 >
-                  Excluir Conta
+                  {isDeleting ? 'Excluindo...' : 'Excluir definitivamente'}
                 </button>
               </div>
             </div>

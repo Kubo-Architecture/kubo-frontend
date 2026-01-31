@@ -25,15 +25,8 @@ export default function UserProfile() {
 
     const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
 
-    console.log('🔍 [USER PROFILE] Buscando perfil:', username);
-
     axios.get(apiUrl)
       .then((res) => {
-        console.log('✅ [USER PROFILE] Dados recebidos do backend:', res.data);
-        console.log('   - name (username):', res.data.name);
-        console.log('   - nickname (exibição):', res.data.nickname);
-        console.log('   - bio:', res.data.bio);
-
         if (res.data.nickname === "") {
           navigate("/profile/nickname")
         }
@@ -42,7 +35,6 @@ export default function UserProfile() {
         setProfileData(res.data)
       })
       .catch((err) => {
-        console.error("❌ [USER PROFILE] Erro ao buscar perfil:", err)
         if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
           navigate("/error/404")
         }
@@ -54,7 +46,6 @@ export default function UserProfile() {
   };
 
   const handleBannerUpdated = (newBanner: string) => {
-    console.log("Banner atualizado:", newBanner);
     setProfileData((prev: any) => ({
       ...prev,
       banner: newBanner
@@ -68,10 +59,6 @@ export default function UserProfile() {
       </div>
     )
   }
-
-  console.log('📊 [USER PROFILE] Renderizando ProfileStats com:');
-  console.log('   - name (passando):', profileData.name);
-  console.log('   - nickname (passando):', profileData.nickname);
 
   return (
     <div className="w-full min-h-screen relative bg-gray-50 dark:bg-[#151B23]">
