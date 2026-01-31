@@ -37,6 +37,7 @@ export default function EditProfileModal({
   const MAX_BIO_LENGTH = 500;
   const MAX_USERNAME_LENGTH = 25;
   const MIN_USERNAME_LENGTH = 4;
+  const MAX_NICKNAME_LENGTH = 30;
   
   const usernameRegex = /^[a-zA-Z0-9._]+$/;
 
@@ -181,6 +182,12 @@ export default function EditProfileModal({
     if (name === 'bio') {
       processedValue = value.replace(/\n/g, ' ');
       if (processedValue.length > MAX_BIO_LENGTH) {
+        return;
+      }
+    }
+
+    if (name === 'nickname') {
+      if (processedValue.length > MAX_NICKNAME_LENGTH) {
         return;
       }
     }
@@ -357,14 +364,20 @@ export default function EditProfileModal({
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Nome de exibição
                   </label>
-                  <input
-                    type="text"
-                    name="nickname"
-                    value={formData.nickname}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Seu nome completo"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="nickname"
+                      value={formData.nickname}
+                      onChange={handleChange}
+                      maxLength={MAX_NICKNAME_LENGTH}
+                      className="w-full px-4 py-2.5 pr-16 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      placeholder="Seu nome completo"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                      {formData.nickname.length}/{MAX_NICKNAME_LENGTH}
+                    </div>
+                  </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Este é o nome que aparece no seu perfil
                   </p>

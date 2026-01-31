@@ -4,8 +4,6 @@ import KuboIconWhite from "../assets/icons/Universal/KuboIcon.png";
 import Capalanding2 from "../assets/capalanding.png";
 import Capalanding from "../assets/capa2.png";
 
-const Mesa = "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80";
-
 function LandingPageHeader() {
   useEffect(() => {
     const handleSmoothScroll = (e: any) => {

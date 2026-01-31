@@ -283,7 +283,7 @@ export default function ProjectPage() {
                                 {project.photo_url ? (
                                     <>
                                         <img
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.02] transition-all duration-700"
+                                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-all duration-700"
                                             src={getImageUrl(project.photo_url)}
                                             alt={project.name}
                                             onError={() => setImageError(true)}
@@ -466,7 +466,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(project.gallery[0]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[0])}
                                                 alt={`${project.name} - Imagem 1`}
                                             />
@@ -486,7 +486,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(project.gallery[1]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[1])}
                                                 alt={`${project.name} - Imagem 2`}
                                             />
@@ -506,7 +506,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(project.gallery[2]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[2])}
                                                 alt={`${project.name} - Imagem 3`}
                                             />
@@ -526,7 +526,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(project.gallery[3]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[3])}
                                                 alt={`${project.name} - Imagem 4`}
                                             />
@@ -546,7 +546,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(project.gallery[4]))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(project.gallery[4])}
                                                 alt={`${project.name} - Imagem 5`}
                                             />
@@ -566,7 +566,7 @@ export default function ProjectPage() {
                                             onClick={() => openLightbox(getImageUrl(imageUrl))}
                                         >
                                             <img
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                                 src={getImageUrl(imageUrl)}
                                                 alt={`${project.name} - Imagem ${index + 6}`}
                                             />

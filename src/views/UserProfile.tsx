@@ -71,10 +71,10 @@ export default function UserProfile() {
             ownProfile={isOwnProfile}
             onEditBannerClick={() => setShowBannerSettings(true)}
           />
-          {/* ✅ CORREÇÃO: Passar os valores na ordem CORRETA */}
+          
           <ProfileStats
-            name={profileData.name}        // ✅ Username (ex: "luksssf")
-            nickname={profileData.nickname} // ✅ Nome de exibição (ex: "Lucas Andrade")
+            name={profileData.name}
+            nickname={profileData.nickname} 
             likes={profileData.likes || 0}
             projetos={projectCount || 0}
             ownProfile={isOwnProfile}
