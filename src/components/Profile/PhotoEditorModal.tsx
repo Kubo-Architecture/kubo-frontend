@@ -119,7 +119,6 @@ export default function PhotoEditorModal({
         if (showDeleteConfirm) {
           setShowDeleteConfirm(false);
         } else if (previewUrl) {
-          // Se estiver no modo de edição, volta para a tela inicial
           handleCancelEdit();
         } else {
           handleClose();
@@ -167,12 +166,10 @@ export default function PhotoEditorModal({
 
   const handleClickCurrentPhoto = async () => {
     if (!currentPhotoUrl || currentPhotoUrl.includes('defaultProfile')) {
-      // Se não tem foto, abre o seletor de arquivo
       fileInputRef.current?.click();
       return;
     }
 
-    // Se tem foto, carrega ela no modo de edição
     setIsEditingCurrentPhoto(true);
     setPreviewUrl(currentPhotoUrl);
     setZoom(1);
@@ -349,7 +346,6 @@ export default function PhotoEditorModal({
       return;
     }
 
-    // Se estiver editando a foto atual sem selecionar uma nova, precisa baixar a imagem
     if (isEditingCurrentPhoto && !selectedFile) {
       setIsLoading(true);
       try {

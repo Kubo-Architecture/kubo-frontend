@@ -17,14 +17,12 @@ interface GeneralSectionProps {
     setEndDate: (value: string) => void;
     isOngoing: boolean;
     setIsOngoing: (value: boolean) => void;
-    // Props para imagens
     mainImagePreview: string;
     galleryPreviews: string[];
     handleMainImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleGalleryImagesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     removeMainImage: () => void;
     removeGalleryImage: (index: number) => void;
-    // Props para especificações técnicas
     usageTypes: string[];
     usageTypeOptions: string[];
     handleUsageTypeToggle: (type: string) => void;
@@ -37,12 +35,10 @@ interface GeneralSectionProps {
     setTerrainArea: (value: string) => void;
     buildArea: string;
     setBuildArea: (value: string) => void;
-    // Props para materiais
     materials: string[];
     handleMaterialChange: (index: number, value: string) => void;
     addMaterialField: () => void;
     removeMaterialField: (index: number) => void;
-    // Props para autocomplete de localização
     locationSuggestions: string[];
     showLocationSuggestions: boolean;
     setShowLocationSuggestions: (show: boolean) => void;
@@ -139,7 +135,6 @@ export default function GeneralSection({
                             </div>
                         </div>
 
-                        {/* Localização - NÃO obrigatória, com autocomplete */}
                         <div className="relative">
                             <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                                 Localização
@@ -150,14 +145,12 @@ export default function GeneralSection({
                                 onChange={(e) => setLocation(e.target.value)}
                                 onFocus={() => setShowLocationSuggestions(true)}
                                 onBlur={() => {
-                                    // Delay para permitir o clique nas sugestões
                                     setTimeout(() => setShowLocationSuggestions(false), 200);
                                 }}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm"
                                 placeholder="São Paulo, SP"
                             />
                             
-                            {/* Dropdown de sugestões */}
                             {showLocationSuggestions && locationSuggestions.length > 0 && (
                                 <div className="absolute z-10 w-full mt-1 bg-white dark:bg-[#151B23] border border-gray-300 dark:border-[#3d444d] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                                     {locationSuggestions.map((suggestion, index) => (

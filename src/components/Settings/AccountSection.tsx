@@ -59,7 +59,6 @@ export default function AccountSection() {
     return () => window.removeEventListener('focus', fetchUser);
   }, []);
 
-  // Fechar modais com ESC
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || e.key === 'Esc') {
@@ -99,7 +98,6 @@ export default function AccountSection() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [showDeleteModal, showDeleteEmailModal, showDeleteConfirmModal, showPasswordModal, showPasswordConfirmModal, showPasswordSuccessModal]);
 
-  // Bloquear scroll quando qualquer modal estiver aberto
   useEffect(() => {
     const isAnyModalOpen = showDeleteModal || showDeleteEmailModal || showDeleteConfirmModal || showPasswordModal || showPasswordConfirmModal || showPasswordSuccessModal;
     
@@ -119,7 +117,6 @@ export default function AccountSection() {
       document.documentElement.style.overflow = 'hidden';
       
       return () => {
-        // Restaurar valores originais (remover propriedade se estava vazia)
         if (originalBodyOverflow) {
           document.body.style.overflow = originalBodyOverflow;
         } else {
@@ -150,7 +147,6 @@ export default function AccountSection() {
           document.documentElement.style.removeProperty('overflow');
         }
         
-        // Restaurar posição do scroll
         window.scrollTo(0, scrollY);
       };
     }

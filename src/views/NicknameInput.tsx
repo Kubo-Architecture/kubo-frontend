@@ -22,7 +22,7 @@ export default function NicknameInput() {
   }, []);
 
   const nicknameRegex = /^[a-zA-Z0-9._]+$/;
-  const MIN_USERNAME_LENGTH = 4; // ✅ ADICIONADO
+  const MIN_USERNAME_LENGTH = 4; 
   const MAX_USERNAME_LENGTH = 25;
 
   const handleSubmit = async (e: any) => {
@@ -34,7 +34,6 @@ export default function NicknameInput() {
       return;
     }
 
-    // ✅ VALIDAÇÃO DE COMPRIMENTO MÍNIMO
     if (nickname.length < MIN_USERNAME_LENGTH) {
       setError(`O nome de usuário deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`);
       return;
@@ -45,7 +44,6 @@ export default function NicknameInput() {
       return;
     }
 
-    // ✅ NÃO PERMITIR PONTO NO FINAL
     if (nickname.endsWith('.')) {
       setError('O nome de usuário não pode terminar com ponto (.)');
       return;
@@ -66,7 +64,6 @@ export default function NicknameInput() {
 
     try {
       const baseUrl = import.meta.env.VITE_API_URL || '';
-      // Verificar se o nickname já existe no banco
       const checkRes = await axios.get(
         `${baseUrl}/users/check-username`,
         { params: { username: nickname.trim(), userId } }

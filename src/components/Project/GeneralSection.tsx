@@ -83,7 +83,6 @@ export default function GeneralSection({
               </div>
             </div>
 
-            {/* Localização - NÃO obrigatória, com autocomplete */}
             <div className="relative">
               <label htmlFor="location" className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-2">
                 Localização
@@ -97,13 +96,11 @@ export default function GeneralSection({
                 onChange={handleChange}
                 onFocus={() => setShowLocationSuggestions(true)}
                 onBlur={() => {
-                  // Delay para permitir o clique nas sugestões
                   setTimeout(() => setShowLocationSuggestions(false), 200);
                 }}
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm text-zinc-900 dark:text-white"
               />
               
-              {/* Dropdown de sugestões */}
               {showLocationSuggestions && locationSuggestions.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white dark:bg-[#151B23] border border-zinc-300 dark:border-[#3d444d] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                   {locationSuggestions.map((suggestion, index) => (

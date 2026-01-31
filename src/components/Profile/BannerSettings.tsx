@@ -26,6 +26,12 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     BannerGreen,
     BannerBlack,
     BannerOrange,
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner_leklmj.png", 
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-yellow_qvhxia.png",
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-blue_iepk2y.png",
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-red_ehljjy.png ",
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889707/ChatGPT_Image_31_de_jan._de_2026_17_00_40_s3tery.png",
+    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889713/ChatGPT_Image_31_de_jan._de_2026_16_56_16_dnrhe3.png",
   ];
 
   useEffect(() => {
@@ -59,14 +65,12 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     document.body.style.width = '100%';
     document.documentElement.style.overflow = 'hidden';
     
-    // Esconder o header
     const header = document.getElementById('main-header');
     if (header) {
       header.style.display = 'none';
     }
     
     return () => {
-      // Restaurar valores originais (remover propriedade se estava vazia)
       if (originalBodyOverflow) {
         document.body.style.overflow = originalBodyOverflow;
       } else {
@@ -97,10 +101,8 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
         document.documentElement.style.removeProperty('overflow');
       }
       
-      // Restaurar posição do scroll
       window.scrollTo(0, scrollY);
       
-      // Mostrar o header novamente
       if (header) {
         header.style.display = '';
       }
@@ -134,12 +136,10 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert("Por favor, selecione apenas arquivos de imagem.");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("A imagem deve ter no máximo 5MB.");
       return;
     }
 
@@ -171,7 +171,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
 
   const handleSave = async () => {
     if (!selectedBanner && !selectedFile) {
-      alert("Por favor, selecione um banner ou faça upload de uma imagem.");
       return;
     }
 
@@ -179,7 +178,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     try {
       const userId = getUserIdFromToken();
       if (!userId) {
-        alert("Usuário não autenticado.");
         return;
       }
 
@@ -217,7 +215,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
       }
     } catch (error) {
       console.error("Erro ao salvar banner:", error);
-      alert("Erro ao salvar banner. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -255,7 +252,7 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
                 {predefinedBanners.map((banner, index) => (
                   <div
                     key={index}
-                    className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
+                    className={`relative rounded-2xl shadow-2xs border-1 border-neutral-200 overflow-hidden cursor-pointer transition-all duration-200 ${selectedBanner === banner
                       ? 'ring-4 ring-black dark:ring-white ring-offset-0'
                       : 'hover:opacity-90'
                       }`}

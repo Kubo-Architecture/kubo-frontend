@@ -14,7 +14,7 @@ export default function ProfileStats(props: any) {
     const [seguindoList, setSeguindoList] = useState<any[]>([]);
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-    const [bio, setBio] = useState(''); // ✅ ADICIONADO
+    const [bio, setBio] = useState(''); 
     
     const currentUserId = getUserIdFromToken();
     const seguidoresModalRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,6 @@ export default function ProfileStats(props: any) {
                 .then((res: any) => setIsFollowing(res.data.isFollowing))
         }
 
-        // Buscar bio do usuário
         axios.get(`${import.meta.env.VITE_API_URL}/users/${props.userId}`)
             .then((res: any) => setBio(res.data.bio || ''))
             .catch(() => setBio(''));
@@ -171,7 +170,6 @@ export default function ProfileStats(props: any) {
     };
 
     const handleProfileUpdate = (updatedData: any) => {
-        // ✅ ATUALIZAR BIO LOCALMENTE
         if (updatedData.bio !== undefined) {
             setBio(updatedData.bio);
         }
@@ -279,7 +277,6 @@ export default function ProfileStats(props: any) {
                             
                             <div 
                                 className="text-center"
-                                //onClick={handleOpenSeguidores}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguidoresCount}
@@ -291,7 +288,6 @@ export default function ProfileStats(props: any) {
                             
                             <div 
                                 className="text-center"
-                                //onClick={handleOpenSeguindo}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguindoCount}
@@ -301,7 +297,6 @@ export default function ProfileStats(props: any) {
                                 </p>
                             </div>
 
-                            {/* Botão Edit/Follow Desktop */}
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsEditProfileModalOpen(true)}
@@ -463,7 +458,6 @@ export default function ProfileStats(props: any) {
                 </div>
             )}
 
-            {/* ✅ Modal de Editar Perfil - COM BIO */}
             <EditProfileModal
                 isOpen={isEditProfileModalOpen}
                 onClose={() => setIsEditProfileModalOpen(false)}
@@ -471,7 +465,7 @@ export default function ProfileStats(props: any) {
                     userId: props.userId,
                     nickname: props.nickname || '',
                     name: props.name || '',
-                    bio: bio, // ✅ PASSANDO A BIO DO ESTADO
+                    bio: bio, 
                     profession: props.profession || '',
                     phone: props.phone || '',
                     email: props.email || '',

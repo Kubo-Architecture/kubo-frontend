@@ -12,7 +12,6 @@ import MaterialsSection from '../components/EditProject/MaterialsSection';
 import RequirementsSection from '../components/EditProject/RequirementsSection';
 import ProjectPreview from '../components/EditProject/ProjectPreview';
 
-// Obtém o nome do usuário a partir do token JWT armazenado
 const getUserNameFromToken = (): string | null => {
     const token = localStorage.getItem('token');
     if (!token) return null;
@@ -59,7 +58,6 @@ export default function EditProjectPage() {
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
     const [existingGallery, setExistingGallery] = useState<string[]>([]);
 
-    // Estados para autocomplete de localização
     const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
     const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
 
@@ -141,7 +139,6 @@ export default function EditProjectPage() {
         }
     }, [projectId]);
 
-    // Função para buscar sugestões de localização usando Nominatim (OpenStreetMap)
     const fetchLocationSuggestions = async (query: string) => {
         if (query.length < 3) {
             setLocationSuggestions([]);
@@ -159,7 +156,6 @@ export default function EditProjectPage() {
             );
 
             const suggestions: string[] = response.data.map((item: any) => {
-                // Formatar endereço de forma mais limpa
                 const parts = [];
                 if (item.address.city) parts.push(item.address.city);
                 else if (item.address.town) parts.push(item.address.town);
@@ -170,7 +166,6 @@ export default function EditProjectPage() {
                 return parts.join(', ');
             });
 
-            // Remover duplicatas
             const uniqueSuggestions = [...new Set(suggestions)];
             setLocationSuggestions(uniqueSuggestions);
         } catch (err) {
@@ -178,7 +173,6 @@ export default function EditProjectPage() {
         }
     };
 
-    // Debounce para evitar muitas requisições
     useEffect(() => {
         const timer = setTimeout(() => {
             if (location) {
@@ -303,7 +297,6 @@ export default function EditProjectPage() {
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
 
-        // VALIDAÇÃO: Nome do projeto obrigatório e máximo 70 caracteres
         if (!name.trim()) {
             setError('Preencha o nome do projeto');
             setActiveSection('geral');
@@ -316,7 +309,6 @@ export default function EditProjectPage() {
             return;
         }
 
-        // VALIDAÇÃO: Descrição obrigatória e máximo 1000 caracteres
         if (!description.trim()) {
             setError('Preencha a descrição do projeto');
             setActiveSection('geral');
@@ -329,7 +321,6 @@ export default function EditProjectPage() {
             return;
         }
 
-        // NOTA: Localização NÃO é obrigatória - validação removida
 
         if (usageTypes.length === 0) {
             setError('Selecione pelo menos um tipo de uso');

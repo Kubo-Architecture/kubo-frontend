@@ -58,7 +58,6 @@ const LoginForm = ({ onLoginSuccess }: any) => {
       ...prev,
       [name]: value
     }));
-    // Limpa erros quando o usuário começa a digitar
     if (errors.email || errors.password || errors.general) {
       setErrors({});
     }
@@ -82,7 +81,6 @@ const LoginForm = ({ onLoginSuccess }: any) => {
     const isValidForm = await validate();
     if (!isValidForm) {
       setIsValid(false);
-      // Mostra mensagem de erro se os campos não forem válidos
       setErrors((prev: any) => ({
         ...prev,
         general: 'Por favor, preencha todos os campos corretamente'
@@ -110,11 +108,9 @@ const LoginForm = ({ onLoginSuccess }: any) => {
 
       const user = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
 
-      // Remove o loading e mostra mensagem de sucesso
       setIsLoading(false);
       setShowSuccessMessage(true);
 
-      // Aguarda 2 segundos antes de redirecionar
       setTimeout(() => {
         if (user.data.nickname) {
           navigate(`/gallery`);

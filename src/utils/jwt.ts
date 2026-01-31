@@ -53,6 +53,6 @@ export function isTokenExpired(token?: string): boolean {
     return true;
   }
 
-  const expirationTime = decoded.exp * 1000; // Converter para milissegundos
+  const expirationTime = decoded.exp * 1000;
   return Date.now() >= expirationTime;
 }

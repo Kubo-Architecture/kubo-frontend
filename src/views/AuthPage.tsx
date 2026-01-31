@@ -20,7 +20,7 @@ const VerificationCodeInput = () => {
   const inputs = useRef<any>([]);
 
   const maxAttempts = 4;
-  const resendCooldown = 120; // 2 minutos em segundos
+  const resendCooldown = 120;
 
   useEffect(() => {
     inputs.current[0]?.focus();
@@ -32,7 +32,6 @@ const VerificationCodeInput = () => {
     }
   }, [code]);
 
-  // Timer para o cooldown do reenvio
   useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => {
@@ -42,7 +41,6 @@ const VerificationCodeInput = () => {
     }
   }, [resendTimer]);
 
-  // Função para formatar o tempo restante (mm:ss)
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -215,7 +213,6 @@ const VerificationCodeInput = () => {
         setCode(['', '', '', '']);
         inputs.current[0]?.focus();
         
-        // Inicia o timer de 2 minutos
         setResendTimer(resendCooldown);
         
         setTimeout(() => {

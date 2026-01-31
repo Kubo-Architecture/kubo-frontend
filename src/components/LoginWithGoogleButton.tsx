@@ -45,9 +45,7 @@ function LoginWithGoogleButton({ onLoginSuccess }: any) {
 
             if (error.response?.status === 404) {
                 navigate('/error/404');
-            } else {
-                alert('Erro ao fazer login com Google. Tente novamente.');
-            }
+            } else {}
         }
     };
 
@@ -56,7 +54,6 @@ function LoginWithGoogleButton({ onLoginSuccess }: any) {
             onSuccess={handleSuccess}
             onError={() => {
                 console.error('Erro no login com Google');
-                alert('Falha ao fazer login com Google.');
             }}
             useOneTap={false}
             size="large"
