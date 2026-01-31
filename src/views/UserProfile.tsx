@@ -1,0 +1,113 @@
+import { useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import axios from "axios"
+import ProfileInnerHeader from "../components/Profile/ProfileInnerHeader"
+import ProfileStats from "../components/Profile/ProfileStats"
+import BannerSettings from "../components/Profile/BannerSettings"
+import Biografy from "../components/Profile/Biografy"
+import ProjectGallery from "../components/Profile/ProjectGallery"
+import Loading from "../components/Universal/Loading"
+import { getUserIdFromToken } from "../utils/jwt"
+
+export default function UserProfile() {
+  const [loading, setLoading] = useState<ConstrainBoolean>(true);
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [profileData, setProfileData] = useState<any>(null)
+  const [showBannerSettings, setShowBannerSettings] = useState<boolean>(false)
+  const [projectCount, setProjectCount] = useState(0);
+
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/").filter(Boolean)
+    const currentUserId = getUserIdFromToken();
+    const username = pathSegments[1]
+
+    const apiUrl = `${import.meta.env.VITE_API_URL}/profile/${username}`
+
+    axios.get(apiUrl)
+      .then((res) => {
+        if (res.data.nickname === "") {
+          navigate("/profile/nickname")
+        }
+
+        setIsOwnProfile(String(res.data.userId) == currentUserId);
+        setProfileData(res.data)
+      })
+      .catch((err) => {
+        if (err.code === "ERR_NETWORK" || err.response?.status === 404) {
+          navigate("/error/404")
+        }
+      })
+  }, [location])
+
+  const handleCloseBannerSettings = () => {
+    setShowBannerSettings(false);
+  };
+
+  const handleBannerUpdated = (newBanner: string) => {
+    setProfileData((prev: any) => ({
+      ...prev,
+      banner: newBanner
+    }));
+  };
+
+  if (!profileData) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-[#151B23]">
+        <Loading />
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full min-h-screen relative bg-gray-50 dark:bg-[#151B23]">
+      <div className="pt-16">
+        {loading && <Loading />}
+        <div className={loading ? "hidden" : "block"}>
+          <ProfileInnerHeader
+            banner={profileData.banner}
+            photoUrl={profileData.photoUrl}
+            ownProfile={isOwnProfile}
+            onEditBannerClick={() => setShowBannerSettings(true)}
+          />
+          
+          <ProfileStats
+            name={profileData.name}
+            nickname={profileData.nickname} 
+            likes={profileData.likes || 0}
+            projetos={projectCount || 0}
+            ownProfile={isOwnProfile}
+            userId={profileData.userId}
+            onFollowChange={(isFollowing: boolean) => {
+              setProfileData((prev: any) => ({
+                ...prev,
+                followers: isFollowing ? (prev.followers || 0) + 1 : Math.max(0, (prev.followers || 0) - 1)
+              }));
+            }}
+          />
+
+          {profileData?.bio && profileData.bio.trim() !== "" && (
+            <Biografy bio={profileData.bio} />
+          )}
+          
+          <div className="relative">
+            <ProjectGallery
+              userId={profileData.userId}
+              onProjectsLoaded={(count: number) => setProjectCount(count)}
+              setIsLoadingChild={setLoading}
+              isOwnProfile={isOwnProfile}
+            />
+          </div>
+
+          {showBannerSettings && (
+            <BannerSettings
+              onClose={handleCloseBannerSettings}
+              onBannerUpdated={handleBannerUpdated}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

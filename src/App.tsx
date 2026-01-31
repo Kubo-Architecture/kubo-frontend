@@ -1,0 +1,83 @@
+import { useEffect, useState, useCallback } from 'react';
+import axios from 'axios';
+import RouterLink from './routes/routes';
+import HeaderFull from './components/Universal/Header';
+import Loading from './components/Universal/Loading';
+import MaintenanceScreen from './views/MaintenanceScreen';
+import './index.css';
+import { useLocation } from 'react-router-dom';
+import { getUserIdFromToken } from './utils/jwt';
+
+const IS_MAINTENANCE_MODE = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
+
+function App() {
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [galleryLoaded, setGalleryLoaded] = useState<boolean>(false);
+  const location = useLocation();
+
+  const disabledRoutes: string[] = ['/login', '/register', '/forgotpassword', '/profile/nickname'];
+
+  const isAuthRoute: boolean = location.pathname.startsWith('/auth/');
+  const isHeaderDisabled: boolean = disabledRoutes.includes(location.pathname) || isAuthRoute;
+  const isGalleryRoute: boolean = location.pathname === '/gallery';
+
+  const checkUser = useCallback(async () => {
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      setUserData(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await axios.get<any>(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+      setUserData(res.data);
+      window.dispatchEvent(new Event("userIdChanged"));
+    } catch (error) {
+      setUserData(null);
+      localStorage.removeItem('token');
+      window.dispatchEvent(new Event("userIdChanged"));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkUser();
+  }, [checkUser]);
+
+  useEffect(() => {
+    if (CSS.supports('overflow', 'overlay')) {
+      document.documentElement.style.overflowY = 'overlay';
+      document.body.style.overflowY = 'overlay';
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isGalleryRoute) {
+      setGalleryLoaded(false);
+    }
+  }, [isGalleryRoute]);
+
+  if (IS_MAINTENANCE_MODE) {
+    return <MaintenanceScreen />;
+  }
+
+  return (
+    <div className="min-h-screen">
+      {!isHeaderDisabled && <HeaderFull userData={userData} />}
+
+      <RouterLink
+        isAuthenticated={!!userData}
+        hasNick={!!userData?.nickname}
+        onLoginSuccess={checkUser}
+        onGalleryLoaded={() => setGalleryLoaded(true)}
+      />
+      
+      {(loading || (isGalleryRoute && !galleryLoaded)) && <Loading />}
+    </div>
+  );
+}
+
+export default App;

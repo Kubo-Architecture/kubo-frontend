@@ -1,0 +1,181 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { User } from 'lucide-react';
+import { getUserIdFromToken } from '../utils/jwt';
+
+export default function NicknameInput() {
+  const [nickname, setNickname] = useState<string>('');
+  const [userId, setuserId] = useState<any>(null);
+  const [error, setError] = useState<any>('');
+  const [touched, setTouched] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedId = getUserIdFromToken();
+    if (storedId) {
+      setuserId(storedId);
+    } else {
+      setError('Usuário não identificado. Faça login novamente.');
+    }
+  }, []);
+
+  const nicknameRegex = /^[a-zA-Z0-9._]+$/;
+  const MIN_USERNAME_LENGTH = 4; 
+  const MAX_USERNAME_LENGTH = 25;
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setTouched(true);
+
+    if (!nickname.trim()) {
+      setError('Por favor, insira um nome de usuário');
+      return;
+    }
+
+    if (nickname.length < MIN_USERNAME_LENGTH) {
+      setError(`O nome de usuário deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`);
+      return;
+    }
+
+    if (nickname.length > MAX_USERNAME_LENGTH) {
+      setError(`O nome de usuário deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`);
+      return;
+    }
+
+    if (nickname.endsWith('.')) {
+      setError('O nome de usuário não pode terminar com ponto (.)');
+      return;
+    }
+
+    if (!nicknameRegex.test(nickname)) {
+      setError('Use apenas letras, números, underline (_) ou ponto (.) sem espaços');
+      return;
+    }
+
+    if (!userId) {
+      setError('ID do usuário não encontrado');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || '';
+      const checkRes = await axios.get(
+        `${baseUrl}/users/check-username`,
+        { params: { username: nickname.trim(), userId } }
+      );
+      if (checkRes.data?.available === false) {
+        setError(checkRes.data?.message || 'Este nome de usuário já está em uso');
+        return;
+      }
+
+      const apiUrl = `${baseUrl}/users/`;
+      const response = await axios.put(
+        apiUrl,
+        {
+          nickname: nickname,
+          userId: userId
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        navigate(`/gallery`);
+        window.location.reload();
+      }
+    } catch (err: any) {
+      const errorMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        'Erro ao enviar apelido';
+      setError(errorMsg);
+      console.error('Erro na requisição:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (e: any) => {
+    const value = e.target.value;
+    setNickname(value.toLowerCase());
+
+    if (error) setError('');
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="w-full max-w-md flex flex-col justify-center items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
+        {/* Ícone de casa */}
+        <div className="flex justify-center mb-2">
+          <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
+            <a href="/"><User className="w-7 h-7 text-white" strokeWidth={2} /></a>
+          </div>
+        </div>
+
+        {/* Título */}
+        <h1 className="text-2xl font-bold text-center text-black mb-0.5">
+          Escolha um nome de usuário
+        </h1>
+
+        {/* Subtítulo */}
+        <p className="text-center text-gray-600 mb-6 text-sm px-4">
+          Esse será o nome que identificará seu perfil
+        </p>
+
+        {/* Formulário */}
+        <form onSubmit={handleSubmit} className="space-y-0 w-full">
+          {/* Apelido */}
+          <div>
+            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+              Nome de usuário
+            </h5>
+            <div className="relative mt-1">
+              <input
+                type="text"
+                name="nickname"
+                value={nickname}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Digite o seu nome de usuário"
+                className={`w-full pl-3 pr-13 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${touched && error ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                autoFocus={true}
+                maxLength={MAX_USERNAME_LENGTH}
+              />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs">
+                {nickname.length}/{MAX_USERNAME_LENGTH}
+              </div>
+            </div>
+            {/* Altura fixa para mensagem de erro */}
+            <div className="h-4 mt-0.5">
+              {touched && error && (
+                <p className="text-red-500 text-xs leading-4">{error}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Botão de submissão */}
+          <button
+            type="submit"
+            disabled={isLoading || !nickname.trim()}
+            className="w-full cursor-pointer bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-5 text-sm"
+          >
+            {isLoading ? 'Enviando...' : 'Próximo'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
