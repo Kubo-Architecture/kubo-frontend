@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
 import { getUserIdFromToken } from "../../utils/jwt";
@@ -10,15 +10,11 @@ export default function ProfileStats(props: any) {
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [isSeguidoresModalOpen, setIsSeguidoresModalOpen] = useState(false);
     const [isSeguindoModalOpen, setIsSeguindoModalOpen] = useState(false);
-    const [seguidoresList, setSeguidoresList] = useState<any[]>([]);
-    const [seguindoList, setSeguindoList] = useState<any[]>([]);
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
     const [bio, setBio] = useState(''); 
     
     const currentUserId = getUserIdFromToken();
-    const seguidoresModalRef = useRef<HTMLDivElement>(null);
-    const seguindoModalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -101,38 +97,6 @@ export default function ProfileStats(props: any) {
             };
         }
     }, [isSeguidoresModalOpen, isSeguindoModalOpen, isEditProfileModalOpen]);
-
-    const handleSeguidoresModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (seguidoresModalRef.current && !seguidoresModalRef.current.contains(e.target as Node)) {
-            setIsSeguidoresModalOpen(false);
-        }
-    };
-
-    const handleSeguindoModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (seguindoModalRef.current && !seguindoModalRef.current.contains(e.target as Node)) {
-            setIsSeguindoModalOpen(false);
-        }
-    };
-
-    const handleOpenSeguidores = async () => {
-        setIsSeguidoresModalOpen(true);
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/followers-list/${props.userId}`);
-            setSeguidoresList(response.data.followers || []);
-        } catch {
-            setSeguidoresList([]);
-        }
-    };
-
-    const handleOpenSeguindo = async () => {
-        setIsSeguindoModalOpen(true);
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/following-list/${props.userId}`);
-            setSeguindoList(response.data.following || []);
-        } catch {
-            setSeguindoList([]);
-        }
-    };
 
     const handleFollowToggle = () => {
         if (!currentUserId) {
@@ -221,10 +185,10 @@ export default function ProfileStats(props: any) {
                             <div className="flex items-start justify-between sm:block">
                                 <div>
                                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800 mb-1 dark:text-gray-100">
-                                        {props.nickname}
+                                        {props.name}
                                     </h1>
                                     <p className="text-base sm:text-lg text-gray-500">
-                                        @{props.name}
+                                        @{props.nickname}
                                     </p>
                                 </div>
                                 
@@ -336,127 +300,6 @@ export default function ProfileStats(props: any) {
                 </div>
             </div>
 
-            {/* Modal de Seguidores */}
-            {isSeguidoresModalOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
-                    onClick={handleSeguidoresModalClick}
-                >
-                    <div 
-                        ref={seguidoresModalRef}
-                        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col"
-                    >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                Seguidores
-                            </h2>
-                            <button 
-                                onClick={() => setIsSeguidoresModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Lista de Seguidores */}
-                        <div className="flex-1 overflow-y-auto p-6">
-                            {seguidoresList.length === 0 ? (
-                                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                                    Nenhum seguidor ainda
-                                </p>
-                            ) : (
-                                <div className="space-y-4">
-                                    {seguidoresList.map((seguidor) => (
-                                        <div 
-                                            key={seguidor.id} 
-                                            className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-                                            onClick={() => window.location.href = `/perfil/${seguidor.name}`}
-                                        >
-                                            <img 
-                                                src={seguidor.photo_url || '/default-avatar.png'} 
-                                                alt={seguidor.nickname}
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-semibold text-gray-900 dark:text-white truncate">
-                                                    {seguidor.nickname}
-                                                </p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                                    @{seguidor.name}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Modal de Seguindo */}
-            {isSeguindoModalOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
-                    onClick={handleSeguindoModalClick}
-                >
-                    <div 
-                        ref={seguindoModalRef}
-                        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col"
-                    >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                Seguindo
-                            </h2>
-                            <button 
-                                onClick={() => setIsSeguindoModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Lista de Seguindo */}
-                        <div className="flex-1 overflow-y-auto p-6">
-                            {seguindoList.length === 0 ? (
-                                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                                    Não está seguindo ninguém ainda
-                                </p>
-                            ) : (
-                                <div className="space-y-4">
-                                    {seguindoList.map((seguindo) => (
-                                        <div 
-                                            key={seguindo.id} 
-                                            className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-                                            onClick={() => window.location.href = `/perfil/${seguindo.name}`}
-                                        >
-                                            <img 
-                                                src={seguindo.photo_url || '/default-avatar.png'} 
-                                                alt={seguindo.nickname}
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-semibold text-gray-900 dark:text-white truncate">
-                                                    {seguindo.nickname}
-                                                </p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                                    @{seguindo.name}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <EditProfileModal
                 isOpen={isEditProfileModalOpen}

@@ -41,34 +41,12 @@ export default function EditProfileModal({
   
   const usernameRegex = /^[a-zA-Z0-9._]+$/;
 
-  const detectAndFixInversion = (name: string, nickname: string) => {
-    const nameHasSpaces = /\s/.test(name);
-    const nameHasSpecialChars = /[^a-zA-Z0-9._]/.test(name);
-    const nicknameIsUsername = usernameRegex.test(nickname) && !/\s/.test(nickname);
-    const isInverted = (nameHasSpaces || nameHasSpecialChars) && nicknameIsUsername;
-
-    if (isInverted) {
-      return {
-        name: nickname,
-        nickname: name,
-        wasInverted: true
-      };
-    }
-
-    return {
-      name: name,
-      nickname: nickname,
-      wasInverted: false
-    };
-  };
-
+  // API: name = nome de exibição, nickname = nome de usuário (@handle)
   useEffect(() => {
     if (isOpen && userData) {
-      const corrected = detectAndFixInversion(userData.name, userData.nickname);
-
       setFormData({
-        nickname: corrected.nickname || '',
-        name: corrected.name || '',
+        nickname: userData.name || '',
+        name: userData.nickname || '',
         bio: userData.bio || '',
       });
       
@@ -246,9 +224,26 @@ export default function EditProfileModal({
     setError('');
     setUsernameError('');
 
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    try {
+      const checkRes = await axios.get(`${baseUrl}/users/check-username`, {
+        params: { username: formData.name.trim(), userId: userData.userId },
+      });
+      if (checkRes.data?.available === false) {
+        setUsernameError(checkRes.data?.message || 'Este nome de usuário já está em uso');
+        setIsSaving(false);
+        return;
+      }
+    } catch (checkErr: any) {
+      const msg = checkErr.response?.data?.message ?? checkErr.response?.data?.error ?? 'Erro ao verificar disponibilidade';
+      setUsernameError(msg);
+      setIsSaving(false);
+      return;
+    }
+
     const payload = {
-      nickname: formData.nickname,
-      name: formData.name,
+      name: formData.nickname,
+      nickname: formData.name,
       bio: formData.bio,
     };
 
@@ -272,15 +267,15 @@ export default function EditProfileModal({
         onProfileUpdate(response.data);
       }
 
-      const originalUsername = userData.name;
-      const newUsername = formData.name;
-      const usernameChanged = originalUsername !== newUsername;
+      const originalNickname = userData.nickname;
+      const newNickname = formData.name;
+      const usernameChanged = originalNickname !== newNickname;
 
       setTimeout(() => {
         handleClose();
         
         if (usernameChanged) {
-          window.location.href = `/profile/${newUsername}`;
+          window.location.href = `/profile/${newNickname}`;
         } else {
           window.location.reload();
         }
@@ -288,7 +283,7 @@ export default function EditProfileModal({
 
     } catch (err: any) {
       if (err.response?.status === 409) {
-        setError('Este nome de usuário já está em uso');
+        setUsernameError(err.response?.data?.message || 'Este nome de usuário já está em uso');
       } else {
         setError(
           err.response?.data?.error || 
