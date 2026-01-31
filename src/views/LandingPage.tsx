@@ -238,13 +238,13 @@ function StatsBanner() {
 }
 
 function SobreSection() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(1); // Começa na segunda imagem
-  const images = [Capalanding2, Capalanding]; // Invertido: agora capalanding.png é o index 1
+  const [currentImageIndex, setCurrentImageIndex] = useState(1); 
+  const images = [Capalanding2, Capalanding];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Muda a cada 5 segundos
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, [images.length]);
@@ -533,7 +533,6 @@ function ContatoSection() {
     'Outro'
   ];
 
-  // Fechar dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (subjectRef.current && !subjectRef.current.contains(event.target as Node)) {
@@ -594,7 +593,6 @@ function ContatoSection() {
     setErrorMessage('');
 
     try {
-      console.log('📤 Enviando dados:', trimmedData);
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/contact`,
@@ -605,9 +603,7 @@ function ContatoSection() {
         }
       );
 
-      console.log('📊 Status da resposta:', response.status);
       const data = await response.json();
-      console.log('✅ Resposta do servidor:', data);
 
       if (response.ok) {
         setSubmitStatus('success');
@@ -623,13 +619,6 @@ function ContatoSection() {
         setErrorMessage(data?.error || 'Erro ao enviar mensagem. Tente novamente.');
       }
     } catch (error: any) {
-      console.error('❌ Erro ao enviar:', error);
-
-      if (error.message === 'Failed to fetch') {
-        setErrorMessage('Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
-      } else {
-        setErrorMessage(error.message || 'Erro desconhecido ao enviar mensagem.');
-      }
 
       setSubmitStatus('error');
     } finally {

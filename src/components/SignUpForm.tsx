@@ -66,7 +66,6 @@ const SignUpForm = () => {
     }
   };
 
-  // Validação sempre que os dados do formulário mudam
   useEffect(() => {
     const validate = async () => {
       if (Object.values(touched).some(field => field)) {
@@ -81,7 +80,6 @@ const SignUpForm = () => {
     const { name, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [name]: value }));
     
-    // Limpa erros quando o usuário começa a digitar
     if (generalError) {
       setGeneralError('');
     }
@@ -97,7 +95,6 @@ const SignUpForm = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // Marcar todos os campos como tocados
     setTouched({
       name: true,
       email: true,
@@ -105,7 +102,6 @@ const SignUpForm = () => {
       confirmPassword: true
     });
 
-    // Validar o formulário
     const isValidForm = await validateForm();
     if (!isValidForm) {
       setIsValid(false);
@@ -122,7 +118,6 @@ const SignUpForm = () => {
     setGeneralError('');
 
     try {
-      // Encriptar a senha
       const rsa = forge.pki.publicKeyFromPem(publicKeyPem);
       const encryptedPassword = forge.util.encode64(
         rsa.encrypt(formData.password, 'RSA-OAEP', {
@@ -139,15 +134,12 @@ const SignUpForm = () => {
       const apiUrl = `${import.meta.env.VITE_API_URL}/users/`;
       const response = await axios.post(apiUrl, payload);
 
-      // Verificar se a resposta é bem-sucedida
       if (response.data && response.data.userId) {
         const userId = response.data.userId;
         
-        // Remove o loading e mostra mensagem de sucesso
         setIsLoading(false);
         setShowSuccessMessage(true);
 
-        // Aguarda 2 segundos antes de redirecionar
         setTimeout(() => {
           navigate(`/auth/${userId}`);
         }, 2000);
@@ -157,11 +149,9 @@ const SignUpForm = () => {
     } catch (error: any) {
       console.error('Erro no cadastro:', error);
 
-      // Tratar diferentes tipos de erros
       if (error.response?.status === 404) {
         navigate('/error/404');
       } else if (error.response?.status === 409) {
-        // Usuário já existe
         setErrors((prev: any) => ({
           ...prev,
           email: 'Este email já está cadastrado'
@@ -172,7 +162,6 @@ const SignUpForm = () => {
         }));
         setGeneralError('Use outro email');
       } else if (error.response?.status === 400) {
-        // Dados inválidos
         if (error.response.data?.errors) {
           const serverErrors = error.response.data.errors;
           setErrors((prev: any) => ({
@@ -192,12 +181,11 @@ const SignUpForm = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Volta para a página anterior
+    navigate(-1); 
   };
 
   return (
     <>
-      {/* Loading overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
           <Loading />
@@ -206,7 +194,6 @@ const SignUpForm = () => {
 
       <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
 
-        {/* Botão de voltar */}
         <button
           onClick={handleGoBack}
           className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm font-medium group cursor-pointer"

@@ -24,7 +24,6 @@ export default function ContactForm() {
     'Outro'
   ];
 
-  // Fechar dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (subjectRef.current && !subjectRef.current.contains(event.target as Node)) {
@@ -85,7 +84,6 @@ export default function ContactForm() {
     setErrorMessage('');
 
     try {
-      console.log('📤 Enviando dados:', trimmedData);
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/contact`,
@@ -94,9 +92,6 @@ export default function ContactForm() {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-
-      console.log('📊 Status da resposta:', response.status);
-      console.log('✅ Resposta do servidor:', response.data);
 
       if (response.status >= 200 && response.status < 300) {
         setSubmitStatus('success');
@@ -114,7 +109,7 @@ export default function ContactForm() {
         );
       }
     } catch (error: any) {
-      console.error('❌ Erro ao enviar:', error);
+      console.error(' Erro ao enviar:', error);
 
       if (error.response) {
         setErrorMessage(

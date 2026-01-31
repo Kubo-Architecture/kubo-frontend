@@ -73,7 +73,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Bloquear scroll no modal de delete
   useEffect(() => {
     if (showDeleteModal) {
       const scrollY = window.scrollY;
@@ -131,13 +130,11 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
     navigate(`/edit-project/${projectId}`);
   };
 
-  // Função para abrir modal de confirmação de exclusão
   const handleDeleteClick = (project: any) => {
     setProjectToDelete(project);
     setShowDeleteModal(true);
   };
 
-  // Função para deletar projeto
   const handleDeleteProject = async () => {
     if (!projectToDelete) return;
 
@@ -161,44 +158,37 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
           onProjectsLoaded(updatedProjects.length);
         }
         
-        // Fechar modal
         setShowDeleteModal(false);
         setProjectToDelete(null);
       }
     } catch (err: any) {
       console.error("Erro ao deletar projeto:", err);
-      alert(err.response?.data?.error || "Erro ao deletar projeto");
     } finally {
       setIsDeleting(null);
     }
   };
 
-  // Função para alterar privacidade do projeto
   const handlePrivacyChange = async (projectId: string, isPrivate: boolean) => {
     try {
-      // Atualizar localmente
       const updatedProjects: any = projects.map((p: any) => {
         const pId = p._id || p.id;
         return String(pId) === String(projectId) ? { ...p, isPrivate } : p;
       });
       setProjects(updatedProjects);
 
-      // Chamar API para persistir mudança
       await axios.patch(
         `${import.meta.env.VITE_API_URL}/projects/${projectId}/privacy`,
         { isPrivate }
       );
 
-      console.log(`Projeto ${projectId} agora é ${isPrivate ? 'privado' : 'público'}`);
     } catch (err: any) {
       console.error("Erro ao alterar privacidade:", err);
-      // Reverter mudança em caso de erro
+
       const revertedProjects: any = projects.map((p: any) => {
         const pId = p._id || p.id;
         return String(pId) === String(projectId) ? { ...p, isPrivate: !isPrivate } : p;
       });
       setProjects(revertedProjects);
-      alert(err.response?.data?.error || "Erro ao alterar privacidade do projeto");
     }
   };
 
@@ -301,7 +291,7 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
         </div>
       </div>
 
-      {/* ✅ MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
+      {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
       {showDeleteModal && projectToDelete && (
         <div 
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -370,7 +360,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
   );
 };
 
-// Componente de Estado Vazio
 const EmptyState = ({ icon, title, description, buttonText, onButtonClick, isOwnProfile }: any) => (
   <div className="flex flex-col items-center justify-center py-24 px-6">
     <div className="mb-6 opacity-80">{icon}</div>

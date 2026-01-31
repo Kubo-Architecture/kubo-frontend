@@ -12,7 +12,7 @@ export default function ProfileStats(props: any) {
     const [isSeguindoModalOpen, setIsSeguindoModalOpen] = useState(false);
     const [showLoginToast, setShowLoginToast] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-    const [bio, setBio] = useState('');
+    const [bio, setBio] = useState(''); 
     
     const currentUserId = getUserIdFromToken();
 
@@ -38,7 +38,6 @@ export default function ProfileStats(props: any) {
                 .then((res: any) => setIsFollowing(res.data.isFollowing))
         }
 
-        // Buscar bio do usuário
         axios.get(`${import.meta.env.VITE_API_URL}/users/${props.userId}`)
             .then((res: any) => setBio(res.data.bio || ''))
             .catch(() => setBio(''));
@@ -242,7 +241,6 @@ export default function ProfileStats(props: any) {
                             
                             <div 
                                 className="text-center"
-                                //onClick={handleOpenSeguidores}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguidoresCount}
@@ -254,7 +252,6 @@ export default function ProfileStats(props: any) {
                             
                             <div 
                                 className="text-center"
-                                //onClick={handleOpenSeguindo}
                             >
                                 <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {seguindoCount}
@@ -264,7 +261,6 @@ export default function ProfileStats(props: any) {
                                 </p>
                             </div>
 
-                            {/* Botão Edit/Follow Desktop */}
                             {props.ownProfile ? (
                                 <button 
                                     onClick={() => setIsEditProfileModalOpen(true)}
@@ -304,6 +300,7 @@ export default function ProfileStats(props: any) {
                 </div>
             </div>
 
+
             <EditProfileModal
                 isOpen={isEditProfileModalOpen}
                 onClose={() => setIsEditProfileModalOpen(false)}
@@ -311,7 +308,7 @@ export default function ProfileStats(props: any) {
                     userId: props.userId,
                     nickname: props.nickname || '',
                     name: props.name || '',
-                    bio: bio,
+                    bio: bio, 
                     profession: props.profession || '',
                     phone: props.phone || '',
                     email: props.email || '',

@@ -38,7 +38,6 @@ export default function NewProject() {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [showCustomUsageType, setShowCustomUsageType] = useState(false);
   
-  // Novos estados para autocomplete de localização
   const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
 
@@ -107,7 +106,6 @@ export default function NewProject() {
     fetchUserNameIfAuthor();
   }, [formData.isAuthor]);
 
-  // Função para buscar sugestões de localização usando Nominatim (OpenStreetMap)
   const fetchLocationSuggestions = async (query: string) => {
     if (query.length < 3) {
       setLocationSuggestions([]);
@@ -125,7 +123,6 @@ export default function NewProject() {
       );
 
       const suggestions: string[] = response.data.map((item: any) => {
-        // Formatar endereço de forma mais limpa
         const parts = [];
         if (item.address.city) parts.push(item.address.city);
         else if (item.address.town) parts.push(item.address.town);
@@ -136,7 +133,6 @@ export default function NewProject() {
         return parts.join(', ');
       });
 
-      // Remover duplicatas
       const uniqueSuggestions = [...new Set(suggestions)];
       setLocationSuggestions(uniqueSuggestions);
     } catch (err) {
@@ -144,7 +140,6 @@ export default function NewProject() {
     }
   };
 
-  // Debounce para evitar muitas requisições
   useEffect(() => {
     const timer = setTimeout(() => {
       if (formData.location) {
@@ -270,10 +265,6 @@ export default function NewProject() {
       return;
     }
 
-    newFiles.forEach((file, i) => {
-      console.log(`  ${i + 1}. ${file.name} (${file.type}, ${(file.size / 1024).toFixed(2)}KB)`);
-    });
-
     const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
     if (totalSize > 50 * 1024 * 1024) {
       setError('A galeria não pode exceder 50MB no total');
@@ -319,7 +310,6 @@ export default function NewProject() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // VALIDAÇÃO: Nome do projeto obrigatório e máximo 70 caracteres
     if (!formData.name.trim()) {
       setError('Preencha o nome do projeto');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -332,7 +322,6 @@ export default function NewProject() {
       return;
     }
 
-    // VALIDAÇÃO: Descrição obrigatória e máximo 1000 caracteres
     if (!formData.description.trim()) {
       setError('Preencha a descrição do projeto');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -345,7 +334,6 @@ export default function NewProject() {
       return;
     }
 
-    // NOTA: Localização NÃO é obrigatória - removida a validação
 
     if (formData.usage_types.length === 0) {
       setError('Selecione pelo menos um tipo de uso');
@@ -390,9 +378,7 @@ export default function NewProject() {
         const userData = userResponse.data;
         finalUserName = userData.name || 'Usuário';
 
-      } catch (err) {
-        console.error('Erro ao buscar nome do backend:', err);
-      }
+      } catch (err) {      }
     }
 
     const finalUsageTypes = formData.usage_types.map(type => 

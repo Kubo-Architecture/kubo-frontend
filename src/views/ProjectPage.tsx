@@ -61,7 +61,6 @@ export default function ProjectPage() {
         fetchProject();
     }, [projectId, navigate, currentUserId]);
 
-    // Gerenciar scroll quando modal de delete abre/fecha
     useEffect(() => {
         if (showDeleteModal) {
             const scrollY = window.scrollY;
@@ -122,7 +121,6 @@ export default function ProjectPage() {
 
     const handleLike = async () => {
         if (!currentUserId) {
-            alert('Faça login para curtir projetos.');
             return;
         }
 
@@ -138,13 +136,11 @@ export default function ProjectPage() {
             }
         } catch (err) {
             console.error('Error toggling like:', err);
-            alert('Não foi possível atualizar a curtida. Tente novamente.');
         }
     };
 
     const handleFavorite = async () => {
         if (!currentUserId) {
-            alert('Faça login para favoritar projetos.');
             return;
         }
 
@@ -158,7 +154,6 @@ export default function ProjectPage() {
             }
         } catch (err) {
             console.error('Error toggling favorite:', err);
-            alert('Não foi possível atualizar o favorito. Tente novamente.');
         }
     };
 
@@ -172,12 +167,7 @@ export default function ProjectPage() {
             }
         } catch (error: any) {
             if (error.response?.status === 400) {
-                alert('ID do projeto inválido');
-            } else if (error.response?.status === 404) {
-                alert('Projeto não encontrado');
-            } else {
-                alert('Erro ao deletar projeto: ' + (error.response?.data?.error || 'Erro desconhecido'));
-            }
+            } else if (error.response?.status === 404) {}
         }
     };
 

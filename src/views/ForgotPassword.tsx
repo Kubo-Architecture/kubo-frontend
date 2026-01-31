@@ -38,7 +38,6 @@ const ForgotPasswordForm = () => {
       await axios.post(apiUrl, { email });
       setSuccess(true);
     } catch (error: any) {
-      console.error('Erro ao enviar email:', error);
       if (error.response?.status === 404) {
         setError('Email não encontrado');
       } else {
@@ -61,7 +60,7 @@ const ForgotPasswordForm = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Volta para a página anterior
+    navigate(-1);
   };
 
   if (success) {
