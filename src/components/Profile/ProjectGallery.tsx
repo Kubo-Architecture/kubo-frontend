@@ -40,10 +40,6 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       }
     };
 
-    if (userId) fetchProjects();
-  }, [userId, refreshTrigger]);
-
-  useEffect(() => {
     const fetchFavorited = async () => {
       if (!userId || !isOwnProfile) return;
       setFavoritedLoading(true);
@@ -58,10 +54,9 @@ const ProjectGallery = ({ userId, onProjectsLoaded, setIsLoadingChild, refreshTr
       }
     };
 
-    if (activeTab === 'favoritos' && userId && isOwnProfile) {
-      fetchFavorited();
-    }
-  }, [activeTab, userId, isOwnProfile, refreshTrigger]);
+    if (userId) fetchProjects();
+    if (userId && isOwnProfile) fetchFavorited();
+  }, [userId, refreshTrigger]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {

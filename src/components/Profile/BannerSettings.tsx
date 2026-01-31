@@ -30,7 +30,6 @@ export default function BannerSettings({ onClose, onBannerUpdated }: BannerSetti
     "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-yellow_qvhxia.png",
     "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-blue_iepk2y.png",
     "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889026/default-banner-red_ehljjy.png ",
-    "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889707/ChatGPT_Image_31_de_jan._de_2026_17_00_40_s3tery.png",
     "https://res.cloudinary.com/dqx7ti5ld/image/upload/v1769889713/ChatGPT_Image_31_de_jan._de_2026_16_56_16_dnrhe3.png",
   ];
 
