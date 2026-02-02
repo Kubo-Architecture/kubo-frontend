@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import KuboIcon from "../../assets/icons/Universal/kubo.png";
 import KuboIconWhite from "../../assets/icons/Universal/KuboIcon.png";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
@@ -8,6 +8,7 @@ export default function HeaderFull({ userData, loading }: any) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const isActiveLink = (path: string) => {
     if (path === '/') {
@@ -16,9 +17,26 @@ export default function HeaderFull({ userData, loading }: any) {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
+  // Fecha o menu mobile quando clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <header id="main-header" className="fixed top-0 left-0 right-0 bg-white dark:bg-[#0E1116] border-b dark:border-[#1b1f23] border-neutral-200 z-50">
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24" ref={mobileMenuRef}>
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <button
@@ -43,13 +61,12 @@ export default function HeaderFull({ userData, loading }: any) {
             </button>
 
             <nav className="hidden md:flex items-center space-x-8 w-20">
-              <a
+              <button
                 onClick={() => navigate('/gallery')}
                 className={`cursor-pointer transition-colors ${isActiveLink('/gallery') ? 'text-black font-medium dark:text-white' : 'text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-gray-300 font-normal'}`}
               >
                 Galeria
-              </a>
-
+              </button>
             </nav>
           </div>
 
@@ -112,38 +129,38 @@ export default function HeaderFull({ userData, loading }: any) {
                       {userData?.email || ''}
                     </p>
                   </div>
-                  <a
+                  <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Meu Perfil</span>
-                  </a>
-                  <a
+                  </button>
+                  <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
-                  </a>
+                  </button>
 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
-                  <a
+                  <button
                     onClick={() => {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
-                  </a>
+                  </button>
                 </div>
               </>
             )}
@@ -181,38 +198,38 @@ export default function HeaderFull({ userData, loading }: any) {
                       {userData?.email || ''}
                     </p>
                   </div>
-                  <a
+                  <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Meu Perfil</span>
-                  </a>
-                  <a
+                  </button>
+                  <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
                     <span className='dark:text-white'>Configurações</span>
-                  </a>
+                  </button>
 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
-                  <a
+                  <button
                     onClick={() => {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
-                  </a>
+                  </button>
                 </div>
               </>
             )}
