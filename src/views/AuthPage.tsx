@@ -245,61 +245,61 @@ const VerificationCodeInput = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative max-h-[95vh] overflow-y-auto">
 
           {/* Botão de voltar dentro do card */}
           <button
             onClick={() => navigate(-1)}
-            className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-black transition text-sm cursor-pointer"
+            className="absolute top-5 left-5 flex items-center gap-1 text-gray-600 hover:text-black transition text-sm cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Voltar</span>
           </button>
 
           {/* Ícone de cartão centralizado em preto e branco */}
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-black rounded-xl flex items-center justify-center">
-              <CreditCard className="w-8 h-8 text-white" strokeWidth={1.5} />
+          <div className="flex justify-center mb-4">
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
+              <CreditCard className="w-6 h-6 text-white" strokeWidth={1.5} />
             </div>
           </div>
 
           {!limitReached ? (
             <>
               {/* Título principal */}
-              <h1 className="text-2xl font-bold text-center text-black mb-2">
+              <h1 className="text-xl font-bold text-center text-black mb-1">
                 Verificação de Email
               </h1>
 
               {/* Subtítulo */}
-              <p className="text-center text-gray-600 mb-6 text-sm">
+              <p className="text-center text-gray-600 mb-4 text-xs">
                 Digite o código de 4 dígitos enviado para seu email
               </p>
 
               {/* Mensagem de sucesso (código reenviado) */}
               {successMessage && (
-                <div className="mb-6 p-3  bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <div className="mb-4 p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-green-900">Código reenviado!</p>
-                    <p className="text-xs text-green-700">{successMessage}</p>
+                    <p className="text-xs font-semibold text-green-900">Código reenviado!</p>
+                    <p className="text-[10px] text-green-700">{successMessage}</p>
                   </div>
                 </div>
               )}
 
               {/* Mensagem de erro geral */}
               {errorMessage && (
-                <div className="mb-6 p-3  bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="mb-4 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-red-900">Erro na verificação</p>
-                    <p className="text-xs text-red-700">{errorMessage}</p>
+                    <p className="text-xs font-semibold text-red-900">Erro na verificação</p>
+                    <p className="text-[10px] text-red-700">{errorMessage}</p>
                   </div>
                 </div>
               )}
 
               {/* Inputs do código */}
-              <div className="mb-6">
-                <div className="flex justify-center gap-3 mb-2">
+              <div className="mb-4">
+                <div className="flex justify-center gap-2 mb-2">
                   {code.map((digit, index) => (
                     <input
                       key={index}
@@ -310,7 +310,7 @@ const VerificationCodeInput = () => {
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       onPaste={handlePaste}
                       ref={(el) => (inputs.current[index] = el)}
-                      className={`w-16 h-16 text-center text-2xl font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-black transition-all ${
+                      className={`w-14 h-14 text-center text-xl font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-black transition-all ${
                         errorMessage
                           ? 'border-red-500 ring-red-200'
                           : 'border-gray-300 focus:border-black'
@@ -320,31 +320,31 @@ const VerificationCodeInput = () => {
                 </div>
 
                 {/* Tentativas restantes */}
-                <div className="text-center text-xs text-gray-500 mt-3">
+                <div className="text-center text-[10px] text-gray-500 mt-2">
                   Tentativas restantes: {maxAttempts - attempts} de {maxAttempts}
                 </div>
               </div>
 
               {/* Botão de reenviar código */}
-              <div className="text-center mb-6">
+              <div className="text-center mb-4">
                 <button
                   onClick={resendCode}
                   disabled={isResending || resendTimer > 0}
-                  className="text-gray-600 hover:text-black text-sm font-medium transition flex items-center justify-center gap-2 w-full disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="text-gray-600 hover:text-black text-xs font-medium transition flex items-center justify-center gap-2 w-full disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {resendTimer > 0 ? (
                     <>
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-3 h-3" />
                       <span>Aguarde {formatTime(resendTimer)} para reenviar</span>
                     </>
                   ) : isResending ? (
                     <>
-                      <Mail className="w-4 h-4" />
+                      <Mail className="w-3 h-3" />
                       <span>Reenviando...</span>
                     </>
                   ) : (
                     <>
-                      <Mail className="w-4 h-4" />
+                      <Mail className="w-3 h-3" />
                       Não recebeu o código? <span className="font-semibold text-black">Reenviar</span>
                     </>
                   )}
@@ -359,7 +359,7 @@ const VerificationCodeInput = () => {
                   }
                 }}
                 disabled={!code.every(digit => digit !== '') || isLoading}
-                className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-sm cursor-pointer"
+                className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-sm cursor-pointer"
               >
                 {isLoading ? 'Verificando...' : 'Verificar Código'}
               </button>
@@ -367,66 +367,66 @@ const VerificationCodeInput = () => {
           ) : (
             /* Tela de limite atingido */
             <>
-              <h1 className="text-2xl font-bold text-center text-black mb-2">
+              <h1 className="text-xl font-bold text-center text-black mb-1">
                 Limite Atingido
               </h1>
 
-              <p className="text-center text-gray-600 mb-6 text-sm">
+              <p className="text-center text-gray-600 mb-4 text-xs">
                 Você excedeu o número máximo de tentativas
               </p>
 
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center border border-red-300">
-                  <AlertCircle className="w-8 h-8 text-red-600" strokeWidth={2} />
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center border border-red-300">
+                  <AlertCircle className="w-6 h-6 text-red-600" strokeWidth={2} />
                 </div>
               </div>
 
               {/* Mensagem de erro se houver */}
               {errorMessage && (
-                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="mb-4 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-red-900">Erro</p>
-                    <p className="text-xs text-red-700">{errorMessage}</p>
+                    <p className="text-xs font-semibold text-red-900">Erro</p>
+                    <p className="text-[10px] text-red-700">{errorMessage}</p>
                   </div>
                 </div>
               )}
 
               {/* Mensagem de sucesso se houver */}
               {successMessage && (
-                <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <div className="mb-4 p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-green-900">Código reenviado!</p>
-                    <p className="text-xs text-green-700">{successMessage}</p>
+                    <p className="text-xs font-semibold text-green-900">Código reenviado!</p>
+                    <p className="text-[10px] text-green-700">{successMessage}</p>
                   </div>
                 </div>
               )}
 
-              <p className="text-center text-gray-700 mb-6 text-sm leading-relaxed">
+              <p className="text-center text-gray-700 mb-4 text-xs leading-relaxed">
                 Por segurança, você deve esperar alguns minutos antes de tentar novamente ou solicitar um novo código de verificação.
               </p>
 
               {/* Mensagem de aviso destacada */}
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-amber-900 mb-1">
+                    <p className="text-xs font-semibold text-amber-900 mb-0.5">
                       Suspensão temporária ativa
                     </p>
-                    <p className="text-xs text-amber-700">
+                    <p className="text-[10px] text-amber-700">
                       Aguarde alguns minutos antes de solicitar um novo código ou tentar novamente.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <button
                   onClick={resendCode}
                   disabled={isResending || resendTimer > 0}
-                  className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {resendTimer > 0 ? (
                     <>
@@ -448,14 +448,14 @@ const VerificationCodeInput = () => {
 
                 <button
                   onClick={resetVerification}
-                  className="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 transition duration-200 text-sm cursor-pointer"
+                  className="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-50 transition duration-200 text-sm cursor-pointer"
                 >
                   Tentar Novamente
                 </button>
 
                 <button
                   onClick={() => navigate('/login')}
-                  className="w-full text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-50 transition duration-200 text-sm border border-gray-300 cursor-pointer"
+                  className="w-full text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-50 transition duration-200 text-sm border border-gray-300 cursor-pointer"
                 >
                   Voltar para o Login
                 </button>

@@ -65,7 +65,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen min-w-[320px]">
       {!isHeaderDisabled && <HeaderFull userData={userData} loading={loading} />}
 
       <RouterLink

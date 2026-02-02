@@ -192,7 +192,7 @@ const SignUpForm = () => {
         </div>
       )}
 
-      <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative">
+      <div className="w-full max-w-md bg-white rounded-2xl md:shadow-sm md:border md:border-gray-100 p-5 relative max-h-[95vh] overflow-y-auto">
 
         <button
           onClick={handleGoBack}
@@ -203,40 +203,40 @@ const SignUpForm = () => {
         </button>
 
         {/* Ícone de usuário */}
-        <div className="flex justify-center mb-2">
-          <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-            <UserPlus className="w-7 h-7 text-white" strokeWidth={2} />
+        <div className="flex justify-center mb-1.5">
+          <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
+            <UserPlus className="w-6 h-6 text-white" strokeWidth={2} />
           </div>
         </div>
 
         {/* Título principal */}
-        <h1 className="text-2xl font-bold text-center text-black mb-0.5">
+        <h1 className="text-xl font-bold text-center text-black mb-0.5">
           Criar conta
         </h1>
 
         {/* Subtítulo */}
-        <p className="text-center text-gray-600 mb-3 text-xs">
+        <p className="text-center text-gray-600 mb-2.5 text-xs">
           Junte-se à comunidade Kubo
         </p>
 
         {/* Mensagem de sucesso */}
         {showSuccessMessage && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+          <div className="mb-3 p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
+            <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-green-900">Conta criada com sucesso!</p>
-              <p className="text-xs text-green-700">Redirecionando para verificação...</p>
+              <p className="text-xs font-semibold text-green-900">Conta criada com sucesso!</p>
+              <p className="text-[10px] text-green-700">Redirecionando para verificação...</p>
             </div>
           </div>
         )}
 
         {/* Mensagem de erro geral */}
         {generalError && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-red-900">Este email já está cadastrado</p>
-              <p className="text-xs text-red-700">{generalError}</p>
+              <p className="text-xs font-semibold text-red-900">Este email já está cadastrado</p>
+              <p className="text-[10px] text-red-700">{generalError}</p>
             </div>
           </div>
         )}
@@ -245,10 +245,10 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit} className="space-y-0">
           {/* Nome completo */}
           <div>
-            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+            <h5 className="block text-black font-medium mb-0.5 text-[10px] uppercase tracking-wider">
               Nome completo
             </h5>
-            <div className="relative mt-1">
+            <div className="relative mt-0.5">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
                 type="text"
@@ -263,19 +263,19 @@ const SignUpForm = () => {
               />
             </div>
             {/* Altura fixa para mensagem de erro */}
-            <div className="h-4 mt-1 mb-2">
+            <div className="h-3 mt-0.5 mb-1.5">
               {touched.name && errors.name && (
-                <p className="text-red-500 text-xs">{errors.name}</p>
+                <p className="text-red-500 text-[10px]">{errors.name}</p>
               )}
             </div>
           </div>
 
           {/* Email */}
           <div>
-            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+            <h5 className="block text-black font-medium mb-0.5 text-[10px] uppercase tracking-wider">
               Email
             </h5>
-            <div className="relative mt-1">
+            <div className="relative mt-0.5">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
                 type="email"
@@ -290,19 +290,19 @@ const SignUpForm = () => {
               />
             </div>
             {/* Altura fixa para mensagem de erro */}
-            <div className="h-4 mt-1 mb-2">
+            <div className="h-3 mt-0.5 mb-1.5">
               {touched.email && errors.email && (
-                <p className="text-red-500 text-xs">{errors.email}</p>
+                <p className="text-red-500 text-[10px]">{errors.email}</p>
               )}
             </div>
           </div>
 
           {/* Senha */}
           <div>
-            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+            <h5 className="block text-black font-medium mb-0.5 text-[10px] uppercase tracking-wider">
               Senha
             </h5>
-            <div className="relative mt-1">
+            <div className="relative mt-0.5">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
                 type={mostrarSenha ? 'text' : 'password'}
@@ -328,19 +328,19 @@ const SignUpForm = () => {
               </button>
             </div>
             {/* Altura fixa para mensagem de erro */}
-            <div className="h-4 mt-1 mb-2">
+            <div className="h-3 mt-0.5 mb-1.5">
               {touched.password && errors.password && (
-                <p className="text-red-500 text-xs leading-3">{errors.password}</p>
+                <p className="text-red-500 text-[10px] leading-3">{errors.password}</p>
               )}
             </div>
           </div>
 
           {/* Confirmar senha */}
           <div>
-            <h5 className="block text-black font-medium mb-1 text-[10px] uppercase tracking-wider">
+            <h5 className="block text-black font-medium mb-0.5 text-[10px] uppercase tracking-wider">
               Confirmar senha
             </h5>
-            <div className="relative mt-1">
+            <div className="relative mt-0.5">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
                 type={mostrarConfirmarSenha ? 'text' : 'password'}
@@ -366,9 +366,9 @@ const SignUpForm = () => {
               </button>
             </div>
             {/* Altura fixa para mensagem de erro */}
-            <div className="h-4 mt-1 mb-2">
+            <div className="h-3 mt-0.5 mb-1.5">
               {touched.confirmPassword && errors.confirmPassword && (
-                <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+                <p className="text-red-500 text-[10px]">{errors.confirmPassword}</p>
               )}
             </div>
           </div>
@@ -377,14 +377,14 @@ const SignUpForm = () => {
           <button
             type="submit"
             disabled={!isValid || isLoading}
-            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-2 text-sm cursor-pointer"
+            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-900 transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300 mt-1.5 text-sm cursor-pointer"
           >
             {isLoading ? 'Criando conta...' : 'Criar conta'}
           </button>
         </form>
 
         {/* Link para login */}
-        <p className="text-center text-gray-600 mt-3 text-xs">
+        <p className="text-center text-gray-600 mt-2.5 text-xs">
           Já tem uma conta?{' '}
           <button
             onClick={() => navigate('/login')}
