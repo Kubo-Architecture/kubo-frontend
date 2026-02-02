@@ -125,6 +125,20 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
     }
   };
 
+  // Função para atualizar as curtidas de um projeto específico
+  const updateProjectLikes = async (projectId: string) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects/${projectId}`);
+      setWorks(prev => prev.map(work => 
+        work.id === projectId || work._id === projectId
+          ? { ...work, likes: response.data.likes }
+          : work
+      ));
+    } catch (error) {
+      console.error('Error updating project likes:', error);
+    }
+  };
+
   useEffect(() => {
     loadFeedProjects(1);
   }, []);
@@ -159,6 +173,24 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
       observer.disconnect();
     };
   }, [hasMore, isLoading, page, searchTerm]);
+
+  // Atualiza os projetos quando a página volta ao foco
+  useEffect(() => {
+    const handleFocus = () => {
+      if (!searchTerm.trim() && works.length > 0) {
+        // Atualiza todos os projetos visíveis
+        works.forEach(work => {
+          updateProjectLikes(work.id || work._id);
+        });
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [works, searchTerm]);
 
   useEffect(() => {
     const checkUserLogged = async () => {
@@ -328,94 +360,108 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
             </>
           ) : (
             <>
-              <div className="space-y-6">
+              <div className="space-y-3 sm:space-y-4 md:space-y-6">
                 {filteredWorks.map((work: any) => (
                   <div 
                     key={work.id} 
-                    className="flex gap-6 p-6 bg-[#1a2128] rounded-xl border border-gray-700 hover:border-gray-600 transition-all cursor-pointer group"
+                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 p-3 sm:p-4 md:p-6 bg-white dark:bg-[#1a2128] rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all cursor-pointer group"
                     onClick={() => navigate(`/project/${work.id}`)}
                   >
                     {/* Imagem */}
-                    <div className="relative flex-shrink-0 w-80 h-64 rounded-lg overflow-hidden">
+                    <div className="relative flex-shrink-0 w-full sm:w-48 md:w-64 lg:w-80 h-40 sm:h-48 md:h-56 lg:h-64 rounded-lg overflow-hidden">
                       <img 
-                        src={work.images?.[0] || '/placeholder.jpg'} 
-                        alt={work.title}
-                        className="w-full h-full object-cover"
+                        src={work.images?.[0]?.url || work.images?.[0] || work.photo_url || '/placeholder.jpg'} 
+                        alt={work.name || work.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
+                        }}
                       />
                     </div>
 
                     {/* Conteúdo */}
-                    <div className="flex-1 flex flex-col justify-between">
+                    <div className="flex-1 flex flex-col justify-between min-w-0">
                       <div>
                         {/* Título e Ano */}
-                        <div className="flex items-center gap-3 mb-3">
-                          <h2 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {work.title}
+                        <div className="flex items-start sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3 flex-wrap">
+                          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 sm:line-clamp-1">
+                            {work.name || work.title}
                           </h2>
-                          {work.year && <span className="text-gray-400">{work.year}</span>}
+                          {work.year && (
+                            <span className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm flex-shrink-0">
+                              {work.year}
+                            </span>
+                          )}
                         </div>
 
                         {/* Metadados */}
-                        <div className="flex items-center gap-4 text-gray-400 text-sm mb-4">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 md:mb-4">
                           {work.location && (
-                            <div className="flex items-center gap-2">
-                              <i className="fas fa-map-marker-alt"></i>
-                              <span>{work.location}</span>
+                            <div className="flex items-center gap-1 sm:gap-1.5">
+                              <i className="fas fa-map-marker-alt text-xs sm:text-sm"></i>
+                              <span className="truncate max-w-[120px] sm:max-w-none">{work.location}</span>
                             </div>
                           )}
                           {(work.user?.nickname || work.author) && (
-                            <div className="flex items-center gap-2">
-                              <i className="fas fa-user"></i>
-                              <span>{work.user?.nickname || work.author}</span>
+                            <div className="flex items-center gap-1 sm:gap-1.5">
+                              <i className="fas fa-user text-xs sm:text-sm"></i>
+                              <span className="truncate max-w-[100px] sm:max-w-none">{work.user?.nickname || work.author}</span>
                             </div>
                           )}
                           {work.style && (
-                            <div className="flex items-center gap-2">
-                              <i className="fas fa-palette"></i>
-                              <span>{work.style}</span>
+                            <div className="flex items-center gap-1 sm:gap-1.5">
+                              <i className="fas fa-palette text-xs sm:text-sm"></i>
+                              <span className="truncate max-w-[100px] sm:max-w-none">{work.style}</span>
                             </div>
                           )}
                         </div>
 
                         {/* Descrição */}
                         {work.description && (
-                          <p className="text-gray-300 leading-relaxed mb-4">
+                          <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3 md:mb-4 line-clamp-2 sm:line-clamp-3">
                             {work.description}
                           </p>
                         )}
 
                         {/* Tags */}
                         {work.tags && work.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap">
-                            {work.tags.map((tag: string, index: number) => (
+                          <div className="flex gap-1 sm:gap-1.5 md:gap-2 flex-wrap">
+                            {work.tags.slice(0, 3).map((tag: string, index: number) => (
                               <span 
                                 key={index}
-                                className="px-3 py-1 bg-gray-800 text-gray-400 text-sm rounded-full hover:bg-gray-700 transition-colors"
+                                className="px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400 text-xs rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                               >
                                 {tag.startsWith('#') ? tag : `#${tag}`}
                               </span>
                             ))}
+                            {work.tags.length > 3 && (
+                              <span className="px-2 py-0.5 text-gray-500 dark:text-gray-500 text-xs">
+                                +{work.tags.length - 3}
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
 
                       {/* Footer com info adicional */}
-                      {(work.year || work.category || work.usage_type) && (
-                        <div className="flex items-center gap-4 text-gray-400 text-sm mt-4 pt-4 border-t border-gray-700">
-                          {work.year && (
-                            <div className="flex items-center gap-2">
-                              <i className="far fa-clock"></i>
-                              <span>{work.year}</span>
-                            </div>
-                          )}
+                      <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3 md:mt-4 pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
                           {(work.category || work.usage_type) && (
-                            <div className="flex items-center gap-2">
-                              <i className="fas fa-building"></i>
-                              <span>{work.category || work.usage_type}</span>
+                            <div className="flex items-center gap-1 sm:gap-1.5">
+                              <i className="fas fa-building text-xs sm:text-sm"></i>
+                              <span className="text-xs sm:text-sm">{work.category || work.usage_type}</span>
                             </div>
                           )}
                         </div>
-                      )}
+                        
+                        {/* Contador de curtidas */}
+                        <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+                          <i className="fas fa-heart text-red-500 text-xs sm:text-sm"></i>
+                          <span className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm">
+                            {work.likes || 0}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}

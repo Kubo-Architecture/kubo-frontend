@@ -59,7 +59,7 @@ export default function ProjectPage() {
         };
 
         fetchProject();
-    }, [projectId, navigate, currentUserId]);
+    }, [projectId, currentUserId, API_URL]);
 
     useEffect(() => {
         if (showDeleteModal) {
@@ -124,18 +124,68 @@ export default function ProjectPage() {
             return;
         }
 
+        // Salva os valores atuais para possível rollback
+        const previousIsLiked = isLiked;
+        const previousLikesCount = likesCount;
+
         try {
-            if (isLiked) {
-                await axios.delete(`${API_URL}/projects/${projectId}/like/${currentUserId}`);
-                setIsLiked(false);
-                setLikesCount(prev => Math.max(0, prev - 1));
-            } else {
+            // Atualiza UI imediatamente (optimistic update)
+            const newIsLiked = !isLiked;
+            const newLikesCount = newIsLiked ? likesCount + 1 : Math.max(0, likesCount - 1);
+            
+            setIsLiked(newIsLiked);
+            setLikesCount(newLikesCount);
+
+            // Faz a requisição ao backend
+            if (newIsLiked) {
                 await axios.post(`${API_URL}/projects/${projectId}/like`, { userId: currentUserId });
-                setIsLiked(true);
-                setLikesCount(prev => prev + 1);
+            } else {
+                await axios.delete(`${API_URL}/projects/${projectId}/like/${currentUserId}`);
             }
+
+            // Dispara evento customizado para atualizar outros componentes
+            window.dispatchEvent(new CustomEvent('projectLikeChanged', {
+                detail: {
+                    projectId: projectId,
+                    likes: newLikesCount,
+                    isLiked: newIsLiked
+                }
+            }));
+
+            // Busca os dados atualizados do servidor para confirmar
+            const response = await axios.get(
+                currentUserId
+                    ? `${API_URL}/projects/${projectId}?userId=${currentUserId}`
+                    : `${API_URL}/projects/${projectId}`
+            );
+            
+            setLikesCount(response.data.likes ?? 0);
+            setIsLiked(response.data.isLiked ?? false);
+
+            // Atualiza o evento com os dados corretos do servidor
+            window.dispatchEvent(new CustomEvent('projectLikeChanged', {
+                detail: {
+                    projectId: projectId,
+                    likes: response.data.likes ?? 0,
+                    isLiked: response.data.isLiked ?? false
+                }
+            }));
+
         } catch (err) {
             console.error('Error toggling like:', err);
+            
+            // Reverte em caso de erro
+            setIsLiked(previousIsLiked);
+            setLikesCount(previousLikesCount);
+            
+            // Dispara evento para reverter nos outros componentes
+            window.dispatchEvent(new CustomEvent('projectLikeChanged', {
+                detail: {
+                    projectId: projectId,
+                    likes: previousLikesCount,
+                    isLiked: previousIsLiked
+                }
+            }));
         }
     };
 
@@ -234,11 +284,11 @@ export default function ProjectPage() {
         <>  
             <div className="min-h-screen bg-white dark:bg-[#151B23]">
                 {/* Main Content */}
-                <div className="w-full px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24 lg:px-8 pt-8 sm:pt-22 pb-12">
+                <div className="w-full px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24 lg:px-8 pt-24 sm:pt-28 md:pt-32 pb-12">
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center cursor-pointer gap-2 mb-16 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors group"
+                        className="inline-flex items-center cursor-pointer gap-2 mb-8 sm:mb-12 md:mb-16 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors group"
                     >
                         <i className="fas fa-arrow-left text-base group-hover:-translate-x-1 transition-transform"></i>
                         <span className="text-base font-medium">Voltar</span>
@@ -443,7 +493,7 @@ export default function ProjectPage() {
                         )}
                     </div>
 
-                    {/* Gallery */}
+                    {/* Gallery - resto do código continua igual... */}
                     {project.gallery && project.gallery.length > 0 && (
                         <div>
                             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Galeria</h2>

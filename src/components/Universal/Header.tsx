@@ -120,7 +120,7 @@ export default function HeaderFull({ userData, loading }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-4 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
+                <div className="absolute right-0 top-full mt-4 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50 overflow-hidden">
                   <div className="px-4 py-3 border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
                       {userData?.name || 'Usuário'}
@@ -134,20 +134,20 @@ export default function HeaderFull({ userData, loading }: any) {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
-                    <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Meu Perfil</span>
+                    <i className="fas fa-user-circle mr-3 w-5 text-center"></i>
+                    <span>Meu Perfil</span>
                   </button>
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
-                    <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Configurações</span>
+                    <i className="fas fa-cog mr-3 w-5 text-center"></i>
+                    <span>Configurações</span>
                   </button>
 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
@@ -156,7 +156,7 @@ export default function HeaderFull({ userData, loading }: any) {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center w-full px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
@@ -189,7 +189,7 @@ export default function HeaderFull({ userData, loading }: any) {
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-1 mr-5 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50">
+                <div className="absolute right-4 top-full mt-1 w-56 bg-white dark:bg-[#0E1116] rounded-2xl shadow-lg dark:border-none border border-gray-200 z-50 overflow-hidden">
                   <div className="px-4 py-3 border-gray-100">
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
                       {userData?.name || 'Usuário'}
@@ -203,20 +203,20 @@ export default function HeaderFull({ userData, loading }: any) {
                       setIsMenuOpen(false);
                       navigate(`/profile/${userData?.nickname}`)
                     }}
-                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
-                    <i className="fas fa-user-circle mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Meu Perfil</span>
+                    <i className="fas fa-user-circle mr-3 w-5 text-center"></i>
+                    <span>Meu Perfil</span>
                   </button>
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate('/config');
                     }}
-                    className="flex items-center w-full px-2 py-3 mx-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-[#494949] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-[#494949] transition-colors cursor-pointer"
                   >
-                    <i className="fas fa-cog mr-3 dark:text-white w-5 text-center"></i>
-                    <span className='dark:text-white'>Configurações</span>
+                    <i className="fas fa-cog mr-3 w-5 text-center"></i>
+                    <span>Configurações</span>
                   </button>
 
                   <div className="border-t border-gray-200 dark:border-[#535353] my-1"></div>
@@ -225,7 +225,7 @@ export default function HeaderFull({ userData, loading }: any) {
                       window.localStorage.clear();
                       navigate("/login")
                     }}
-                    className="flex items-center w-full px-2 py-3 m-2 rounded-xl text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
+                    className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-[#FDEFEF] dark:text-[#EC7B7A] dark:hover:bg-[#4C3333] transition-colors cursor-pointer"
                   >
                     <i className="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
                     <span>Sair</span>
