@@ -2,13 +2,32 @@ import { useState, useEffect, useRef } from 'react';
 import KuboIcon from "../../assets/icons/Universal/kubo.png";
 import KuboIconWhite from "../../assets/icons/Universal/KuboIcon.png";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function HeaderFull({ userData, loading }: any) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Rotas onde o header não deve aparecer
+  const hideHeaderRoutes = [
+    '/forgot-password',
+    '/login',
+    '/signup',
+    '/auth'
+  ];
+
+  // Verifica se a rota atual está na lista
+  const shouldHideHeader = hideHeaderRoutes.some(route => 
+    location.pathname.startsWith(route)
+  );
+
+  // Se o header deve estar escondido, não renderiza nada
+  if (shouldHideHeader) {
+    return null;
+  }
 
   const isActiveLink = (path: string) => {
     if (path === '/') {

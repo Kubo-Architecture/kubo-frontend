@@ -595,7 +595,7 @@ export default function AccountSection() {
                 </div>
               )}
 
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="flex items-center gap-2 text-sm font-semibold text-neutral-700 dark:text-neutral-500 mb-3">
                   <i className="fa-solid fa-key text-neutral-600 dark:text-neutral-500"></i>
                   Senha Atual
@@ -608,6 +608,21 @@ export default function AccountSection() {
                   className="w-full px-4 py-3 bg-white dark:bg-[#202830] dark:border-[#3d444d] dark:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-200 rounded-xl text-sm font-medium text-black focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
                 />
+              </div>
+
+              {/* Link Esqueci minha senha */}
+              <div className="mb-6 text-right">
+                <button
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setChangePassword('');
+                    setPasswordError('');
+                    navigate('/forgotpassword', { state: { email: userEmail } });
+                  }}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer font-medium"
+                >
+                  Esqueci minha senha
+                </button>
               </div>
 
               <div className="flex gap-3">

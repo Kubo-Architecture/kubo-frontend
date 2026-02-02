@@ -13,6 +13,7 @@ import UserConfig from "../views/UserConfig.tsx";
 import MaintenanceScreen from "../views/MaintenanceScreen.tsx";
 import NewProject from "../views/Newproject.tsx";
 import EditProjectPage  from "../views/EditProjectPage.tsx";
+import ForgotPasswordVerification from "../views/Forgotpasswordverification.tsx";
 
 
 export default function Rotas({ isAuthenticated, hasNick, authPending, onLoginSuccess, onGalleryLoaded }: any) {
@@ -27,6 +28,7 @@ export default function Rotas({ isAuthenticated, hasNick, authPending, onLoginSu
             <Route path="/profile/nickname" element={<NicknameInput />} />
             <Route path="/project/:projectID" element={<ProjectPage />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/forgot-password/verify" element={<ForgotPasswordVerification />} />
             <Route path="/gallery" element={<Gallery onInitialLoadComplete={onGalleryLoaded} />} />
             <Route path="/config" element={<UserConfig />} />
             <Route path="/MaintenanceScreen" element={<MaintenanceScreen />} />

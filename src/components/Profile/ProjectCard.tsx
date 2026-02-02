@@ -104,30 +104,20 @@ const ProjectCard = ({ project }: any) => {
                     </div>
                 )}
 
-                {(project.category || project.usage_type || project.style || (likesCount !== undefined && likesCount !== null)) && (
-                    <div className="flex items-center justify-between gap-3 text-gray-600 dark:text-gray-400 text-xs pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center gap-3">
-                            {(project.category || project.usage_type) && (
-                                <div className="flex items-center gap-1">
-                                    <i className="fas fa-building"></i>
-                                    <span>{project.category || project.usage_type}</span>
-                                </div>
-                            )}
-                            {project.style && (
-                                <div className="flex items-center gap-1">
-                                    <i className="fas fa-palette"></i>
-                                    <span className="truncate">{project.style}</span>
-                                </div>
-                            )}
-                        </div>
-                        
-                        {/* Contador de curtidas no canto inferior direito */}
-                        <div className="flex items-center gap-1.5">
-                            <i className="fas fa-heart text-red-500"></i>
-                            <span className="font-semibold text-gray-900 dark:text-white">
-                                {likesCount}
-                            </span>
-                        </div>
+                {(project.category || project.usage_type || project.style) && (
+                    <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-xs pt-3 border-t border-gray-200 dark:border-gray-700">
+                        {(project.category || project.usage_type) && (
+                            <div className="flex items-center gap-1">
+                                <i className="fas fa-building"></i>
+                                <span>{project.category || project.usage_type}</span>
+                            </div>
+                        )}
+                        {project.style && (
+                            <div className="flex items-center gap-1">
+                                <i className="fas fa-palette"></i>
+                                <span className="truncate">{project.style}</span>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
