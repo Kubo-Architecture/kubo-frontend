@@ -14,6 +14,7 @@ const SignUpForm = () => {
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState<boolean>(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>('');
+  const [showNameLengthWarning, setShowNameLengthWarning] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<any>({
     name: '',
@@ -78,6 +79,13 @@ const SignUpForm = () => {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
+    
+    // Verifica se é o campo name e se atingiu o limite
+    if (name === 'name' && value.length >= 30) {
+      setShowNameLengthWarning(true);
+      setTimeout(() => setShowNameLengthWarning(false), 3000);
+    }
+    
     setFormData((prev: any) => ({ ...prev, [name]: value }));
     
     if (generalError) {
@@ -219,6 +227,17 @@ const SignUpForm = () => {
           Junte-se à comunidade Kubo
         </p>
 
+        {/* Mensagem de aviso de limite de nome */}
+        {showNameLengthWarning && (
+          <div className="mb-3 p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2 animate-fade-in">
+            <AlertCircle className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-semibold text-yellow-900">Limite atingido</p>
+              <p className="text-[10px] text-yellow-700">O nome pode ter no máximo 30 caracteres</p>
+            </div>
+          </div>
+        )}
+
         {/* Mensagem de sucesso */}
         {showSuccessMessage && (
           <div className="mb-3 p-2.5 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
@@ -245,9 +264,14 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit} className="space-y-0">
           {/* Nome completo */}
           <div>
-            <h5 className="block text-black font-medium mb-0.5 text-[10px] uppercase tracking-wider">
-              Nome completo
-            </h5>
+            <div className="flex items-center justify-between mb-0.5">
+              <h5 className="block text-black font-medium text-[10px] uppercase tracking-wider">
+                Nome completo
+              </h5>
+              <span className="text-[10px] text-gray-500">
+                {formData.name.length}/30
+              </span>
+            </div>
             <div className="relative mt-0.5">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
@@ -257,6 +281,7 @@ const SignUpForm = () => {
                 onChange={handleChange}
                 onBlur={() => handleBlur('name')}
                 placeholder="Digite seu nome"
+                maxLength={30}
                 className={`w-full pl-10 pr-3 py-2 bg-white border rounded-lg text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition ${
                   (touched.name && errors.name) || generalError ? 'border-red-500' : 'border-gray-300'
                 }`}

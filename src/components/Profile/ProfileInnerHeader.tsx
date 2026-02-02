@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DefaultProfile from "../../assets/Profile/defaultProfile.svg";
 import PhotoEditorModal from "../Profile/PhotoEditorModal";
+import { isBannerColor, extractColor } from "./BannerSettings"; // Adicione esta importação
 
 export default function ProfileInnerHeader(props: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,16 +20,34 @@ export default function ProfileInnerHeader(props: any) {
     window.location.reload();
   };
 
+  // Função auxiliar para obter o estilo do banner
+  const getBannerStyle = () => {
+    if (!props.banner) {
+      return {
+        backgroundColor: "#C4C4C4",
+      };
+    }
+
+    // Se for uma cor personalizada
+    if (isBannerColor(props.banner)) {
+      return {
+        backgroundColor: extractColor(props.banner),
+      };
+    }
+
+    // Se for uma imagem (URL)
+    return {
+      backgroundImage: `url(${props.banner})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    };
+  };
+
   return (
     <>
       <div
         className="h-[150px] md:h-[200px] lg:h-[300px] xl:h-[350px] w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 flex relative justify-end"
-        style={{
-          backgroundColor: props.banner ? undefined : "#C4C4C4",
-          backgroundImage: props.banner ? `url(${props.banner})` : undefined,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        style={getBannerStyle()}
       >
         {/* Botão de Editar Banner - só aparece no próprio perfil */}
         {props.ownProfile && props.onEditBannerClick && (
