@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../theme/ThemeProvider';
 
 import AccountSection from '../components/Settings/AccountSection';
@@ -6,9 +7,23 @@ import ThemeSection from '../components/Settings/ThemeSection';
 import ContactSection from '../components/Settings/ContactSection';
 
 export default function UserConfig() {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('geral');
-
+  const [isLoading, setIsLoading] = useState(true);
   const { theme, setTheme } = useTheme();
+
+  // Verificar se usuário está logado
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      // Se não estiver logado, redirecionar para login
+      navigate('/login', { replace: true });
+      return;
+    }
+    
+    setIsLoading(false);
+  }, [navigate]);
 
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
@@ -33,6 +48,11 @@ export default function UserConfig() {
     { id: 'contato', label: 'Contato', icon: 'fa-solid fa-envelope', available: true },
     { id: 'politica-privacidade', label: 'Política de Privacidade', icon: 'fa-solid fa-shield-halved', available: true }
   ];
+
+  // Mostrar loading enquanto verifica autenticação
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-white fixed inset-0 overflow-hidden">

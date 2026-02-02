@@ -444,24 +444,14 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
                       </div>
 
                       {/* Footer com info adicional */}
-                      <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3 md:mt-4 pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
-                          {(work.category || work.usage_type) && (
-                            <div className="flex items-center gap-1 sm:gap-1.5">
-                              <i className="fas fa-building text-xs sm:text-sm"></i>
-                              <span className="text-xs sm:text-sm">{work.category || work.usage_type}</span>
-                            </div>
-                          )}
+                      {(work.category || work.usage_type) && (
+                        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3 md:mt-4 pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            <i className="fas fa-building text-xs sm:text-sm"></i>
+                            <span className="text-xs sm:text-sm">{work.category || work.usage_type}</span>
+                          </div>
                         </div>
-                        
-                        {/* Contador de curtidas */}
-                        <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
-                          <i className="fas fa-heart text-red-500 text-xs sm:text-sm"></i>
-                          <span className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm">
-                            {work.likes || 0}
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 ))}
