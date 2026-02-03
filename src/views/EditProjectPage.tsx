@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { decodeJWT } from '../utils/jwt';
+import { formatBrazilianArea, parseBrazilianArea } from '../utils/areaFormat';
 
 import Loading from '../components/Universal/Loading';
 import EditProjectSidebar from '../components/EditProject/EditProjectSidebar';
@@ -97,14 +98,14 @@ export default function EditProjectPage() {
                 }
 
                 setTerrainArea(
-                    typeof data.terrain_area === 'number'
-                        ? String(data.terrain_area)
-                        : data.terrain_area || ''
+                    data.terrain_area != null && data.terrain_area !== ''
+                        ? formatBrazilianArea(Number(data.terrain_area))
+                        : ''
                 );
                 setBuildArea(
-                    typeof data.build_area === 'number'
-                        ? String(data.build_area)
-                        : data.build_area || ''
+                    data.build_area != null && data.build_area !== ''
+                        ? formatBrazilianArea(Number(data.build_area))
+                        : ''
                 );
                 setStatus(data.status || '');
                 setMaterials(data.materials && data.materials.length > 0 ? data.materials : ['']);
@@ -361,14 +362,14 @@ export default function EditProjectPage() {
             };
 
             if (buildArea && buildArea.trim()) {
-                const parsed = parseFloat(buildArea.replace(',', '.'));
+                const parsed = parseBrazilianArea(buildArea);
                 if (!isNaN(parsed)) {
                     updateData.build_area = parsed;
                 }
             }
 
             if (terrainArea && terrainArea.trim()) {
-                const parsed = parseFloat(terrainArea.replace(',', '.'));
+                const parsed = parseBrazilianArea(terrainArea);
                 if (!isNaN(parsed)) {
                     updateData.terrain_area = parsed;
                 }

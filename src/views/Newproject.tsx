@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
 import { compressImage } from '../utils/imageCompression';
+import { parseBrazilianArea } from '../utils/areaFormat';
 import axios from 'axios';
 import MediaSection from '../components/Project/MediaSection';
 import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
@@ -395,8 +396,10 @@ export default function NewProject() {
     data.append('location', formData.location);
     data.append('description', formData.description);
     data.append('status', formData.status);
-    data.append('build_area', formData.build_area || '');
-    data.append('terrain_area', formData.terrain_area || '');
+    const buildAreaNum = parseBrazilianArea(formData.build_area);
+    const terrainAreaNum = parseBrazilianArea(formData.terrain_area);
+    data.append('build_area', !isNaN(buildAreaNum) ? String(buildAreaNum) : '');
+    data.append('terrain_area', !isNaN(terrainAreaNum) ? String(terrainAreaNum) : '');
     data.append('userId', userId);
 
     finalUsageTypes.forEach((type, index) => {

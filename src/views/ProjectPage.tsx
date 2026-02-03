@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
+import { formatBrazilianArea } from '../utils/areaFormat';
 import axios from 'axios';
 import Loading from '../components/Universal/Loading';
 
@@ -306,13 +307,13 @@ export default function ProjectPage() {
         {
             icon: 'fas fa-mountain',
             title: 'Área do terreno',
-            value: project.terrain_area ? `${project.terrain_area}m²` : null,
+            value: project.terrain_area != null && project.terrain_area !== '' ? `${formatBrazilianArea(Number(project.terrain_area))}m²` : null,
             show: project.terrain_area && project.terrain_area > 0
         },
         {
             icon: 'fas fa-house',
             title: 'Área construída',
-            value: project.build_area ? `${project.build_area}m²` : null,
+            value: project.build_area != null && project.build_area !== '' ? `${formatBrazilianArea(Number(project.build_area))}m²` : null,
             show: project.build_area && project.build_area > 0
         },
         {

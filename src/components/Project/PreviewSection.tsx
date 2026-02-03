@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatBrazilianArea, parseBrazilianArea } from '../../utils/areaFormat';
 
 interface PreviewSectionProps {
   formData: {
@@ -100,12 +101,12 @@ export default function PreviewSection({ formData, mainImagePreview, galleryPrev
               {
                 icon: 'fas fa-mountain',
                 title: 'Área do terreno',
-                value: formData.terrain_area ? `${formData.terrain_area}m²` : 'Não informado'
+                value: formData.terrain_area ? `${formatBrazilianArea(parseBrazilianArea(formData.terrain_area))}m²` : 'Não informado'
               },
               {
                 icon: 'fas fa-house',
                 title: 'Área construída',
-                value: formData.build_area ? `${formData.build_area}m²` : 'Não informado'
+                value: formData.build_area ? `${formatBrazilianArea(parseBrazilianArea(formData.build_area))}m²` : 'Não informado'
               },
               {
                 icon: 'fas fa-chart-simple',

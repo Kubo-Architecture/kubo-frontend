@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatBrazilianArea, parseBrazilianArea, sanitizeAreaInput } from '../../utils/areaFormat';
 
 interface GeneralSectionProps {
   formData: any;
@@ -413,14 +414,22 @@ export default function GeneralSection({
                 Área construída (m²)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 id="build_area"
                 name="build_area"
                 value={formData.build_area}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
+                onChange={(e) => {
+                  const v = sanitizeAreaInput(e.target.value);
+                  handleChange({ ...e, target: { ...e.target, value: v } });
+                }}
+                onBlur={(e) => {
+                  const n = parseBrazilianArea(e.target.value);
+                  if (!isNaN(n) && n >= 0) {
+                    handleChange({ ...e, target: { ...e.target, value: formatBrazilianArea(n) } });
+                  }
+                }}
+                placeholder="Ex.: 28.800"
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm text-zinc-900 dark:text-white"
               />
             </div>
@@ -430,14 +439,22 @@ export default function GeneralSection({
                 Área do terreno (m²)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 id="terrain_area"
                 name="terrain_area"
                 value={formData.terrain_area}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
+                onChange={(e) => {
+                  const v = sanitizeAreaInput(e.target.value);
+                  handleChange({ ...e, target: { ...e.target, value: v } });
+                }}
+                onBlur={(e) => {
+                  const n = parseBrazilianArea(e.target.value);
+                  if (!isNaN(n) && n >= 0) {
+                    handleChange({ ...e, target: { ...e.target, value: formatBrazilianArea(n) } });
+                  }
+                }}
+                placeholder="Ex.: 28.800"
                 className="w-full px-4 py-3 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm text-zinc-900 dark:text-white"
               />
             </div>

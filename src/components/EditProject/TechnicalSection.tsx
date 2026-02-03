@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatBrazilianArea, parseBrazilianArea, sanitizeAreaInput } from '../../utils/areaFormat';
 
 interface TechnicalSectionProps {
     usageTypes: string[];
@@ -101,11 +102,16 @@ export default function TechnicalSection({
                                 Área do Terreno (m²)
                             </label>
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 value={terrainArea}
-                                onChange={(e) => setTerrainArea(e.target.value)}
+                                onChange={(e) => setTerrainArea(sanitizeAreaInput(e.target.value))}
+                                onBlur={(e) => {
+                                    const n = parseBrazilianArea(e.target.value);
+                                    if (!isNaN(n) && n >= 0) setTerrainArea(formatBrazilianArea(n));
+                                }}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm"
-                                placeholder="500"
+                                placeholder="Ex.: 28.800"
                             />
                         </div>
 
@@ -114,11 +120,16 @@ export default function TechnicalSection({
                                 Área Construída (m²)
                             </label>
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="decimal"
                                 value={buildArea}
-                                onChange={(e) => setBuildArea(e.target.value)}
+                                onChange={(e) => setBuildArea(sanitizeAreaInput(e.target.value))}
+                                onBlur={(e) => {
+                                    const n = parseBrazilianArea(e.target.value);
+                                    if (!isNaN(n) && n >= 0) setBuildArea(formatBrazilianArea(n));
+                                }}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#3d444d] bg-white dark:bg-[#202830] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all text-sm"
-                                placeholder="300"
+                                placeholder="Ex.: 28.800"
                             />
                         </div>
                     </div>

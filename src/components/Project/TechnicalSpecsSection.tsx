@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatBrazilianArea, parseBrazilianArea, sanitizeAreaInput } from '../../utils/areaFormat';
 
 interface TechnicalSpecsSectionProps {
   formData: {
@@ -159,14 +160,22 @@ export default function TechnicalSpecsSection({
             </label>
             <div className="relative">
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 id="build_area_technical"
                 name="build_area"
                 value={formData.build_area}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
+                onChange={(e) => {
+                  const v = sanitizeAreaInput(e.target.value);
+                  handleChange({ ...e, target: { ...e.target, value: v } });
+                }}
+                onBlur={(e) => {
+                  const n = parseBrazilianArea(e.target.value);
+                  if (!isNaN(n) && n >= 0) {
+                    handleChange({ ...e, target: { ...e.target, value: formatBrazilianArea(n) } });
+                  }
+                }}
+                placeholder="Ex.: 28.800"
                 className="w-full pl-4 pr-12 py-3.5 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-neutral-500"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-zinc-500 dark:text-neutral-500 font-medium">
@@ -175,7 +184,7 @@ export default function TechnicalSpecsSection({
             </div>
             {formData.build_area && (
               <p className="text-xs text-zinc-600 dark:text-neutral-400">
-                {parseFloat(formData.build_area).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m² de área construída
+                {formatBrazilianArea(parseBrazilianArea(formData.build_area))} m² de área construída
               </p>
             )}
           </div>
@@ -188,14 +197,22 @@ export default function TechnicalSpecsSection({
             </label>
             <div className="relative">
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 id="terrain_area_technical"
                 name="terrain_area"
                 value={formData.terrain_area}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
+                onChange={(e) => {
+                  const v = sanitizeAreaInput(e.target.value);
+                  handleChange({ ...e, target: { ...e.target, value: v } });
+                }}
+                onBlur={(e) => {
+                  const n = parseBrazilianArea(e.target.value);
+                  if (!isNaN(n) && n >= 0) {
+                    handleChange({ ...e, target: { ...e.target, value: formatBrazilianArea(n) } });
+                  }
+                }}
+                placeholder="Ex.: 28.800"
                 className="w-full pl-4 pr-12 py-3.5 bg-white dark:bg-[#202830] border border-zinc-300 dark:border-[#3d444d] rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-neutral-500"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-zinc-500 dark:text-neutral-500 font-medium">
@@ -204,14 +221,14 @@ export default function TechnicalSpecsSection({
             </div>
             {formData.terrain_area && (
               <p className="text-xs text-zinc-600 dark:text-neutral-400">
-                {parseFloat(formData.terrain_area).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m² de terreno
+                {formatBrazilianArea(parseBrazilianArea(formData.terrain_area))} m² de terreno
               </p>
             )}
           </div>
         </div>
 
         {/* Taxa de Ocupação */}
-        {formData.build_area && formData.terrain_area && parseFloat(formData.terrain_area) > 0 && (
+        {formData.build_area && formData.terrain_area && parseBrazilianArea(formData.terrain_area) > 0 && (
           <div className="pt-4 border-t border-zinc-200 dark:border-[#3d444d]">
             <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-[#202830] rounded-xl border border-zinc-200 dark:border-[#3d444d]">
               <div className="flex items-center gap-3">
@@ -223,7 +240,7 @@ export default function TechnicalSpecsSection({
                     Taxa de ocupação
                   </p>
                   <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                    {((parseFloat(formData.build_area) / parseFloat(formData.terrain_area)) * 100).toFixed(1)}%
+                    {((parseBrazilianArea(formData.build_area) / parseBrazilianArea(formData.terrain_area)) * 100).toFixed(1)}%
                   </p>
                 </div>
               </div>
