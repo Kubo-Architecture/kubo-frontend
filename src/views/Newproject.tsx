@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
+import { compressImage } from '../utils/imageCompression';
 import axios from 'axios';
 import MediaSection from '../components/Project/MediaSection';
 import TechnicalSpecsSection from '../components/Project/TechnicalSpecsSection';
@@ -33,6 +34,7 @@ export default function NewProject() {
   const [photo, setPhoto] = useState<File | null>(null);
   const [gallery, setGallery] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState('');
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
@@ -239,62 +241,65 @@ export default function NewProject() {
     }));
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        setError('A foto principal deve ter no máximo 10MB');
-        return;
-      }
-      
-      setPhoto(file);
-
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      setError('A foto principal deve ter no máximo 10MB');
+      return;
+    }
+    setError('');
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImage(file);
+      setPhoto(compressed);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setMainImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setError('');
+      reader.onloadend = () => setMainImagePreview(reader.result as string);
+      reader.readAsDataURL(compressed);
+    } catch {
+      setError('Não foi possível processar a imagem. Tente outra.');
+    } finally {
+      setIsCompressing(false);
     }
   };
 
-  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
-
-    if (newFiles.length === 0) {
-      return;
-    }
-
-    const totalSize = [...gallery, ...newFiles].reduce((acc, file) => acc + file.size, 0);
-    if (totalSize > 50 * 1024 * 1024) {
-      setError('A galeria não pode exceder 50MB no total');
-      return;
-    }
+    if (newFiles.length === 0) return;
 
     if (gallery.length + newFiles.length > 20) {
       setError('Máximo de 20 imagens na galeria');
       return;
     }
 
-    setGallery((prevGallery) => {
-      const allFiles = [...prevGallery, ...newFiles];
-      const uniqueMap = new Map();
-      allFiles.forEach((file) => {
-        uniqueMap.set(file.name + file.size, file);
-      });
-      const uniqueFiles = Array.from(uniqueMap.values()) as File[];
-
-      newFiles.forEach((file) => {
+    setError('');
+    setIsCompressing(true);
+    try {
+      const compressed = await Promise.all(newFiles.map((file) => compressImage(file)));
+      const newPreviews: (string | null)[] = new Array(compressed.length).fill(null);
+      let done = 0;
+      compressed.forEach((file, i) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setGalleryPreviews((prev) => [...prev, reader.result as string]);
+          newPreviews[i] = reader.result as string;
+          done += 1;
+          if (done === compressed.length) {
+            setGalleryPreviews((prev) => [...prev, ...(newPreviews as string[])]);
+          }
         };
         reader.readAsDataURL(file);
       });
-
-      return uniqueFiles;
-    });
-    setError('');
+      setGallery((prev) => {
+        const all = [...prev, ...compressed];
+        const unique = new Map<string, File>();
+        all.forEach((f) => unique.set(f.name + f.size, f));
+        return Array.from(unique.values());
+      });
+    } catch {
+      setError('Não foi possível processar algumas imagens. Tente novamente.');
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   const removeGalleryImage = (index: number) => {
@@ -488,7 +493,7 @@ export default function NewProject() {
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isCompressing}
                 className="cursor-pointer px-4 py-3.5 border-2 border-zinc-300 dark:border-[#3d444d] text-zinc-900 dark:text-white rounded-xl font-medium hover:bg-zinc-50 dark:hover:bg-[#202830] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 Cancelar
@@ -496,7 +501,7 @@ export default function NewProject() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isCompressing}
                 onClick={handleSubmit}
                 className="cursor-pointer px-4 py-3.5 bg-black dark:bg-white text-white dark:text-black rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
               >
@@ -519,6 +524,15 @@ export default function NewProject() {
         {/* Main Content */}
         <main className="flex-1 lg:ml-80 pt-16 min-h-screen">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+            {isCompressing && (
+              <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800 px-4 py-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                <svg className="animate-spin h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Comprimindo imagens para envio...</span>
+              </div>
+            )}
             {error && (
               <div
                 className={`mb-6 rounded-xl border px-4 py-3 text-sm ${
