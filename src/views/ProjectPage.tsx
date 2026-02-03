@@ -15,8 +15,10 @@ export default function ProjectPage() {
     const [isFavorited, setIsFavorited] = useState<boolean>(false);
     const [likesCount, setLikesCount] = useState<number>(0);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
     const [, setImageError] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [imageLoadStates, setImageLoadStates] = useState<{[key: string]: boolean}>({});
     
     const deleteModalRef = useRef<HTMLDivElement>(null);
 
@@ -25,12 +27,16 @@ export default function ProjectPage() {
     const getImageUrl = (path: string | null | undefined): string => {
         if (!path) return '';
         if (path.startsWith('http')) return path;
-        const fullUrl = `${API_URL}${path}`;
-        return fullUrl;
+        return `${API_URL}${path}`;
     };
 
     const currentUserId = getUserIdFromToken();
     const isOwner = project?.userId === currentUserId;
+
+    const allImages = project ? [
+        project.photo_url,
+        ...(project.gallery || [])
+    ].filter(Boolean) : [];
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -110,49 +116,32 @@ export default function ProjectPage() {
                 
                 window.scrollTo(0, scrollY);
             };
-        } else {
-            document.body.style.removeProperty('overflow');
-            document.body.style.removeProperty('position');
-            document.body.style.removeProperty('top');
-            document.body.style.removeProperty('width');
-            document.documentElement.style.removeProperty('overflow');
         }
     }, [showDeleteModal]);
 
     const handleLike = async () => {
-        if (!currentUserId) {
-            return;
-        }
+        if (!currentUserId) return;
 
-        // Salva os valores atuais para possível rollback
         const previousIsLiked = isLiked;
         const previousLikesCount = likesCount;
 
         try {
-            // Atualiza UI imediatamente (optimistic update)
             const newIsLiked = !isLiked;
             const newLikesCount = newIsLiked ? likesCount + 1 : Math.max(0, likesCount - 1);
             
             setIsLiked(newIsLiked);
             setLikesCount(newLikesCount);
 
-            // Faz a requisição ao backend
             if (newIsLiked) {
                 await axios.post(`${API_URL}/projects/${projectId}/like`, { userId: currentUserId });
             } else {
                 await axios.delete(`${API_URL}/projects/${projectId}/like/${currentUserId}`);
             }
 
-            // Dispara evento customizado para atualizar outros componentes
             window.dispatchEvent(new CustomEvent('projectLikeChanged', {
-                detail: {
-                    projectId: projectId,
-                    likes: newLikesCount,
-                    isLiked: newIsLiked
-                }
+                detail: { projectId, likes: newLikesCount, isLiked: newIsLiked }
             }));
 
-            // Busca os dados atualizados do servidor para confirmar
             const response = await axios.get(
                 currentUserId
                     ? `${API_URL}/projects/${projectId}?userId=${currentUserId}`
@@ -162,10 +151,9 @@ export default function ProjectPage() {
             setLikesCount(response.data.likes ?? 0);
             setIsLiked(response.data.isLiked ?? false);
 
-            // Atualiza o evento com os dados corretos do servidor
             window.dispatchEvent(new CustomEvent('projectLikeChanged', {
                 detail: {
-                    projectId: projectId,
+                    projectId,
                     likes: response.data.likes ?? 0,
                     isLiked: response.data.isLiked ?? false
                 }
@@ -173,26 +161,17 @@ export default function ProjectPage() {
 
         } catch (err) {
             console.error('Error toggling like:', err);
-            
-            // Reverte em caso de erro
             setIsLiked(previousIsLiked);
             setLikesCount(previousLikesCount);
             
-            // Dispara evento para reverter nos outros componentes
             window.dispatchEvent(new CustomEvent('projectLikeChanged', {
-                detail: {
-                    projectId: projectId,
-                    likes: previousLikesCount,
-                    isLiked: previousIsLiked
-                }
+                detail: { projectId, likes: previousLikesCount, isLiked: previousIsLiked }
             }));
         }
     };
 
     const handleFavorite = async () => {
-        if (!currentUserId) {
-            return;
-        }
+        if (!currentUserId) return;
 
         try {
             if (isFavorited) {
@@ -216,8 +195,7 @@ export default function ProjectPage() {
                 navigate('/gallery');
             }
         } catch (error: any) {
-            if (error.response?.status === 400) {
-            } else if (error.response?.status === 404) {}
+            console.error('Error deleting project:', error);
         }
     };
 
@@ -227,8 +205,9 @@ export default function ProjectPage() {
         }
     };
 
-    const openLightbox = (imageUrl: string) => {
+    const openLightbox = (imageUrl: string, index: number) => {
         setSelectedImage(imageUrl);
+        setCurrentImageIndex(index);
         document.body.style.overflow = 'hidden';
     };
 
@@ -237,19 +216,42 @@ export default function ProjectPage() {
         document.body.style.overflow = 'unset';
     };
 
+    const navigateImage = (direction: 'prev' | 'next') => {
+        const newIndex = direction === 'next' 
+            ? (currentImageIndex + 1) % allImages.length
+            : (currentImageIndex - 1 + allImages.length) % allImages.length;
+        
+        setCurrentImageIndex(newIndex);
+        setSelectedImage(getImageUrl(allImages[newIndex]));
+    };
+
     useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && selectedImage) {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!selectedImage) return;
+            
+            if (e.key === 'Escape') {
                 closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                navigateImage('prev');
+            } else if (e.key === 'ArrowRight') {
+                navigateImage('next');
             }
+        };
+
+        const handleEscapeModal = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && showDeleteModal) {
                 setShowDeleteModal(false);
             }
         };
 
-        window.addEventListener('keydown', handleEscape);
-        return () => window.removeEventListener('keydown', handleEscape);
-    }, [selectedImage, showDeleteModal]);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keydown', handleEscapeModal);
+        
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keydown', handleEscapeModal);
+        };
+    }, [selectedImage, showDeleteModal, currentImageIndex]);
 
     if (loading) {
         return <Loading />;
@@ -259,18 +261,18 @@ export default function ProjectPage() {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#151B23] p-6">
                 <div className="text-center max-w-md">
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gray-50 dark:bg-[#202830] flex items-center justify-center border border-gray-100 dark:border-[#3d444d]">
-                        <i className="fas fa-building text-3xl text-gray-300 dark:text-neutral-600"></i>
+                    <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gray-100 dark:bg-[#202830] flex items-center justify-center">
+                        <i className="fas fa-building text-2xl text-gray-400 dark:text-neutral-600"></i>
                     </div>
-                    <h3 className="text-2xl font-medium text-gray-900 dark:text-white mb-3">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                         Projeto não encontrado
                     </h3>
-                    <p className="text-gray-500 dark:text-neutral-400 text-sm mb-8 leading-relaxed">
+                    <p className="text-gray-500 dark:text-neutral-400 text-sm mb-6">
                         O projeto que você está procurando não existe ou foi removido.
                     </p>
                     <button
                         onClick={() => navigate('/gallery')}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all active:scale-[0.98] cursor-pointer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-neutral-200 transition-all active:scale-95 cursor-pointer"
                     >
                         <i className="fas fa-arrow-left text-xs"></i>
                         <span>Voltar à galeria</span>
@@ -280,340 +282,236 @@ export default function ProjectPage() {
         );
     }
 
+    const specs = [
+        {
+            icon: 'fas fa-layer-group',
+            title: 'Materiais',
+            value: project.materials && project.materials.length > 0 
+                ? project.materials.join(', ')
+                : null,
+            show: project.materials && project.materials.length > 0
+        },
+        {
+            icon: 'fas fa-users',
+            title: 'Realização',
+            value: project.author,
+            show: project.author && project.author.trim() !== ''
+        },
+        {
+            icon: 'fas fa-location-crosshairs',
+            title: 'Tipo de uso',
+            value: project.usage_type,
+            show: project.usage_type && project.usage_type.trim() !== ''
+        },
+        {
+            icon: 'fas fa-mountain',
+            title: 'Área do terreno',
+            value: project.terrain_area ? `${project.terrain_area}m²` : null,
+            show: project.terrain_area && project.terrain_area > 0
+        },
+        {
+            icon: 'fas fa-house',
+            title: 'Área construída',
+            value: project.build_area ? `${project.build_area}m²` : null,
+            show: project.build_area && project.build_area > 0
+        },
+        {
+            icon: 'fas fa-chart-simple',
+            title: 'Status',
+            value: project.status,
+            show: project.status && project.status.trim() !== ''
+        }
+    ].filter(spec => spec.show);
+
     return (
         <>  
             <div className="min-h-screen bg-white dark:bg-[#151B23]">
-                {/* Main Content */}
                 <div className="w-full px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24 lg:px-8 pt-24 sm:pt-28 md:pt-32 pb-12">
                     {/* Back Button */}
                     <button 
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center cursor-pointer gap-2 mb-8 sm:mb-12 md:mb-16 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors group"
+                        className="inline-flex items-center cursor-pointer gap-2 mb-6 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors group"
                     >
-                        <i className="fas fa-arrow-left text-base group-hover:-translate-x-1 transition-transform"></i>
-                        <span className="text-base font-medium">Voltar</span>
+                        <i className="fas fa-arrow-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
+                        <span className="text-sm font-medium">Voltar</span>
                     </button>
 
-                    {/* Hero Section - Side by Side */}
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-16 items-start">
-                        {/* Left Column - Info */}
-                        <div className="space-y-6">
+                    {/* Hero Section */}
+                    <div className="grid lg:grid-cols-2 gap-8 mb-10">
+                        {/* Left - Info */}
+                        <div className="space-y-5">
                             <div>
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-3">
                                     {project.name}
                                 </h1>
                                 
-                                <div className="flex items-center gap-2 text-gray-600 dark:text-neutral-400 mb-6">
-                                    <i className="fas fa-location-dot text-base"></i>
-                                    <span className="text-base font-medium">{project.location}</span>
+                                <div className="flex items-center gap-2 text-gray-600 dark:text-neutral-400 mb-4">
+                                    <i className="fas fa-location-dot text-sm"></i>
+                                    <span className="text-sm font-medium">{project.location}</span>
                                 </div>
 
-                                <p className="text-gray-700 dark:text-neutral-400 leading-relaxed text-base">
+                                <p className="text-gray-600 dark:text-neutral-400 leading-relaxed text-sm">
                                     {project.description || 'Nenhuma descrição fornecida'}
                                 </p>
                             </div>
+
+                            {/* User Info */}
+                            <div className="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-[#2a3139]">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#202830] dark:to-[#151B23] flex items-center justify-center">
+                                    <i className="fas fa-user text-sm text-gray-600 dark:text-neutral-400"></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 dark:text-neutral-500 font-medium">
+                                        Autor do projeto
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {project.author || 'Não informado'}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Right Column - Hero Image */}
-                        <div className="lg:pl-4">
+                        {/* Right - Hero Image */}
+                        <div>
                             <div 
-                                className="rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[5/5] cursor-pointer group relative shadow-lg hover:shadow-2xl transition-all duration-300"
-                                onClick={() => project.photo_url && openLightbox(getImageUrl(project.photo_url))}
+                                className="rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-[4/3] cursor-pointer group relative shadow-lg hover:shadow-xl transition-all duration-300"
+                                onClick={() => project.photo_url && openLightbox(getImageUrl(project.photo_url), 0)}
                             >
                                 {project.photo_url ? (
                                     <>
+                                        {!imageLoadStates[project.photo_url] && (
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-8 h-8 border-3 border-gray-300 dark:border-neutral-600 border-t-gray-600 dark:border-t-neutral-400 rounded-full animate-spin"></div>
+                                            </div>
+                                        )}
                                         <img
-                                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-all duration-700"
+                                            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                                             src={getImageUrl(project.photo_url)}
                                             alt={project.name}
+                                            loading="eager"
+                                            decoding="async"
+                                            onLoad={() => setImageLoadStates(prev => ({...prev, [project.photo_url]: true}))}
                                             onError={() => setImageError(true)}
                                         />
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <div className="bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm px-3 py-2 rounded-full">
                                                 <i className="fas fa-expand text-gray-900 dark:text-neutral-400 text-sm"></i>
                                             </div>
                                         </div>
                                     </>
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center">
-                                        <i className="fas fa-image text-4xl text-gray-300 dark:text-neutral-600"></i>
+                                        <i className="fas fa-image text-3xl text-gray-300 dark:text-neutral-600"></i>
                                     </div>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    {/* User Info and Actions */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-16 pb-8 border-b border-gray-100 dark:border-[#3d444d]">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-[#202830] dark:to-[#151B23] flex items-center justify-center">
-                                <i className="fas fa-user text-base text-gray-600 dark:text-neutral-400"></i>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider font-medium">
-                                    Autor do projeto
-                                </p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {project.author || 'Não informado'}
-                                </p>
-                            </div>
-                        </div>
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-2 mb-10 pb-8 border-b border-gray-100 dark:border-[#2a3139] flex-wrap">
+                        <button
+                            onClick={handleLike}
+                            className={`flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border transition-all active:scale-95 ${
+                                isLiked 
+                                    ? 'border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
+                                    : 'border-gray-200 dark:border-[#2a3139] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
+                            }`}
+                        >
+                            <i className={`${isLiked ? 'fas' : 'far'} fa-heart text-sm`}></i>
+                            <span className="text-sm font-medium">{likesCount}</span>
+                        </button>
 
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                            <button
-                                onClick={handleLike}
-                                className={`flex-1 sm:flex-initial cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
-                                    isLiked 
-                                        ? 'border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' 
-                                        : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
-                                }`}
-                                aria-label={isLiked ? 'Remover curtida' : 'Curtir'}
-                            >
-                                <i className={`${isLiked ? 'fas' : 'far'} fa-heart text-base`}></i>
-                                <span className="text-sm font-medium">{likesCount}</span>
-                            </button>
+                        <button
+                            onClick={handleFavorite}
+                            className={`flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border transition-all active:scale-95 ${
+                                isFavorited 
+                                    ? 'border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
+                                    : 'border-gray-200 dark:border-[#2a3139] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
+                            }`}
+                        >
+                            <i className={`${isFavorited ? 'fas' : 'far'} fa-star text-sm`}></i>
+                            <span className="text-sm font-medium">Favoritar</span>
+                        </button>
 
-                            <button
-                                onClick={handleFavorite}
-                                className={`flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border transition-all active:scale-[0.98] ${
-                                    isFavorited 
-                                        ? 'border-amber-200 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
-                                        : 'border-gray-200 dark:border-[#3d444d] hover:border-gray-300 dark:hover:border-[#3d444d] hover:bg-gray-50 dark:hover:bg-[#202830] text-gray-700 dark:text-neutral-400'
-                                }`}
-                                aria-label={isFavorited ? 'Remover dos favoritos' : 'Favoritar'}
-                            >
-                                <i className={`${isFavorited ? 'fas' : 'far'} fa-star text-base`}></i>
-                                <span className="text-sm font-medium">Favoritar</span>
-                            </button>
-
-                            {isOwner && (
+                        {isOwner && (
+                            <>
                                 <button
                                     onClick={() => navigate(`/edit-project/${projectId}`)}
-                                    className="flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border border-blue-200 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all active:scale-[0.98]"
-                                    aria-label="Editar projeto"
+                                    className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all active:scale-95"
                                 >
-                                    <i className="fas fa-edit text-base"></i>
+                                    <i className="fas fa-edit text-sm"></i>
                                     <span className="text-sm font-medium">Editar</span>
                                 </button>
-                            )}
 
-                            {isOwner && (
                                 <button
                                     onClick={() => setShowDeleteModal(true)}
-                                    className="flex-1 sm:flex-initial flex items-center cursor-pointer justify-center gap-2 px-6 py-3 rounded-xl border border-red-200 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all active:scale-[0.98]"
-                                    aria-label="Deletar projeto"
+                                    className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all active:scale-95"
                                 >
-                                    <i className="fas fa-trash text-base"></i>
+                                    <i className="fas fa-trash text-sm"></i>
                                     <span className="text-sm font-medium">Deletar</span>
                                 </button>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Specifications Grid */}
-                    <div className="mb-16">
-                        <h2 className="text-2xl font-medium text-gray-900 dark:text-white mb-8">Especificações técnicas</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {[
-                                {
-                                    icon: 'fas fa-layer-group',
-                                    title: 'Materiais',
-                                    value: project.materials && project.materials.length > 0 
-                                        ? project.materials.join(', ')
-                                        : null,
-                                    show: project.materials && project.materials.length > 0
-                                },
-                                {
-                                    icon: 'fas fa-users',
-                                    title: 'Realização',
-                                    value: project.author,
-                                    show: project.author && project.author.trim() !== ''
-                                },
-                                {
-                                    icon: 'fas fa-location-crosshairs',
-                                    title: 'Tipo de uso',
-                                    value: project.usage_type,
-                                    show: project.usage_type && project.usage_type.trim() !== ''
-                                },
-                                {
-                                    icon: 'fas fa-mountain',
-                                    title: 'Área do terreno',
-                                    value: project.terrain_area ? `${project.terrain_area}m²` : null,
-                                    show: project.terrain_area && project.terrain_area > 0
-                                },
-                                {
-                                    icon: 'fas fa-house',
-                                    title: 'Área construída',
-                                    value: project.build_area ? `${project.build_area}m²` : null,
-                                    show: project.build_area && project.build_area > 0
-                                },
-                                {
-                                    icon: 'fas fa-chart-simple',
-                                    title: 'Status',
-                                    value: project.status,
-                                    show: project.status && project.status.trim() !== ''
-                                }
-                            ]
-                            .filter(spec => spec.show)
-                            .map((spec, index) => (
-                                <div 
-                                    key={index} 
-                                    className="group p-5 rounded-xl border border-gray-100 dark:border-[#3d444d] hover:border-gray-200 dark:hover:border-[#3d444d] hover:shadow-sm transition-all bg-white dark:bg-[#151B23]"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#202830] dark:to-[#151B23] flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <i className={`${spec.icon} text-base text-gray-700 dark:text-neutral-400`}></i>
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">
-                                                {spec.title}
-                                            </h3>
-                                            <p className="text-gray-900 dark:text-white text-sm font-medium leading-relaxed break-words">
-                                                {spec.value}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        {[
-                            project.materials && project.materials.length > 0,
-                            project.author && project.author.trim() !== '',
-                            project.usage_type && project.usage_type.trim() !== '',
-                            project.terrain_area && project.terrain_area > 0,
-                            project.build_area && project.build_area > 0,
-                            project.status && project.status.trim() !== ''
-                        ].every(val => !val) && (
-                            <div className="text-center py-12 text-gray-500 dark:text-neutral-500">
-                                <i className="fas fa-info-circle text-2xl mb-2"></i>
-                                <p className="text-sm">Nenhuma especificação técnica informada</p>
-                            </div>
+                            </>
                         )}
                     </div>
 
-                    {/* Gallery - resto do código continua igual... */}
+                    {/* Specifications */}
+                    {specs.length > 0 && (
+                        <div className="mb-10">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-5">Especificações técnicas</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {specs.map((spec, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="group p-4 rounded-xl border border-gray-100 dark:border-[#2a3139] hover:border-gray-200 dark:hover:border-[#3d444d] hover:shadow-sm transition-all bg-white dark:bg-[#151B23]"
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-gray-50 dark:bg-[#202830] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                                <i className={`${spec.icon} text-sm text-gray-700 dark:text-neutral-400`}></i>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-xs font-semibold text-gray-500 dark:text-neutral-500 uppercase tracking-wide mb-1">
+                                                    {spec.title}
+                                                </h3>
+                                                <p className="text-gray-900 dark:text-white text-sm font-medium leading-snug break-words">
+                                                    {spec.value}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Gallery */}
                     {project.gallery && project.gallery.length > 0 && (
                         <div>
-                            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Galeria</h2>
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-5">Galeria de imagens</h2>
                             
-                            <div className="grid grid-cols-12 gap-4">
-                                {project.gallery[0] && (
-                                    <div className="col-span-12 md:col-span-4 md:row-span-2">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(project.gallery[0]))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(project.gallery[0])}
-                                                alt={`${project.name} - Imagem 1`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                {project.gallery.map((imageUrl: string, index: number) => (
+                                    <div 
+                                        key={index}
+                                        className="rounded-xl overflow-hidden bg-gray-100 dark:bg-[#202830] aspect-square cursor-pointer group relative shadow-md hover:shadow-lg transition-all duration-300"
+                                        onClick={() => openLightbox(getImageUrl(imageUrl), index + 1)}
+                                    >
+                                        {!imageLoadStates[imageUrl] && (
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-6 h-6 border-2 border-gray-300 dark:border-neutral-600 border-t-gray-600 dark:border-t-neutral-400 rounded-full animate-spin"></div>
                                             </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {project.gallery[1] && (
-                                    <div className="col-span-12 md:col-span-4">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(project.gallery[1]))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(project.gallery[1])}
-                                                alt={`${project.name} - Imagem 2`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {project.gallery[2] && (
-                                    <div className="col-span-12 md:col-span-4 md:row-span-2">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden h-full bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(project.gallery[2]))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(project.gallery[2])}
-                                                alt={`${project.name} - Imagem 3`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {project.gallery[3] && (
-                                    <div className="col-span-12 md:col-span-4">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(project.gallery[3]))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(project.gallery[3])}
-                                                alt={`${project.name} - Imagem 4`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {project.gallery[4] && (
-                                    <div className="col-span-12 md:col-span-4">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(project.gallery[4]))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(project.gallery[4])}
-                                                alt={`${project.name} - Imagem 5`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {project.gallery.slice(5).map((imageUrl: string, index: number) => (
-                                    <div key={index + 5} className="col-span-12 md:col-span-4">
-                                        <div 
-                                            className="rounded-2xl overflow-hidden aspect-video bg-gray-100 dark:bg-[#202830] cursor-pointer group relative shadow-md hover:shadow-2xl transition-all duration-300"
-                                            onClick={() => openLightbox(getImageUrl(imageUrl))}
-                                        >
-                                            <img
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                                src={getImageUrl(imageUrl)}
-                                                alt={`${project.name} - Imagem ${index + 6}`}
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <i className="fas fa-expand text-white text-lg drop-shadow-lg"></i>
-                                                </div>
+                                        )}
+                                        <img
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            src={getImageUrl(imageUrl)}
+                                            alt={`${project.name} - Imagem ${index + 1}`}
+                                            loading="lazy"
+                                            decoding="async"
+                                            onLoad={() => setImageLoadStates(prev => ({...prev, [imageUrl]: true}))}
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-[#202830]/90 backdrop-blur-sm p-2 rounded-full">
+                                                <i className="fas fa-expand text-gray-900 dark:text-neutral-400 text-xs"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -624,26 +522,26 @@ export default function ProjectPage() {
                 </div>
             </div>
 
-            {/* Modal de Confirmação de Delete */}
+            {/* Delete Modal */}
             {showDeleteModal && (
                 <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                     onClick={handleDeleteModalClick}
                 >
                     <div 
                         ref={deleteModalRef}
-                        className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl"
+                        className="bg-white dark:bg-[#202830] rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
-                                <i className="fas fa-trash text-red-600 dark:text-red-400 text-xl"></i>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-11 h-11 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
+                                <i className="fas fa-trash text-red-600 dark:text-red-400 text-lg"></i>
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                                     Deletar Projeto?
                                 </h3>
-                                <p className="text-sm text-gray-500 dark:text-neutral-500">
+                                <p className="text-xs text-gray-500 dark:text-neutral-500">
                                     Esta ação não pode ser desfeita
                                 </p>
                             </div>
@@ -651,19 +549,19 @@ export default function ProjectPage() {
                         
                         <p className="text-gray-600 dark:text-neutral-400 mb-6 text-sm">
                             Você está prestes a deletar <strong className="text-gray-900 dark:text-white">{project.name}</strong>. 
-                            Todos os dados do projeto, incluindo imagens, serão perdidos permanentemente.
+                            Todos os dados do projeto serão perdidos permanentemente.
                         </p>
                         
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors cursor-pointer"
+                                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-[#3d444d] text-gray-700 dark:text-neutral-400 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-[#151B23] transition-colors cursor-pointer text-sm"
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleDeleteProject}
-                                className="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors cursor-pointer"
+                                className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors cursor-pointer text-sm"
                             >
                                 Sim, Deletar
                             </button>
@@ -675,28 +573,67 @@ export default function ProjectPage() {
             {/* Lightbox Modal */}
             {selectedImage && (
                 <div 
-                    className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+                    className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center"
                     onClick={closeLightbox}
                 >
+                    {/* Close Button */}
                     <button
                         onClick={closeLightbox}
-                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
+                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
                         aria-label="Fechar"
                     >
-                        <i className="fas fa-times text-xl"></i>
+                        <i className="fas fa-times text-lg"></i>
                     </button>
+
+                    {/* Navigation Buttons */}
+                    {allImages.length > 1 && (
+                        <>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigateImage('prev');
+                                }}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer z-10"
+                                aria-label="Imagem anterior"
+                            >
+                                <i className="fas fa-chevron-left"></i>
+                            </button>
+                            
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigateImage('next');
+                                }}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer z-10"
+                                aria-label="Próxima imagem"
+                            >
+                                <i className="fas fa-chevron-right"></i>
+                            </button>
+                        </>
+                    )}
                     
-                    <div className="max-w-7xl w-full h-full flex items-center justify-center">
+                    {/* Image Container */}
+                    <div className="max-w-7xl w-full h-full flex items-center justify-center p-4">
                         <img
                             src={selectedImage}
                             alt="Visualização ampliada"
                             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
+                            loading="eager"
+                            decoding="async"
                         />
                     </div>
 
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-                        Pressione ESC ou clique fora para fechar
+                    {/* Image Counter */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                        <span className="text-white/90 text-sm font-medium">
+                            {currentImageIndex + 1} / {allImages.length}
+                        </span>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="absolute bottom-14 left-1/2 -translate-x-1/2 text-white/50 text-xs">
+                        Use as setas do teclado ou clique nos botões para navegar
                     </div>
                 </div>
             )}
