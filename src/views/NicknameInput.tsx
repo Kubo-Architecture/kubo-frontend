@@ -97,7 +97,6 @@ export default function NicknameInput() {
         err.response?.data?.error ||
         'Erro ao enviar apelido';
       setError(errorMsg);
-      console.error('Erro na requisição:', err);
     } finally {
       setIsLoading(false);
     }
