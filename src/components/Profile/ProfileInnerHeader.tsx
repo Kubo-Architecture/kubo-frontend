@@ -5,10 +5,12 @@ import { isBannerColor, extractColor } from "./BannerSettings"; // Adicione esta
 
 export default function ProfileInnerHeader(props: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [photoLoadError, setPhotoLoadError] = useState(false);
 
-  const profileImageUrl = props.photoUrl?.trim()
-    ? `url(${props.photoUrl.replace(/=s\d+(-c)?$/, "=s400-c")})`
-    : `url(${DefaultProfile})`;
+  const rawPhotoUrl = props.photoUrl?.trim()
+    ? props.photoUrl.replace(/=s\d+(-c)?$/, "=s400-c")
+    : null;
+  const profileImageSrc = rawPhotoUrl && !photoLoadError ? rawPhotoUrl : DefaultProfile;
 
   const handleImageClick = () => {
     if (props.ownProfile) {
@@ -61,11 +63,17 @@ export default function ProfileInnerHeader(props: any) {
         )}
 
         <div
-          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full bg-cover border-white dark:border-[#181E29] border-3 absolute left-2 sm:left-3 md:left-4 lg:left-6 xl:left-8 2xl:left-12 top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${props.ownProfile ? "hover:cursor-pointer group" : ""
+          className={`h-[160px] md:h-[240px] lg:h-[320px] xl:h-[370px] w-[160px] md:w-[240px] shadow-2xl lg:w-[320px] xl:w-[370px] rounded-full overflow-hidden border-white dark:border-[#181E29] border-3 absolute left-2 sm:left-3 md:left-4 lg:left-6 xl:left-8 2xl:left-12 top-[45px] md:top-[60px] lg:top-[70px] xl:top-[110px] ${props.ownProfile ? "hover:cursor-pointer group" : ""
             }`}
-          style={{ backgroundImage: profileImageUrl }}
           onClick={handleImageClick}
         >
+          <img
+            src={profileImageSrc}
+            alt="Foto do perfil"
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+            onError={() => setPhotoLoadError(true)}
+          />
           {props.ownProfile && (
             <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300 flex items-center justify-center">
               <i className="fa-solid fa-pen text-white text-3xl md:text-4xl lg:text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>

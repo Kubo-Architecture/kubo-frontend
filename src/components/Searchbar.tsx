@@ -134,6 +134,8 @@ export default function SearchBar({
                         src={user.photoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User')}
                         alt={user.name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-[#3d444d] group-hover:border-gray-200 dark:group-hover:border-[#3d444d] transition-colors"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User'); }}
                       />
                       {user.verified && (
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-[#151B23]">

@@ -7,7 +7,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export default function HeaderFull({ userData, loading }: any) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [photoLoadError, setPhotoLoadError] = useState(false);
   const navigate = useNavigate();
+  const profilePhotoSrc = (userData?.photoUrl && !photoLoadError) ? userData.photoUrl : DefaultProfile;
   const location = useLocation();
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -121,8 +123,10 @@ export default function HeaderFull({ userData, loading }: any) {
                 <div className="relative">
                   <img
                     className="h-10 w-10 rounded-full border border-gray-300 object-cover"
-                    src={userData?.photoUrl || DefaultProfile}
+                    src={profilePhotoSrc}
                     alt="Foto do perfil"
+                    referrerPolicy="no-referrer"
+                    onError={() => setPhotoLoadError(true)}
                   />
                 </div>
                 <i
@@ -195,8 +199,10 @@ export default function HeaderFull({ userData, loading }: any) {
             >
               <img
                 className="h-10 w-10 rounded-full border border-gray-300 object-cover cursor-pointer"
-                src={userData?.photoUrl || DefaultProfile}
+                src={profilePhotoSrc}
                 alt="Foto do perfil"
+                referrerPolicy="no-referrer"
+                onError={() => setPhotoLoadError(true)}
               />
             </button>) : (
               <span className='cursor-pointer' onClick={() => navigate('/login')}>Entrar</span>
