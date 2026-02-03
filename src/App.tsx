@@ -4,7 +4,7 @@ import RouterLink from './routes/routes';
 import HeaderFull from './components/Universal/Header';
 import Loading from './components/Universal/Loading';
 import MaintenanceScreen from './views/MaintenanceScreen';
-import FeedbackButton from './components/btnfeedback';
+import FeedbackButton from './components/FeedbackButton';
 import './index.css';
 import { useLocation } from 'react-router-dom';
 import { getUserIdFromToken } from './utils/jwt';

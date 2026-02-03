@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Send, X, Check, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { getUserIdFromToken } from '../utils/jwt';
 
 export default function FeedbackButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -114,6 +115,13 @@ export default function FeedbackButton() {
   const handleSubmit = async () => {
     const trimmedFeedback = feedback.trim();
 
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      setSubmitStatus('error');
+      setErrorMessage('Faça login para enviar feedback.');
+      return;
+    }
+
     if (!trimmedFeedback) {
       setSubmitStatus('error');
       setErrorMessage('Por favor, escreva seu feedback.');
@@ -125,16 +133,15 @@ export default function FeedbackButton() {
     setErrorMessage('');
 
     try {
-      const payload = {
-        fullName: 'Usuário (Feedback)',
-        email: 'feedback@kubo.com',
-        subject: 'Feedback do Site',
-        message: trimmedFeedback
-      };
+      const userRes = await axios.get<{ name?: string; email?: string; Email?: string }>(
+        `${import.meta.env.VITE_API_URL}/users/${userId}`
+      );
+      const userName = (userRes.data?.name ?? '').trim();
+      const userEmail = (userRes.data?.email ?? userRes.data?.Email ?? '').trim();
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/contact`,
-        payload,
+        `${import.meta.env.VITE_API_URL}/feedback`,
+        { name: userName, email: userEmail, text: trimmedFeedback },
         {
           headers: { 'Content-Type': 'application/json' }
         }
