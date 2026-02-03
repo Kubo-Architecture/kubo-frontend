@@ -221,8 +221,13 @@ export default function Gallery({ onInitialLoadComplete }: GalleryProps) {
   const safeWorks = Array.isArray(works) ? works : [];
 
   const filteredWorks = safeWorks.filter((work: any) => {
-    if (filter !== 'all' && work.category !== filter && work.usage_type !== filter) return false;
-    return true;
+    if (filter === 'all') return true;
+    const usageTypes = work.usage_type
+      ? String(work.usage_type).split(',').map((s: string) => s.trim()).filter(Boolean)
+      : [];
+    if (usageTypes.includes(filter)) return true;
+    if (work.category === filter) return true;
+    return false;
   });
 
   const isInitialLoading =
