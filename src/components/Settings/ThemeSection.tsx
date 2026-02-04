@@ -19,7 +19,7 @@ export default function ThemeSection({ theme, onThemeChange }: ThemeSectionProps
           <p className="text-sm sm:text-base text-neutral-500">Escolha entre Light ou Dark Mode</p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl">
           {themeOptions.map((option) => {
             return (
               <button
