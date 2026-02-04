@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserIdFromToken } from '../utils/jwt';
-import { formatBrazilianArea } from '../utils/areaFormat';
 import axios from 'axios';
 import Loading from '../components/Universal/Loading';
 
@@ -68,6 +67,7 @@ export default function ProjectPage() {
         fetchProject();
     }, [projectId, currentUserId, API_URL]);
 
+    // Controle de scroll para o modal de delete
     useEffect(() => {
         if (showDeleteModal) {
             const scrollY = window.scrollY;
@@ -119,6 +119,59 @@ export default function ProjectPage() {
             };
         }
     }, [showDeleteModal]);
+
+    // Controle de scroll para o lightbox
+    useEffect(() => {
+        if (selectedImage) {
+            const scrollY = window.scrollY;
+            
+            const originalBodyOverflow = document.body.style.overflow || '';
+            const originalBodyPosition = document.body.style.position || '';
+            const originalBodyTop = document.body.style.top || '';
+            const originalBodyWidth = document.body.style.width || '';
+            const originalHtmlOverflow = document.documentElement.style.overflow || '';
+            
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
+            
+            return () => {
+                if (originalBodyOverflow) {
+                    document.body.style.overflow = originalBodyOverflow;
+                } else {
+                    document.body.style.removeProperty('overflow');
+                }
+                
+                if (originalBodyPosition) {
+                    document.body.style.position = originalBodyPosition;
+                } else {
+                    document.body.style.removeProperty('position');
+                }
+                
+                if (originalBodyTop) {
+                    document.body.style.top = originalBodyTop;
+                } else {
+                    document.body.style.removeProperty('top');
+                }
+                
+                if (originalBodyWidth) {
+                    document.body.style.width = originalBodyWidth;
+                } else {
+                    document.body.style.removeProperty('width');
+                }
+                
+                if (originalHtmlOverflow) {
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+                } else {
+                    document.documentElement.style.removeProperty('overflow');
+                }
+                
+                window.scrollTo(0, scrollY);
+            };
+        }
+    }, [selectedImage]);
 
     const handleLike = async () => {
         if (!currentUserId) return;
@@ -209,12 +262,10 @@ export default function ProjectPage() {
     const openLightbox = (imageUrl: string, index: number) => {
         setSelectedImage(imageUrl);
         setCurrentImageIndex(index);
-        document.body.style.overflow = 'hidden';
     };
 
     const closeLightbox = () => {
         setSelectedImage(null);
-        document.body.style.overflow = 'unset';
     };
 
     const navigateImage = (direction: 'prev' | 'next') => {
@@ -252,7 +303,7 @@ export default function ProjectPage() {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keydown', handleEscapeModal);
         };
-    }, [selectedImage, showDeleteModal, currentImageIndex]);
+    }, [selectedImage, showDeleteModal, currentImageIndex, allImages.length]);
 
     if (loading) {
         return <Loading />;
@@ -307,13 +358,13 @@ export default function ProjectPage() {
         {
             icon: 'fas fa-mountain',
             title: 'Área do terreno',
-            value: project.terrain_area != null && project.terrain_area !== '' ? `${formatBrazilianArea(Number(project.terrain_area))}m²` : null,
+            value: project.terrain_area ? `${project.terrain_area}m²` : null,
             show: project.terrain_area && project.terrain_area > 0
         },
         {
             icon: 'fas fa-house',
             title: 'Área construída',
-            value: project.build_area != null && project.build_area !== '' ? `${formatBrazilianArea(Number(project.build_area))}m²` : null,
+            value: project.build_area ? `${project.build_area}m²` : null,
             show: project.build_area && project.build_area > 0
         },
         {
